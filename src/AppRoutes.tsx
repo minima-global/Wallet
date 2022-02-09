@@ -3,7 +3,6 @@ import Page2 from './pages/Page2';
 import Page3 from './pages/Page3';
 import Balance from './pages/Balance';
 import Send from './pages/Send';
-import Terminal from './pages/Terminal';
 
 export interface RouteType {
     path: string;
@@ -14,17 +13,17 @@ export interface RouteType {
 const Routes: RouteType[] = [
     {
         path: '/',
-        sidebarName: 'Page 1',
+        sidebarName: 'Status',
         element: <Page1></Page1>,
     },
     {
         path: '/page2',
-        sidebarName: 'Page 2',
+        sidebarName: 'Receive',
         element: <Page2></Page2>,
     },
     {
         path: '/page3',
-        sidebarName: 'Page 3',
+        sidebarName: 'Create Token',
         element: <Page3></Page3>,
     },
     {
@@ -36,11 +35,6 @@ const Routes: RouteType[] = [
         path: '/send',
         sidebarName: 'Send',
         element: <Send></Send>,
-    },
-    {
-        path: '/terminal',
-        sidebarName: 'Terminal',
-        element: <Terminal></Terminal>,
     },
 ];
 

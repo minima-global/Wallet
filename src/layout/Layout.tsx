@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { AppBar, Toolbar, Typography, IconButton, Drawer, Box, Container } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import Routes from '../app.routes';
-import { RouteType } from './../app.routes';
+import Routes from '../AppRoutes';
+import { RouteType } from '../AppRoutes';
 import { useLocation, useRoutes } from 'react-router-dom';
 import SideMenu from './SideMenu';
 
@@ -15,11 +15,6 @@ export default function Layout() {
     const handleDrawerToggle = () => {
         setIsOpen((op) => !op);
     };
-
-    // TODO:
-    // Use the react-router hook called 'useLocation' to get the current path
-    // Use getPageName function to get current page
-    // Add page name to html below
 
     const location = useLocation().pathname;
 

@@ -12,7 +12,7 @@ import {
     Grid,
 } from '@mui/material';
 import { useNavigate, useLocation } from 'react-router-dom';
-import Routes from '../app.routes';
+import Routes from '../AppRoutes';
 // import useBlockNumber from '../minima/useBlockNumber';
 import { ReactComponent as LandscapeLogo } from './LANDSCAPE-01.svg';
 import useMinimaInit from '../minima/useMinimaInit';
