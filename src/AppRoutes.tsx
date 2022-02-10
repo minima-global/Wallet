@@ -1,5 +1,5 @@
 import Page1 from './pages/Page1';
-import Page2 from './pages/Page2';
+import Receive from './pages/Receive';
 import Page3 from './pages/Page3';
 import Balance from './pages/Balance';
 import Send from './pages/Send';
@@ -17,9 +17,9 @@ const Routes: RouteType[] = [
         element: <Page1></Page1>,
     },
     {
-        path: '/page2',
+        path: '/receive',
         sidebarName: 'Receive',
-        element: <Page2></Page2>,
+        element: <Receive></Receive>,
     },
     {
         path: '/page3',
