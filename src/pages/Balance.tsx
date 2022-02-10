@@ -99,6 +99,7 @@ const Balance = () => {
                                                     textOverflow: 'ellipsis',
                                                     overFlowX: 'hidden',
                                                     overflow: 'hidden',
+                                                    lineHeight: 1.3,
                                                 }}
                                             >
                                                 {item.token.name ? item.token.name : item.token}
