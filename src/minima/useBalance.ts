@@ -18,19 +18,22 @@ const useBalance = () => {
                 console.error(err);
                 setBalance([]);
             });
-        setInterval(() => {
-            callBalance().then(
-                (data: any) => {
-                    if (data.status) {
-                        setBalance(data.response);
-                    }
-                },
-                (err) => {
-                    console.error(err);
-                    setBalance([]);
-                }
-            );
-        }, 10000);
+        // const subscription = setInterval(() => {
+        //     callBalance().then(
+        //         (data: any) => {
+        //             if (data.status) {
+        //                 setBalance(data.response);
+        //             }
+        //         },
+        //         (err) => {
+        //             console.error(err);
+        //             setBalance([]);
+        //         }
+        //     );
+        // }, 10000);
+        return(() => {
+            // clearInterval(subscription);
+        })
     }, []);
 
     return balance;
