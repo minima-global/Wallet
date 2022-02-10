@@ -8,8 +8,7 @@ import {
     ListItemAvatar,
     Autocomplete,
     TextField,
-    createFilterOptions,
-    Input,
+    Pagination,
 } from '@mui/material';
 
 import useBalance from '../minima/useBalance';
@@ -20,6 +19,7 @@ import { useEffect, useState } from 'react';
 
 const Balance = () => {
     const balance = useBalance();
+    const [page, setPage] = useState<number>(1);
     const [filteredBalance, setFilteredBalance] = useState<MinimaToken[]>([]);
 
     console.log('balance', balance);
@@ -42,6 +42,11 @@ const Balance = () => {
             setFilteredBalance(balance);
         }
     }
+    /** Pagination postponed */
+    // function paginate(array: MinimaToken[], page_size: number, page_number: number) {
+    //     // human-readable page numbers usually start with 1, so we reduce 1 in the first argument
+    //     return setFilteredBalance(array.slice((page_number - 1) * page_size, page_number * page_size));
+    // }
 
     return (
         <>
@@ -86,10 +91,31 @@ const Balance = () => {
                                         />
                                     </ListItemAvatar>
                                     <ListItemText
-                                        primary={item.token.name ? item.token.name : item.token}
-                                        secondary={item.confirmed}
-                                        primaryTypographyProps={{ variant: 'h2', noWrap: true }}
-                                        secondaryTypographyProps={{ variant: 'subtitle1' }}
+                                        disableTypography
+                                        primary={
+                                            <Typography
+                                                variant="h2"
+                                                sx={{
+                                                    textOverflow: 'ellipsis',
+                                                    overFlowX: 'hidden',
+                                                    overflow: 'hidden',
+                                                }}
+                                            >
+                                                {item.token.name ? item.token.name : item.token}
+                                            </Typography>
+                                        }
+                                        secondary={
+                                            <Typography
+                                                sx={{
+                                                    textOverflow: 'ellipsis',
+                                                    overFlowX: 'hidden',
+                                                    overflow: 'hidden',
+                                                }}
+                                                variant="subtitle1"
+                                            >
+                                                {item.confirmed}
+                                            </Typography>
+                                        }
                                     />
                                 </ListItemButton>
                             ))
@@ -97,6 +123,19 @@ const Balance = () => {
                             <Typography variant="h6">No tokens found</Typography>
                         )}
                     </List>
+
+                    {/* {filteredBalance.length && filteredBalance.length > 0 ? (
+                        <Pagination
+                            count={Math.ceil(balance.length / 10)}
+                            color="primary"
+                            page={page}
+                            onChange={(event, val) => {
+                                console.log(val);
+                                setPage(val);
+                                paginate(balance, 10, page);
+                            }}
+                        />
+                    ) : null} */}
                 </Grid>
                 <Grid item xs={0} md={2}></Grid>
             </Grid>
