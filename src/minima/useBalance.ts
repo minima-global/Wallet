@@ -18,7 +18,7 @@ const useBalance = () => {
                 console.error(err);
                 setBalance([]);
             });
-        setInterval(() => {
+        const subscription = setInterval(() => {
             callBalance().then(
                 (data: any) => {
                     if (data.status) {
@@ -31,6 +31,9 @@ const useBalance = () => {
                 }
             );
         }, 10000);
+        return(() => {
+            clearInterval(subscription);
+        })
     }, []);
 
     return balance;
