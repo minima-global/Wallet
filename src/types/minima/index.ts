@@ -2,14 +2,14 @@
  * Minima Objects
  */
  export interface Status {
-  version: string;
-  devices: number;
-  length: number;
-  weight: number;
-  configuration: string;
-  minima: number;
-  coins: number;
-  data: string;
+  version: string; // minima version
+  devices: number; // how many devices are connected to peer
+  length: number; // chain length
+  weight: number; // chain weight
+  // configuration: string; //
+  minima: number; // total amount of minima from genesis block
+  coins: number; // total coins in the mmr database
+  data: string; // Where the users data is stored
   memory: {
     ram: string;
     disk: string;
@@ -23,16 +23,16 @@
       p2pdb: string;
     };
   };
-  chain: {
+  chain: { // chain data
     block: number;
-    time: string;
-    hash: string;
-    speed: string;
-    difficulty: string;
-    size: number;
-    length: number;
-    weight: number;
     branches: number;
+    difficulty: string;
+    hash: string;
+    length: number;
+    size: number;
+    speed: string;
+    time: string;
+    weight: number;
     cascade: {
       start: number;
       length: number;
@@ -46,13 +46,13 @@
     archivedb: number;
   };
   network: {
+    connected: number;
+    connecting: number;
     host: string;
     hostset: boolean;
     port: number;
-    connecting: number;
-    connected: number;
     rpc: boolean;
-    p2p: {
+    p2p?: {
       address: string;
       isAcceptingInLinks: boolean;
       numInLinks: number;
