@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { AppBar, Toolbar, Typography, IconButton, Drawer, Box, Container } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
+import { appName } from '../shared/constants';
 import Routes from '../AppRoutes';
 import { RouteType } from '../AppRoutes';
 import { useLocation, useRoutes } from 'react-router-dom';
 import SideMenu from './SideMenu';
+import MenuIcon from '@mui/icons-material/Menu';
 
 const drawerWidth = 240;
 
@@ -36,9 +37,25 @@ export default function Layout() {
                     ml: { sm: `${drawerWidth}px` },
                 }}
             >
-                <Toolbar sx={{ bgcolor: 'text.secondary' }}>Minima Boilerplate</Toolbar>
+                <Toolbar
+                    sx={{
+                        bgcolor: 'text.secondary',
+                        textAlign: 'center',
+                        flex: 1,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        fontWeight: '500',
+                    }}
+                >
+                    {appName}
+                </Toolbar>
                 <Toolbar>
-                    <IconButton color="inherit" aria-label="menu" onClick={handleDrawerToggle}>
+                    <IconButton
+                        sx={{ display: { xs: 'block', sm: 'none' } }}
+                        color="inherit"
+                        aria-label="menu"
+                        onClick={handleDrawerToggle}
+                    >
                         <MenuIcon />
                     </IconButton>
                     <Typography>{getPageName(Routes, location)}</Typography>
