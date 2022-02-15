@@ -107,16 +107,9 @@ const Status = () => {
                 <Grid item xs={12} md={6}>
                     <Card variant="outlined">{status && status.chain ? <Chain chain={status.chain} /> : null}</Card>
                 </Grid>
-                {/* <Grid item xs={12} md={6}>
-                    <Card variant="outlined">
-                        <Memory />
-                    </Card>
-                </Grid>
                 <Grid item xs={12} md={6}>
-                    <Card variant="outlined">
-                        <Memory />
-                    </Card>
-                </Grid> */}
+                    <Card variant="outlined">{status && status.txpow ? <TxPoW txpow={status.txpow} /> : null}</Card>
+                </Grid>
             </Grid>
             <Grid item md={2}></Grid>
         </Grid>
@@ -341,6 +334,68 @@ const Chain: FC<ChainProps> = (props: ChainProps) => {
                             primary="Weight"
                             secondary={props.chain.weight}
                             primaryTypographyProps={{ fontWeight: 600 }}
+                        ></ListItemText>
+                    </ListItem>
+                </List>
+            </CardContent>
+        </React.Fragment>
+    );
+};
+
+interface TxPoWProps {
+    txpow: {
+        mempool: number;
+        ramdb: number;
+        txpowdb: number;
+        archivedb: number;
+    };
+}
+
+const TxPoW: FC<TxPoWProps> = (props: TxPoWProps) => {
+    return (
+        <React.Fragment>
+            <CardContent>
+                <Box>
+                    <Typography sx={{ fontSize: 14, display: 'inline' }} color="text.secondary" gutterBottom>
+                        TxPoW
+                    </Typography>
+                </Box>
+
+                <List>
+                    <ListItem>
+                        <ListItemText
+                            primary="Mempool"
+                            secondary={props.txpow.mempool}
+                            primaryTypographyProps={{
+                                fontWeight: 600,
+                            }}
+                        ></ListItemText>
+                    </ListItem>
+                    <ListItem>
+                        <ListItemText
+                            primary="RAM Database"
+                            secondary={props.txpow.ramdb}
+                            primaryTypographyProps={{
+                                fontWeight: 600,
+                            }}
+                        ></ListItemText>
+                    </ListItem>
+                    <ListItem>
+                        <ListItemText
+                            primary="TxPoW Database"
+                            secondary={props.txpow.txpowdb}
+                            primaryTypographyProps={{
+                                fontWeight: 600,
+                            }}
+                        ></ListItemText>
+                    </ListItem>
+                    <ListItem>
+                        <ListItemText
+                            primary="Archive Database"
+                            secondary={props.txpow.archivedb}
+                            primaryTypographyProps={{
+                                fontWeight: 600,
+                            }}
                         ></ListItemText>
                     </ListItem>
                 </List>
