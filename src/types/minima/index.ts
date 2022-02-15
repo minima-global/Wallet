@@ -45,6 +45,7 @@
     txpowdb: number;
     archivedb: number;
   };
+
   network: {
     connected: number;
     connecting: number;
@@ -53,6 +54,7 @@
     port: number;
     rpc: boolean;
     p2p?: {
+      deviceHashRate: number;
       address: string;
       isAcceptingInLinks: boolean;
       numInLinks: number;

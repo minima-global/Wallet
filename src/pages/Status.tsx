@@ -110,6 +110,16 @@ const Status = () => {
                 <Grid item xs={12} md={6}>
                     <Card variant="outlined">{status && status.txpow ? <TxPoW txpow={status.txpow} /> : null}</Card>
                 </Grid>
+                <Grid item xs={12} md={6}>
+                    <Card variant="outlined">
+                        {status && status.network ? <Network network={status.network} /> : null}
+                    </Card>
+                </Grid>
+                <Grid item xs={12} md={12}>
+                    <Card variant="outlined">
+                        {status && status.network.p2p ? <P2P p2p={status.network.p2p} /> : null}
+                    </Card>
+                </Grid>
             </Grid>
             <Grid item md={2}></Grid>
         </Grid>
@@ -398,6 +408,259 @@ const TxPoW: FC<TxPoWProps> = (props: TxPoWProps) => {
                             }}
                         ></ListItemText>
                     </ListItem>
+                </List>
+            </CardContent>
+        </React.Fragment>
+    );
+};
+
+interface NetworkProps {
+    network: {
+        connected: number;
+        connecting: number;
+        host: string;
+        hostset: boolean;
+        port: number;
+        rpc: boolean;
+    };
+}
+
+const Network: FC<NetworkProps> = (props: NetworkProps) => {
+    return (
+        <React.Fragment>
+            <CardContent>
+                <Box>
+                    <Typography sx={{ fontSize: 14, display: 'inline' }} color="text.secondary" gutterBottom>
+                        Network
+                    </Typography>
+                </Box>
+
+                <List>
+                    <ListItem>
+                        <ListItemText
+                            primary="Connected"
+                            secondary={props.network.connected}
+                            primaryTypographyProps={{
+                                fontWeight: 600,
+                            }}
+                        ></ListItemText>
+                    </ListItem>
+                    <ListItem>
+                        <ListItemText
+                            primary="Connecting"
+                            secondary={props.network.connecting}
+                            primaryTypographyProps={{
+                                fontWeight: 600,
+                            }}
+                        ></ListItemText>
+                    </ListItem>
+                    <ListItem>
+                        <ListItemText
+                            primary="Host"
+                            secondary={props.network.host}
+                            primaryTypographyProps={{
+                                fontWeight: 600,
+                            }}
+                        ></ListItemText>
+                    </ListItem>
+                    <ListItem>
+                        <ListItemText
+                            primary="Host Set"
+                            secondary={props.network.hostset ? 'True' : 'False'}
+                            primaryTypographyProps={{
+                                fontWeight: 600,
+                            }}
+                        ></ListItemText>
+                    </ListItem>
+                    <ListItem>
+                        <ListItemText
+                            primary="Port"
+                            secondary={props.network.port}
+                            primaryTypographyProps={{
+                                fontWeight: 600,
+                            }}
+                        ></ListItemText>
+                    </ListItem>
+                    <ListItem>
+                        <ListItemText
+                            primary="P2P"
+                            secondary={props.network.rpc ? 'True' : 'False'}
+                            primaryTypographyProps={{
+                                fontWeight: 600,
+                            }}
+                        ></ListItemText>
+                    </ListItem>
+                </List>
+            </CardContent>
+        </React.Fragment>
+    );
+};
+
+interface P2PProps {
+    p2p?: {
+        deviceHashRate: number;
+        address: string;
+        isAcceptingInLinks: boolean;
+        numInLinks: number;
+        numOutLinks: number;
+        numNotAcceptingConnP2PLinks: number;
+        numNoneP2PLinks: number;
+        numKnownPeers: number;
+        numAllLinks: number;
+        nio_inbound: number;
+        nio_outbound: number;
+    };
+}
+
+const P2P: FC<P2PProps> = (props: P2PProps) => {
+    return (
+        <React.Fragment>
+            <CardContent>
+                <Box>
+                    <Typography sx={{ fontSize: 14, display: 'inline' }} color="text.secondary" gutterBottom>
+                        P2P
+                    </Typography>
+                </Box>
+
+                <List>
+                    <Grid container sx={{ justifyContent: 'space-between' }}>
+                        <Grid item>
+                            <ListItem>
+                                {props.p2p?.deviceHashRate !== undefined ? (
+                                    <ListItemText
+                                        primary="Device Hashrate"
+                                        secondary={props.p2p.deviceHashRate}
+                                        primaryTypographyProps={{
+                                            fontWeight: 600,
+                                        }}
+                                    ></ListItemText>
+                                ) : null}
+                            </ListItem>
+                            <ListItem>
+                                {props.p2p?.address ? (
+                                    <ListItemText
+                                        primary="Address"
+                                        secondary={props.p2p.address}
+                                        primaryTypographyProps={{
+                                            fontWeight: 600,
+                                        }}
+                                    ></ListItemText>
+                                ) : null}
+                            </ListItem>
+                            <ListItem>
+                                {props.p2p?.isAcceptingInLinks !== undefined ? (
+                                    <ListItemText
+                                        primary="Accepting inlinks"
+                                        secondary={props.p2p.isAcceptingInLinks ? 'True' : 'False'}
+                                        primaryTypographyProps={{
+                                            fontWeight: 600,
+                                        }}
+                                    ></ListItemText>
+                                ) : null}
+                            </ListItem>
+                            <ListItem>
+                                {props.p2p?.numInLinks !== undefined ? (
+                                    <ListItemText
+                                        primary="Inlink Count"
+                                        secondary={props.p2p.numInLinks}
+                                        primaryTypographyProps={{
+                                            fontWeight: 600,
+                                        }}
+                                    ></ListItemText>
+                                ) : null}
+                            </ListItem>
+                            <ListItem>
+                                {props.p2p?.numOutLinks !== undefined ? (
+                                    <ListItemText
+                                        primary="Outlink Count"
+                                        secondary={props.p2p.numOutLinks}
+                                        primaryTypographyProps={{
+                                            fontWeight: 600,
+                                        }}
+                                    ></ListItemText>
+                                ) : null}
+                            </ListItem>
+                            <ListItem>
+                                {props.p2p?.numAllLinks !== undefined ? (
+                                    <ListItemText
+                                        primary="Count Of All Links"
+                                        secondary={props.p2p.numAllLinks}
+                                        primaryTypographyProps={{
+                                            fontWeight: 600,
+                                        }}
+                                    ></ListItemText>
+                                ) : null}
+                            </ListItem>
+                        </Grid>
+                        <Grid item>
+                            <ListItem>
+                                {props.p2p?.numAllLinks !== undefined ? (
+                                    <ListItemText
+                                        primary="Count All Links"
+                                        secondary={props.p2p.numAllLinks}
+                                        primaryTypographyProps={{
+                                            fontWeight: 600,
+                                        }}
+                                    ></ListItemText>
+                                ) : null}
+                            </ListItem>
+                            <ListItem>
+                                {props.p2p?.numNotAcceptingConnP2PLinks !== undefined ? (
+                                    <ListItemText
+                                        primary="Count Not Accepting P2P Links"
+                                        secondary={props.p2p.numNotAcceptingConnP2PLinks}
+                                        primaryTypographyProps={{
+                                            fontWeight: 600,
+                                        }}
+                                    ></ListItemText>
+                                ) : null}
+                            </ListItem>
+                            <ListItem>
+                                {props.p2p?.numNoneP2PLinks !== undefined ? (
+                                    <ListItemText
+                                        primary="Count Not P2P Links"
+                                        secondary={props.p2p.numNoneP2PLinks}
+                                        primaryTypographyProps={{
+                                            fontWeight: 600,
+                                        }}
+                                    ></ListItemText>
+                                ) : null}
+                            </ListItem>
+                            <ListItem>
+                                {props.p2p?.numKnownPeers !== undefined ? (
+                                    <ListItemText
+                                        primary="Count Known Peers"
+                                        secondary={props.p2p.numKnownPeers}
+                                        primaryTypographyProps={{
+                                            fontWeight: 600,
+                                        }}
+                                    ></ListItemText>
+                                ) : null}
+                            </ListItem>
+                            <ListItem>
+                                {props.p2p?.nio_inbound !== undefined ? (
+                                    <ListItemText
+                                        primary="NIO Inbound"
+                                        secondary={props.p2p.nio_inbound}
+                                        primaryTypographyProps={{
+                                            fontWeight: 600,
+                                        }}
+                                    ></ListItemText>
+                                ) : null}
+                            </ListItem>
+                            <ListItem>
+                                {props.p2p?.nio_outbound !== undefined ? (
+                                    <ListItemText
+                                        primary="NIO Outbound"
+                                        secondary={props.p2p.nio_outbound}
+                                        primaryTypographyProps={{
+                                            fontWeight: 600,
+                                        }}
+                                    ></ListItemText>
+                                ) : null}
+                            </ListItem>
+                        </Grid>
+                    </Grid>
                 </List>
             </CardContent>
         </React.Fragment>
