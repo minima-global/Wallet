@@ -1,4 +1,4 @@
-import Page1 from './pages/Page1';
+import Status from './pages/Status';
 import Receive from './pages/Receive';
 import Page3 from './pages/Page3';
 import Balance from './pages/Balance';
@@ -14,7 +14,7 @@ const Routes: RouteType[] = [
     {
         path: '/',
         sidebarName: 'Status',
-        element: <Page1></Page1>,
+        element: <Status></Status>,
     },
     {
         path: '/receive',
