@@ -33,7 +33,7 @@ const Status = () => {
     }, []);
 
     return (
-        <Grid container>
+        <Grid container mb={2}>
             <Grid item md={2}></Grid>
             <Grid item container md={8} spacing={2} mt={2}>
                 <Grid item xs={12} md={12}>
@@ -115,11 +115,13 @@ const Status = () => {
                         {status && status.network ? <Network network={status.network} /> : null}
                     </Card>
                 </Grid>
-                <Grid item xs={12} md={12}>
-                    <Card variant="outlined">
-                        {status && status.network.p2p ? <P2P p2p={status.network.p2p} /> : null}
-                    </Card>
-                </Grid>
+                {status && status.network.p2p && status.network.p2p.address ? (
+                    <Grid item xs={12} md={12}>
+                        <Card variant="outlined">
+                            {status && status.network.p2p ? <P2P p2p={status.network.p2p} /> : null}
+                        </Card>
+                    </Grid>
+                ) : null}
             </Grid>
             <Grid item md={2}></Grid>
         </Grid>
