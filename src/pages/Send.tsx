@@ -83,7 +83,7 @@ const Send: FC = () => {
         <Grid container mt={2} spacing={2}>
             <Grid item xs={0} md={2}></Grid>
             <Grid item xs={12} md={8}>
-                <Card>
+                <Card variant="outlined">
                     <CardContent>
                         <form onSubmit={formik.handleSubmit}>
                             {tokenSelection && tokenSelection.length > 0 ? (
