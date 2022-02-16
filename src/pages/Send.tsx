@@ -137,7 +137,7 @@ const Send: FC = () => {
                                 }}
                                 InputProps={{
                                     style:
-                                        formik.touched.amount && Boolean(formik.errors.amount)
+                                        formik.touched.address && Boolean(formik.errors.address)
                                             ? { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }
                                             : { borderBottomLeftRadius: 8, borderBottomRightRadius: 8 },
                                 }}
