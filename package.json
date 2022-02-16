@@ -15,6 +15,7 @@
         "@types/node": "^16.11.21",
         "@types/react": "^17.0.38",
         "@types/react-dom": "^17.0.11",
+        "formik": "^2.2.9",
         "html5-qrcode": "^2.1.6",
         "http-proxy-middleware": "^2.0.2",
         "notistack": "^2.0.3",
@@ -22,7 +23,8 @@
         "react-dom": "^17.0.2",
         "react-router-dom": "^6.2.1",
         "react-scripts": "5.0.0",
-        "typescript": "^4.5.5"
+        "typescript": "^4.5.5",
+        "yup": "^0.32.11"
     },
     "scripts": {
         "start": "react-scripts start",
@@ -57,6 +59,5 @@
         "semi": true,
         "singleQuote": true,
         "printWidth": 120
-    },
-    "devDependencies": {}
+    }
 }

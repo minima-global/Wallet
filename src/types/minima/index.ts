@@ -1,4 +1,18 @@
 /**
+ * Minima RPC
+ */
+
+export interface RpcResponse {
+  command: string;
+  status: boolean;
+  message?: string;
+}
+
+export interface RpcBalance extends RpcResponse {
+  tokens: MinimaToken[];
+}
+
+/**
  * Minima Objects
  */
  export interface Status {
@@ -85,4 +99,16 @@ interface CustomTokenJson {
   name: string;
   description: string;
   icon: string;
+}
+
+/**
+ * Function Component props
+ */
+export interface MiniModalProp {
+  readonly status: string;
+  readonly header: string;
+  readonly subtitle: string;
+  handleClose: () => void;
+  handleOpen: () => void;
+  open: boolean;
 }
