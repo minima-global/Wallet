@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from 'react';
-import { Grid, Typography, Button } from '@mui/material';
+import { Grid, Typography, Button, Card, CardContent } from '@mui/material';
 import { callCommand } from '../minima/rpc-commands';
 import { copyTextToClipboard } from '../shared/functions';
 
@@ -35,9 +35,12 @@ const Receive: FC = () => {
         <Grid container spacing={2} sx={{ marginTop: { xs: 0 } }}>
             <Grid item xs={0} md={2}></Grid>
             <Grid item xs={12} md={8}>
-                <Typography variant="h6">Receive Page</Typography>
-                <Typography variant="subtitle1">Address: {address}</Typography>
-                <Button onClick={handleCopyClick}>{!isCopied ? 'Copy' : 'Copied'}</Button>
+                <Card variant="outlined">
+                    <CardContent>
+                        <Typography variant="subtitle1">Address: {address}</Typography>
+                        <Button onClick={handleCopyClick}>{!isCopied ? 'Copy' : 'Copied'}</Button>
+                    </CardContent>
+                </Card>
             </Grid>
             <Grid item xs={0} md={2}></Grid>
         </Grid>
