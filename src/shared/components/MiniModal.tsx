@@ -24,8 +24,12 @@ const MiniModal: FC<MiniModalProp> = (props) => {
                     </Typography>
                 </Box>
                 <Box sx={buttonWrap}>
-                    <Button onClick={props.handleClose}>Cancel</Button>
-                    <Button onClick={props.handleClose}>Ok</Button>
+                    <Button sx={[button, buttonCancel]} variant="text" onClick={props.handleClose}>
+                        Cancel
+                    </Button>
+                    <Button sx={button} variant="text" onClick={props.handleClose}>
+                        Ok
+                    </Button>
                 </Box>
             </Box>
         </Modal>
@@ -33,6 +37,18 @@ const MiniModal: FC<MiniModalProp> = (props) => {
 };
 
 export default MiniModal;
+
+const button = {
+    '&:hover': {
+        backgroundColor: 'transparent',
+        opacity: 0.8,
+    },
+    letterSpacing: 3,
+    paddingRight: 0,
+};
+const buttonCancel = {
+    color: '#363A3F',
+};
 
 const style = {
     position: 'absolute',
