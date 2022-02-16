@@ -57,8 +57,7 @@ const Send: FC = () => {
         validationSchema: TransferTokenSchema,
         onSubmit: (data) => {
             callSend(data)
-                .then((res: any) => {
-                    console.log('sent');
+                .then(() => {
                     // SENT
                     formik.resetForm();
                     // Set Modal
@@ -69,7 +68,7 @@ const Send: FC = () => {
                 .catch((err) => {
                     console.error(err.message);
                     // FAILED
-                    if (err.message.substring(0, 20) === INSUFFICIENT) {
+                    if (err.message !== undefined && err.message.substring(0, 20) === INSUFFICIENT) {
                         formik.setFieldError('amount', err.message);
                     }
                 })
