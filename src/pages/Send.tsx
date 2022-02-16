@@ -116,14 +116,21 @@ const Send: FC = () => {
                                 fullWidth
                                 id="amount"
                                 name="amount"
-                                placeholder="Amount"
+                                placeholder="0.0"
                                 value={formik.values.amount}
                                 onChange={formik.handleChange}
                                 error={formik.touched.amount && Boolean(formik.errors.amount)}
                                 helperText={formik.touched.amount && formik.errors.amount}
                                 sx={{ marginBottom: 4 }}
                             />
-                            <Button color="primary" variant="contained" fullWidth type="submit">
+                            <Button
+                                disabled={formik.isSubmitting && !formik.isValid}
+                                disableElevation
+                                color="primary"
+                                variant="contained"
+                                fullWidth
+                                type="submit"
+                            >
                                 Submit
                             </Button>
                         </form>

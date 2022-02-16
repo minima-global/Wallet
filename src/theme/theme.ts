@@ -74,6 +74,19 @@ theme = createTheme(theme, {
                 root: {
                     // Some CSS
                     fontSize: '1rem',
+                    borderRadius: 8,
+                    textTransform: 'none',
+                    fontWeight: 800,
+                    letterSpacing: 1,
+                    lineHeight: '21px',
+                    minHeight: 44,
+                    '&:hover': {
+                        backgroundColor: '#0D55D9'
+                    },
+                    '&:disabled': {
+                        backgroundColor: '#5A94FF',
+                        color: '#fff'
+                    }
                 },
             },
         },
@@ -101,10 +114,12 @@ theme = createTheme(theme, {
                         borderRadius: 8,
                         fontWeight: '400',
                         fontSize: '1rem',
+                        
                         '&::placeholder': {
                             color: '#91919D',
                             fontSize: '1rem',
-                            fontWeight: '100'
+                            fontWeight: '100',
+                            
                         },
                         '&:focus': {
                             backgroundColor: 'rgba(255, 255, 255, 0.8)'
