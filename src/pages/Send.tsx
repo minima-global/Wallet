@@ -1,11 +1,23 @@
 import { callBalance, callSend } from '../minima/rpc-commands';
 import { useSnackbar } from 'notistack';
-import { Button, TextField, Card, CardContent, Grid, Select, MenuItem } from '@mui/material';
+import { Button, TextField, Card, CardContent, Grid, Select, MenuItem, Chip } from '@mui/material';
 import { Html5QrcodeScanner } from 'html5-qrcode';
 import { FC, useEffect, useRef, useState } from 'react';
-import { useFormik } from 'formik';
 
-import { RpcResponse, MinimaToken } from '../types/minima';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+
+import { MinimaToken } from '../types/minima';
+
+const TransferTokenSchema = Yup.object().shape({
+    tokenid: Yup.string().required('Field Required'),
+    address: Yup.string()
+        .matches(/0[xX][0-9a-fA-F]+/, 'Invalid Address.')
+        .min(66, 'Invalid Address, too short.')
+        .max(66, 'Invalid Address, too long.')
+        .required('Field Required'),
+    amount: Yup.string().required('Field Required'),
+});
 
 const Send: FC = () => {
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -41,7 +53,7 @@ const Send: FC = () => {
             amount: '',
             address: '',
         },
-        // validationSchema: validationSchema,
+        validationSchema: TransferTokenSchema,
         onSubmit: (values) => {
             alert(JSON.stringify(values, null, 2));
         },
@@ -50,7 +62,7 @@ const Send: FC = () => {
     return (
         <Grid container mt={2} spacing={2}>
             <Grid item xs={0} md={2}></Grid>
-            <Grid item xs={8} md={8}>
+            <Grid item xs={12} md={8}>
                 <Card>
                     <CardContent>
                         <form onSubmit={formik.handleSubmit}>
@@ -66,8 +78,23 @@ const Send: FC = () => {
                                 >
                                     {tokenSelection && tokenSelection.length > 0
                                         ? tokenSelection.map((token: MinimaToken) => (
-                                              <MenuItem key={token.tokenid} value={token.tokenid}>
+                                              <MenuItem
+                                                  key={token.tokenid}
+                                                  value={token.tokenid}
+                                                  sx={{ justifyContent: 'space-between' }}
+                                              >
                                                   {token.token.name ? token.token.name : token.token}
+                                                  <Chip
+                                                      sx={{ ml: 2 }}
+                                                      color="primary"
+                                                      label={
+                                                          token.tokenid === '0x00'
+                                                              ? '0x00'
+                                                              : token.tokenid.substring(0, 8) +
+                                                                '...' +
+                                                                token.tokenid.substring(58, 66)
+                                                      }
+                                                  />
                                               </MenuItem>
                                           ))
                                         : null}
