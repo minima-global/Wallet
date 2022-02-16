@@ -6,6 +6,7 @@ import { FC, useEffect, useRef, useState } from 'react';
 
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { INSUFFICIENT } from '../minima/constants';
 
 import { MinimaToken } from '../types/minima';
 
@@ -54,8 +55,24 @@ const Send: FC = () => {
             address: '',
         },
         validationSchema: TransferTokenSchema,
-        onSubmit: (values) => {
-            alert(JSON.stringify(values, null, 2));
+        onSubmit: (data) => {
+            callSend(data)
+                .then((res: any) => {
+                    console.log('sent');
+                    // SENT
+                    formik.resetForm();
+                })
+                .catch((err) => {
+                    console.error(err.message);
+                    // FAILED
+                    if (err.message.substring(0, 20) === INSUFFICIENT) {
+                        formik.setFieldError('amount', err.message);
+                    }
+                })
+                .finally(() => {
+                    formik.setSubmitting(false);
+                    // NO MATTER WHAT
+                });
         },
     });
 
@@ -112,6 +129,7 @@ const Send: FC = () => {
                                 helperText={formik.touched.address && formik.errors.address}
                                 sx={{ marginBottom: 4 }}
                             />
+
                             <TextField
                                 fullWidth
                                 id="amount"
@@ -131,7 +149,7 @@ const Send: FC = () => {
                                 fullWidth
                                 type="submit"
                             >
-                                Submit
+                                {formik.isSubmitting ? 'Sending...' : 'Send'}
                             </Button>
                         </form>
                     </CardContent>
