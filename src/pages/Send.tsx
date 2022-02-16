@@ -1,7 +1,5 @@
 import { callBalance, callSend } from '../minima/rpc-commands';
-import { useSnackbar } from 'notistack';
 import { Button, TextField, Card, CardContent, Grid, Select, MenuItem, Chip } from '@mui/material';
-import { Html5QrcodeScanner } from 'html5-qrcode';
 import { FC, useEffect, useRef, useState } from 'react';
 
 import { useFormik } from 'formik';
@@ -9,6 +7,7 @@ import * as Yup from 'yup';
 import { INSUFFICIENT } from '../minima/constants';
 
 import { MinimaToken } from '../types/minima';
+import MiniModal from '../shared/components/MiniModal';
 
 const TransferTokenSchema = Yup.object().shape({
     tokenid: Yup.string().required('Field Required'),
@@ -31,32 +30,23 @@ const styles = {
 };
 
 const Send: FC = () => {
-    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-    const readerDiv = useRef(null);
-
+    // Tokens Data
     const [tokenSelection, setTokenSelection] = useState<MinimaToken[]>([]);
+    // Handle Modal
+    const [open, setOpen] = useState(false);
+    const [modalStatus, setModalStatus] = useState('Failed');
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => {
+        setOpen(false);
+        setModalStatus('Failed');
+    };
 
+    // Get initial balance
     useEffect(() => {
         callBalance().then((res: any) => {
             setTokenSelection(res.response);
         });
     }, []);
-
-    const onSendClicked = () => {
-        callSend({
-            address: '',
-            amount: '',
-            tokenid: '',
-        }).then(
-            (res) => {
-                console.log(res);
-                enqueueSnackbar('success', { variant: 'success' });
-            },
-            () => {
-                enqueueSnackbar('error', { variant: 'error' });
-            }
-        );
-    };
 
     const formik = useFormik({
         initialValues: {
@@ -71,6 +61,10 @@ const Send: FC = () => {
                     console.log('sent');
                     // SENT
                     formik.resetForm();
+                    // Set Modal
+                    setModalStatus('Success');
+                    // Open Modal
+                    setOpen(true);
                 })
                 .catch((err) => {
                     console.error(err.message);
@@ -80,8 +74,8 @@ const Send: FC = () => {
                     }
                 })
                 .finally(() => {
-                    formik.setSubmitting(false);
                     // NO MATTER WHAT
+                    formik.setSubmitting(false);
                 });
         },
     });
@@ -182,73 +176,23 @@ const Send: FC = () => {
                         </form>
                     </CardContent>
                 </Card>
-                {/* <Formik
-                    initialValues={initForm}
-                    // validationSchema={}
-                    onSubmit={(e) => {
-                        console.log(`Submitting...`);
 
-                        return;
-                    }}
-                >
-                    {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting }) => (
-                        <Form>
-                            <FormGroup>
-                                <FormControl>
-                                    <InputLabel htmlFor="my-tokenid">Token Id</InputLabel>
-                                    <Input id="my-tokenid" aria-describedby="my-helper-text" value={values.tokenid} />
-                                    <FormHelperText id="my-helper-text">We'll never share your email.</FormHelperText>
-                                </FormControl>
-                                <FormControl>
-                                    <InputLabel htmlFor="my-address">Address</InputLabel>
-                                    <Input id="my-address" aria-describedby="my-helper-text" value={values.address} />
-                                    <FormHelperText id="my-helper-text">We'll never share your email.</FormHelperText>
-                                </FormControl>
-                                <FormControl>
-                                    <InputLabel htmlFor="my-amount">Amount</InputLabel>
-                                    <Input id="my-amount" aria-describedby="my-helper-text" value={values.amount} />
-                                    <FormHelperText id="my-helper-text">We'll never share your email.</FormHelperText>
-                                </FormControl>
-                                <Button type="submit">Submit</Button>
-                            </FormGroup>
-                        </Form>
-                    )}
-                </Formik> */}
+                <MiniModal
+                    open={open}
+                    handleClose={handleClose}
+                    handleOpen={handleOpen}
+                    header={modalStatus === 'Success' ? 'Success!' : 'Failed!'}
+                    status="Transaction Status"
+                    subtitle={
+                        modalStatus === 'Success'
+                            ? 'Your transaction will be received shortly'
+                            : 'Please try again later.'
+                    }
+                />
             </Grid>
             <Grid item xs={0} md={2}></Grid>
         </Grid>
     );
-
-    // if (!('BarcodeDetector' in window)) {
-    //     alert('Barcode Detector is not supported by this browser.');
-    // } else {
-    //     alert('Barcode Detector supported!');
-
-    //     // create new detector
-    //     // @ts-ignore
-    //     var barcodeDetector = new BarcodeDetector({ formats: ['qr_code'] });
-    // }
-
-    // useEffect(() => {
-    //     function onScanSuccess(decodedText: any, decodedResult: any) {
-    //         // handle the scanned code as you like, for example:
-    //         // console.log(`Code matched = ${decodedText}`, decodedResult);
-    //         alert(`Code matched = ${decodedText}`);
-    //     }
-
-    //     function onScanFailure(error: any) {
-    //         // handle scan failure, usually better to ignore and keep scanning.
-    //         // for example:
-    //         console.warn(`Code scan error = ${error}`);
-    //     }
-
-    //     let html5QrcodeScanner = new Html5QrcodeScanner(
-    //         'reader',
-    //         { fps: 10, qrbox: { width: 250, height: 250 } },
-    //         /* verbose= */ false
-    //     );
-    //     html5QrcodeScanner.render(onScanSuccess, onScanFailure);
-    // }, []);
 };
 
 export default Send;

@@ -100,3 +100,15 @@ interface CustomTokenJson {
   description: string;
   icon: string;
 }
+
+/**
+ * Function Component props
+ */
+export interface MiniModalProp {
+  readonly status: string;
+  readonly header: string;
+  readonly subtitle: string;
+  handleClose: () => void;
+  handleOpen: () => void;
+  open: boolean;
+}
