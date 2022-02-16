@@ -1,4 +1,18 @@
 /**
+ * Minima RPC
+ */
+
+export interface RpcResponse {
+  command: string;
+  status: boolean;
+  message?: string;
+}
+
+export interface RpcBalance extends RpcResponse {
+  tokens: MinimaToken[];
+}
+
+/**
  * Minima Objects
  */
  export interface Status {

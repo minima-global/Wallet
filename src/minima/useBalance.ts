@@ -14,7 +14,7 @@ const useBalance = () => {
                     setBalance(data.response);
                 }
             })
-            .catch((err) => {
+            .catch((err: Error) => {
                 console.error(err);
                 setBalance([]);
             });
