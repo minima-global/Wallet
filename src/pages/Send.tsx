@@ -20,6 +20,16 @@ const TransferTokenSchema = Yup.object().shape({
     amount: Yup.string().required('Field Required'),
 });
 
+const styles = {
+    helperText: {
+        borderBottomRightRadius: 8,
+        borderBottomLeftRadius: 8,
+        color: '#363A3F',
+        fontWeight: '400',
+        paddingLeft: 8,
+    },
+};
+
 const Send: FC = () => {
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const readerDiv = useRef(null);
@@ -128,6 +138,15 @@ const Send: FC = () => {
                                 error={formik.touched.address && Boolean(formik.errors.address)}
                                 helperText={formik.touched.address && formik.errors.address}
                                 sx={{ marginBottom: 4 }}
+                                FormHelperTextProps={{
+                                    style: styles.helperText,
+                                }}
+                                InputProps={{
+                                    style:
+                                        formik.touched.amount && Boolean(formik.errors.amount)
+                                            ? { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }
+                                            : { borderBottomLeftRadius: 8, borderBottomRightRadius: 8 },
+                                }}
                             />
 
                             <TextField
@@ -140,6 +159,15 @@ const Send: FC = () => {
                                 error={formik.touched.amount && Boolean(formik.errors.amount)}
                                 helperText={formik.touched.amount && formik.errors.amount}
                                 sx={{ marginBottom: 4 }}
+                                FormHelperTextProps={{
+                                    style: styles.helperText,
+                                }}
+                                InputProps={{
+                                    style:
+                                        formik.touched.amount && Boolean(formik.errors.amount)
+                                            ? { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }
+                                            : { borderBottomLeftRadius: 8, borderBottomRightRadius: 8 },
+                                }}
                             />
                             <Button
                                 disabled={formik.isSubmitting && !formik.isValid}

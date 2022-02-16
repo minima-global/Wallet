@@ -67,7 +67,28 @@ let theme = createTheme({
 
 theme = createTheme(theme, {
     components: {
-        // Name of the component
+        MuiFormHelperText: {
+            styleOverrides: {
+                root: {
+                    backgroundColor: '#FDBEBE',
+                    color: '#363A3F',
+                    fontWeight: 400,
+                    padding: 5,
+                    margin: 0,
+                    '&$error': {
+                        color: 'black'
+                    }
+                },
+                "&$error": {
+                    color: 'black'
+               }
+            },
+            root: {
+                "&$error": {
+                    color: 'black'
+                }
+            }
+        },
         MuiButton: {
             styleOverrides: {
                 // Name of the slot
@@ -123,7 +144,9 @@ theme = createTheme(theme, {
                         },
                         '&:focus': {
                             backgroundColor: 'rgba(255, 255, 255, 0.8)'
-                        }
+                        },
+                        
+                        
                     },
                     
                 }
