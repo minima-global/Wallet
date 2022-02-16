@@ -54,29 +54,25 @@ const Send: FC = () => {
                 <Card>
                     <CardContent>
                         <form onSubmit={formik.handleSubmit}>
-                            <Select
-                                sx={{ marginBottom: 4 }}
-                                id="tokenid"
-                                name="tokenid"
-                                value={formik.values.tokenid}
-                                onChange={formik.handleChange}
-                                error={formik.touched.tokenid && Boolean(formik.errors.tokenid)}
-                                // onOpen={() => {
-                                //     callBalance().then((res: any) => {
-                                //         console.log(`Updating tokens..`);
-                                //         setTokenSelection(res.response);
-                                //     });
-                                // }}
-                                fullWidth
-                            >
-                                {tokenSelection && tokenSelection.length > 0
-                                    ? tokenSelection.map((token: MinimaToken) => (
-                                          <MenuItem key={token.tokenid} value={token.tokenid}>
-                                              {token.token.name ? token.token.name : token.token}
-                                          </MenuItem>
-                                      ))
-                                    : null}
-                            </Select>
+                            {tokenSelection && tokenSelection.length > 0 ? (
+                                <Select
+                                    sx={{ marginBottom: 4 }}
+                                    id="tokenid"
+                                    name="tokenid"
+                                    value={formik.values.tokenid}
+                                    onChange={formik.handleChange}
+                                    error={formik.touched.tokenid && Boolean(formik.errors.tokenid)}
+                                    fullWidth
+                                >
+                                    {tokenSelection && tokenSelection.length > 0
+                                        ? tokenSelection.map((token: MinimaToken) => (
+                                              <MenuItem key={token.tokenid} value={token.tokenid}>
+                                                  {token.token.name ? token.token.name : token.token}
+                                              </MenuItem>
+                                          ))
+                                        : null}
+                                </Select>
+                            ) : null}
 
                             <TextField
                                 fullWidth
