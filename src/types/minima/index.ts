@@ -13,13 +13,14 @@ interface SendParams {
   readonly tokenid?: string;
 }
 // send, tokencreate has params
-// response has a txpow (send, tokencreate), newaddress, status, balance, help, 
+// response has a txpow (send, tokencreate only transcrionTxpow), newaddress, status, balance, help, 
 export interface RpcResponse {
   command: string;
   status: boolean;
-  response: any | Status;
+  response?: Status | TxPOW | TransactionTxPOW | MinimaToken[] | MinimaAddress | Help;
   message?: string;
   params?: TokenParams | SendParams;
+  error?: string;
 }
 export interface CustomTokenData {
   readonly name: string;
@@ -45,6 +46,12 @@ export interface RpcBalance extends RpcResponse {
  * Minima Objects
  */
 
+interface MinimaAddress {
+  readonly publickey: string;
+  readonly script: string;
+  readonly address: string;
+  readonly track: boolean;
+}
 /**
  * @@@@@@@@@@@@@@@@@@@@@@@@@@@ STATUS @@@@@@@@@@@@@@@@@@@@@@@@@@
  */
@@ -247,23 +254,72 @@ export interface TxPOW {
   body: BodyTxPOW;
 }
 
-interface Token {
-  name: string;
-}
-
 export interface MinimaToken {
-  token: string & CustomTokenJson;
-  tokenid: string;
-  confirmed: string;
-  unconfirmed: string;
-  sendable: string;
-  total: string;
+  readonly token: string & CustomTokenJson;
+  readonly tokenid: string;
+  readonly confirmed: string;
+  readonly unconfirmed: string;
+  readonly sendable: string;
+  readonly total: string;
 }
 interface CustomTokenJson {
-  name: string;
-  description: string;
-  icon: string;
+  readonly name: string;
+  readonly icon?: string;
+  readonly description?: string;
 }
+
+interface Help {
+  readonly help: string;
+  readonly status: string;
+  readonly printtree: string;
+  readonly trace: string;
+  readonly automine: string;
+  readonly hashtest: string;
+  readonly txpow: string;
+  readonly coins: string;
+  readonly tokens: string;
+  readonly keys: string;
+  readonly newaddress: string;
+  readonly send: string;
+  readonly balance: string;
+  readonly tokencreate: string;
+  readonly hash: string;
+  readonly scripts: string;
+  readonly runscript: string;
+  readonly tutorial: string;
+  readonly mmrcreate: string;
+  readonly mmrproof: string;
+  readonly coinimport: string;
+  readonly coinexport: string;
+  readonly cointrack: string;
+  readonly sign: string;
+  readonly verify: string;
+  readonly txnlist: string;
+  readonly  txncreate: string;
+  readonly  txndelete: string;
+  readonly  txncheck: string;
+  readonly  txninput: string;
+  readonly  txnoutput: string;
+  readonly  txnstate: string;
+  readonly  txnscript: string;
+  readonly  txnsign: string;
+  readonly  txnclear: string;
+  readonly  txnpost: string;
+  readonly  txnimport: string;
+  readonly  txnexport: string;
+  readonly  network: string;
+  readonly  maxima: string;
+  readonly  message: string;
+  readonly  connect: string;
+  readonly  disconnect: string;
+  readonly  rpc: string;
+  readonly  webhooks: string;
+  readonly  sshtunnel: string;
+  readonly  backup: string;
+  readonly  restore: string;
+  readonly  incentivecash: string;
+  readonly  quit: string;
+};
 
 /**
  * Function Component props

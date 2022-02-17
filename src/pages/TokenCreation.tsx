@@ -5,6 +5,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { callToken } from '../minima/rpc-commands';
 import { INSUFFICIENT } from '../minima/constants';
+import { RpcResponse } from '../types/minima';
 
 const CreateTokenSchema = Yup.object().shape({
     name: Yup.string().required('Field Required'),
@@ -41,7 +42,7 @@ const TokenCreation: FC = () => {
                 amount: data.amount,
             };
             callToken(customToken)
-                .then(() => {
+                .then((res: RpcResponse) => {
                     // SENT
                     formik.resetForm();
                     // Set Modal

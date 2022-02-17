@@ -7,10 +7,9 @@ import Minima from './minimanew.js';
  * Set a generic type for RPC calls + switch between the calling fnc
  * set at any for now..
  */
-export const callCommand = (command: string) => {
-    console.log(`${command}`)
+export const callCommand = (command: string): Promise<RpcResponse> => {
     return new Promise((resolve, reject) => {
-        Minima.cmd(command, (data: any) => {
+        Minima.cmd(command, (data: RpcResponse) => {
             if (data.status) {
                 resolve(data);
             } else {
@@ -20,8 +19,7 @@ export const callCommand = (command: string) => {
     });
 };
 
-export const callToken = (data: TokenData) => () => {
-    console.log(`TokenData`, data);
+export const callToken = (data: TokenData) => {
     const command = `${TOKENCREATE}+name:${JSON.stringify(data.name)}+amount:${data.amount}`;
     return callCommand(command);
 };
