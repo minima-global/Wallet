@@ -9,24 +9,35 @@ import {
     Autocomplete,
     TextField,
     Pagination,
+    CircularProgress,
 } from '@mui/material';
 
 import useBalance from '../minima/useBalance';
 import MinimaIcon from '../assets/images/minimaLogoSquare200x200.png';
-import { MinimaToken } from '../types/minima';
+import { MinimaToken, RpcResponse } from '../types/minima';
 
 import { useEffect, useState } from 'react';
+import { callBalance } from '../minima/rpc-commands';
 
 const Balance = () => {
-    const balance = useBalance();
     const [page, setPage] = useState<number>(1);
+    const [balance, setBalance] = useState<MinimaToken[]>([]);
     const [filteredBalance, setFilteredBalance] = useState<MinimaToken[]>([]);
-
-    console.log('balance', balance);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        setFilteredBalance(balance);
-    }, [balance]);
+        callBalance()
+            .then((data: any) => {
+                setBalance(data.response);
+                setFilteredBalance(data.response);
+                setLoading(false);
+            })
+            .catch((err: Error) => {
+                console.error(err);
+                setFilteredBalance([]);
+            });
+        setLoading(false);
+    }, [filteredBalance]);
 
     function handleInputChange(event: React.SyntheticEvent, value: string, reason: string) {
         if (value.length > 0) {
@@ -53,78 +64,84 @@ const Balance = () => {
             <Grid container spacing={2} sx={{ marginTop: 2 }}>
                 <Grid item xs={0} md={2}></Grid>
                 <Grid item xs={12} md={8}>
-                    <Autocomplete
-                        sx={{ marginBottom: 4 }}
-                        freeSolo
-                        id="token-search"
-                        onInputChange={handleInputChange}
-                        disableClearable
-                        options={filteredBalance.map((option: MinimaToken) =>
-                            option.token.name ? option.token.name : option.token
-                        )}
-                        renderInput={(params) => (
-                            <TextField
-                                {...params}
-                                placeholder="Search token"
-                                InputProps={{
-                                    ...params.InputProps,
-                                    type: 'search',
-                                }}
-                            />
-                        )}
-                    />
-                    <List>
-                        {filteredBalance && filteredBalance.length > 0 ? (
-                            filteredBalance?.map((item: MinimaToken, i) => (
-                                <ListItemButton key={item.tokenid} sx={{ marginBottom: 2 }}>
-                                    <ListItemAvatar>
-                                        <Avatar
-                                            src={
-                                                item.tokenid === '0x00'
-                                                    ? MinimaIcon
-                                                    : !item.token.icon || item.token.icon.length === 0
-                                                    ? `https://robohash.org/${item.tokenid}`
-                                                    : item.token.icon && item.token.icon
-                                                    ? item.token.icon
-                                                    : ''
-                                            }
-                                            alt={item.token.name ? item.token.name : item.token}
-                                        />
-                                    </ListItemAvatar>
-                                    <ListItemText
-                                        disableTypography
-                                        primary={
-                                            <Typography
-                                                variant="h2"
-                                                sx={{
-                                                    textOverflow: 'ellipsis',
-                                                    overFlowX: 'hidden',
-                                                    overflow: 'hidden',
-                                                    lineHeight: 1.3,
-                                                }}
-                                            >
-                                                {item.token.name ? item.token.name : item.token}
-                                            </Typography>
-                                        }
-                                        secondary={
-                                            <Typography
-                                                sx={{
-                                                    textOverflow: 'ellipsis',
-                                                    overFlowX: 'hidden',
-                                                    overflow: 'hidden',
-                                                }}
-                                                variant="subtitle1"
-                                            >
-                                                {item.confirmed}
-                                            </Typography>
-                                        }
+                    {loading ? (
+                        <CircularProgress size={32} />
+                    ) : (
+                        <>
+                            <Autocomplete
+                                sx={{ marginBottom: 4 }}
+                                freeSolo
+                                id="token-search"
+                                onInputChange={handleInputChange}
+                                disableClearable
+                                options={filteredBalance.map((option: MinimaToken) =>
+                                    option.token.name ? option.token.name : option.token
+                                )}
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        placeholder="Search token"
+                                        InputProps={{
+                                            ...params.InputProps,
+                                            type: 'search',
+                                        }}
                                     />
-                                </ListItemButton>
-                            ))
-                        ) : (
-                            <Typography variant="h6">No tokens found</Typography>
-                        )}
-                    </List>
+                                )}
+                            />
+                            <List>
+                                {filteredBalance && filteredBalance.length > 0 ? (
+                                    filteredBalance?.map((item: MinimaToken, i) => (
+                                        <ListItemButton key={item.tokenid} sx={{ marginBottom: 2 }}>
+                                            <ListItemAvatar>
+                                                <Avatar
+                                                    src={
+                                                        item.tokenid === '0x00'
+                                                            ? MinimaIcon
+                                                            : !item.token.icon || item.token.icon.length === 0
+                                                            ? `https://robohash.org/${item.tokenid}`
+                                                            : item.token.icon && item.token.icon
+                                                            ? item.token.icon
+                                                            : ''
+                                                    }
+                                                    alt={item.token.name ? item.token.name : item.token}
+                                                />
+                                            </ListItemAvatar>
+                                            <ListItemText
+                                                disableTypography
+                                                primary={
+                                                    <Typography
+                                                        variant="h2"
+                                                        sx={{
+                                                            textOverflow: 'ellipsis',
+                                                            overFlowX: 'hidden',
+                                                            overflow: 'hidden',
+                                                            lineHeight: 1.3,
+                                                        }}
+                                                    >
+                                                        {item.token.name ? item.token.name : item.token}
+                                                    </Typography>
+                                                }
+                                                secondary={
+                                                    <Typography
+                                                        sx={{
+                                                            textOverflow: 'ellipsis',
+                                                            overFlowX: 'hidden',
+                                                            overflow: 'hidden',
+                                                        }}
+                                                        variant="subtitle1"
+                                                    >
+                                                        {item.confirmed}
+                                                    </Typography>
+                                                }
+                                            />
+                                        </ListItemButton>
+                                    ))
+                                ) : (
+                                    <Typography variant="h6">No tokens found</Typography>
+                                )}
+                            </List>
+                        </>
+                    )}
 
                     {/* {filteredBalance.length && filteredBalance.length > 0 ? (
                         <Pagination

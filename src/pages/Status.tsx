@@ -15,6 +15,7 @@ import {
     Accordion,
     AccordionSummary,
     AccordionDetails,
+    CircularProgress,
 } from '@mui/material';
 import { Status as StatusType } from '../types/minima';
 import { callCommand } from '../minima/rpc-commands';
@@ -24,105 +25,134 @@ import ExpandMoreOutlined from '@mui/icons-material/ExpandMoreOutlined';
 
 const Status = () => {
     const [status, setStatus] = useState<StatusType>();
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        callCommand('status').then((data: any) => {
-            console.log(data);
-            setStatus(data.response);
-        });
+        callCommand('status')
+            .then((data: any) => {
+                setStatus(data.response);
+                setLoading(false);
+            })
+            .catch((err) => {
+                console.error(err);
+            });
     }, []);
 
     return (
         <Grid container mb={2} mt={2}>
             <Grid item md={2}></Grid>
-            <Grid item container md={8} spacing={2} mt={2}>
-                <Grid item xs={12} md={12}>
-                    <Card variant="outlined">
-                        <CardContent>
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <Typography
-                                    sx={{ fontSize: 14, display: 'inline' }}
-                                    color="text.secondary"
-                                    gutterBottom
-                                >
-                                    Overview
-                                </Typography>
-                                <Chip
-                                    color="success"
-                                    icon={status?.version ? <CheckCircleIcon /> : <CancelIcon />}
-                                    label={status?.version ? 'online' : 'offline'}
-                                />
-                            </Box>
-                            <List>
-                                <ListSubheader>{status?.version ? 'Node v' + status.version : null}</ListSubheader>
-                                <ListItem>
-                                    <ListItemText
-                                        primary="Height"
-                                        secondary={status?.chain.block}
-                                        primaryTypographyProps={{ fontWeight: 600 }}
-                                    ></ListItemText>
-                                </ListItem>
-                                <ListItem>
-                                    <ListItemText
-                                        primary="Timestamp"
-                                        secondary={status?.chain.time}
-                                        primaryTypographyProps={{ fontWeight: 600 }}
-                                    ></ListItemText>
-                                </ListItem>
-                                <ListItem>
-                                    <ListItemText
-                                        primary="Devices"
-                                        secondary={status?.devices}
-                                        primaryTypographyProps={{ fontWeight: 600 }}
-                                    ></ListItemText>
-                                </ListItem>
-                                <ListItem>
-                                    <ListItemText
-                                        primary="Ram Usage"
-                                        secondary={status?.memory.ram}
-                                        primaryTypographyProps={{ fontWeight: 600 }}
-                                    ></ListItemText>
-                                </ListItem>
-                                <ListItem>
-                                    <ListItemText
-                                        primary="Disk Usage"
-                                        secondary={status?.memory.disk}
-                                        primaryTypographyProps={{ fontWeight: 600 }}
-                                    ></ListItemText>
-                                </ListItem>
-                                <ListItem>
-                                    <ListItemText
-                                        primary="User Data"
-                                        secondary={status?.data}
-                                        primaryTypographyProps={{ fontWeight: 600 }}
-                                    ></ListItemText>
-                                </ListItem>
-                            </List>
-                        </CardContent>
-                    </Card>
-                </Grid>
-                <Grid item xs={12} md={6}>
-                    <Card variant="outlined">{status && status.memory ? <Memory memory={status.memory} /> : null}</Card>
-                </Grid>
-                <Grid item xs={12} md={6}>
-                    <Card variant="outlined">{status && status.chain ? <Chain chain={status.chain} /> : null}</Card>
-                </Grid>
-                <Grid item xs={12} md={6}>
-                    <Card variant="outlined">{status && status.txpow ? <TxPoW txpow={status.txpow} /> : null}</Card>
-                </Grid>
-                <Grid item xs={12} md={6}>
-                    <Card variant="outlined">
-                        {status && status.network ? <Network network={status.network} /> : null}
-                    </Card>
-                </Grid>
-                {status && status.network.p2p && status.network.p2p.address ? (
-                    <Grid item xs={12} md={12}>
-                        <Card variant="outlined">
-                            {status && status.network.p2p ? <P2P p2p={status.network.p2p} /> : null}
-                        </Card>
-                    </Grid>
-                ) : null}
+            <Grid
+                item
+                container
+                md={8}
+                spacing={2}
+                mt={2}
+                sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            >
+                {loading ? (
+                    <CircularProgress size={32} />
+                ) : (
+                    <>
+                        <Grid item xs={12} md={12}>
+                            <Card variant="outlined">
+                                <CardContent>
+                                    <Box
+                                        sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+                                    >
+                                        <Typography
+                                            sx={{ fontSize: 14, display: 'inline' }}
+                                            color="text.secondary"
+                                            gutterBottom
+                                        >
+                                            Overview
+                                        </Typography>
+                                        <Chip
+                                            color="success"
+                                            icon={status?.version ? <CheckCircleIcon /> : <CancelIcon />}
+                                            label={status?.version ? 'online' : 'offline'}
+                                        />
+                                    </Box>
+                                    <List>
+                                        <ListSubheader>
+                                            {status?.version ? 'Node v' + status.version : null}
+                                        </ListSubheader>
+                                        <ListItem>
+                                            <ListItemText
+                                                primary="Height"
+                                                secondary={status?.chain.block}
+                                                primaryTypographyProps={{ fontWeight: 600 }}
+                                            ></ListItemText>
+                                        </ListItem>
+                                        <ListItem>
+                                            <ListItemText
+                                                primary="Timestamp"
+                                                secondary={status?.chain.time}
+                                                primaryTypographyProps={{ fontWeight: 600 }}
+                                            ></ListItemText>
+                                        </ListItem>
+                                        <ListItem>
+                                            <ListItemText
+                                                primary="Devices"
+                                                secondary={status?.devices}
+                                                primaryTypographyProps={{ fontWeight: 600 }}
+                                            ></ListItemText>
+                                        </ListItem>
+                                        <ListItem>
+                                            <ListItemText
+                                                primary="Ram Usage"
+                                                secondary={status?.memory.ram}
+                                                primaryTypographyProps={{ fontWeight: 600 }}
+                                            ></ListItemText>
+                                        </ListItem>
+                                        <ListItem>
+                                            <ListItemText
+                                                primary="Disk Usage"
+                                                secondary={status?.memory.disk}
+                                                primaryTypographyProps={{ fontWeight: 600 }}
+                                            ></ListItemText>
+                                        </ListItem>
+                                        <ListItem>
+                                            <ListItemText
+                                                primary="User Data"
+                                                secondary={status?.data}
+                                                primaryTypographyProps={{ fontWeight: 600 }}
+                                            ></ListItemText>
+                                        </ListItem>
+                                    </List>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <Card variant="outlined">
+                                {status && status.memory ? <Memory memory={status.memory} /> : null}
+                            </Card>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <Card variant="outlined">
+                                {status && status.chain ? <Chain chain={status.chain} /> : null}
+                            </Card>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <Card variant="outlined">
+                                {status && status.txpow ? <TxPoW txpow={status.txpow} /> : null}
+                            </Card>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <Card variant="outlined">
+                                {status && status.network ? <Network network={status.network} /> : null}
+                            </Card>
+                        </Grid>
+                        {status && status.network.p2p && status.network.p2p.address ? (
+                            <Grid item xs={12} md={12}>
+                                <Card variant="outlined">
+                                    {status && status.network.p2p ? <P2P p2p={status.network.p2p} /> : null}
+                                </Card>
+                            </Grid>
+                        ) : null}
+                    </>
+                )}
             </Grid>
+
             <Grid item md={2}></Grid>
         </Grid>
     );
