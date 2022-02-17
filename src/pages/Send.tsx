@@ -158,27 +158,6 @@ const Send: FC = () => {
                                         id="amount"
                                         name="amount"
                                         placeholder="0.0"
-                                        onKeyUp={(e: any) => {
-                                            // console.log(e.target.value);
-                                            const valueInput = parseInt(e.target.value);
-
-                                            if (typeof valueInput === 'number') {
-                                                tokenSelection.map((t: MinimaToken) => {
-                                                    if (parseInt(t.sendable) >= valueInput) {
-                                                        console.log(`User Input amount`, valueInput);
-                                                        console.log(`Token amount available`, parseInt(t.sendable));
-                                                        // console.log(`Able to spend`);
-                                                    } else if (parseInt(t.sendable) < valueInput) {
-                                                        // const tokenName = t.token.name ? t.token.name : t.token;
-
-                                                        formik.setFieldError(
-                                                            'amount',
-                                                            'Insufficient funds, you only have ' + t.sendable
-                                                        );
-                                                    }
-                                                });
-                                            }
-                                        }}
                                         value={formik.values.amount}
                                         onChange={formik.handleChange}
                                         error={formik.touched.amount && Boolean(formik.errors.amount)}
