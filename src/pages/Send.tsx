@@ -195,7 +195,3 @@ const Send: FC = () => {
 };
 
 export default Send;
-
-const MyCustomBadge = () => {
-    return <div>My Custom Badge</div>;
-};

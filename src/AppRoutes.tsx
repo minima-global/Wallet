@@ -1,8 +1,8 @@
 import Status from './pages/Status';
 import Receive from './pages/Receive';
-import Page3 from './pages/Page3';
 import Balance from './pages/Balance';
 import Send from './pages/Send';
+import TokenCreation from './pages/TokenCreation';
 
 export interface RouteType {
     path: string;
@@ -24,7 +24,7 @@ const Routes: RouteType[] = [
     {
         path: '/page3',
         sidebarName: 'Create Token',
-        element: <Page3></Page3>,
+        element: <TokenCreation></TokenCreation>,
     },
     {
         path: '/balance',

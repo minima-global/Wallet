@@ -1,4 +1,4 @@
-import { RpcResponse, MinimaToken } from './../types/minima/index';
+import { RpcResponse, MinimaToken, CustomTokenData, TokenData, SendData } from './../types/minima/index';
 import { STATUS, BALANCE, RPCHOST, SEND, HELP, ADDRESS, TOKENCREATE } from './constants';
 import Minima from './minimanew.js';
 // call any generic minima command
@@ -8,6 +8,7 @@ import Minima from './minimanew.js';
  * set at any for now..
  */
 export const callCommand = (command: string) => {
+    console.log(`${command}`)
     return new Promise((resolve, reject) => {
         Minima.cmd(command, (data: any) => {
             if (data.status) {
@@ -19,16 +20,11 @@ export const callCommand = (command: string) => {
     });
 };
 
-export const callToken = (data: any) => () => {
+export const callToken = (data: TokenData) => () => {
+    console.log(`TokenData`, data);
     const command = `${TOKENCREATE}+name:${JSON.stringify(data.name)}+amount:${data.amount}`;
     return callCommand(command);
 };
-
-interface SendData {
-    address: string;
-    amount: string;
-    tokenid: string;
-}
 
 export const callSend = (data: SendData) => {
     const command = `${SEND}+address:${data.address}+amount:${data.amount}+tokenid:${data.tokenid}`;
@@ -43,9 +39,6 @@ export const callStatus = () => {
     return callCommand(STATUS);
 };
 
-// interface RpcBalance extends RpcResponse {
-//     tokens: MinimaToken[];
-// }
 export const callBalance: any = () => {
     return callCommand(BALANCE);
 };
