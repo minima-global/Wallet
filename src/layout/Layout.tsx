@@ -7,6 +7,8 @@ import { useLocation, useRoutes } from 'react-router-dom';
 import SideMenu from './SideMenu';
 import MenuIcon from '@mui/icons-material/Menu';
 
+import WalletIcon from '../assets/images/minimaWallet-01.png';
+
 const drawerWidth = 240;
 
 export default function Layout() {
@@ -49,7 +51,7 @@ export default function Layout() {
                 >
                     {appName}
                 </Toolbar>
-                <Toolbar>
+                <Toolbar sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
                     <IconButton
                         sx={{ display: { xs: 'block', sm: 'none' } }}
                         color="inherit"
