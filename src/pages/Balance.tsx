@@ -50,10 +50,11 @@ const Balance = () => {
 
     return (
         <>
-            <Grid container spacing={2} sx={{ marginTop: { xs: 0 } }}>
+            <Grid container spacing={2} sx={{ marginTop: 2 }}>
                 <Grid item xs={0} md={2}></Grid>
                 <Grid item xs={12} md={8}>
                     <Autocomplete
+                        sx={{ marginBottom: 4 }}
                         freeSolo
                         id="token-search"
                         onInputChange={handleInputChange}
@@ -74,8 +75,8 @@ const Balance = () => {
                     />
                     <List>
                         {filteredBalance && filteredBalance.length > 0 ? (
-                            filteredBalance?.map((item, i) => (
-                                <ListItemButton key={i} sx={{ marginBottom: 2 }}>
+                            filteredBalance?.map((item: MinimaToken, i) => (
+                                <ListItemButton key={item.tokenid} sx={{ marginBottom: 2 }}>
                                     <ListItemAvatar>
                                         <Avatar
                                             src={

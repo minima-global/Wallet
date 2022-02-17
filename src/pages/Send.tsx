@@ -88,7 +88,7 @@ const Send: FC = () => {
                         <form onSubmit={formik.handleSubmit}>
                             {tokenSelection && tokenSelection.length > 0 ? (
                                 <Select
-                                    sx={{ marginBottom: 4 }}
+                                    sx={{ marginBottom: 4, marginTop: 4 }}
                                     id="tokenid"
                                     name="tokenid"
                                     value={formik.values.tokenid}
@@ -163,6 +163,7 @@ const Send: FC = () => {
                                 }}
                             />
                             <Button
+                                sx={{ marginBottom: 4 }}
                                 disabled={formik.isSubmitting && !formik.isValid}
                                 disableElevation
                                 color="primary"

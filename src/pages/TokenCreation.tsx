@@ -136,6 +136,7 @@ const TokenCreation: FC = () => {
                                 sx={{ marginBottom: 4 }}
                             ></TextField>
                             <Button
+                                sx={{ marginBottom: 4 }}
                                 disabled={formik.isSubmitting && !formik.isValid}
                                 disableElevation
                                 color="primary"

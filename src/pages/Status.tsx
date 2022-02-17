@@ -33,7 +33,7 @@ const Status = () => {
     }, []);
 
     return (
-        <Grid container mb={2}>
+        <Grid container mb={2} mt={2}>
             <Grid item md={2}></Grid>
             <Grid item container md={8} spacing={2} mt={2}>
                 <Grid item xs={12} md={12}>

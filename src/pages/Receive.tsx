@@ -33,7 +33,7 @@ const Receive: FC = () => {
     };
 
     return (
-        <Grid container spacing={2} sx={{ marginTop: { xs: 0 } }}>
+        <Grid container spacing={2} sx={{ marginTop: 2 }}>
             <Grid item xs={0} md={2}></Grid>
             <Grid item xs={12} md={8}>
                 <Card variant="outlined">
@@ -42,9 +42,9 @@ const Receive: FC = () => {
                             textAlign: 'center',
                         }}
                     >
-                        <QRCode level="M" value={address} />
+                        <QRCode style={{ marginTop: 16 }} level="M" value={address} />
 
-                        <Box sx={{ marginTop: 2 }}>
+                        <Box sx={{ marginTop: 4 }}>
                             <Tooltip title="Wallet Address">
                                 <TextField
                                     aria-readonly
@@ -68,7 +68,7 @@ const Receive: FC = () => {
                                     value={`(${address.substring(0, 8)}...${address.substring(58, 66)})`}
                                 />
                             </Tooltip>
-                            <Typography variant="subtitle1">
+                            <Typography sx={{ marginTop: 2 }} variant="subtitle1">
                                 Use this address to receive any Minima or Minima tokens.
                             </Typography>
                         </Box>
