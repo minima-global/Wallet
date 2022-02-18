@@ -167,6 +167,20 @@ theme = createTheme(theme, {
 
                 }
             }
+        },
+        MuiListSubheader: {
+            styleOverrides: {
+                root: {
+                    backgroundColor: 'transparent'
+                }
+            }
+        },
+        MuiCard: {
+            styleOverrides: {
+                root: {
+                    backgroundColor: 'rgba(255, 255, 255, 0.5)'
+                }
+            }
         }
     },
 });
