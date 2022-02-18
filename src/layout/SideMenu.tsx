@@ -17,6 +17,8 @@ import Routes from '../AppRoutes';
 import { ReactComponent as LandscapeLogo } from './LANDSCAPE-01.svg';
 import useMinimaInit from '../minima/useMinimaInit';
 
+import WalletIcon from '../assets/images/minimaWallet-01.png';
+
 interface IProps {
     handleDrawerToggle: () => void;
 }
@@ -38,6 +40,7 @@ const SideMenu = ({ handleDrawerToggle }: IProps) => {
     return (
         <>
             <Toolbar>
+                <img src={WalletIcon} alt="walletIcon" id="walletIcon" />
                 <Typography sx={style.appName} variant="h6">
                     Wallet
                 </Typography>
@@ -83,5 +86,6 @@ export default SideMenu;
 const style = {
     appName: {
         fontWeight: '800',
+        marginLeft: 1,
     },
 };
