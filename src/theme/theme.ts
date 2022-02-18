@@ -1,6 +1,6 @@
 import ManropRegular from './Manrope-Regular.woff2';
 import FrostedBlue from './frosted-blue.jpg';
-import uiBackground from './ui-background.png';
+import uiBackground from '../assets/images/LM.jpeg';
 import { createTheme } from '@mui/material/styles';
 
 // A custom theme for this app
@@ -59,6 +59,10 @@ let theme = createTheme({
             @font-face {
                 font-family: Manrope-regular;
                 src: url(${ManropRegular}) format('woff2');
+            },
+            body {
+                background-image: url(${uiBackground});
+                background-size: cover;
             }
           `,
         },
@@ -81,7 +85,7 @@ theme = createTheme(theme, {
                 },
                 "&$error": {
                     color: 'black'
-               }
+                }
             },
             root: {
                 "&$error": {
@@ -115,9 +119,11 @@ theme = createTheme(theme, {
             styleOverrides: {
                 root: {
                     backgroundColor: theme.palette.text.primary,
+
                 },
             },
         },
+        
         MuiDrawer: {
             styleOverrides: {
                 paperAnchorLeft: {
@@ -131,24 +137,24 @@ theme = createTheme(theme, {
                     backgroundColor: 'rgba(255, 255, 255, 0.5)',
                     borderRadius: 8,
                     input: {
-                        paddingLeft: 16,                        
+                        paddingLeft: 16,
                         borderRadius: 8,
                         fontWeight: '400',
                         fontSize: '1rem',
-                        
+
                         '&::placeholder': {
                             color: '#91919D',
                             fontSize: '1rem',
                             fontWeight: '100',
-                            
+
                         },
                         '&:focus': {
                             backgroundColor: 'rgba(255, 255, 255, 0.8)'
                         },
-                        
-                        
+
+
                     },
-                    
+
                 }
             }
         },
@@ -158,7 +164,21 @@ theme = createTheme(theme, {
                     backgroundColor: 'rgba(255, 255, 255, 0.8)',
                     borderRadius: 8,
                     minHeight: 64,
-                    
+
+                }
+            }
+        },
+        MuiListSubheader: {
+            styleOverrides: {
+                root: {
+                    backgroundColor: 'transparent'
+                }
+            }
+        },
+        MuiCard: {
+            styleOverrides: {
+                root: {
+                    backgroundColor: 'rgba(255, 255, 255, 0.5)'
                 }
             }
         }
