@@ -119,13 +119,7 @@ theme = createTheme(theme, {
                 },
             },
         },
-        MuiToolbar: {
-            styleOverrides: {
-                root: {
-                    minHeight: 40
-                }
-            }
-        },
+        
         MuiDrawer: {
             styleOverrides: {
                 paperAnchorLeft: {
