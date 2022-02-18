@@ -39,18 +39,6 @@ export default function Layout() {
                     ml: { sm: `${drawerWidth}px` },
                 }}
             >
-                <Toolbar
-                    sx={{
-                        bgcolor: 'text.secondary',
-                        textAlign: 'center',
-                        flex: 1,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        fontWeight: '500',
-                    }}
-                >
-                    {appName}
-                </Toolbar>
                 <Toolbar sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
                     <IconButton
                         sx={{ display: { xs: 'block', sm: 'none' } }}

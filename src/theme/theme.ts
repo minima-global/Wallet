@@ -81,7 +81,7 @@ theme = createTheme(theme, {
                 },
                 "&$error": {
                     color: 'black'
-               }
+                }
             },
             root: {
                 "&$error": {
@@ -115,8 +115,16 @@ theme = createTheme(theme, {
             styleOverrides: {
                 root: {
                     backgroundColor: theme.palette.text.primary,
+
                 },
             },
+        },
+        MuiToolbar: {
+            styleOverrides: {
+                root: {
+                    minHeight: 40
+                }
+            }
         },
         MuiDrawer: {
             styleOverrides: {
@@ -131,24 +139,24 @@ theme = createTheme(theme, {
                     backgroundColor: 'rgba(255, 255, 255, 0.5)',
                     borderRadius: 8,
                     input: {
-                        paddingLeft: 16,                        
+                        paddingLeft: 16,
                         borderRadius: 8,
                         fontWeight: '400',
                         fontSize: '1rem',
-                        
+
                         '&::placeholder': {
                             color: '#91919D',
                             fontSize: '1rem',
                             fontWeight: '100',
-                            
+
                         },
                         '&:focus': {
                             backgroundColor: 'rgba(255, 255, 255, 0.8)'
                         },
-                        
-                        
+
+
                     },
-                    
+
                 }
             }
         },
@@ -158,7 +166,7 @@ theme = createTheme(theme, {
                     backgroundColor: 'rgba(255, 255, 255, 0.8)',
                     borderRadius: 8,
                     minHeight: 64,
-                    
+
                 }
             }
         }

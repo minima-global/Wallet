@@ -37,8 +37,11 @@ const SideMenu = ({ handleDrawerToggle }: IProps) => {
 
     return (
         <>
-            <Toolbar />
-            <Toolbar />
+            <Toolbar>
+                <Typography sx={style.appName} variant="h6">
+                    Wallet
+                </Typography>
+            </Toolbar>
             <Divider />
 
             <List>
@@ -76,3 +79,9 @@ const SideMenu = ({ handleDrawerToggle }: IProps) => {
 };
 
 export default SideMenu;
+
+const style = {
+    appName: {
+        fontWeight: '800',
+    },
+};
