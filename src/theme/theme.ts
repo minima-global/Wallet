@@ -1,6 +1,6 @@
 import ManropRegular from './Manrope-Regular.woff2';
 import FrostedBlue from './frosted-blue.jpg';
-import uiBackground from './ui-background.png';
+import uiBackground from '../assets/images/LM.jpeg';
 import { createTheme } from '@mui/material/styles';
 
 // A custom theme for this app
@@ -59,6 +59,10 @@ let theme = createTheme({
             @font-face {
                 font-family: Manrope-regular;
                 src: url(${ManropRegular}) format('woff2');
+            },
+            body {
+                background-image: url(${uiBackground});
+                background-size: cover;
             }
           `,
         },
