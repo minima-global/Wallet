@@ -37,7 +37,8 @@ const Balance = () => {
                 setFilteredBalance([]);
             });
         setLoading(false);
-    }, [filteredBalance]);
+        return () => {};
+    }, []);
 
     function handleInputChange(event: React.SyntheticEvent, value: string, reason: string) {
         if (value.length > 0) {
@@ -77,6 +78,13 @@ const Balance = () => {
                                 options={filteredBalance.map((option: MinimaToken) =>
                                     option.token.name ? option.token.name : option.token
                                 )}
+                                renderOption={(props, option) => {
+                                    return (
+                                        <li {...props} key={option + Math.random()}>
+                                            {option}
+                                        </li>
+                                    );
+                                }}
                                 renderInput={(params) => (
                                     <TextField
                                         {...params}
@@ -163,5 +171,3 @@ const Balance = () => {
 };
 
 export default Balance;
-
-const BalanceItem = () => {};

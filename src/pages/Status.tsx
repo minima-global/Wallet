@@ -183,7 +183,6 @@ interface MemoryProps {
 }
 
 const Memory: FC<MemoryProps> = (props: MemoryProps) => {
-    console.log(props.memory);
     return (
         <React.Fragment>
             <CardContent>
