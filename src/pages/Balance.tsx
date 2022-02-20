@@ -12,12 +12,14 @@ import {
     CircularProgress,
 } from '@mui/material';
 
-import { useNavigate, Outlet } from 'react-router-dom';
+import { useNavigate, Route, Routes, Outlet } from 'react-router-dom';
 import MinimaIcon from '../assets/images/minimaLogoSquare200x200.png';
 import { MinimaToken } from '../types/minima';
 
 import { useEffect, useState } from 'react';
 import { callBalance } from '../minima/rpc-commands';
+
+import TokenDetails from './TokenDetails';
 
 const Balance = () => {
     const [page, setPage] = useState<number>(1);
@@ -63,6 +65,7 @@ const Balance = () => {
 
     return (
         <>
+            <Outlet />
             <Grid container spacing={2} sx={{ marginTop: 2 }}>
                 <Grid item xs={0} md={2}></Grid>
                 <Grid item xs={12} md={8}>
@@ -103,7 +106,7 @@ const Balance = () => {
                                         <ListItemButton
                                             key={item.tokenid}
                                             sx={{ marginBottom: 2 }}
-                                            onClick={() => navigate('0x00')}
+                                            onClick={() => navigate('/tokendetails')}
                                         >
                                             <ListItemAvatar>
                                                 <Avatar
@@ -171,6 +174,10 @@ const Balance = () => {
                 </Grid>
                 <Grid item xs={0} md={2}></Grid>
             </Grid>
+
+            {/* <Routes>
+                <Route path=":id" element={<TokenDetails />}></Route>
+            </Routes> */}
         </>
     );
 };

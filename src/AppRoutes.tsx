@@ -1,6 +1,6 @@
 import { IconButton, Toolbar, AppBar, Grid, Drawer, Box, Container, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
 
 import Balance from './pages/Balance';
@@ -81,13 +81,13 @@ const AppNavigation = () => {
                 <Grid item xs={12}>
                     <Container>
                         <Routes>
+                            <Route path="/" element={<Navigate to="/balance" />} />
                             <Route path="/balance" element={<Balance />} />
-                            <Route path="/tokendetails" element={<TokenDetails />} />
+                            <Route path="/tokendetails" element={<TokenDetails />}></Route>
                             <Route path="/send" element={<Send />} />
                             <Route path="/receive" element={<Receive />} />
                             <Route path="/status" element={<Status />} />
                             <Route path="/tokencreate" element={<TokenCreation />} />
-                            <Route path="*" element={<Balance />} />
                         </Routes>
                     </Container>
                 </Grid>
