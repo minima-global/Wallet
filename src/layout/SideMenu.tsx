@@ -36,7 +36,13 @@ const SideMenu = ({ handleDrawerToggle }: IProps) => {
     const routerLocation = useLocation();
     const connected = useMinimaInit();
     const activeRoute = (routeName: string) => {
-        return routerLocation.pathname === routeName || routeName === '' ? true : false;
+        return routerLocation.pathname === routeName ? true : false;
+    };
+
+    //TODO CLOSE MENU ON NAVIGATION
+    const handleDrawerOnNavigation = (path: string) => {
+        navigate(path);
+        handleDrawerToggle();
     };
 
     const DrawerItems: DrawerItem[] = [
@@ -84,7 +90,12 @@ const SideMenu = ({ handleDrawerToggle }: IProps) => {
                 <List>
                     {DrawerItems.map((route: DrawerItem, i) => {
                         return (
-                            <ListItemButton onClick={route.onClick} key={i}>
+                            <ListItemButton
+                                onClick={() => {
+                                    handleDrawerOnNavigation(route.pathname);
+                                }}
+                                key={i}
+                            >
                                 <ListItemIcon>
                                     <Radio sx={{ p: 0 }} checked={activeRoute(route.pathname)} />
                                 </ListItemIcon>

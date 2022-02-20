@@ -12,15 +12,16 @@ import {
     CircularProgress,
 } from '@mui/material';
 
-import useBalance from '../minima/useBalance';
+import { useNavigate, Outlet } from 'react-router-dom';
 import MinimaIcon from '../assets/images/minimaLogoSquare200x200.png';
-import { MinimaToken, RpcResponse } from '../types/minima';
+import { MinimaToken } from '../types/minima';
 
 import { useEffect, useState } from 'react';
 import { callBalance } from '../minima/rpc-commands';
 
 const Balance = () => {
     const [page, setPage] = useState<number>(1);
+    const navigate = useNavigate();
     const [balance, setBalance] = useState<MinimaToken[]>([]);
     const [filteredBalance, setFilteredBalance] = useState<MinimaToken[]>([]);
     const [loading, setLoading] = useState(true);
@@ -99,7 +100,11 @@ const Balance = () => {
                             <List>
                                 {filteredBalance && filteredBalance.length > 0 ? (
                                     filteredBalance?.map((item: MinimaToken, i) => (
-                                        <ListItemButton key={item.tokenid} sx={{ marginBottom: 2 }}>
+                                        <ListItemButton
+                                            key={item.tokenid}
+                                            sx={{ marginBottom: 2 }}
+                                            onClick={() => navigate('0x00')}
+                                        >
                                             <ListItemAvatar>
                                                 <Avatar
                                                     src={

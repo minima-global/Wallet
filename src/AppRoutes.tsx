@@ -21,7 +21,7 @@ export interface RouteType {
 
 const AppNavigation = () => {
     const [open, setOpen] = useState(false);
-    const [pageTitle, setPageTitle] = useState('PageName');
+    const [pageTitle, setPageTitle] = useState('Balance');
     const location = useLocation();
     const handleDrawerToggle = () => {
         setOpen((op) => !op);
@@ -81,9 +81,8 @@ const AppNavigation = () => {
                 <Grid item xs={12}>
                     <Container>
                         <Routes>
-                            <Route path="/balance" element={<Balance />}>
-                                <Route path=":tokenid" element={<TokenDetails />} />
-                            </Route>
+                            <Route path="/balance" element={<Balance />} />
+                            <Route path="/tokendetails" element={<TokenDetails />} />
                             <Route path="/send" element={<Send />} />
                             <Route path="/receive" element={<Receive />} />
                             <Route path="/status" element={<Status />} />

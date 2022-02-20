@@ -13,9 +13,9 @@ import { BrowserRouter, HashRouter } from 'react-router-dom';
 const Main = () => {
     return (
         <React.StrictMode>
-            <HashRouter>
+            <BrowserRouter>
                 <App />
-            </HashRouter>
+            </BrowserRouter>
         </React.StrictMode>
     );
 };
