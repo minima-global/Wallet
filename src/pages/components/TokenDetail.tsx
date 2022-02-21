@@ -73,8 +73,7 @@ const TokenDetail = () => {
         // console.log('Run useEffect');
         callBalance()
             .then((data: any) => {
-                console.log('Run callBalance');
-
+                // console.log('Run callBalance');
                 data.response.forEach((b: MinimaToken) => {
                     // console.log(`Running through balance`);
                     if (b.tokenid === tokenid) {
