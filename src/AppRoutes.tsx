@@ -83,10 +83,8 @@ const AppNavigation = () => {
                     <Container>
                         <Routes>
                             <Route path="/" element={<Navigate replace to="/balance" />} />
-                            <Route path="/balance" element={<Balance />}></Route>
-                            <Route path="/tokendetails" element={<TokenDetails />}>
-                                <Route path=":tokenid" element={<TokenDetail />}></Route>
-                            </Route>
+                            <Route path="/balance" element={<Balance />} />
+                            <Route path="balance/:tokenid" element={<TokenDetail />} />
                             <Route path="/send" element={<Send />} />
                             <Route path="/receive" element={<Receive />} />
                             <Route path="/status" element={<Status />} />

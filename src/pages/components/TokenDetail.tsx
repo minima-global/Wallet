@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { callBalance } from '../../minima/rpc-commands';
 import { MinimaToken } from '../../types/minima';
 import { useLocation } from 'react-router-dom';
-import { Card, CardContent, Avatar, Typography } from '@mui/material';
+import { Card, CardContent, Avatar, Typography, Grid } from '@mui/material';
 
 import MinimaIcon from '../../assets/images/minimaLogoSquare200x200.png';
 
@@ -24,7 +24,6 @@ const TokenDetail = () => {
     console.log(`tokenid`, tokenid);
 
     useEffect(() => {
-        console.log('DETAILS useEffect called', tokenid);
         console.log('TokenLoaded', token);
         callBalance()
             .then((data: any) => {
@@ -45,28 +44,39 @@ const TokenDetail = () => {
     }, [tokenid]);
 
     return (
-        <Card variant="outlined">
-            <CardContent
-                sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}
-            >
-                <Avatar
-                    sx={{ height: dimensions, width: dimensions }}
-                    onClick={handleAvatarDimensions}
-                    src={
-                        token?.tokenid === '0x00'
-                            ? MinimaIcon
-                            : !token?.token.icon || token?.token.icon.length === 0
-                            ? `https://robohash.org/${token?.tokenid}`
-                            : token?.token.icon && token?.token.icon
-                            ? token.token.icon
-                            : ''
-                    }
-                    alt={token?.token.name ? token?.token.name : token?.token}
-                />
+        <Grid container spacing={2} sx={{ marginTop: 2 }}>
+            <Grid item xs={0} md={2}></Grid>
+            <Grid item xs={12} md={8}>
+                <Card variant="outlined">
+                    <CardContent
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            flexDirection: 'column',
+                        }}
+                    >
+                        <Avatar
+                            sx={{ height: dimensions, width: dimensions }}
+                            onClick={handleAvatarDimensions}
+                            src={
+                                token?.tokenid === '0x00'
+                                    ? MinimaIcon
+                                    : !token?.token.icon || token?.token.icon.length === 0
+                                    ? `https://robohash.org/${token?.tokenid}`
+                                    : token?.token.icon && token?.token.icon
+                                    ? token.token.icon
+                                    : ''
+                            }
+                            alt={token?.token.name ? token?.token.name : token?.token}
+                        />
 
-                <Typography variant="h6"> {token?.token.name ? token?.token.name : token?.token}</Typography>
-            </CardContent>
-        </Card>
+                        <Typography variant="h6"> {token?.token.name ? token?.token.name : token?.token}</Typography>
+                    </CardContent>
+                </Card>
+            </Grid>
+            <Grid item xs={0} md={2}></Grid>
+        </Grid>
     );
 };
 export default TokenDetail;
