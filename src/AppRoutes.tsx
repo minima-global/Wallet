@@ -1,14 +1,15 @@
 import { IconButton, Toolbar, AppBar, Grid, Drawer, Box, Container, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
+import { Routes, Route, useLocation, Navigate, useNavigate } from 'react-router-dom';
+
 import MenuIcon from '@mui/icons-material/Menu';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import Balance from './pages/Balance';
 import Send from './pages/Send';
 import Status from './pages/Status';
 import Receive from './pages/Receive';
 import TokenCreation from './pages/TokenCreation';
-import TokenDetails from './pages/TokenDetails';
 import TokenDetail from './pages/components/TokenDetail';
 
 import { DRAWERWIDTH } from './shared/constants';
@@ -23,7 +24,11 @@ export interface RouteType {
 const AppNavigation = () => {
     const [open, setOpen] = useState(false);
     const [pageTitle, setPageTitle] = useState('Balance');
+
+    // Back Button
+    const [onDetail, setOnDetail] = useState(false);
     const location = useLocation();
+    const navigate = useNavigate();
     const handleDrawerToggle = () => {
         setOpen((op) => !op);
     };
@@ -53,6 +58,12 @@ const AppNavigation = () => {
 
     useEffect(() => {
         getPageTitle();
+        if (location.pathname.substring(0, 9) === '/balance/') {
+            // console.log('Token Detail page');
+            setOnDetail(true);
+        } else {
+            setOnDetail(false);
+        }
     }, [location]);
 
     const getPageTitle = () => {
@@ -67,6 +78,15 @@ const AppNavigation = () => {
         <>
             <AppBar position="static" sx={appwidth}>
                 <Toolbar sx={start}>
+                    {onDetail ? (
+                        <IconButton
+                            onClick={() => {
+                                navigate(-1);
+                            }}
+                        >
+                            <ArrowBackIcon sx={{ color: '#fff' }} />
+                        </IconButton>
+                    ) : null}
                     <IconButton
                         sx={{ display: { xs: 'block', sm: 'none' } }}
                         color="inherit"
