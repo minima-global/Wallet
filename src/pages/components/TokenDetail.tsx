@@ -162,7 +162,7 @@ const TokenDetail = () => {
                                             <Typography variant="h2" sx={{ pL: 2 }}>
                                                 Token ID
                                             </Typography>
-                                            <ListItem sx={copyRow}>
+                                            <Box sx={[copyRow, { width: '100%' }]}>
                                                 <ListItemText
                                                     sx={{
                                                         width: '100%',
@@ -198,7 +198,7 @@ const TokenDetail = () => {
                                                         )}
                                                     </ListItemIcon>
                                                 </ListItemText>
-                                            </ListItem>
+                                            </Box>
                                         </ListItem>
                                     </List>
                                 </CardContent>
