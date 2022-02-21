@@ -79,6 +79,16 @@ const AppNavigation = () => {
         <>
             <AppBar position="static" sx={appwidth}>
                 <Toolbar sx={start}>
+                    {onDetail ? null : (
+                        <IconButton
+                            sx={{ display: { xs: 'block', sm: 'none' } }}
+                            color="inherit"
+                            aria-label="menu"
+                            onClick={handleDrawerToggle}
+                        >
+                            <MenuIcon />
+                        </IconButton>
+                    )}
                     {onDetail ? (
                         <IconButton
                             onClick={() => {
@@ -88,14 +98,6 @@ const AppNavigation = () => {
                             <ArrowBackIcon sx={{ color: '#fff' }} />
                         </IconButton>
                     ) : null}
-                    <IconButton
-                        sx={{ display: { xs: 'block', sm: 'none' } }}
-                        color="inherit"
-                        aria-label="menu"
-                        onClick={handleDrawerToggle}
-                    >
-                        <MenuIcon />
-                    </IconButton>
                     <Typography variant="h6">{pageTitle}</Typography>
                 </Toolbar>
             </AppBar>
