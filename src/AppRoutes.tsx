@@ -9,6 +9,7 @@ import Status from './pages/Status';
 import Receive from './pages/Receive';
 import TokenCreation from './pages/TokenCreation';
 import TokenDetails from './pages/TokenDetails';
+import TokenDetail from './pages/components/TokenDetail';
 
 import { DRAWERWIDTH } from './shared/constants';
 import SideMenu from './layout/SideMenu';
@@ -81,9 +82,11 @@ const AppNavigation = () => {
                 <Grid item xs={12}>
                     <Container>
                         <Routes>
-                            <Route path="/" element={<Navigate to="/balance" />} />
-                            <Route path="/balance" element={<Balance />} />
-                            <Route path="/tokendetails" element={<TokenDetails />}></Route>
+                            <Route path="/" element={<Navigate replace to="/balance" />} />
+                            <Route path="/balance" element={<Balance />}></Route>
+                            <Route path="/tokendetails" element={<TokenDetails />}>
+                                <Route path=":tokenid" element={<TokenDetail />}></Route>
+                            </Route>
                             <Route path="/send" element={<Send />} />
                             <Route path="/receive" element={<Receive />} />
                             <Route path="/status" element={<Status />} />
