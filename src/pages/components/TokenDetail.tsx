@@ -24,11 +24,13 @@ const TokenDetail = () => {
     console.log(`tokenid`, tokenid);
 
     useEffect(() => {
-        console.log('TokenLoaded', token);
+        console.log('Run useEffect');
         callBalance()
             .then((data: any) => {
-                setBalance(data.response);
-                balance.forEach((b: MinimaToken) => {
+                console.log('Run callBalance');
+
+                data.response.forEach((b: MinimaToken) => {
+                    console.log(`Running through balance`);
                     if (b.tokenid === tokenid) {
                         console.log(b);
                         setToken(b);
@@ -41,7 +43,7 @@ const TokenDetail = () => {
             });
         // setLoading(false);
         return () => {};
-    }, [tokenid]);
+    }, []);
 
     return (
         <Grid container spacing={2} sx={{ marginTop: 2 }}>
