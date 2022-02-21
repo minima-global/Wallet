@@ -131,6 +131,9 @@ const Balance = () => {
                                                             overFlowX: 'hidden',
                                                             overflow: 'hidden',
                                                             lineHeight: 1.3,
+                                                            display: '-webkit-box',
+                                                            WebkitBoxOrient: 'vertical',
+                                                            WebkitLineClamp: 1,
                                                         }}
                                                     >
                                                         {item.token.name ? item.token.name : item.token}
