@@ -15,6 +15,7 @@ import {
     ListItem,
     ListItemText,
     ListItemIcon,
+    Fade,
 } from '@mui/material';
 
 import MinimaIcon from '../../assets/images/minimaLogoSquare200x200.png';
@@ -101,172 +102,181 @@ const TokenDetail = () => {
                 ) : !loading && token !== undefined ? (
                     <>
                         <Grid item xs={12}>
-                            <Card variant="outlined">
-                                <CardContent
-                                    sx={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        flexDirection: 'column',
-                                    }}
-                                >
-                                    <Avatar
-                                        sx={{ height: dimensions, width: dimensions, margin: 3 }}
-                                        onClick={handleAvatarDimensions}
-                                        src={
-                                            token?.tokenid === '0x00'
-                                                ? MinimaIcon
-                                                : !token?.token.icon || token?.token.icon.length === 0
-                                                ? `https://robohash.org/${token?.tokenid}`
-                                                : token?.token.icon && token?.token.icon
-                                                ? token.token.icon
-                                                : ''
-                                        }
-                                        alt={token?.token.name ? token?.token.name : token?.token}
-                                    />
-
-                                    <Typography variant="h2" sx={{ textAlign: 'center' }}>
-                                        {token?.token.name ? token?.token.name : token?.token}
-                                    </Typography>
-                                    <Divider sx={{ margin: 1 }} />
-                                    <Typography
-                                        variant="body1"
+                            <Fade in={true}>
+                                <Card variant="outlined">
+                                    <CardContent
                                         sx={{
-                                            letterSpacing: 1,
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            flexDirection: 'column',
                                         }}
                                     >
-                                        {token?.token.description ? token?.token.description : ''}
-                                    </Typography>
-                                    {/* <Button variant="text">Show More</Button> */}
-                                </CardContent>
-                            </Card>
+                                        <Avatar
+                                            sx={{ height: dimensions, width: dimensions, margin: 3 }}
+                                            onClick={handleAvatarDimensions}
+                                            src={
+                                                token?.tokenid === '0x00'
+                                                    ? MinimaIcon
+                                                    : !token?.token.icon || token?.token.icon.length === 0
+                                                    ? `https://robohash.org/${token?.tokenid}`
+                                                    : token?.token.icon && token?.token.icon
+                                                    ? token.token.icon
+                                                    : ''
+                                            }
+                                            alt={token?.token.name ? token?.token.name : token?.token}
+                                        />
+
+                                        <Typography variant="h2" sx={{ textAlign: 'center' }}>
+                                            {token?.token.name ? token?.token.name : token?.token}
+                                        </Typography>
+                                        <Divider sx={{ margin: 1 }} />
+                                        <Typography
+                                            variant="body1"
+                                            sx={{
+                                                letterSpacing: 1,
+                                            }}
+                                        >
+                                            {token?.token.description ? token?.token.description : ''}
+                                        </Typography>
+                                        {/* <Button variant="text">Show More</Button> */}
+                                    </CardContent>
+                                </Card>
+                            </Fade>
                         </Grid>
 
                         <Grid item xs={12}>
-                            <Card variant="outlined">
-                                <CardContent>
-                                    <List>
-                                        <ListItem sx={start}>
-                                            <Typography variant="h2" sx={{ pL: 2 }}>
-                                                Name
-                                            </Typography>
-                                            <ListItemText
-                                                sx={{ width: '100%' }}
-                                                disableTypography
-                                                secondary={
-                                                    <Typography variant="subtitle1" sx={valueStyle}>
-                                                        {token?.token.name ? token?.token.name : token?.token}
-                                                    </Typography>
-                                                }
-                                            ></ListItemText>
-                                        </ListItem>
-                                        <ListItem sx={start}>
-                                            <Typography variant="h2" sx={{ pL: 2 }}>
-                                                Total Minted
-                                            </Typography>
-                                            <ListItemText
-                                                sx={{ width: '100%' }}
-                                                disableTypography
-                                                secondary={
-                                                    <Typography variant="subtitle1" sx={valueStyle}>
-                                                        {token?.total ? token?.total : '0'}
-                                                    </Typography>
-                                                }
-                                            ></ListItemText>
-                                        </ListItem>
-                                        <ListItem sx={start}>
-                                            <Typography variant="h2" sx={{ pL: 2 }}>
-                                                Token ID
-                                            </Typography>
-                                            <Box sx={[copyRow, { width: '100%' }]}>
+                            <Fade in={true}>
+                                <Card variant="outlined">
+                                    <CardContent>
+                                        <List>
+                                            <ListItem sx={start}>
+                                                <Typography variant="h2" sx={{ pL: 2 }}>
+                                                    Name
+                                                </Typography>
                                                 <ListItemText
-                                                    sx={{
-                                                        display: 'flex',
-                                                        flex: '0 0 100%',
-                                                        flexDirection: 'row-reverse',
-                                                        width: '100%',
-                                                    }}
+                                                    sx={{ width: '100%' }}
                                                     disableTypography
                                                     secondary={
-                                                        <Typography
-                                                            variant="subtitle1"
-                                                            sx={[
-                                                                valueStyle,
-                                                                { borderTopRightRadius: 0, borderBottomRightRadius: 0 },
-                                                            ]}
-                                                        >
-                                                            {token?.tokenid ? token?.tokenid : '0x00'}
+                                                        <Typography variant="subtitle1" sx={valueStyle}>
+                                                            {token?.token.name ? token?.token.name : token?.token}
                                                         </Typography>
                                                     }
-                                                >
-                                                    <ListItemIcon
-                                                        onClick={() => {
-                                                            handleCopyBtn(token?.tokenid ? token?.tokenid : '');
+                                                ></ListItemText>
+                                            </ListItem>
+                                            <ListItem sx={start}>
+                                                <Typography variant="h2" sx={{ pL: 2 }}>
+                                                    Total Minted
+                                                </Typography>
+                                                <ListItemText
+                                                    sx={{ width: '100%' }}
+                                                    disableTypography
+                                                    secondary={
+                                                        <Typography variant="subtitle1" sx={valueStyle}>
+                                                            {token?.total ? token?.total : '0'}
+                                                        </Typography>
+                                                    }
+                                                ></ListItemText>
+                                            </ListItem>
+                                            <ListItem sx={start}>
+                                                <Typography variant="h2" sx={{ pL: 2 }}>
+                                                    Token ID
+                                                </Typography>
+                                                <Box sx={[copyRow, { width: '100%' }]}>
+                                                    <ListItemText
+                                                        sx={{
+                                                            display: 'flex',
+                                                            flex: '0 0 100%',
+                                                            flexDirection: 'row-reverse',
+                                                            width: '100%',
                                                         }}
-                                                        sx={[copyBtn, { backgroundColor: copy ? '#00B74A' : null }]}
+                                                        disableTypography
+                                                        secondary={
+                                                            <Typography
+                                                                variant="subtitle1"
+                                                                sx={[
+                                                                    valueStyle,
+                                                                    {
+                                                                        borderTopRightRadius: 0,
+                                                                        borderBottomRightRadius: 0,
+                                                                    },
+                                                                ]}
+                                                            >
+                                                                {token?.tokenid ? token?.tokenid : '0x00'}
+                                                            </Typography>
+                                                        }
                                                     >
-                                                        {!copy ? (
-                                                            <ContentCopyIcon sx={{ color: '#fff' }} />
-                                                        ) : (
-                                                            <FileCopyIcon sx={{ color: '#fff' }} />
-                                                        )}
-                                                    </ListItemIcon>
-                                                </ListItemText>
-                                            </Box>
-                                        </ListItem>
-                                    </List>
-                                </CardContent>
-                            </Card>
+                                                        <ListItemIcon
+                                                            onClick={() => {
+                                                                handleCopyBtn(token?.tokenid ? token?.tokenid : '');
+                                                            }}
+                                                            sx={[copyBtn, { backgroundColor: copy ? '#00B74A' : null }]}
+                                                        >
+                                                            {!copy ? (
+                                                                <ContentCopyIcon sx={{ color: '#fff' }} />
+                                                            ) : (
+                                                                <FileCopyIcon sx={{ color: '#fff' }} />
+                                                            )}
+                                                        </ListItemIcon>
+                                                    </ListItemText>
+                                                </Box>
+                                            </ListItem>
+                                        </List>
+                                    </CardContent>
+                                </Card>
+                            </Fade>
                         </Grid>
 
                         <Grid item xs={12}>
-                            <Card variant="outlined">
-                                <CardContent>
-                                    <List>
-                                        <ListItem sx={start}>
-                                            <Typography variant="h2" sx={{ pL: 2 }}>
-                                                Confirmed
-                                            </Typography>
-                                            <ListItemText
-                                                sx={{ width: '100%' }}
-                                                disableTypography
-                                                secondary={
-                                                    <Typography variant="subtitle1" sx={valueStyle}>
-                                                        {token?.confirmed ? token?.confirmed : 0}
-                                                    </Typography>
-                                                }
-                                            ></ListItemText>
-                                        </ListItem>
-                                        <ListItem sx={start}>
-                                            <Typography variant="h2" sx={{ pL: 2 }}>
-                                                Unconfirmed
-                                            </Typography>
-                                            <ListItemText
-                                                sx={{ width: '100%' }}
-                                                disableTypography
-                                                secondary={
-                                                    <Typography variant="subtitle1" sx={valueStyle}>
-                                                        {token?.unconfirmed ? token?.unconfirmed : '0'}
-                                                    </Typography>
-                                                }
-                                            ></ListItemText>
-                                        </ListItem>
-                                        <ListItem sx={start}>
-                                            <Typography variant="h2" sx={{ pL: 2 }}>
-                                                Sendable
-                                            </Typography>
-                                            <ListItemText
-                                                sx={{ width: '100%' }}
-                                                disableTypography
-                                                secondary={
-                                                    <Typography variant="subtitle1" sx={valueStyle}>
-                                                        {token?.sendable ? token?.sendable : '0'}
-                                                    </Typography>
-                                                }
-                                            ></ListItemText>
-                                        </ListItem>
-                                    </List>
-                                </CardContent>
-                            </Card>
+                            <Fade in={true}>
+                                <Card variant="outlined">
+                                    <CardContent>
+                                        <List>
+                                            <ListItem sx={start}>
+                                                <Typography variant="h2" sx={{ pL: 2 }}>
+                                                    Confirmed
+                                                </Typography>
+                                                <ListItemText
+                                                    sx={{ width: '100%' }}
+                                                    disableTypography
+                                                    secondary={
+                                                        <Typography variant="subtitle1" sx={valueStyle}>
+                                                            {token?.confirmed ? token?.confirmed : 0}
+                                                        </Typography>
+                                                    }
+                                                ></ListItemText>
+                                            </ListItem>
+                                            <ListItem sx={start}>
+                                                <Typography variant="h2" sx={{ pL: 2 }}>
+                                                    Unconfirmed
+                                                </Typography>
+                                                <ListItemText
+                                                    sx={{ width: '100%' }}
+                                                    disableTypography
+                                                    secondary={
+                                                        <Typography variant="subtitle1" sx={valueStyle}>
+                                                            {token?.unconfirmed ? token?.unconfirmed : '0'}
+                                                        </Typography>
+                                                    }
+                                                ></ListItemText>
+                                            </ListItem>
+                                            <ListItem sx={start}>
+                                                <Typography variant="h2" sx={{ pL: 2 }}>
+                                                    Sendable
+                                                </Typography>
+                                                <ListItemText
+                                                    sx={{ width: '100%' }}
+                                                    disableTypography
+                                                    secondary={
+                                                        <Typography variant="subtitle1" sx={valueStyle}>
+                                                            {token?.sendable ? token?.sendable : '0'}
+                                                        </Typography>
+                                                    }
+                                                ></ListItemText>
+                                            </ListItem>
+                                        </List>
+                                    </CardContent>
+                                </Card>
+                            </Fade>
                         </Grid>
                     </>
                 ) : (
