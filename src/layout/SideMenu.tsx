@@ -10,15 +10,22 @@ import {
     Radio,
     Grid,
     Chip,
+    ListItemButton,
 } from '@mui/material';
-import { useNavigate, useLocation } from 'react-router-dom';
-import Routes from '../AppRoutes';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
+// import Routes from '../AppRoutes';
 // import useBlockNumber from '../minima/useBlockNumber';
-import { ReactComponent as LandscapeLogo } from './LANDSCAPE-01.svg';
+import { ReactComponent as LandscapeLogo } from '../assets/images/LANDSCAPE-01.svg';
 import useMinimaInit from '../minima/useMinimaInit';
 
 import WalletIcon from '../assets/images/minimaWallet-01.png';
 import LensIcon from '@mui/icons-material/Lens';
+
+interface DrawerItem {
+    pathname: string;
+    name: string;
+    onClick?: () => void;
+}
 
 interface IProps {
     handleDrawerToggle: () => void;
@@ -27,20 +34,51 @@ interface IProps {
 const SideMenu = ({ handleDrawerToggle }: IProps) => {
     const navigate = useNavigate();
     const routerLocation = useLocation();
-    // const blockNumber = useBlockNumber();
     const connected = useMinimaInit();
-    const activeRoute = (routeName: any) => {
+    const activeRoute = (routeName: string) => {
         return routerLocation.pathname === routeName ? true : false;
     };
 
-    const onMenuItemClicked = (path: string) => () => {
+    //TODO CLOSE MENU ON NAVIGATION
+    const handleDrawerOnNavigation = (path: string) => {
         navigate(path);
         handleDrawerToggle();
     };
 
+    const DrawerItems: DrawerItem[] = [
+        {
+            pathname: '/balance',
+            name: 'Balance',
+            onClick: () => navigate('/balance'),
+        },
+        {
+            pathname: '/send',
+            name: 'Send',
+            onClick: () => navigate('/send'),
+        },
+        {
+            pathname: '/receive',
+            name: 'Receive',
+            onClick: () => navigate('/receive'),
+        },
+        {
+            pathname: '/status',
+            name: 'Status',
+            onClick: () => navigate('/status'),
+        },
+        {
+            pathname: '/tokencreate',
+            name: 'Mint Token',
+            onClick: () => navigate('/tokencreate'),
+        },
+    ];
+
     return (
-        <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '95vh' }}>
-            <Box>
+        <Grid
+            container
+            sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '95vh' }}
+        >
+            <Grid item>
                 <Toolbar>
                     <img src={WalletIcon} alt="walletIcon" id="walletIcon" />
                     <Typography sx={style.appName} variant="h6">
@@ -50,22 +88,27 @@ const SideMenu = ({ handleDrawerToggle }: IProps) => {
                 <Divider />
 
                 <List>
-                    {Routes.map((route, i) => {
+                    {DrawerItems.map((route: DrawerItem, i) => {
                         return (
-                            <ListItem button onClick={onMenuItemClicked(route.path)} key={i}>
+                            <ListItemButton
+                                onClick={() => {
+                                    handleDrawerOnNavigation(route.pathname);
+                                }}
+                                key={i}
+                            >
                                 <ListItemIcon>
-                                    <Radio sx={{ p: 0 }} checked={activeRoute(route.path)} />
+                                    <Radio sx={{ p: 0 }} checked={activeRoute(route.pathname)} />
                                 </ListItemIcon>
 
-                                <ListItemText primary={route.sidebarName} />
-                            </ListItem>
+                                <ListItemText primary={route.name}></ListItemText>
+                            </ListItemButton>
                         );
                     })}
                 </List>
 
                 <Divider />
-            </Box>
-            <Box>
+            </Grid>
+            <Grid item>
                 <Box sx={{ display: 'flex', margin: 1 }}>
                     <Chip
                         variant="outlined"
@@ -79,9 +122,6 @@ const SideMenu = ({ handleDrawerToggle }: IProps) => {
                         label={connected ? 'Connected' : 'Offline'}
                     />
                 </Box>
-                {/* <Button variant="contained" sx={{ ml: 2, mr: 2, mt: 4 }}>
-                Urgent CTA
-            </Button> */}
 
                 <Grid container sx={{ pl: 2, pr: 2, mt: 4 }} alignItems="flex-end">
                     <Grid item xs={4}>
@@ -91,8 +131,8 @@ const SideMenu = ({ handleDrawerToggle }: IProps) => {
                         <LandscapeLogo></LandscapeLogo>
                     </Grid>
                 </Grid>
-            </Box>
-        </Box>
+            </Grid>
+        </Grid>
     );
 };
 
