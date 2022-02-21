@@ -105,7 +105,7 @@ const Balance = () => {
                                         <ListItemButton
                                             key={item.tokenid}
                                             sx={{ marginBottom: 2 }}
-                                            onClick={() => navigate('/tokendetails')}
+                                            onClick={() => navigate(`${item.tokenid}`)}
                                         >
                                             <ListItemAvatar>
                                                 <Avatar
