@@ -44,14 +44,29 @@ const TokenDetail = () => {
         }
     };
 
-    const handleCopyBtn = () => {
-        setCopy(true);
-        setTimeout(() => {
-            setCopy(false);
-        }, 1000);
+    const handleCopyBtn = (text: string) => {
+        copyTextToClipboard(text)
+            .then(() => {
+                // If successful, update the isCopied state value
+                setCopy(true);
+
+                setTimeout(() => {
+                    setCopy(false);
+                }, 1000);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     };
 
-    console.log(`tokenid`, tokenid);
+    async function copyTextToClipboard(text: string) {
+        if ('clipboard' in navigator) {
+            return await navigator.clipboard.writeText(text);
+        } else {
+            alert('error');
+            return document.execCommand('copy', true, text);
+        }
+    }
 
     useEffect(() => {
         console.log('Run useEffect');
@@ -78,7 +93,7 @@ const TokenDetail = () => {
     }, []);
 
     return (
-        <Grid container spacing={2} sx={{ marginTop: 2 }}>
+        <Grid container spacing={2} sx={{ marginTop: 2, marginBottom: 2 }}>
             <Grid item xs={0} md={2}></Grid>
             <Grid item xs={12} md={8} container spacing={2}>
                 {loading ? (
@@ -165,9 +180,10 @@ const TokenDetail = () => {
                                             <Box sx={[copyRow, { width: '100%' }]}>
                                                 <ListItemText
                                                     sx={{
-                                                        width: '100%',
                                                         display: 'flex',
+                                                        flex: '0 0 100%',
                                                         flexDirection: 'row-reverse',
+                                                        width: '100%',
                                                     }}
                                                     disableTypography
                                                     secondary={
@@ -184,10 +200,7 @@ const TokenDetail = () => {
                                                 >
                                                     <ListItemIcon
                                                         onClick={() => {
-                                                            setCopy(true);
-                                                            setTimeout(() => {
-                                                                setCopy(false);
-                                                            }, 1000);
+                                                            handleCopyBtn(token?.tokenid ? token?.tokenid : '');
                                                         }}
                                                         sx={[copyBtn, { backgroundColor: copy ? '#00B74A' : null }]}
                                                     >
@@ -199,6 +212,57 @@ const TokenDetail = () => {
                                                     </ListItemIcon>
                                                 </ListItemText>
                                             </Box>
+                                        </ListItem>
+                                    </List>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+
+                        <Grid item xs={12}>
+                            <Card variant="outlined">
+                                <CardContent>
+                                    <List>
+                                        <ListItem sx={start}>
+                                            <Typography variant="h2" sx={{ pL: 2 }}>
+                                                Confirmed
+                                            </Typography>
+                                            <ListItemText
+                                                sx={{ width: '100%' }}
+                                                disableTypography
+                                                secondary={
+                                                    <Typography variant="subtitle1" sx={valueStyle}>
+                                                        {token?.confirmed ? token?.confirmed : 0}
+                                                    </Typography>
+                                                }
+                                            ></ListItemText>
+                                        </ListItem>
+                                        <ListItem sx={start}>
+                                            <Typography variant="h2" sx={{ pL: 2 }}>
+                                                Unconfirmed
+                                            </Typography>
+                                            <ListItemText
+                                                sx={{ width: '100%' }}
+                                                disableTypography
+                                                secondary={
+                                                    <Typography variant="subtitle1" sx={valueStyle}>
+                                                        {token?.unconfirmed ? token?.unconfirmed : '0'}
+                                                    </Typography>
+                                                }
+                                            ></ListItemText>
+                                        </ListItem>
+                                        <ListItem sx={start}>
+                                            <Typography variant="h2" sx={{ pL: 2 }}>
+                                                Sendable
+                                            </Typography>
+                                            <ListItemText
+                                                sx={{ width: '100%' }}
+                                                disableTypography
+                                                secondary={
+                                                    <Typography variant="subtitle1" sx={valueStyle}>
+                                                        {token?.sendable ? token?.sendable : '0'}
+                                                    </Typography>
+                                                }
+                                            ></ListItemText>
                                         </ListItem>
                                     </List>
                                 </CardContent>
@@ -233,6 +297,7 @@ const valueStyle = {
     padding: 2,
     borderRadius: 1,
     overflowX: 'hidden',
+    width: '100%',
 };
 const start = {
     flexDirection: 'column',
