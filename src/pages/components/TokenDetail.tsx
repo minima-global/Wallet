@@ -21,6 +21,7 @@ import MinimaIcon from '../../assets/images/minimaLogoSquare200x200.png';
 
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
+import ThumbDownOffAltIcon from '@mui/icons-material/ThumbDownOffAlt';
 
 const TokenDetail = () => {
     const { tokenid } = useParams();
@@ -69,15 +70,15 @@ const TokenDetail = () => {
     }
 
     useEffect(() => {
-        console.log('Run useEffect');
+        // console.log('Run useEffect');
         callBalance()
             .then((data: any) => {
                 console.log('Run callBalance');
 
                 data.response.forEach((b: MinimaToken) => {
-                    console.log(`Running through balance`);
+                    // console.log(`Running through balance`);
                     if (b.tokenid === tokenid) {
-                        console.log(b);
+                        // console.log(b);
                         setToken(b);
                     }
                 });
@@ -98,7 +99,7 @@ const TokenDetail = () => {
             <Grid item xs={12} md={8} container spacing={2}>
                 {loading ? (
                     <CircularProgress size={32} />
-                ) : (
+                ) : !loading && token !== undefined ? (
                     <>
                         <Grid item xs={12}>
                             <Card variant="outlined">
@@ -269,6 +270,20 @@ const TokenDetail = () => {
                             </Card>
                         </Grid>
                     </>
+                ) : (
+                    <Grid
+                        item
+                        xs={12}
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            flexDirection: 'column',
+                        }}
+                    >
+                        <ThumbDownOffAltIcon sx={{ color: '#317AFF' }} />
+                        <Typography variant="subtitle1">Token not found!</Typography>
+                    </Grid>
                 )}
             </Grid>
             <Grid item xs={0} md={2}></Grid>
