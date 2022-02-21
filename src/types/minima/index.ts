@@ -264,7 +264,7 @@ export interface MinimaToken {
 }
 interface CustomTokenJson {
   readonly name: string;
-  readonly icon?: string;
+  readonly url?: string;
   readonly description?: string;
 }
 

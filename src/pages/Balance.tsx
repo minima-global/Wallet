@@ -31,6 +31,7 @@ const Balance = () => {
     useEffect(() => {
         callBalance()
             .then((data: any) => {
+                console.log(data.response);
                 setBalance(data.response);
                 setFilteredBalance(data.response);
                 setLoading(false);
@@ -112,10 +113,10 @@ const Balance = () => {
                                                     src={
                                                         item.tokenid === '0x00'
                                                             ? MinimaIcon
-                                                            : !item.token.icon || item.token.icon.length === 0
+                                                            : !item.token.url || item.token.url.length === 0
                                                             ? `https://robohash.org/${item.tokenid}`
-                                                            : item.token.icon && item.token.icon
-                                                            ? item.token.icon
+                                                            : item.token.url && item.token.url.length > 0
+                                                            ? item.token.url
                                                             : ''
                                                     }
                                                     alt={item.token.name ? item.token.name : item.token}

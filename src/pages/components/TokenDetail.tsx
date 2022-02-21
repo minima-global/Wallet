@@ -117,10 +117,10 @@ const TokenDetail = () => {
                                             src={
                                                 token?.tokenid === '0x00'
                                                     ? MinimaIcon
-                                                    : !token?.token.icon || token?.token.icon.length === 0
+                                                    : !token?.token.url || token?.token.url.length === 0
                                                     ? `https://robohash.org/${token?.tokenid}`
-                                                    : token?.token.icon && token?.token.icon
-                                                    ? token.token.icon
+                                                    : token?.token.url && token?.token.url.length > 0
+                                                    ? token.token.url
                                                     : ''
                                             }
                                             alt={token?.token.name ? token?.token.name : token?.token}
