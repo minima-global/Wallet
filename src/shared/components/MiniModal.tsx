@@ -11,7 +11,7 @@ const MiniModal: FC<MiniModalProp> = (props) => {
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
         >
-            <Box sx={[style, { width: { xs: '80vw', sm: 400 } }]}>
+            <Box sx={[style, { width: { xs: '80vw', sm: 400 }, minWidth: { xs: 270, sm: 370 } }]}>
                 <Box>
                     <Typography sx={status} id="modal-modal-title" variant="h6" component="h2">
                         {props.status}
