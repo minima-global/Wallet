@@ -152,7 +152,7 @@ const drawerdisplay = {
 };
 const drawerdisplaydesktop = {
     display: { xs: 'none', sm: 'block' },
-    '& .MuiDrawer-paper': { boxSizing: 'border-box', width: DRAWERWIDTH },
+    '& .MuiDrawer-paper': { width: DRAWERWIDTH, overflowY: 'scroll' },
 };
 
 export default AppNavigation;
