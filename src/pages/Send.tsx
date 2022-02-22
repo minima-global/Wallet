@@ -1,5 +1,16 @@
 import { callBalance, callSend } from '../minima/rpc-commands';
-import { Button, TextField, Card, CardContent, Grid, Select, MenuItem, Chip, CircularProgress } from '@mui/material';
+import {
+    Button,
+    TextField,
+    Card,
+    CardContent,
+    Grid,
+    Select,
+    MenuItem,
+    Chip,
+    CircularProgress,
+    Typography,
+} from '@mui/material';
 import { FC, useEffect, useRef, useState } from 'react';
 
 import { useFormik } from 'formik';
@@ -112,9 +123,21 @@ const Send: FC = () => {
                                                       <MenuItem
                                                           key={token.tokenid}
                                                           value={token.tokenid}
-                                                          sx={{ justifyContent: 'space-between' }}
+                                                          sx={{
+                                                              justifyContent: 'space-between',
+                                                          }}
                                                       >
-                                                          {token.token.name ? token.token.name : token.token}
+                                                          <Typography
+                                                              variant="h6"
+                                                              sx={{
+                                                                  display: 'inline',
+                                                                  maxWidth: '20vw',
+                                                                  overflowX: 'hidden',
+                                                                  textOverflow: 'ellipsis',
+                                                              }}
+                                                          >
+                                                              {token.token.name ? token.token.name : token.token}
+                                                          </Typography>
                                                           <Chip
                                                               sx={{ ml: 2 }}
                                                               color="primary"

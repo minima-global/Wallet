@@ -34,7 +34,6 @@ interface IProps {
 const SideMenu = ({ handleDrawerToggle }: IProps) => {
     const navigate = useNavigate();
     const routerLocation = useLocation();
-    const connected = useMinimaInit();
     const activeRoute = (routeName: string) => {
         return routerLocation.pathname === routeName ? true : false;
     };
@@ -109,7 +108,7 @@ const SideMenu = ({ handleDrawerToggle }: IProps) => {
                 <Divider />
             </Grid>
             <Grid item>
-                <Box sx={{ display: 'flex', margin: 1 }}>
+                {/* <Box sx={{ display: 'flex', margin: 1 }}>
                     <Chip
                         variant="outlined"
                         icon={
@@ -121,7 +120,7 @@ const SideMenu = ({ handleDrawerToggle }: IProps) => {
                         }
                         label={connected ? 'Connected' : 'Offline'}
                     />
-                </Box>
+                </Box> */}
 
                 <Grid container sx={{ pl: 2, pr: 2, mt: 4 }} alignItems="flex-end">
                     <Grid item xs={4}>

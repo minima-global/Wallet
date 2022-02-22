@@ -31,7 +31,7 @@ const Balance = () => {
     useEffect(() => {
         callBalance()
             .then((data: any) => {
-                console.log(data.response);
+                //console.log(data.response);
                 setBalance(data.response);
                 setFilteredBalance(data.response);
                 setLoading(false);
