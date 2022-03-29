@@ -1,4 +1,4 @@
-import { callCommand } from '../minima/rpc-commands';
+import { callStatus } from '../minima/rpc-commands';
 import { useState, useRef, useEffect } from 'react';
 import { Button, Paper, TextField, TextareaAutosize } from '@mui/material';
 import { useSnackbar } from 'notistack';
@@ -17,7 +17,7 @@ const Terminal = () => {
     const buttonRef: any = useRef(null);
 
     useEffect(() => {
-        callCommand('status').then(
+        callStatus().then(
             (data: any) => {
                 console.log(data);
                 if (data.status) {
@@ -61,20 +61,20 @@ const Terminal = () => {
             commandHistoryIndex = -1;
             typedStuff = '';
 
-            callCommand(command).then(
-                (data: any) => {
-                    console.log(data);
-                    setCommand('');
-                    if (data.status) {
-                        setCommandResponses((old) => [...old, data.response]);
-                    } else {
-                        enqueueSnackbar(data.error, { variant: 'error' });
-                    }
-                },
-                (e) => {
-                    enqueueSnackbar(JSON.stringify(e), { variant: 'error' });
-                }
-            );
+            // callCommand(command).then(
+            //     (data: any) => {
+            //         console.log(data);
+            //         setCommand('');
+            //         if (data.status) {
+            //             setCommandResponses((old) => [...old, data.response]);
+            //         } else {
+            //             enqueueSnackbar(data.error, { variant: 'error' });
+            //         }
+            //     },
+            //     (e) => {
+            //         enqueueSnackbar(JSON.stringify(e), { variant: 'error' });
+            //     }
+            // );
         }
     };
 

@@ -1,4 +1,6 @@
+import { useContext } from 'react';
 import {
+    Alert,
     List,
     ListItemButton,
     Grid,
@@ -8,18 +10,19 @@ import {
     ListItemAvatar,
     Autocomplete,
     TextField,
-    Pagination,
+    Portal,
+    Snackbar,
     CircularProgress,
 } from '@mui/material';
 
-import { useNavigate, Route, Routes, Outlet } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import MinimaIcon from '../assets/images/minimaLogoSquare200x200.png';
 import { MinimaToken } from '../types/minima';
 
 import { useEffect, useState } from 'react';
 import { callBalance } from '../minima/rpc-commands';
 
-import TokenDetails from './TokenDetails';
+import { BalanceUpdates } from '../App';
 
 const Balance = () => {
     const [page, setPage] = useState<number>(1);
@@ -28,21 +31,38 @@ const Balance = () => {
     const [filteredBalance, setFilteredBalance] = useState<MinimaToken[]>([]);
     const [loading, setLoading] = useState(true);
 
+    const update = useContext(BalanceUpdates);
+
     useEffect(() => {
-        callBalance()
-            .then((data: any) => {
-                //console.log(data.response);
-                setBalance(data.response);
-                setFilteredBalance(data.response);
-                setLoading(false);
-            })
-            .catch((err: Error) => {
-                console.error(err);
-                setFilteredBalance([]);
-            });
+        // console.log('BalancePage update, context data', update);
+        if (update && update.length) {
+            // console.log(`Setting balance...`);
+            setBalance(update);
+            setFilteredBalance(update);
+            setLoading(false);
+        } else {
+            setFilteredBalance([]);
+        }
+
+        // TODO: should be just one location doing this, perhaps onCOnnected
+        if (update && !update.length) {
+            console.log(`first time loading so let's load balance`);
+            callBalance()
+                .then((data: any) => {
+                    // console.log(data);
+                    setBalance(data);
+                    setFilteredBalance(data);
+                    setLoading(false);
+                })
+                .catch((err: Error) => {
+                    console.error(err);
+                    setFilteredBalance([]);
+                });
+        }
+
         setLoading(false);
         return () => {};
-    }, []);
+    }, [update]);
 
     function handleInputChange(event: React.SyntheticEvent, value: string, reason: string) {
         if (value.length > 0) {
@@ -73,33 +93,35 @@ const Balance = () => {
                         <CircularProgress size={32} />
                     ) : (
                         <>
-                            <Autocomplete
-                                sx={{ marginBottom: 4 }}
-                                freeSolo
-                                id="token-search"
-                                onInputChange={handleInputChange}
-                                disableClearable
-                                options={filteredBalance.map((option: MinimaToken) =>
-                                    option.token.name ? option.token.name : option.token
-                                )}
-                                renderOption={(props, option) => {
-                                    return (
-                                        <li {...props} key={option + Math.random()}>
-                                            {option}
-                                        </li>
-                                    );
-                                }}
-                                renderInput={(params) => (
-                                    <TextField
-                                        {...params}
-                                        placeholder="Search token"
-                                        InputProps={{
-                                            ...params.InputProps,
-                                            type: 'search',
-                                        }}
-                                    />
-                                )}
-                            />
+                            {filteredBalance && filteredBalance.length ? (
+                                <Autocomplete
+                                    sx={{ marginBottom: 4 }}
+                                    freeSolo
+                                    id="token-search"
+                                    onInputChange={handleInputChange}
+                                    disableClearable
+                                    options={filteredBalance.map((option: MinimaToken) =>
+                                        option.token.name ? option.token.name : option.token
+                                    )}
+                                    renderOption={(props, option) => {
+                                        return (
+                                            <li {...props} key={option + Math.random()}>
+                                                {option}
+                                            </li>
+                                        );
+                                    }}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            placeholder="Search token"
+                                            InputProps={{
+                                                ...params.InputProps,
+                                                type: 'search',
+                                            }}
+                                        />
+                                    )}
+                                />
+                            ) : null}
                             <List>
                                 {filteredBalance && filteredBalance.length > 0 ? (
                                     filteredBalance?.map((item: MinimaToken, i) => (

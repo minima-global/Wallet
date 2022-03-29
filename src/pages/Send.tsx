@@ -11,7 +11,7 @@ import {
     CircularProgress,
     Typography,
 } from '@mui/material';
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useContext, useState } from 'react';
 
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -19,6 +19,8 @@ import { INSUFFICIENT } from '../minima/constants';
 
 import { MinimaToken } from '../types/minima';
 import MiniModal from '../shared/components/MiniModal';
+
+import { BalanceUpdates } from '../App';
 
 const TransferTokenSchema = Yup.object().shape({
     tokenid: Yup.string().required('Field Required'),
@@ -54,17 +56,24 @@ const Send: FC = () => {
         setModalStatus('Failed');
     };
 
+    const update = useContext(BalanceUpdates);
+
     // Get initial balance
     useEffect(() => {
-        callBalance()
-            .then((res: any) => {
-                setTokenSelection(res.response);
-                setLoading(false);
-            })
-            .catch((err: any) => {
-                console.error(err);
-            });
-    }, []);
+        if (update && update.length) {
+            setTokenSelection(update);
+            setLoading(false);
+        } else {
+            callBalance()
+                .then((data: any) => {
+                    setTokenSelection(data);
+                    setLoading(false);
+                })
+                .catch((err: any) => {
+                    console.error(err);
+                });
+        }
+    }, [update]);
 
     const formik = useFormik({
         initialValues: {

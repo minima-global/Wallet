@@ -11,7 +11,7 @@ import {
     Tooltip,
     CircularProgress,
 } from '@mui/material';
-import { callCommand } from '../minima/rpc-commands';
+import { callAddress } from '../minima/rpc-commands';
 import { copyTextToClipboard } from '../shared/functions';
 import QRCode from 'react-qr-code';
 
@@ -21,9 +21,9 @@ const Receive: FC = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        callCommand('newaddress')
+        callAddress()
             .then((res: any) => {
-                setAddress(res.response.address);
+                setAddress(res.address);
                 setLoading(false);
             })
             .catch((err) => {

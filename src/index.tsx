@@ -1,9 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import { HashRouter } from 'react-router-dom';
 import App from './App';
-import { BrowserRouter, HashRouter } from 'react-router-dom';
-import useMinimaInit from './minima/useMinimaInit';
+import './index.css';
 
 /*
  * HashRouter to allow us to run the index.html directly from the file system.
@@ -11,9 +10,8 @@ import useMinimaInit from './minima/useMinimaInit';
  * BrowserRouter can be used where we have a web server that can always serve the index.html,
  * no matter which url is in the browser
  */
-const Main = () => {
-    const connected = useMinimaInit();
 
+const Main = () => {
     return (
         <React.StrictMode>
             <HashRouter>
