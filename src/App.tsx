@@ -35,10 +35,10 @@ export default function App() {
     useEffect(() => {
         eventApi.ws.onmessage = (evt: any) => {
             let data = JSON.parse(evt.data);
-            console.log(data);
+            //console.log(data);
 
-            console.log('Data after parse', data);
-            console.log('Data after stringify', JSON.stringify(data.data));
+            // console.log('Data after parse', data);
+            // console.log('Data after stringify', JSON.stringify(data.data));
 
             // Event type
             const event = data.event;
