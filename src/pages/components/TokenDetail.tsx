@@ -86,14 +86,18 @@ const TokenDetail = () => {
         } else {
             callBalance()
                 .then((data: any) => {
-                    // console.log('Run callBalance');
-                    data.forEach((b: MinimaToken) => {
-                        // console.log(`Running through balance`);
-                        if (b.tokenid === tokenid) {
-                            // console.log(b);
-                            setToken(b);
-                        }
-                    });
+                    console.log('Balance', data);
+                    {
+                        data && data.length
+                            ? data.forEach((b: MinimaToken) => {
+                                  // console.log(`Running through balance`);
+                                  if (b.tokenid === tokenid) {
+                                      // console.log(b);
+                                      setToken(b);
+                                  }
+                              })
+                            : console.log(`Balance not found..`);
+                    }
                     // setLoading(false);
                 })
                 .catch((err: Error) => {
