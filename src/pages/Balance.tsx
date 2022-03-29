@@ -46,7 +46,7 @@ const Balance = () => {
 
         // TODO: should be just one location doing this, perhaps onCOnnected
         if (update && !update.length) {
-            console.log(`first time loading so let's load balance`);
+            // console.log(`first time loading so let's load balance`);
             callBalance()
                 .then((data: any) => {
                     // console.log(data);

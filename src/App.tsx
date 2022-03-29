@@ -46,12 +46,12 @@ export default function App() {
             data = data.data;
             switch (event) {
                 case 'NEWBALANCE':
-                    console.log('New balance available.');
+                    // console.log('New balance available.');
 
                     mdsApi
                         .balance()
                         .then((data) => {
-                            console.log(`Setting balance..`, data);
+                            // console.log(`Setting balance..`, data);
                             setMyBalance(data);
                         })
                         .catch((err) => {

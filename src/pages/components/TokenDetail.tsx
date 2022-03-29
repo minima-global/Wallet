@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { callBalance } from '../../minima/rpc-commands';
 import { MinimaToken } from '../../types/minima';
@@ -23,6 +23,7 @@ import MinimaIcon from '../../assets/images/minimaLogoSquare200x200.png';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import ThumbDownOffAltIcon from '@mui/icons-material/ThumbDownOffAlt';
+import { BalanceUpdates } from '../../App';
 
 const TokenDetail = () => {
     const { tokenid } = useParams();
@@ -34,6 +35,8 @@ const TokenDetail = () => {
 
     const [token, setToken] = useState<MinimaToken>();
     const [dimensions, setDimensions] = useState(128);
+
+    const updates = useContext(BalanceUpdates); // balanceUpdates
 
     // handle description lines
     const [maxLines, setMaxLines] = useState<number>(3);
@@ -72,26 +75,37 @@ const TokenDetail = () => {
 
     useEffect(() => {
         // console.log('Run useEffect');
-        callBalance()
-            .then((data: any) => {
-                // console.log('Run callBalance');
-                data.response.forEach((b: MinimaToken) => {
-                    // console.log(`Running through balance`);
-                    if (b.tokenid === tokenid) {
-                        // console.log(b);
-                        setToken(b);
-                    }
-                });
-                setLoading(false);
-            })
-            .catch((err: Error) => {
-                setLoading(false);
-                setFailed(true);
-                console.error(err);
+
+        if (updates && updates.length) {
+            updates.forEach((b: MinimaToken) => {
+                if (b.tokenid === tokenid) {
+                    // console.log(b);
+                    setToken(b);
+                }
             });
+        } else {
+            callBalance()
+                .then((data: any) => {
+                    // console.log('Run callBalance');
+                    data.forEach((b: MinimaToken) => {
+                        // console.log(`Running through balance`);
+                        if (b.tokenid === tokenid) {
+                            // console.log(b);
+                            setToken(b);
+                        }
+                    });
+                    // setLoading(false);
+                })
+                .catch((err: Error) => {
+                    setLoading(false);
+                    setFailed(true);
+                    console.error(err);
+                });
+        }
+
         setLoading(false);
         return () => {};
-    }, []);
+    }, [updates]);
 
     return (
         <Grid container spacing={2} sx={{ marginTop: 2, marginBottom: 2 }}>
