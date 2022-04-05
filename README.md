@@ -1,4 +1,4 @@
-# Terminal
+# Wallet
 
 Wallet Minidapp built for Minima to manage coins, create tokens and view node status.
 
