@@ -18,7 +18,7 @@ import {
     CircularProgress,
 } from '@mui/material';
 import { Status as StatusType } from '../types/minima';
-import { callCommand } from '../minima/rpc-commands';
+import { callStatus } from '../minima/rpc-commands';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import ExpandMoreOutlined from '@mui/icons-material/ExpandMoreOutlined';
@@ -28,9 +28,9 @@ const Status = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        callCommand('status')
+        callStatus()
             .then((data: any) => {
-                setStatus(data.response);
+                setStatus(data);
                 setLoading(false);
             })
             .catch((err) => {

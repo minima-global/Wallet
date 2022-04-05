@@ -42,7 +42,8 @@ const TokenCreation: FC = () => {
                 amount: data.amount,
             };
             callToken(customToken)
-                .then((res: RpcResponse) => {
+                .then((res: any) => {
+                    // console.log(res);
                     // SENT
                     formik.resetForm();
                     // Set Modal
@@ -51,10 +52,12 @@ const TokenCreation: FC = () => {
                     setOpen(true);
                 })
                 .catch((err: any) => {
-                    console.error(err.message);
+                    // console.error(err.message);
                     // FAILED
                     if (err.message !== undefined && err.message.substring(0, 20) === INSUFFICIENT) {
                         formik.setFieldError('amount', err.message);
+                    } else {
+                        console.error(`Err is undefined or not a string..`);
                     }
                 })
                 .finally(() => {
