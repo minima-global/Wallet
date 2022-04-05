@@ -78,7 +78,7 @@ const Send: FC = () => {
     const formik = useFormik({
         initialValues: {
             tokenid: '0x00',
-            amount: '',
+            amount: 0,
             address: '',
         },
         validationSchema: TransferTokenSchema,

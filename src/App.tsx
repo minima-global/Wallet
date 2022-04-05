@@ -6,26 +6,17 @@ import { SnackbarProvider } from 'notistack';
 import AppNavigation from './AppRoutes';
 import useMinimaInit from './minima/useMinimaInit';
 import { MinimaToken } from './types/minima';
-import { Events } from '@minima-global/mds-api';
+import { nodeEvent, ws } from '@minima-global/mds-api';
 import { Commands } from '@minima-global/mds-api';
 
 // Create a context provider to give balance updates to consumers in the app
 const BalanceUpdates = createContext<MinimaToken[]>([]);
 
 let mdsApi: Commands;
-// Minima Events
-let eventApi: Events;
-export const getWebSocket = () => {
-    return eventApi;
-};
 
 export default function App() {
     const [myBalance, setMyBalance] = useState<MinimaToken[]>([]);
-    try {
-        eventApi = new Events();
-    } catch (e) {
-        console.log('Failed to init minima');
-    }
+
     try {
         mdsApi = new Commands();
     } catch (e) {
@@ -33,37 +24,38 @@ export default function App() {
     }
 
     useEffect(() => {
-        eventApi.ws.onmessage = (evt: any) => {
-            let data = JSON.parse(evt.data);
-            //console.log(data);
+        if (ws)
+            ws.onmessage = (evt: any) => {
+                let data = JSON.parse(evt.data);
+                //console.log(data);
 
-            // console.log('Data after parse', data);
-            // console.log('Data after stringify', JSON.stringify(data.data));
+                // console.log('Data after parse', data);
+                // console.log('Data after stringify', JSON.stringify(data.data));
 
-            // Event type
-            const event = data.event;
-            // Data sent with event
-            data = data.data;
-            switch (event) {
-                case 'NEWBALANCE':
-                    // console.log('New balance available.');
+                // Event type
+                const event = data.event;
+                // Data sent with event
+                data = data.data;
+                switch (event) {
+                    case 'NEWBALANCE':
+                        //console.log('New balance available.');
 
-                    mdsApi
-                        .balance()
-                        .then((data) => {
-                            // console.log(`Setting balance..`, data);
-                            setMyBalance(data);
-                        })
-                        .catch((err) => {
-                            console.error(err);
-                            // setMyBalance([]);
-                        });
+                        mdsApi
+                            .balance()
+                            .then((data) => {
+                                // console.log(`Setting balance..`, data);
+                                setMyBalance(data);
+                            })
+                            .catch((err) => {
+                                console.error(err);
+                                // setMyBalance([]);
+                            });
 
-                    break;
-                default:
-                //console.error('Unknown event type: ', evt.event);
-            }
-        };
+                        break;
+                    default:
+                    //console.error('Unknown event type: ', evt.event);
+                }
+            };
     }, []);
 
     return (

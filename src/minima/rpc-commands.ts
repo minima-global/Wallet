@@ -1,7 +1,5 @@
-import { RpcResponse, MinimaToken, CustomTokenData, TokenData, SendData } from './../types/minima/index';
-import { STATUS, BALANCE, RPCHOST, SEND, HELP, ADDRESS, TOKENCREATE } from './constants';
+import { SendArgs, Commands, TokenCreateArgs } from '@minima-global/mds-api';
 
-import { Commands } from '@minima-global/mds-api';
 
 const Minima = new Commands(); // this will create a cmds reference
 // call any generic minima command
@@ -22,13 +20,13 @@ const Minima = new Commands(); // this will create a cmds reference
 //     });
 // };
 
-export const callToken = (data: TokenData) => {
+export const callToken = (data: TokenCreateArgs) => {
     // const command = `${TOKENCREATE}+name:${JSON.stringify(data.name)}+amount:${data.amount}`;
     return Minima.tokencreate({name: `${JSON.stringify(data.name)}`, amount: `${data.amount}`});
 };
 
-export const callSend = (data: SendData) => {
-    return Minima.send({ amount: `${data.amount}`, address: `${data.address}`, tokenid: `${data.tokenid}`});
+export const callSend = (data: SendArgs) => {
+    return Minima.send({ amount: data.amount, address: `${data.address}`, tokenid: `${data.tokenid}`});
 };
 
 export const callAddress = () => {

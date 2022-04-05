@@ -31,13 +31,6 @@ export interface TokenData {
   readonly name: CustomTokenData;
   readonly amount: string;
 }
-
-export interface SendData {
-  readonly address: string;
-  readonly amount: string;
-  readonly tokenid: string;
-}
-
 export interface RpcBalance extends RpcResponse {
   tokens: MinimaToken[];
 }
