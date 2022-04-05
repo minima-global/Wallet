@@ -1,46 +1,35 @@
-# Getting Started with Create React App
+# Terminal
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Wallet Minidapp built for Minima to manage coins, create tokens and view node status.
 
-## Available Scripts
 
-In the project directory, you can run:
+### Prerequisites
 
-### `npm start`
+With this current version of our mds-api pkg you will need to generate a personal access token that sits in your root directory *e.g*
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+`~/.npmrc`
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+which holds something like:
 
-### `npm test`
+`//npm.pkg.github.com/:_authToken=ghp_D8tXIVpi...4eWX7sV4ExnLV`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+(Learn how [to](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry))
 
-### `npm run build`
+and have another  `.npmrc` file in the root of this project holding this link:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+`@minima-global:registry=https://npm.pkg.github.com`
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Installation
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Once you have registered your ***personal access token*** you now have the rights to use **mds-api** 😎.
 
-### `npm run eject`
+- Run `npm i` in the root of this project, this should install all the dependencies including **mds-api**.
+- Run `npm run build-zip` that should build you a `wallet.zip` minidapp in the root of this project.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Finally,
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- Make sure you have a [Minima](https://github.com/minima-global/Minima) node and [mds](https://github.com/minima-global/mds-core) running.
+- Now open your browser and go to `127.0.0.1:8090/` which should take you to the **minihub**.
+- Click the install btn, and find your `wallet.zip`.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+All done, enjoy.
