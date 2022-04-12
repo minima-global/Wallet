@@ -10,6 +10,7 @@ import {
     Chip,
     Tooltip,
     CircularProgress,
+    Stack,
 } from '@mui/material';
 import { callAddress } from '../minima/rpc-commands';
 import { copy, copyTextToClipboard } from '../shared/functions';
@@ -57,14 +58,39 @@ const Receive: FC = () => {
                     <CircularProgress size={32} />
                 ) : (
                     <Card variant="outlined">
-                        <CardContent
-                            sx={{
-                                textAlign: 'center',
-                            }}
-                        >
-                            <QRCode style={{ marginTop: 16 }} level="M" value={address} />
+                        <CardContent sx={{ display: 'flex', flexDirection: 'column' }}>
+                            <QRCode style={{ marginTop: 16, alignSelf: 'center' }} level="M" value={address} />
 
-                            <Box sx={{ marginTop: 4 }}>
+                            <Stack>
+                                <Typography sx={{ textAlign: 'left', mt: 3, pl: 2 }} variant="h2">
+                                    Wallet Address
+                                </Typography>
+                                <Typography
+                                    sx={{ mt: 3, pl: 2, wordBreak: 'break-word', textAlign: 'left' }}
+                                    variant="caption"
+                                >
+                                    {address}
+                                </Typography>
+                                {/* <Button color="primary" variant="contained" sx={button} onClick={handleCopyClick}>
+                                    {!isCopied ? 'Copy' : 'Copied'}
+                                </Button> */}
+                            </Stack>
+
+                            <Chip
+                                label={!isCopied ? 'Copy' : 'Copied'}
+                                color="primary"
+                                sx={{
+                                    alignSelf: 'flex-start',
+                                    '&:hover': {
+                                        opacity: 0.8,
+                                    },
+                                    textAlign: 'center',
+                                    ml: 2,
+                                }}
+                                onClick={handleCopyClick}
+                            />
+
+                            {/* <Box sx={{ marginTop: 4 }}>
                                 <Tooltip title="Wallet Address">
                                     <TextField
                                         aria-readonly
@@ -93,7 +119,7 @@ const Receive: FC = () => {
                                 <Typography sx={{ marginTop: 2 }} variant="subtitle1">
                                     Use this address to receive any Minima or Minima tokens.
                                 </Typography>
-                            </Box>
+                            </Box> */}
                         </CardContent>
                     </Card>
                 )}
@@ -104,11 +130,3 @@ const Receive: FC = () => {
 };
 
 export default Receive;
-
-const button = {
-    '&:hover': {
-        opacity: 0.8,
-    },
-    letterSpacing: 1,
-};
-const hexAddressText = { color: '#000', fontSize: 14, fontWeight: '800', paddingLeft: 0 };

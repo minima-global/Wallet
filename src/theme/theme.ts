@@ -188,7 +188,7 @@ theme = createTheme(theme, {
             styleOverrides: {
                 root: {
                     paddingLeft: 0,
-
+                    paddingRight: 0,
                 },
             },
         },
