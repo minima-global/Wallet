@@ -67,7 +67,6 @@ const Receive: FC = () => {
                             <Box sx={{ marginTop: 4 }}>
                                 <Tooltip title="Wallet Address">
                                     <TextField
-                                        sx={{ textOverflow: 'ellipsis' }}
                                         aria-readonly
                                         InputProps={{
                                             endAdornment: (
@@ -83,11 +82,12 @@ const Receive: FC = () => {
                                                     Wallet
                                                 </Typography>
                                             ),
-                                            style: { color: '#91919D', fontWeight: '800', textOverflow: 'ellipsis' },
+                                            style: {
+                                                color: '#91919D',
+                                                fontWeight: '800',
+                                            },
                                         }}
-                                        value={`${
-                                            address.substring(0, 8) + '...' + address.substring(52, address.length)
-                                        }`}
+                                        value={address}
                                     />
                                 </Tooltip>
                                 <Typography sx={{ marginTop: 2 }} variant="subtitle1">

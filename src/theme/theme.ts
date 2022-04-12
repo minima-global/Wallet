@@ -141,6 +141,7 @@ theme = createTheme(theme, {
                         borderRadius: 8,
                         fontWeight: '400',
                         fontSize: '1rem',
+                        textOverflow: 'ellipsis',
 
                         '&::placeholder': {
                             color: '#91919D',
