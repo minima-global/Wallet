@@ -59,23 +59,23 @@ const Status = () => {
                                     <Box
                                         sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
                                     >
-                                        <Typography
-                                            sx={{ fontSize: 14, display: 'inline' }}
-                                            color="text.secondary"
-                                            gutterBottom
-                                        >
+                                        <Typography variant="h2" sx={{ color: '#317AFF' }}>
                                             Overview
                                         </Typography>
                                         <Chip
-                                            color="success"
+                                            color="primary"
                                             icon={status?.version ? <CheckCircleIcon /> : <CancelIcon />}
                                             label={status?.version ? 'online' : 'offline'}
                                         />
                                     </Box>
                                     <List>
-                                        <ListSubheader sx={{ pl: 0 }}>
-                                            {status?.version ? 'Node v' + status.version : null}
-                                        </ListSubheader>
+                                        <ListItem>
+                                            <ListItemText
+                                                primary="Node Version"
+                                                secondary={status?.version ? status.version : null}
+                                                primaryTypographyProps={{ fontWeight: 600 }}
+                                            ></ListItemText>
+                                        </ListItem>
                                         <ListItem>
                                             <ListItemText
                                                 primary="Height"
@@ -187,7 +187,7 @@ const Memory: FC<MemoryProps> = (props: MemoryProps) => {
         <React.Fragment>
             <CardContent>
                 <Box>
-                    <Typography sx={{ fontSize: 14, display: 'inline' }} color="text.secondary" gutterBottom>
+                    <Typography variant="h2" sx={{ color: '#317AFF', mb: 2 }}>
                         Files
                     </Typography>
                 </Box>
@@ -273,7 +273,7 @@ const Chain: FC<ChainProps> = (props: ChainProps) => {
         <React.Fragment>
             <CardContent>
                 <Box>
-                    <Typography sx={{ fontSize: 14, display: 'inline' }} color="text.secondary" gutterBottom>
+                    <Typography variant="h2" sx={{ color: '#317AFF', mb: 2 }}>
                         Chain
                     </Typography>
                 </Box>
@@ -397,7 +397,7 @@ const TxPoW: FC<TxPoWProps> = (props: TxPoWProps) => {
         <React.Fragment>
             <CardContent>
                 <Box>
-                    <Typography sx={{ fontSize: 14, display: 'inline' }} color="text.secondary" gutterBottom>
+                    <Typography variant="h2" sx={{ color: '#317AFF', mb: 2 }}>
                         TxPoW
                     </Typography>
                 </Box>
@@ -461,7 +461,7 @@ const Network: FC<NetworkProps> = (props: NetworkProps) => {
         <React.Fragment>
             <CardContent>
                 <Box>
-                    <Typography sx={{ fontSize: 14, display: 'inline' }} color="text.secondary" gutterBottom>
+                    <Typography variant="h2" sx={{ color: '#317AFF', mb: 2 }}>
                         Network
                     </Typography>
                 </Box>
@@ -548,7 +548,7 @@ const P2P: FC<P2PProps> = (props: P2PProps) => {
         <React.Fragment>
             <CardContent>
                 <Box>
-                    <Typography sx={{ fontSize: 14, display: 'inline' }} color="text.secondary" gutterBottom>
+                    <Typography variant="h2" sx={{ color: '#317AFF', mb: 2 }}>
                         P2P
                     </Typography>
                 </Box>
