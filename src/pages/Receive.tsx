@@ -12,7 +12,7 @@ import {
     CircularProgress,
 } from '@mui/material';
 import { callAddress } from '../minima/rpc-commands';
-import { copyTextToClipboard } from '../shared/functions';
+import { copy, copyTextToClipboard } from '../shared/functions';
 import QRCode from 'react-qr-code';
 
 const Receive: FC = () => {
@@ -32,16 +32,21 @@ const Receive: FC = () => {
     }, []);
 
     const handleCopyClick = () => {
-        copyTextToClipboard(address)
-            .then(() => {
-                setIsCopied(true);
-                setTimeout(() => {
-                    setIsCopied(false);
-                }, 1500);
-            })
-            .catch((err) => {
-                console.error(`${err}`);
-            });
+        copy(address);
+        setIsCopied(true);
+        setTimeout(() => {
+            setIsCopied(false);
+        }, 1500);
+        // copyTextToClipboard(address)
+        // .then(() => {
+        //         setIsCopied(true);
+        //         setTimeout(() => {
+        //             setIsCopied(false);
+        //         }, 1500);
+        //     })
+        //     .catch((err) => {
+        //         console.error(`${err}`);
+        //     });
     };
 
     return (
@@ -65,14 +70,14 @@ const Receive: FC = () => {
                                         sx={{ textOverflow: 'ellipsis' }}
                                         aria-readonly
                                         InputProps={{
-                                            // endAdornment: (
-                                            //     <Chip
-                                            //         color="primary"
-                                            //         label={!isCopied ? 'Copy' : 'Copied'}
-                                            //         sx={button}
-                                            //         onClick={handleCopyClick}
-                                            //     />
-                                            // ),
+                                            endAdornment: (
+                                                <Chip
+                                                    color="primary"
+                                                    label={!isCopied ? 'Copy' : 'Copied'}
+                                                    sx={button}
+                                                    onClick={handleCopyClick}
+                                                />
+                                            ),
                                             startAdornment: (
                                                 <Typography sx={hexAddressText} variant="h6">
                                                     Wallet
@@ -80,7 +85,9 @@ const Receive: FC = () => {
                                             ),
                                             style: { color: '#91919D', fontWeight: '800', textOverflow: 'ellipsis' },
                                         }}
-                                        value={`${address}`}
+                                        value={`${
+                                            address.substring(0, 8) + '...' + address.substring(52, address.length)
+                                        }`}
                                     />
                                 </Tooltip>
                                 <Typography sx={{ marginTop: 2 }} variant="subtitle1">
