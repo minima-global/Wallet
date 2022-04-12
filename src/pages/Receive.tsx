@@ -84,7 +84,7 @@ const Receive: FC = () => {
                                     Wallet Address
                                 </Typography>
                                 <Typography
-                                    sx={{ mt: 3, pl: 2, wordBreak: 'break-word', textAlign: 'left' }}
+                                    sx={{ mt: 3, mr: 2, pl: 2, wordBreak: 'break-word', textAlign: 'left' }}
                                     variant="caption"
                                 >
                                     {address}
