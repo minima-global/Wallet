@@ -181,7 +181,15 @@ theme = createTheme(theme, {
                     backgroundColor: 'rgba(255, 255, 255, 0.5)'
                 }
             }
-        }
+        },
+        MuiListItem: {
+            styleOverrides: {
+                root: {
+                    paddingLeft: 0,
+
+                },
+            },
+        },
     },
 });
 

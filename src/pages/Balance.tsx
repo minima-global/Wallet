@@ -178,7 +178,9 @@ const Balance = () => {
                                         </ListItemButton>
                                     ))
                                 ) : (
-                                    <Typography variant="h6">No tokens found</Typography>
+                                    <Typography sx={{ alignText: 'center' }} variant="h6">
+                                        No tokens found
+                                    </Typography>
                                 )}
                             </List>
                         </>

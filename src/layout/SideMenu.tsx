@@ -75,10 +75,17 @@ const SideMenu = ({ handleDrawerToggle }: IProps) => {
     return (
         <Grid
             container
-            sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '95vh' }}
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                flexGrow: '',
+                height: '100vh',
+                backgroundColor: '#fff',
+            }}
         >
             <Grid item>
-                <Toolbar>
+                <Toolbar sx={{ backgroundColor: '#fff' }}>
                     <img src={WalletIcon} alt="walletIcon" id="walletIcon" />
                     <Typography sx={style.appName} variant="h6">
                         Wallet
@@ -86,7 +93,7 @@ const SideMenu = ({ handleDrawerToggle }: IProps) => {
                 </Toolbar>
                 <Divider />
 
-                <List>
+                <List sx={{ backgroundColor: '#fefefe' }}>
                     {DrawerItems.map((route: DrawerItem, i) => {
                         return (
                             <ListItemButton
@@ -107,22 +114,8 @@ const SideMenu = ({ handleDrawerToggle }: IProps) => {
 
                 <Divider />
             </Grid>
-            <Grid item>
-                {/* <Box sx={{ display: 'flex', margin: 1 }}>
-                    <Chip
-                        variant="outlined"
-                        icon={
-                            connected ? (
-                                <LensIcon sx={{ width: 14, height: 14, fill: '#b6f4ee' }} />
-                            ) : (
-                                <LensIcon sx={{ width: 14, height: 14, fill: 'red' }} />
-                            )
-                        }
-                        label={connected ? 'Connected' : 'Offline'}
-                    />
-                </Box> */}
-
-                <Grid container sx={{ pl: 2, pr: 2, mt: 4 }} alignItems="flex-end">
+            <Grid item sx={{ backgroundColor: '#fff', pb: 1 }}>
+                <Grid container sx={{ pl: 2, pr: 2, mt: 4, mb: 0, backgroundColor: '#fff' }} alignItems="flex-end">
                     <Grid item xs={4}>
                         <Box sx={{ fontSize: 12, letterSpacing: 0.02, lineHeight: 1.5 }}>Powered by</Box>
                     </Grid>

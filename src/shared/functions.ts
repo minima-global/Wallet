@@ -1,4 +1,5 @@
 /** Copy to clipboard */
+
 export async function copyTextToClipboard(text: string) {
     if ('clipboard' in navigator) {
         console.log('using clipboard');

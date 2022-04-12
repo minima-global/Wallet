@@ -52,6 +52,7 @@ const TokenCreation: FC = () => {
                     setOpen(true);
                 })
                 .catch((err: any) => {
+                    console.log(err);
                     // console.error(err.message);
                     // FAILED
                     if (err.message !== undefined && err.message.substring(0, 20) === INSUFFICIENT) {

@@ -23,7 +23,7 @@ const Receive: FC = () => {
     useEffect(() => {
         callAddress()
             .then((res: any) => {
-                setAddress(res.address);
+                setAddress(res.miniaddress);
                 setLoading(false);
             })
             .catch((err) => {
@@ -62,24 +62,25 @@ const Receive: FC = () => {
                             <Box sx={{ marginTop: 4 }}>
                                 <Tooltip title="Wallet Address">
                                     <TextField
+                                        sx={{ textOverflow: 'ellipsis' }}
                                         aria-readonly
                                         InputProps={{
-                                            endAdornment: (
-                                                <Chip
-                                                    color="primary"
-                                                    label={!isCopied ? 'Copy' : 'Copied'}
-                                                    sx={button}
-                                                    onClick={handleCopyClick}
-                                                />
-                                            ),
+                                            // endAdornment: (
+                                            //     <Chip
+                                            //         color="primary"
+                                            //         label={!isCopied ? 'Copy' : 'Copied'}
+                                            //         sx={button}
+                                            //         onClick={handleCopyClick}
+                                            //     />
+                                            // ),
                                             startAdornment: (
                                                 <Typography sx={hexAddressText} variant="h6">
                                                     Wallet
                                                 </Typography>
                                             ),
-                                            style: { color: '#91919D', fontWeight: '800' },
+                                            style: { color: '#91919D', fontWeight: '800', textOverflow: 'ellipsis' },
                                         }}
-                                        value={`(${address.substring(0, 6)}...${address.substring(60, 66)})`}
+                                        value={`${address}`}
                                     />
                                 </Tooltip>
                                 <Typography sx={{ marginTop: 2 }} variant="subtitle1">

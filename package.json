@@ -10,9 +10,9 @@
         "build-zip": "npm run build && cd build && zip -r wallet.zip . && mv wallet.zip ../",
         "reload": "rm -r node_modules/ && npm i && npm run start",
         "mds-uninstall": "curl -X POST http://localhost:8090/mds/manage/uninstall -d '{\"port\": \"8081\"}'",
-        "mds-install": "curl --form package=\"@/home/neil/minima/wallet-mds/wallet.zip\" http://localhost:8090/mds/manage/install -v",
+        "mds-install": "curl --form package=\"@/Users/eliasnemr/projects/v2/wallet/wallet.zip\" http://localhost:8090/mds/manage/install -v",
         "refresh-ff": "bash refresh-firefox.sh",
-        "mds-reload": "npm run build-zip && npm run mds-uninstall && npm run mds-install && npm run refresh-ff"
+        "mds-reload": "npm run build-zip && npm run mds-uninstall && npm run mds-install"
     },
     "homepage": ".",
     "proxy": "http://localhost:9002",
