@@ -69,7 +69,7 @@ const Receive: FC = () => {
     };
 
     return (
-        <Grid container spacing={2} sx={{ marginTop: 2 }}>
+        <Grid container spacing={0} mt={2}>
             <Grid item xs={0} md={2}></Grid>
             <Grid item xs={12} md={8} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 {loading ? (
@@ -77,10 +77,10 @@ const Receive: FC = () => {
                 ) : (
                     <Card variant="outlined">
                         <CardContent sx={{ display: 'flex', flexDirection: 'column' }}>
-                            <QRCode style={{ marginTop: 16, alignSelf: 'center' }} level="M" value={address} />
+                            <QRCode style={{ alignSelf: 'center' }} level="M" value={address} />
 
                             <Stack>
-                                <Typography sx={{ textAlign: 'left' }} variant="h2">
+                                <Typography sx={{ textAlign: 'left', mt: 2 }} variant="h2">
                                     Wallet Address
                                 </Typography>
                                 <Typography sx={{ wordBreak: 'break-word', textAlign: 'left' }} variant="caption">
@@ -165,6 +165,7 @@ const copyBtn = {
     alignItems: 'center',
     alignSelf: 'baseline',
     borderRadius: 8,
-    padding: 1,
+    padding: 0.5,
+    mt: 2,
     cursor: 'pointer',
 };
