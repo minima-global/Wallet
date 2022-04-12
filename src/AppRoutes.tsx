@@ -118,7 +118,7 @@ const AppNavigation = () => {
                 <Toolbar sx={start}>
                     {onDetail ? null : (
                         <IconButton
-                            sx={{ display: { xs: 'block', sm: 'none' } }}
+                            sx={{ display: { xs: 'flex', sm: 'none' } }}
                             color="inherit"
                             aria-label="menu"
                             onClick={handleDrawerToggle}
