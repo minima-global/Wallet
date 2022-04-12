@@ -15,6 +15,9 @@ import {
     TooltipProps,
     tooltipClasses,
     ListItemIcon,
+    List,
+    ListItem,
+    ListItemText,
 } from '@mui/material';
 import { callAddress } from '../minima/rpc-commands';
 import { copy, copyTextToClipboard } from '../shared/functions';
@@ -79,17 +82,16 @@ const Receive: FC = () => {
                         <CardContent sx={{ display: 'flex', flexDirection: 'column' }}>
                             <QRCode style={{ alignSelf: 'center' }} level="M" value={address} />
 
-                            <Stack>
-                                <Typography sx={{ textAlign: 'left', mt: 2 }} variant="h2">
-                                    Wallet Address
-                                </Typography>
-                                <Typography sx={{ wordBreak: 'break-word', textAlign: 'left' }} variant="caption">
-                                    {address}
-                                </Typography>
-                                {/* <Button color="primary" variant="contained" sx={button} onClick={handleCopyClick}>
-                                    {!isCopied ? 'Copy' : 'Copied'}
-                                </Button> */}
-                            </Stack>
+                            <List>
+                                <ListItem>
+                                    <ListItemText
+                                        sx={{ wordBreak: 'break-word' }}
+                                        primary="Wallet Address"
+                                        secondary={address}
+                                        primaryTypographyProps={{ fontWeight: 600 }}
+                                    ></ListItemText>
+                                </ListItem>
+                            </List>
 
                             <BootstrapTooltip placement="top-end" disableHoverListener open={isCopied} title="Copied!">
                                 <ListItemIcon
@@ -103,6 +105,9 @@ const Receive: FC = () => {
                                     )}
                                 </ListItemIcon>
                             </BootstrapTooltip>
+                            <Typography variant="caption">
+                                Receive any Minima & network tokens with this address.
+                            </Typography>
                             {/* <Chip
                                 label={!isCopied ? 'Copy' : 'Copied'}
                                 color="primary"
@@ -166,6 +171,5 @@ const copyBtn = {
     alignSelf: 'baseline',
     borderRadius: 8,
     padding: 0.5,
-    mt: 2,
     cursor: 'pointer',
 };
