@@ -1,9 +1,21 @@
 /** Copy to clipboard */
-  export async function copyTextToClipboard(text: string) {
+export async function copyTextToClipboard(text: string) {
     if ('clipboard' in navigator) {
-      return await navigator.clipboard.writeText(text);
+        console.log('using clipboard');
+        return await navigator.clipboard.writeText(text);
     } else {
-      return document.execCommand('copy', true, text); // IE FALLBACK
+        console.log('using document.execCommand');
+        return copy(text);
     }
-  }
-  
+}
+
+// https://stackoverflow.com/questions/400212/how-do-i-copy-to-the-clipboard-in-javascript/33928558#33928558
+function copy(text: string) {
+    var input = document.createElement('textarea');
+    input.innerHTML = text;
+    document.body.appendChild(input);
+    input.select();
+    var result = document.execCommand('copy');
+    document.body.removeChild(input);
+    return Promise.resolve(result);
+}
