@@ -76,80 +76,24 @@ const Receive: FC = () => {
                     <CircularProgress size={32} />
                 ) : (
                     <Card variant="outlined">
-                        <CardContent sx={{ display: 'flex', flexDirection: 'column' }}>
-                            <QRCode style={{ marginTop: 16, alignSelf: 'center' }} level="M" value={address} />
+                        <CardContent>
+                            <Grid container justifyContent="center" sx={{ mt: 5 }}>
+                                <Grid item>
+                                    <QRCode level="M" value={address} />
+                                </Grid>
+                            </Grid>
 
-                            <Stack>
-                                <Typography sx={{ textAlign: 'left', mt: 3, pl: 2 }} variant="h2">
-                                    Wallet Address
-                                </Typography>
-                                <Typography
-                                    sx={{ mt: 3, mr: 2, pl: 2, wordBreak: 'break-word', textAlign: 'left' }}
-                                    variant="caption"
-                                >
-                                    {address}
-                                </Typography>
-                                {/* <Button color="primary" variant="contained" sx={button} onClick={handleCopyClick}>
-                                    {!isCopied ? 'Copy' : 'Copied'}
-                                </Button> */}
-                            </Stack>
-
-                            <BootstrapTooltip placement="top-end" disableHoverListener open={isCopied} title="Copied!">
-                                <ListItemIcon
-                                    onClick={handleCopyClick}
-                                    sx={[copyBtn, { backgroundColor: isCopied ? '#00B74A' : null }]}
-                                >
-                                    {!isCopied ? (
-                                        <ContentCopyIcon sx={{ color: '#fff', fontSize: 16 }} />
-                                    ) : (
-                                        <FileCopyIcon sx={{ color: '#fff', fontSize: 16 }} />
-                                    )}
-                                </ListItemIcon>
-                            </BootstrapTooltip>
-                            {/* <Chip
-                                label={!isCopied ? 'Copy' : 'Copied'}
+                            <Typography sx={{ mt: 3, mb: 1 }} variant="h2">
+                                Wallet Address
+                            </Typography>
+                            <Typography variant="body1" sx={{ wordWrap: 'break-word', mb: 1 }}>
+                                {address}
+                            </Typography>
+                            <Chip
                                 color="primary"
-                                sx={{
-                                    alignSelf: 'flex-start',
-                                    '&:hover': {
-                                        opacity: 0.8,
-                                    },
-                                    textAlign: 'center',
-                                    ml: 2,
-                                }}
+                                label={!isCopied ? 'Copy' : 'Copied'}
                                 onClick={handleCopyClick}
-                            /> */}
-
-                            {/* <Box sx={{ marginTop: 4 }}>
-                                <Tooltip title="Wallet Address">
-                                    <TextField
-                                        aria-readonly
-                                        InputProps={{
-                                            endAdornment: (
-                                                <Chip
-                                                    color="primary"
-                                                    label={!isCopied ? 'Copy' : 'Copied'}
-                                                    sx={button}
-                                                    onClick={handleCopyClick}
-                                                />
-                                            ),
-                                            startAdornment: (
-                                                <Typography sx={hexAddressText} variant="h6">
-                                                    Wallet
-                                                </Typography>
-                                            ),
-                                            style: {
-                                                color: '#91919D',
-                                                fontWeight: '800',
-                                            },
-                                        }}
-                                        value={address}
-                                    />
-                                </Tooltip>
-                                <Typography sx={{ marginTop: 2 }} variant="subtitle1">
-                                    Use this address to receive any Minima or Minima tokens.
-                                </Typography>
-                            </Box> */}
+                            ></Chip>
                         </CardContent>
                     </Card>
                 )}
@@ -160,15 +104,3 @@ const Receive: FC = () => {
 };
 
 export default Receive;
-
-const copyBtn = {
-    backgroundColor: '#317AFF',
-    justifyContent: 'center',
-    display: 'flex',
-    alignItems: 'center',
-    alignSelf: 'baseline',
-    borderRadius: 8,
-    padding: 1,
-    cursor: 'pointer',
-    marginLeft: 1.5,
-};
