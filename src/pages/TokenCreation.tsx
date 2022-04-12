@@ -69,7 +69,7 @@ const TokenCreation: FC = () => {
     });
 
     return (
-        <Grid container mt={2} spacing={2}>
+        <Grid container mt={2} spacing={0}>
             <Grid item xs={0} md={2}></Grid>
             <Grid item xs={12} md={8}>
                 <Card variant="outlined">
@@ -84,7 +84,7 @@ const TokenCreation: FC = () => {
                                 onChange={formik.handleChange}
                                 error={formik.touched.name && Boolean(formik.errors.name)}
                                 helperText={formik.touched.name && formik.errors.name}
-                                sx={{ marginBottom: 4, marginTop: 4 }}
+                                sx={{ mb: 2 }}
                                 FormHelperTextProps={{
                                     style: styles.helperText,
                                 }}
@@ -104,7 +104,7 @@ const TokenCreation: FC = () => {
                                 onChange={formik.handleChange}
                                 error={formik.touched.amount && Boolean(formik.errors.amount)}
                                 helperText={formik.touched.amount && formik.errors.amount}
-                                sx={{ marginBottom: 4 }}
+                                sx={{ mb: 2 }}
                                 FormHelperTextProps={{
                                     style: styles.helperText,
                                 }}
@@ -124,7 +124,7 @@ const TokenCreation: FC = () => {
                                 onChange={formik.handleChange}
                                 error={formik.touched.url && Boolean(formik.errors.url)}
                                 helperText={formik.touched.url && formik.errors.url}
-                                sx={{ marginBottom: 4 }}
+                                sx={{ mb: 2 }}
                             ></TextField>
                             <TextField
                                 fullWidth
@@ -137,10 +137,9 @@ const TokenCreation: FC = () => {
                                 helperText={formik.touched.description && formik.errors.description}
                                 multiline
                                 rows={4}
-                                sx={{ marginBottom: 4 }}
+                                sx={{ mb: 2 }}
                             ></TextField>
                             <Button
-                                sx={{ marginBottom: 4 }}
                                 disabled={formik.isSubmitting && !formik.isValid}
                                 disableElevation
                                 color="primary"
