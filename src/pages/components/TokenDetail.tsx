@@ -343,6 +343,7 @@ const valueStyle = {
     padding: 2,
     borderRadius: 1,
     overflowX: 'hidden',
+    textOverflow: 'ellipsis',
     width: '100%',
 };
 const start = {
