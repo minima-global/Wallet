@@ -85,9 +85,9 @@ const SideMenu = ({ handleDrawerToggle }: IProps) => {
             }}
         >
             <Grid item>
-                <Toolbar sx={{ backgroundColor: '#fff' }}>
+                <Toolbar sx={{ backgroundColor: '#fff' }} variant="dense">
                     <img src={WalletIcon} alt="walletIcon" id="walletIcon" />
-                    <Typography sx={style.appName} variant="h6">
+                    <Typography sx={style.appName} variant="h4">
                         Wallet
                     </Typography>
                 </Toolbar>

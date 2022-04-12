@@ -33,6 +33,12 @@ let theme = createTheme({
     },
     typography: {
         fontFamily: ['Manrope-regular'].join(','),
+        h4: {
+            fontWeight: 700,
+            fontSize: '18px',
+            lineHeight: '27px',
+            letterSpacing: '0.02em',
+        },
         h2: {
             fontWeight: 700,
             fontSize: 18,
@@ -71,6 +77,24 @@ let theme = createTheme({
 
 theme = createTheme(theme, {
     components: {
+        MuiSelect: {
+            styleOverrides: {
+                root: {
+                    paddingTop: 14,
+                    paddingBottom: 14,
+                    backgroundColor: '#fff'
+                }
+            }
+        },
+        MuiCardContent: {
+            styleOverrides: {
+                root: {
+                    "&:last-child": {
+                        paddingBottom: 16
+                      }
+                }
+            }
+        },
         MuiFormHelperText: {
             styleOverrides: {
                 root: {
@@ -180,7 +204,8 @@ theme = createTheme(theme, {
         MuiCard: {
             styleOverrides: {
                 root: {
-                    backgroundColor: 'rgba(255, 255, 255, 0.5)'
+                    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                    paddingBottom: 0
                 }
             }
         },

@@ -80,13 +80,10 @@ const Receive: FC = () => {
                             <QRCode style={{ marginTop: 16, alignSelf: 'center' }} level="M" value={address} />
 
                             <Stack>
-                                <Typography sx={{ textAlign: 'left', mt: 3, pl: 2 }} variant="h2">
+                                <Typography sx={{ textAlign: 'left' }} variant="h2">
                                     Wallet Address
                                 </Typography>
-                                <Typography
-                                    sx={{ mt: 3, mr: 2, pl: 2, wordBreak: 'break-word', textAlign: 'left' }}
-                                    variant="caption"
-                                >
+                                <Typography sx={{ wordBreak: 'break-word', textAlign: 'left' }} variant="caption">
                                     {address}
                                 </Typography>
                                 {/* <Button color="primary" variant="contained" sx={button} onClick={handleCopyClick}>
@@ -170,5 +167,4 @@ const copyBtn = {
     borderRadius: 8,
     padding: 1,
     cursor: 'pointer',
-    marginLeft: 1.5,
 };

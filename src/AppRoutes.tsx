@@ -115,7 +115,7 @@ const AppNavigation = () => {
                 </Snackbar>
             </Portal>
             <AppBar position="static" sx={appwidth}>
-                <Toolbar sx={start}>
+                <Toolbar sx={start} variant="dense">
                     {onDetail ? null : (
                         <IconButton
                             sx={{ display: { xs: 'flex', sm: 'none' } }}
@@ -135,7 +135,7 @@ const AppNavigation = () => {
                             <ArrowBackIcon sx={{ color: '#fff' }} />
                         </IconButton>
                     ) : null}
-                    <Typography variant="h6">{pageTitle}</Typography>
+                    <Typography variant="h4">{pageTitle}</Typography>
                 </Toolbar>
             </AppBar>
             <Grid component="main" container sx={appwidth}>

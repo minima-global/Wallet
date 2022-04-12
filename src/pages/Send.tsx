@@ -107,7 +107,7 @@ const Send: FC = () => {
     });
 
     return (
-        <Grid container mt={2} spacing={2}>
+        <Grid container mt={2} spacing={0}>
             <Grid item xs={0} md={2}></Grid>
             <Grid item xs={12} md={8} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 {loading ? (
@@ -119,7 +119,7 @@ const Send: FC = () => {
                                 <form onSubmit={formik.handleSubmit}>
                                     {tokenSelection && tokenSelection.length > 0 ? (
                                         <Select
-                                            sx={{ marginBottom: 4, marginTop: 4 }}
+                                            sx={{ marginBottom: 2 }}
                                             id="tokenid"
                                             name="tokenid"
                                             value={formik.values.tokenid}
@@ -143,6 +143,7 @@ const Send: FC = () => {
                                                                   maxWidth: '20vw',
                                                                   overflowX: 'hidden',
                                                                   textOverflow: 'ellipsis',
+                                                                  fontSize: '1rem',
                                                               }}
                                                           >
                                                               {token.token.name ? token.token.name : token.token}
@@ -173,7 +174,7 @@ const Send: FC = () => {
                                         onChange={formik.handleChange}
                                         error={formik.touched.address && Boolean(formik.errors.address)}
                                         helperText={formik.touched.address && formik.errors.address}
-                                        sx={{ marginBottom: 4 }}
+                                        sx={{ marginBottom: 2 }}
                                         FormHelperTextProps={{
                                             style: styles.helperText,
                                         }}
@@ -194,7 +195,7 @@ const Send: FC = () => {
                                         onChange={formik.handleChange}
                                         error={formik.touched.amount && Boolean(formik.errors.amount)}
                                         helperText={formik.touched.amount && formik.errors.amount}
-                                        sx={{ marginBottom: 4 }}
+                                        sx={{ marginBottom: 2 }}
                                         FormHelperTextProps={{
                                             style: styles.helperText,
                                         }}
@@ -206,7 +207,6 @@ const Send: FC = () => {
                                         }}
                                     />
                                     <Button
-                                        sx={{ marginBottom: 4 }}
                                         disabled={formik.isSubmitting && !formik.isValid}
                                         disableElevation
                                         color="primary"
