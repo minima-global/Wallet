@@ -16,6 +16,10 @@ import {
     ListItemText,
     ListItemIcon,
     Fade,
+    Tooltip,
+    styled,
+    TooltipProps,
+    tooltipClasses,
 } from '@mui/material';
 
 import MinimaIcon from '../../assets/images/minimaLogoSquare200x200.png';
@@ -26,6 +30,17 @@ import ThumbDownOffAltIcon from '@mui/icons-material/ThumbDownOffAlt';
 import { BalanceUpdates } from '../../App';
 
 import { copy as copyText } from '../../shared/functions';
+
+const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
+    <Tooltip {...props} arrow classes={{ popper: className }} />
+))(({ theme }) => ({
+    [`& .${tooltipClasses.arrow}`]: {
+        color: theme.palette.common.black,
+    },
+    [`& .${tooltipClasses.tooltip}`]: {
+        backgroundColor: theme.palette.common.black,
+    },
+}));
 
 const TokenDetail = () => {
     const { tokenid } = useParams();
@@ -227,18 +242,28 @@ const TokenDetail = () => {
                                                             </Typography>
                                                         }
                                                     >
-                                                        <ListItemIcon
-                                                            onClick={() => {
-                                                                handleCopyBtn(token?.tokenid ? token?.tokenid : '');
-                                                            }}
-                                                            sx={[copyBtn, { backgroundColor: copy ? '#00B74A' : null }]}
+                                                        <BootstrapTooltip
+                                                            placement="top-end"
+                                                            disableHoverListener
+                                                            open={copy}
+                                                            title="Copied!"
                                                         >
-                                                            {!copy ? (
-                                                                <ContentCopyIcon sx={{ color: '#fff' }} />
-                                                            ) : (
-                                                                <FileCopyIcon sx={{ color: '#fff' }} />
-                                                            )}
-                                                        </ListItemIcon>
+                                                            <ListItemIcon
+                                                                onClick={() => {
+                                                                    handleCopyBtn(token?.tokenid ? token?.tokenid : '');
+                                                                }}
+                                                                sx={[
+                                                                    copyBtn,
+                                                                    { backgroundColor: copy ? '#00B74A' : null },
+                                                                ]}
+                                                            >
+                                                                {!copy ? (
+                                                                    <ContentCopyIcon sx={{ color: '#fff' }} />
+                                                                ) : (
+                                                                    <FileCopyIcon sx={{ color: '#fff' }} />
+                                                                )}
+                                                            </ListItemIcon>
+                                                        </BootstrapTooltip>
                                                     </ListItemText>
                                                 </Box>
                                             </ListItem>
@@ -336,6 +361,7 @@ const copyBtn = {
     alignItems: 'center',
     borderTopRightRadius: 8,
     borderBottomRightRadius: 8,
+    cursor: 'pointer',
 };
 
 const valueStyle = {

@@ -11,10 +11,28 @@ import {
     Tooltip,
     CircularProgress,
     Stack,
+    styled,
+    TooltipProps,
+    tooltipClasses,
+    ListItemIcon,
 } from '@mui/material';
 import { callAddress } from '../minima/rpc-commands';
 import { copy, copyTextToClipboard } from '../shared/functions';
 import QRCode from 'react-qr-code';
+
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import FileCopyIcon from '@mui/icons-material/FileCopy';
+
+const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
+    <Tooltip {...props} arrow classes={{ popper: className }} />
+))(({ theme }) => ({
+    [`& .${tooltipClasses.arrow}`]: {
+        color: theme.palette.common.black,
+    },
+    [`& .${tooltipClasses.tooltip}`]: {
+        backgroundColor: theme.palette.common.black,
+    },
+}));
 
 const Receive: FC = () => {
     const [address, setAddress] = useState<string>('');
@@ -76,7 +94,19 @@ const Receive: FC = () => {
                                 </Button> */}
                             </Stack>
 
-                            <Chip
+                            <BootstrapTooltip placement="top-end" disableHoverListener open={isCopied} title="Copied!">
+                                <ListItemIcon
+                                    onClick={handleCopyClick}
+                                    sx={[copyBtn, { backgroundColor: isCopied ? '#00B74A' : null }]}
+                                >
+                                    {!isCopied ? (
+                                        <ContentCopyIcon sx={{ color: '#fff', fontSize: 16 }} />
+                                    ) : (
+                                        <FileCopyIcon sx={{ color: '#fff', fontSize: 16 }} />
+                                    )}
+                                </ListItemIcon>
+                            </BootstrapTooltip>
+                            {/* <Chip
                                 label={!isCopied ? 'Copy' : 'Copied'}
                                 color="primary"
                                 sx={{
@@ -88,7 +118,7 @@ const Receive: FC = () => {
                                     ml: 2,
                                 }}
                                 onClick={handleCopyClick}
-                            />
+                            /> */}
 
                             {/* <Box sx={{ marginTop: 4 }}>
                                 <Tooltip title="Wallet Address">
@@ -130,3 +160,15 @@ const Receive: FC = () => {
 };
 
 export default Receive;
+
+const copyBtn = {
+    backgroundColor: '#317AFF',
+    justifyContent: 'center',
+    display: 'flex',
+    alignItems: 'center',
+    alignSelf: 'baseline',
+    borderRadius: 8,
+    padding: 1,
+    cursor: 'pointer',
+    marginLeft: 1.5,
+};
