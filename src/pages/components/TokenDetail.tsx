@@ -25,6 +25,8 @@ import FileCopyIcon from '@mui/icons-material/FileCopy';
 import ThumbDownOffAltIcon from '@mui/icons-material/ThumbDownOffAlt';
 import { BalanceUpdates } from '../../App';
 
+import { copy as copyText } from '../../shared/functions';
+
 const TokenDetail = () => {
     const { tokenid } = useParams();
     const [loading, setLoading] = useState<boolean>(true);
@@ -50,18 +52,20 @@ const TokenDetail = () => {
     };
 
     const handleCopyBtn = (text: string) => {
-        copyTextToClipboard(text)
-            .then(() => {
-                // If successful, update the isCopied state value
-                setCopy(true);
+        copyText(text);
+        setCopy(true);
+        setTimeout(() => setCopy(false), 1000);
+        // .then(() => {
+        //     // If successful, update the isCopied state value
+        //     setCopy(true);
 
-                setTimeout(() => {
-                    setCopy(false);
-                }, 1000);
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+        //     setTimeout(() => {
+        //         setCopy(false);
+        //     }, 1000);
+        // })
+        // .catch((err) => {
+        //     console.log(err);
+        // });
     };
 
     async function copyTextToClipboard(text: string) {
