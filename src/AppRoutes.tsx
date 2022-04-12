@@ -104,7 +104,11 @@ const AppNavigation = () => {
     return (
         <>
             <Portal>
-                <Snackbar autoHideDuration={3000} open={showNewBalanceSnack}>
+                <Snackbar
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                    autoHideDuration={3000}
+                    open={showNewBalanceSnack}
+                >
                     <Alert severity="success" sx={{ backgroundColor: '#317AFF', width: '100%', color: '#fff' }}>
                         Balance update!
                     </Alert>

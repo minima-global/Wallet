@@ -25,8 +25,8 @@ import { BalanceUpdates } from '../App';
 const TransferTokenSchema = Yup.object().shape({
     tokenid: Yup.string().required('Field Required'),
     address: Yup.string()
-        .matches(/0[xX][0-9a-fA-F]+/, 'Invalid Address.')
-        .min(66, 'Invalid Address, too short.')
+        .matches(/0|M[xX][0-9a-fA-F]+/, 'Invalid Address.')
+        .min(60, 'Invalid Address, too short.')
         .max(66, 'Invalid Address, too long.')
         .required('Field Required'),
     amount: Yup.string().required('Field Required'),

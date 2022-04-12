@@ -73,7 +73,7 @@ const Status = () => {
                                         />
                                     </Box>
                                     <List>
-                                        <ListSubheader>
+                                        <ListSubheader sx={{ pl: 0 }}>
                                             {status?.version ? 'Node v' + status.version : null}
                                         </ListSubheader>
                                         <ListItem>
