@@ -86,7 +86,7 @@ const Balance = () => {
 
     return (
         <>
-            <Grid container spacing={2}>
+            <Grid container spacing={0} mt={2}>
                 <Grid item xs={0} md={2}></Grid>
                 <Grid item xs={12} md={8}>
                     {loading ? (

@@ -27,19 +27,19 @@ const TokenCreation: FC = () => {
     const formik = useFormik({
         initialValues: {
             name: '',
-            amount: '',
+            amount: 0,
             url: '',
             description: '',
         },
         validationSchema: CreateTokenSchema,
-        onSubmit: (data) => {
+        onSubmit: (formData) => {
             const customToken = {
                 name: {
-                    name: data.name,
-                    description: data.description,
-                    url: data.url,
+                    name: formData.name,
+                    description: formData.description,
+                    url: formData.url,
                 },
-                amount: data.amount,
+                amount: formData.amount,
             };
             callToken(customToken)
                 .then((res: any) => {

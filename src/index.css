@@ -34,3 +34,11 @@ code {
 .MuiListItem-root {
     padding-bottom: 14px!important;
 }
+
+.MuiAutocomplete-input {
+    background-color: transparent!important;
+}
+.Mui-focused {
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 8px;
+}
