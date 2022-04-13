@@ -98,7 +98,7 @@ const Balance = () => {
                     {loading ? (
                         <CircularProgress size={32} />
                     ) : (
-                        <Card>
+                        <Card variant="outlined">
                             <CardContent
                                 sx={{
                                     display: 'flex',
