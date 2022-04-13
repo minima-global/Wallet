@@ -94,7 +94,7 @@ const Balance = () => {
         <>
             <Grid container spacing={0} mt={2} mb={2}>
                 <Grid item xs={0} md={2}></Grid>
-                <Grid item xs={12} md={8} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Grid item xs={12} md={8} sx={{ textAlign: 'center' }}>
                     {loading ? (
                         <CircularProgress size={32} />
                     ) : (
