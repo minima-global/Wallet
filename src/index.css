@@ -42,3 +42,16 @@ code {
     background-color: rgba(255, 255, 255, 0.8);
     border-radius: 8px;
 }
+
+@media only screen and (min-width: 600px) {
+    .MuiToolbar-root {
+        padding-left: 16px!important;
+    }
+    
+}
+
+.Mui-selected {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 0!important;
+
+}

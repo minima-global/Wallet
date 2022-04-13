@@ -101,6 +101,7 @@ const SideMenu = ({ handleDrawerToggle }: IProps) => {
                                     handleDrawerOnNavigation(route.pathname);
                                 }}
                                 key={i}
+                                selected={activeRoute(route.pathname)}
                             >
                                 <ListItemIcon>
                                     <Radio sx={{ p: 0 }} checked={activeRoute(route.pathname)} />
@@ -134,5 +135,7 @@ const style = {
     appName: {
         fontWeight: '800',
         marginLeft: 1,
+        mb: 0.25,
+        ml: 2.5,
     },
 };

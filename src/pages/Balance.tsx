@@ -23,6 +23,7 @@ import { useEffect, useState } from 'react';
 import { callBalance } from '../minima/rpc-commands';
 
 import { BalanceUpdates } from '../App';
+import { Box } from '@mui/system';
 
 const Balance = () => {
     const [page, setPage] = useState<number>(1);
@@ -39,7 +40,8 @@ const Balance = () => {
             // console.log(`Setting balance...`);
             setBalance(update);
             setFilteredBalance(update);
-            setLoading(false);
+            // setLoading(false);
+            setTimeout(() => setLoading(false), 1000);
         } else {
             setFilteredBalance([]);
         }
@@ -52,7 +54,8 @@ const Balance = () => {
                     // console.log(data);
                     setBalance(data);
                     setFilteredBalance(data);
-                    setLoading(false);
+                    // setLoading(false);
+                    setTimeout(() => setLoading(false), 1000);
                 })
                 .catch((err: Error) => {
                     console.error(err);
@@ -60,7 +63,9 @@ const Balance = () => {
                 });
         }
 
-        setLoading(false);
+        // setLoading(false);
+        setTimeout(() => setLoading(false), 1000);
+
         return () => {};
     }, [update]);
 
@@ -88,101 +93,113 @@ const Balance = () => {
         <>
             <Grid container spacing={0} mt={2}>
                 <Grid item xs={0} md={2}></Grid>
-                <Grid item xs={12} md={8}>
+                <Grid
+                    item
+                    xs={12}
+                    md={8}
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexDirection: 'column',
+                    }}
+                >
                     {loading ? (
                         <CircularProgress size={32} />
                     ) : (
                         <>
-                            {filteredBalance && filteredBalance.length ? (
-                                <Autocomplete
-                                    sx={{ marginBottom: 4 }}
-                                    freeSolo
-                                    id="token-search"
-                                    onInputChange={handleInputChange}
-                                    disableClearable
-                                    options={filteredBalance.map((option: MinimaToken) =>
-                                        option.token.name ? option.token.name : option.token
-                                    )}
-                                    renderOption={(props, option) => {
-                                        return (
-                                            <li {...props} key={option + Math.random()}>
-                                                {option}
-                                            </li>
-                                        );
-                                    }}
-                                    renderInput={(params) => (
-                                        <TextField
-                                            {...params}
-                                            placeholder="Search token"
-                                            InputProps={{
-                                                ...params.InputProps,
-                                                type: 'search',
-                                            }}
-                                        />
-                                    )}
-                                />
-                            ) : null}
-                            <List>
-                                {filteredBalance && filteredBalance.length > 0 ? (
-                                    filteredBalance?.map((item: MinimaToken, i) => (
-                                        <ListItemButton
-                                            key={item.tokenid}
-                                            sx={{ marginBottom: 2 }}
-                                            onClick={() => navigate(`${item.tokenid}`)}
-                                        >
-                                            <ListItemAvatar>
-                                                <Avatar
-                                                    src={
-                                                        item.tokenid === '0x00'
-                                                            ? MinimaIcon
-                                                            : !item.token.url || item.token.url.length === 0
-                                                            ? `https://robohash.org/${item.tokenid}`
-                                                            : item.token.url && item.token.url.length > 0
-                                                            ? item.token.url
-                                                            : ''
-                                                    }
-                                                    alt={item.token.name ? item.token.name : item.token}
-                                                />
-                                            </ListItemAvatar>
-                                            <ListItemText
-                                                disableTypography
-                                                primary={
-                                                    <Typography
-                                                        variant="h2"
-                                                        sx={{
-                                                            textOverflow: 'ellipsis',
-                                                            overFlowX: 'hidden',
-                                                            overflow: 'hidden',
-                                                            lineHeight: 1.3,
-                                                            display: '-webkit-box',
-                                                            WebkitBoxOrient: 'vertical',
-                                                            WebkitLineClamp: 1,
-                                                        }}
-                                                    >
-                                                        {item.token.name ? item.token.name : item.token}
-                                                    </Typography>
-                                                }
-                                                secondary={
-                                                    <Typography
-                                                        sx={{
-                                                            textOverflow: 'ellipsis',
-                                                            overFlowX: 'hidden',
-                                                            overflow: 'hidden',
-                                                        }}
-                                                        variant="subtitle1"
-                                                    >
-                                                        {item.confirmed}
-                                                    </Typography>
-                                                }
+                            <Box>
+                                {filteredBalance && filteredBalance.length ? (
+                                    <Autocomplete
+                                        sx={{ marginBottom: 4 }}
+                                        freeSolo
+                                        id="token-search"
+                                        onInputChange={handleInputChange}
+                                        disableClearable
+                                        options={filteredBalance.map((option: MinimaToken) =>
+                                            option.token.name ? option.token.name : option.token
+                                        )}
+                                        renderOption={(props, option) => {
+                                            return (
+                                                <li {...props} key={option + Math.random()}>
+                                                    {option}
+                                                </li>
+                                            );
+                                        }}
+                                        renderInput={(params) => (
+                                            <TextField
+                                                {...params}
+                                                placeholder="Search token"
+                                                InputProps={{
+                                                    ...params.InputProps,
+                                                    type: 'search',
+                                                }}
                                             />
-                                        </ListItemButton>
-                                    ))
-                                ) : (
-                                    <Typography sx={{ alignText: 'center' }} variant="h6">
-                                        No tokens found
-                                    </Typography>
-                                )}
-                            </List>
+                                        )}
+                                    />
+                                ) : null}
+                                <List>
+                                    {filteredBalance && filteredBalance.length > 0 ? (
+                                        filteredBalance?.map((item: MinimaToken, i) => (
+                                            <ListItemButton
+                                                key={item.tokenid}
+                                                sx={{ marginBottom: 2 }}
+                                                onClick={() => navigate(`${item.tokenid}`)}
+                                            >
+                                                <ListItemAvatar>
+                                                    <Avatar
+                                                        src={
+                                                            item.tokenid === '0x00'
+                                                                ? MinimaIcon
+                                                                : !item.token.url || item.token.url.length === 0
+                                                                ? `https://robohash.org/${item.tokenid}`
+                                                                : item.token.url && item.token.url.length > 0
+                                                                ? item.token.url
+                                                                : ''
+                                                        }
+                                                        alt={item.token.name ? item.token.name : item.token}
+                                                    />
+                                                </ListItemAvatar>
+                                                <ListItemText
+                                                    disableTypography
+                                                    primary={
+                                                        <Typography
+                                                            variant="h2"
+                                                            sx={{
+                                                                textOverflow: 'ellipsis',
+                                                                overFlowX: 'hidden',
+                                                                overflow: 'hidden',
+                                                                lineHeight: 1.3,
+                                                                display: '-webkit-box',
+                                                                WebkitBoxOrient: 'vertical',
+                                                                WebkitLineClamp: 1,
+                                                            }}
+                                                        >
+                                                            {item.token.name ? item.token.name : item.token}
+                                                        </Typography>
+                                                    }
+                                                    secondary={
+                                                        <Typography
+                                                            sx={{
+                                                                textOverflow: 'ellipsis',
+                                                                overFlowX: 'hidden',
+                                                                overflow: 'hidden',
+                                                            }}
+                                                            variant="subtitle1"
+                                                        >
+                                                            {item.confirmed}
+                                                        </Typography>
+                                                    }
+                                                />
+                                            </ListItemButton>
+                                        ))
+                                    ) : (
+                                        <Typography sx={{ textAlign: 'center' }} variant="h6">
+                                            No tokens found
+                                        </Typography>
+                                    )}
+                                </List>
+                            </Box>
                         </>
                     )}
 

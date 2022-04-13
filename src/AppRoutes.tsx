@@ -135,7 +135,9 @@ const AppNavigation = () => {
                             <ArrowBackIcon sx={{ color: '#fff' }} />
                         </IconButton>
                     ) : null}
-                    <Typography variant="h4">{pageTitle}</Typography>
+                    <Typography mb={0.25} variant="h4">
+                        {pageTitle}
+                    </Typography>
                 </Toolbar>
             </AppBar>
             <Grid component="main" container sx={appwidth}>

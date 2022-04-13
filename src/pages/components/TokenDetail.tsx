@@ -131,7 +131,7 @@ const TokenDetail = () => {
     }, [updates]);
 
     return (
-        <Grid container spacing={2} sx={{ marginTop: 2, marginBottom: 2 }}>
+        <Grid container spacing={0} mt={2} mb={2}>
             <Grid item xs={0} md={2}></Grid>
             <Grid item xs={12} md={8} container spacing={2}>
                 {loading ? (
@@ -149,7 +149,7 @@ const TokenDetail = () => {
                                         }}
                                     >
                                         <Avatar
-                                            sx={{ height: dimensions, width: dimensions, margin: 3 }}
+                                            sx={{ height: dimensions, width: dimensions }}
                                             onClick={handleAvatarDimensions}
                                             src={
                                                 token?.tokenid === '0x00'
@@ -163,7 +163,7 @@ const TokenDetail = () => {
                                             alt={token?.token.name ? token?.token.name : token?.token}
                                         />
 
-                                        <Typography variant="h2" sx={{ textAlign: 'center' }}>
+                                        <Typography variant="h2" sx={{ textAlign: 'center' }} mt={2}>
                                             {token?.token.name ? token?.token.name : token?.token}
                                         </Typography>
                                         <Divider sx={{ margin: 1 }} />
@@ -244,9 +244,7 @@ const TokenDetail = () => {
                                                     >
                                                         <BootstrapTooltip
                                                             placement="top-end"
-                                                            disableHoverListener
-                                                            open={copy}
-                                                            title="Copied!"
+                                                            title={!copy ? 'Copy TokenID' : 'Copied!'}
                                                         >
                                                             <ListItemIcon
                                                                 onClick={() => {

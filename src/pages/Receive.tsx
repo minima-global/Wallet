@@ -92,8 +92,8 @@ const Receive: FC = () => {
                                     ></ListItemText>
                                 </ListItem>
                             </List>
-
-                            <BootstrapTooltip placement="top-end" disableHoverListener open={isCopied} title="Copied!">
+                            {/* disableHoverListener */}
+                            <BootstrapTooltip placement="top-end" title={!isCopied ? 'Copy Address' : 'Copied!'}>
                                 <ListItemIcon
                                     onClick={handleCopyClick}
                                     sx={[copyBtn, { backgroundColor: isCopied ? '#00B74A' : null }]}
