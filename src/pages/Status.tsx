@@ -39,21 +39,21 @@ const Status = () => {
     }, []);
 
     return (
-        <Grid container spacing={0}>
+        <Grid container spacing={0} mb={2}>
             <Grid item md={2}></Grid>
             <Grid
                 item
                 container
                 md={8}
-                spacing={0}
-                mt={2}
+                spacing={1}
+                mt={1}
                 sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
             >
                 {loading ? (
                     <CircularProgress size={32} />
                 ) : (
                     <>
-                        <Grid item xs={12} md={12} mb={2} ml={0} mr={0}>
+                        <Grid item xs={12} md={12}>
                             <Card variant="outlined">
                                 <CardContent>
                                     <Box
@@ -122,28 +122,28 @@ const Status = () => {
                                 </CardContent>
                             </Card>
                         </Grid>
-                        <Grid item xs={12} md={6} mb={2}>
+                        <Grid item xs={12} md={6}>
                             <Card variant="outlined">
                                 {status && status.memory ? <Memory memory={status.memory} /> : null}
                             </Card>
                         </Grid>
-                        <Grid item xs={12} md={6} mb={2}>
+                        <Grid item xs={12} md={6}>
                             <Card variant="outlined">
                                 {status && status.chain ? <Chain chain={status.chain} /> : null}
                             </Card>
                         </Grid>
-                        <Grid item xs={12} md={6} mb={2}>
+                        <Grid item xs={12} md={6}>
                             <Card variant="outlined">
                                 {status && status.txpow ? <TxPoW txpow={status.txpow} /> : null}
                             </Card>
                         </Grid>
-                        <Grid item xs={12} md={6} mb={2}>
+                        <Grid item xs={12} md={6}>
                             <Card variant="outlined">
                                 {status && status.network ? <Network network={status.network} /> : null}
                             </Card>
                         </Grid>
                         {status && status.network.p2p && status.network.p2p.address ? (
-                            <Grid item xs={12} md={12} mb={2}>
+                            <Grid item xs={12} md={12}>
                                 <Card variant="outlined">
                                     {status && status.network.p2p ? <P2P p2p={status.network.p2p} /> : null}
                                 </Card>
