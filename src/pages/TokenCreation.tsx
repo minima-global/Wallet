@@ -44,6 +44,7 @@ const TokenCreation: FC = () => {
             callToken(customToken)
                 .then((res: any) => {
                     // console.log(res);
+                    // console.log(formData.amount);
                     // SENT
                     formik.resetForm();
                     // Set Modal

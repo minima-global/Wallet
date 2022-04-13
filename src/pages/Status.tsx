@@ -59,9 +59,7 @@ const Status = () => {
                                     <Box
                                         sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
                                     >
-                                        <Typography variant="h2" sx={{ color: '#317AFF' }}>
-                                            Overview
-                                        </Typography>
+                                        <Typography variant="h6">Overview</Typography>
                                         <Chip
                                             color="primary"
                                             icon={status?.version ? <CheckCircleIcon /> : <CancelIcon />}
@@ -187,9 +185,7 @@ const Memory: FC<MemoryProps> = (props: MemoryProps) => {
         <React.Fragment>
             <CardContent>
                 <Box>
-                    <Typography variant="h2" sx={{ color: '#317AFF', mb: 2 }}>
-                        Files
-                    </Typography>
+                    <Typography variant="h6">Files</Typography>
                 </Box>
 
                 <List>
@@ -273,9 +269,7 @@ const Chain: FC<ChainProps> = (props: ChainProps) => {
         <React.Fragment>
             <CardContent>
                 <Box>
-                    <Typography variant="h2" sx={{ color: '#317AFF', mb: 2 }}>
-                        Chain
-                    </Typography>
+                    <Typography variant="h6">Chain</Typography>
                 </Box>
 
                 <List>
@@ -397,7 +391,7 @@ const TxPoW: FC<TxPoWProps> = (props: TxPoWProps) => {
         <React.Fragment>
             <CardContent>
                 <Box>
-                    <Typography variant="h2" sx={{ color: '#317AFF', mb: 2 }}>
+                    <Typography variant="h6" sx={{ mb: 2 }}>
                         TxPoW
                     </Typography>
                 </Box>
@@ -461,9 +455,7 @@ const Network: FC<NetworkProps> = (props: NetworkProps) => {
         <React.Fragment>
             <CardContent>
                 <Box>
-                    <Typography variant="h2" sx={{ color: '#317AFF', mb: 2 }}>
-                        Network
-                    </Typography>
+                    <Typography variant="h6">Network</Typography>
                 </Box>
 
                 <List>
@@ -548,9 +540,7 @@ const P2P: FC<P2PProps> = (props: P2PProps) => {
         <React.Fragment>
             <CardContent>
                 <Box>
-                    <Typography variant="h2" sx={{ color: '#317AFF', mb: 2 }}>
-                        P2P
-                    </Typography>
+                    <Typography variant="h6">P2P</Typography>
                 </Box>
 
                 <List>

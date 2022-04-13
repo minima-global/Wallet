@@ -105,7 +105,7 @@ const TokenDetail = () => {
         } else {
             callBalance()
                 .then((data: any) => {
-                    console.log('Balance', data);
+                    // console.log('Balance', data);
                     {
                         data && data.length
                             ? data.forEach((b: MinimaToken) => {

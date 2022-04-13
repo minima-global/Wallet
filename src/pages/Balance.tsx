@@ -13,6 +13,8 @@ import {
     Portal,
     Snackbar,
     CircularProgress,
+    Card,
+    CardContent,
 } from '@mui/material';
 
 import { useNavigate } from 'react-router-dom';
@@ -23,7 +25,6 @@ import { useEffect, useState } from 'react';
 import { callBalance } from '../minima/rpc-commands';
 
 import { BalanceUpdates } from '../App';
-import { Box } from '@mui/system';
 
 const Balance = () => {
     const [page, setPage] = useState<number>(1);
@@ -91,24 +92,20 @@ const Balance = () => {
 
     return (
         <>
-            <Grid container spacing={0} mt={2}>
+            <Grid container spacing={0} mt={2} mb={2}>
                 <Grid item xs={0} md={2}></Grid>
-                <Grid
-                    item
-                    xs={12}
-                    md={8}
-                    sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        flexDirection: 'column',
-                    }}
-                >
+                <Grid item xs={12} md={8} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     {loading ? (
                         <CircularProgress size={32} />
                     ) : (
-                        <>
-                            <Box>
+                        <Card>
+                            <CardContent
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    justifyContent: 'center',
+                                }}
+                            >
                                 {filteredBalance && filteredBalance.length ? (
                                     <Autocomplete
                                         sx={{ marginBottom: 4 }}
@@ -199,8 +196,8 @@ const Balance = () => {
                                         </Typography>
                                     )}
                                 </List>
-                            </Box>
-                        </>
+                            </CardContent>
+                        </Card>
                     )}
 
                     {/* {filteredBalance.length && filteredBalance.length > 0 ? (
