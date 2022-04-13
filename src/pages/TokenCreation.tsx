@@ -55,10 +55,15 @@ const TokenCreation: FC = () => {
                     console.log(err);
                     // console.error(err.message);
                     // FAILED
+
+                    if (err === undefined || err.message === undefined) {
+                        alert('Something went wrong, error message undefined.  Open a support ticket!');
+                    }
+
                     if (err.message !== undefined && err.message.substring(0, 20) === INSUFFICIENT) {
                         formik.setFieldError('amount', err.message);
                     } else {
-                        console.error(`Err is undefined or not a string..`);
+                        alert(err);
                     }
                 })
                 .finally(() => {

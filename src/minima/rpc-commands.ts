@@ -20,9 +20,32 @@ const Minima = new Commands(); // this will create a cmds reference
 //     });
 // };
 
-export const callToken = (data: TokenCreateArgs) => {
-    // const command = `${TOKENCREATE}+name:${JSON.stringify(data.name)}+amount:${data.amount}`;
-    return Minima.tokencreate({name: `${JSON.stringify(data.name)}`, amount: `${data.amount}`});
+/**
+ * 
+ * TODO - fix up issue with what you send to tokencreate
+ * Error: Invalid JSON parameter for tokencreate @ name:{/"name/":/"wqerqwe/",/"description/":/"/",/"url/":/"/"} 
+ * org.minima.utils.json.parser.ParseException: Unexpected character (/) at position 1.
+ * 
+ */
+/**
+ * 
+ * TODO I know pass any as record<string, any> doesn't work right
+ * must be concise when using Record type
+ * update mds-api to type any for name
+ */
+
+interface Test {
+    name: any;
+    amount: number;
+}
+export const callToken = (data: Test) => {
+    return Minima.tokencreate({
+        name: {
+            name: data.name.name, 
+            description: data.name.description, 
+            url: data.name.url
+        }, 
+        amount: `${data.amount}`});
 };
 
 export const callSend = (data: SendArgs) => {
