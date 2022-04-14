@@ -1,11 +1,3 @@
-/** hide scrollbar */
-*{
-    -ms-overflow-style: none;
-}
-::-webkit-scrollbar {
-    display: none;
-}
-
 html,
 body {
     height: '100%';
@@ -14,7 +6,6 @@ body {
         'Droid Sans', 'Helvetica Neue', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    overflow: scroll !important;
 }
 
 code {
@@ -27,24 +18,23 @@ code {
 }
 
 .MuiSelect-select {
-    padding-top: 14px!important;
-    padding-bottom: 14px!important;
-    background-color: rgba(255, 255, 255, 0.5)!important;
-    
+    padding-top: 14px !important;
+    padding-bottom: 14px !important;
+    background-color: rgba(255, 255, 255, 0.5) !important;
 }
 .MuiSelect-select:focus {
     background-color: rgba(255, 255, 255, 0.8);
 }
 .MuiList-root {
-    padding-bottom: 0!important;
-    padding-top: 0!important;
+    padding-bottom: 0 !important;
+    padding-top: 0 !important;
 }
 .MuiListItem-root {
-    padding-bottom: 14px!important;
+    padding-bottom: 14px !important;
 }
 
 .MuiAutocomplete-input {
-    background-color: transparent!important;
+    background-color: transparent !important;
 }
 .Mui-focused {
     background-color: rgba(255, 255, 255, 0.8);
@@ -53,13 +43,11 @@ code {
 
 @media only screen and (min-width: 600px) {
     .MuiToolbar-root {
-        padding-left: 16px!important;
+        padding-left: 16px !important;
     }
-    
 }
 
 .Mui-selected {
     background-color: rgba(255, 255, 255, 0.2);
-    border-radius: 0!important;
-
+    border-radius: 0 !important;
 }

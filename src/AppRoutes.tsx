@@ -165,8 +165,9 @@ const AppNavigation = () => {
                 >
                     <SideMenu handleDrawerToggle={handleDrawerToggle} />
                 </Drawer>
+                {/* Drawer on desktop is always open */}
                 <Drawer variant="permanent" sx={drawerdisplaydesktop}>
-                    <SideMenu handleDrawerToggle={handleDrawerToggle} />
+                    <SideMenu handleDrawerToggle={() => {}} />
                 </Drawer>
             </Box>
         </>
