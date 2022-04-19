@@ -66,7 +66,7 @@ const Offline = () => {
                             <Typography variant="h4">Still doesn't work?</Typography>
                             <Typography variant="body1">
                                 Open a new support ticket on <Link href="https://discord.gg/CraZfThGCw">Discord</Link>{' '}
-                                so the Minima team can help.
+                                so Minima support can help.
                             </Typography>
                         </Stack>
                     </CardContent>
