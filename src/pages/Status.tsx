@@ -26,6 +26,7 @@ import ExpandMoreOutlined from '@mui/icons-material/ExpandMoreOutlined';
 const Status = () => {
     const [status, setStatus] = useState<StatusType>();
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(false);
 
     useEffect(() => {
         callStatus()
@@ -34,6 +35,8 @@ const Status = () => {
                 setLoading(false);
             })
             .catch((err) => {
+                setLoading(false);
+                setError(true);
                 console.error(err);
             });
     }, []);
@@ -49,9 +52,9 @@ const Status = () => {
                 mt={1}
                 sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
             >
-                {loading ? (
+                {loading && !error ? (
                     <CircularProgress size={32} />
-                ) : (
+                ) : !loading && !error ? (
                     <>
                         <Grid item xs={12} md={12}>
                             <Card variant="outlined">
@@ -147,6 +150,21 @@ const Status = () => {
                                 </Card>
                             </Grid>
                         ) : null}
+                    </>
+                ) : (
+                    <>
+                        <Grid item xs={12} md={12}>
+                            <Card variant="outlined">
+                                <CardContent>
+                                    <Box
+                                        sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+                                    >
+                                        <Typography variant="h6">Overview</Typography>
+                                        <Chip color="error" icon={<CancelIcon />} label={'offline'} />
+                                    </Box>
+                                </CardContent>
+                            </Card>
+                        </Grid>
                     </>
                 )}
             </Grid>
