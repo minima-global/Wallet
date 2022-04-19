@@ -33,7 +33,9 @@ const TransferTokenSchema = Yup.object().shape({
         .min(60, 'Invalid Address, too short.')
         .max(66, 'Invalid Address, too long.')
         .required('Field Required'),
-    amount: Yup.string().required('Field Required'),
+    amount: Yup.string()
+        .required('Field Required')
+        .matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters.'),
 });
 
 const styles = {

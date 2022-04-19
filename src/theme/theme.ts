@@ -110,9 +110,12 @@ theme = createTheme(theme, {
                     fontWeight: 400,
                     padding: 5,
                     margin: 0,
+                    
                     '&$error': {
                         color: 'black'
-                    }
+                    },
+                    borderTopLeftRadius: 0,
+                    borderTopRightRadius: 0
                 },
                 "&$error": {
                     color: 'black'

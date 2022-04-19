@@ -9,10 +9,17 @@ import { RpcResponse } from '../types/minima';
 import { useNavigate } from 'react-router-dom';
 
 const CreateTokenSchema = Yup.object().shape({
-    name: Yup.string().required('Field Required'),
-    amount: Yup.string().required('Field Required'),
-    description: Yup.string().min(0).max(255, 'Maximum 255 characters allowed.'),
-    url: Yup.string(),
+    name: Yup.string()
+        .required('Field Required')
+        .matches(/^[^\\;'"]+$/, 'Invalid characters.'),
+    amount: Yup.string()
+        .required('Field Required')
+        .matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters.'),
+    description: Yup.string()
+        .min(0)
+        .max(255, 'Maximum 255 characters allowed.')
+        .matches(/^[^\\;'"]+$/, 'Invalid characters.'),
+    url: Yup.string().matches(/^[^\\;'"]+$/, 'Invalid characters.'),
 });
 
 const TokenCreation: FC = () => {
@@ -71,8 +78,6 @@ const TokenCreation: FC = () => {
                 })
                 .catch((err: any) => {
                     console.log(err);
-                    // console.error(err.message);
-                    // FAILED
 
                     if (err === undefined || err.message === undefined) {
                         setErrMessage('Something went wrong!  Open a Discord Support ticket for assistance.');
@@ -81,10 +86,8 @@ const TokenCreation: FC = () => {
 
                     if (err.message !== undefined && err.message.substring(0, 20) === INSUFFICIENT) {
                         formik.setFieldError('amount', err.message);
-                        setErrMessage(err.message);
                     } else {
-                        setErrMessage(err);
-                        //alert(err);
+                        setErrMessage(err.message);
                     }
                 })
                 .finally(() => {
