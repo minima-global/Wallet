@@ -1,5 +1,5 @@
 import { FC, useState, useEffect } from 'react';
-import { Grid, Card, CardContent, TextField, Button } from '@mui/material';
+import { Grid, Card, CardContent, TextField, Button, Portal, Snackbar, Alert } from '@mui/material';
 import MiniModal from '../shared/components/MiniModal';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -20,6 +20,7 @@ const TokenCreation: FC = () => {
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(true);
     const [modalStatus, setModalStatus] = useState('Failed');
+    const [errMessage, setErrMessage] = useState('');
     const handleOpen = () => setOpen(true);
     const handleClose = () => {
         setOpen(false);
@@ -74,18 +75,22 @@ const TokenCreation: FC = () => {
                     // FAILED
 
                     if (err === undefined || err.message === undefined) {
-                        alert('Something went wrong, error message undefined.  Open a support ticket!');
+                        setErrMessage('Something went wrong!  Open a Discord Support ticket for assistance.');
+                        // alert('Something went wrong, error message undefined.  Open a support ticket!');
                     }
 
                     if (err.message !== undefined && err.message.substring(0, 20) === INSUFFICIENT) {
                         formik.setFieldError('amount', err.message);
+                        setErrMessage(err.message);
                     } else {
-                        alert(err);
+                        setErrMessage(err);
+                        //alert(err);
                     }
                 })
                 .finally(() => {
                     // NO MATTER WHAT
                     formik.setSubmitting(false);
+                    setTimeout(() => setErrMessage(''), 2500);
                 });
         },
     });
@@ -96,6 +101,23 @@ const TokenCreation: FC = () => {
             <Grid item xs={12} md={8}>
                 {!loading ? (
                     <>
+                        <Portal>
+                            <Snackbar
+                                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                                autoHideDuration={3000}
+                                onDurationChange={() => {
+                                    console.log('Closing...');
+                                }}
+                                open={errMessage.length ? true : false}
+                            >
+                                <Alert
+                                    severity="error"
+                                    sx={{ backgroundColor: 'rgb(211, 47, 47)', width: '100%', color: '#fff' }}
+                                >
+                                    {errMessage}
+                                </Alert>
+                            </Snackbar>
+                        </Portal>
                         <Card variant="outlined">
                             <CardContent>
                                 <form onSubmit={formik.handleSubmit}>
