@@ -73,16 +73,22 @@ const Balance = () => {
 
     function handleInputChange(event: any) {
         const value = event.target.value;
-        console.log('event', event);
-        console.log('value', value);
+        // console.log('event', event);
+        // console.log('value', value);
         setFilterText(value);
-        if (value.length > 0) {
+        if (value.length) {
             // console.log(value);
             const suggestedData = balance.filter(
                 (opt: MinimaToken) =>
-                    (typeof opt.token === 'string' && opt.token.includes(value) ? true : false) ||
-                    (typeof opt.token.name === 'string' && opt.token.name.includes(value) ? true : false) ||
-                    (typeof opt.tokenid === 'string' && opt.tokenid.includes(value) ? true : false)
+                    (typeof opt.token === 'string' && opt.token.toLowerCase().includes(value.toLowerCase())
+                        ? true
+                        : false) ||
+                    (typeof opt.token.name === 'string' && opt.token.name.toLowerCase().includes(value.toLowerCase())
+                        ? true
+                        : false) ||
+                    (typeof opt.tokenid === 'string' && opt.tokenid.toLowerCase().includes(value.toLowerCase())
+                        ? true
+                        : false)
             );
             setFilteredBalance(suggestedData);
         } else {
@@ -164,6 +170,7 @@ const Balance = () => {
                                 }}
                             >
                                 <TextField
+                                    placeholder="Search by name or tokenid"
                                     sx={{ marginBottom: 4 }}
                                     id="token-search"
                                     value={filterText}
@@ -175,8 +182,8 @@ const Balance = () => {
                                     ))}
                                 </List>
                                 {filteredBalance.length === 0 ? (
-                                    <Typography sx={{ textAlign: 'center' }} variant="h6">
-                                        No tokens found
+                                    <Typography sx={{ textAlign: 'left' }} variant="h6">
+                                        Token not found
                                     </Typography>
                                 ) : null}
                             </CardContent>

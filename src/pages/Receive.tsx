@@ -74,7 +74,7 @@ const Receive: FC = () => {
     return (
         <Grid container spacing={0} mt={2}>
             <Grid item xs={0} md={2}></Grid>
-            <Grid item xs={12} md={8} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Grid item xs={12} md={8} sx={{ textAlign: 'center' }}>
                 {loading ? (
                     <CircularProgress size={32} />
                 ) : (
@@ -105,7 +105,7 @@ const Receive: FC = () => {
                                     )}
                                 </ListItemIcon>
                             </BootstrapTooltip>
-                            <Typography variant="caption">
+                            <Typography sx={{ textAlign: 'left' }} variant="caption">
                                 Receive any Minima & network tokens with this address.
                             </Typography>
                         </CardContent>

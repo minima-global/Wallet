@@ -48,8 +48,8 @@ let theme = createTheme({
             fontSize: 52,
         },
         h6: {
-            fontWeight: 800,
-            fontSize: 22,
+            fontWeight: 300,
+            fontSize: 16,
         },
         body1: {
             fontSize: 17,
