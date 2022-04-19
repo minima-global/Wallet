@@ -28,11 +28,15 @@ const TokenCreation: FC = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        callStatus().catch((err) => {
-            console.error(err);
-            setLoading(false);
-            navigate('/offline');
-        });
+        callStatus()
+            .then(() => {
+                setLoading(false);
+            })
+            .catch((err) => {
+                console.error(err);
+                setLoading(false);
+                navigate('/offline');
+            });
     }, []);
 
     // Formik
