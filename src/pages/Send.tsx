@@ -10,6 +10,9 @@ import {
     Chip,
     CircularProgress,
     Typography,
+    Portal,
+    Snackbar,
+    Alert,
 } from '@mui/material';
 import { FC, useEffect, useContext, useState } from 'react';
 
@@ -21,6 +24,7 @@ import { MinimaToken } from '../types/minima';
 import MiniModal from '../shared/components/MiniModal';
 
 import { BalanceUpdates } from '../App';
+import { useNavigate } from 'react-router-dom';
 
 const TransferTokenSchema = Yup.object().shape({
     tokenid: Yup.string().required('Field Required'),
@@ -45,7 +49,10 @@ const styles = {
 const Send: FC = () => {
     // Loading
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
+
+    const [errMessage, setErrMessage] = useState('');
+
+    const navigate = useNavigate();
     // Tokens Data
     const [tokenSelection, setTokenSelection] = useState<MinimaToken[]>([]);
     // Handle Modal
@@ -71,8 +78,9 @@ const Send: FC = () => {
                     setLoading(false);
                 })
                 .catch((err: any) => {
+                    navigate('/offline');
                     setLoading(false);
-                    setError(true);
+
                     console.error(err);
                 });
         }
@@ -100,11 +108,14 @@ const Send: FC = () => {
                     // FAILED
                     if (err.message !== undefined && err.message.substring(0, 20) === INSUFFICIENT) {
                         formik.setFieldError('amount', err.message);
+                    } else if (err.message) {
+                        setErrMessage(err.message);
                     }
                 })
                 .finally(() => {
                     // NO MATTER WHAT
                     formik.setSubmitting(false);
+                    setTimeout(() => setErrMessage(''), 2000);
                 });
         },
     });
@@ -113,9 +124,26 @@ const Send: FC = () => {
         <Grid container mt={2} spacing={0}>
             <Grid item xs={0} md={2}></Grid>
             <Grid item xs={12} md={8} sx={{ textAlign: 'center' }}>
-                {loading && !error ? (
+                <Portal>
+                    <Snackbar
+                        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                        autoHideDuration={3000}
+                        onDurationChange={() => {
+                            console.log('Closing...');
+                        }}
+                        open={errMessage.length ? true : false}
+                    >
+                        <Alert
+                            severity="error"
+                            sx={{ backgroundColor: 'rgb(211, 47, 47)', width: '100%', color: '#fff' }}
+                        >
+                            {errMessage}
+                        </Alert>
+                    </Snackbar>
+                </Portal>
+                {loading ? (
                     <CircularProgress size={32} />
-                ) : !loading && !error ? (
+                ) : (
                     <>
                         <Card variant="outlined">
                             <CardContent>
@@ -235,16 +263,6 @@ const Send: FC = () => {
                                     : 'Please try again later.'
                             }
                         />
-                    </>
-                ) : (
-                    <>
-                        <Card variant="outlined">
-                            <CardContent>
-                                <Typography sx={{ textAlign: 'left' }} variant="h6">
-                                    Your node is offline, please check your node status and try again.
-                                </Typography>
-                            </CardContent>
-                        </Card>
                     </>
                 )}
             </Grid>

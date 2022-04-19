@@ -22,11 +22,13 @@ import { callStatus } from '../minima/rpc-commands';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import ExpandMoreOutlined from '@mui/icons-material/ExpandMoreOutlined';
+import { useNavigate } from 'react-router-dom';
 
 const Status = () => {
     const [status, setStatus] = useState<StatusType>();
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         callStatus()
@@ -35,8 +37,8 @@ const Status = () => {
                 setLoading(false);
             })
             .catch((err) => {
+                navigate('/offline');
                 setLoading(false);
-                setError(true);
                 console.error(err);
             });
     }, []);
@@ -52,9 +54,9 @@ const Status = () => {
                 mt={1}
                 sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
             >
-                {loading && !error ? (
+                {loading ? (
                     <CircularProgress size={32} />
-                ) : !loading && !error ? (
+                ) : (
                     <>
                         <Grid item xs={12} md={12}>
                             <Card variant="outlined">
@@ -150,23 +152,6 @@ const Status = () => {
                                 </Card>
                             </Grid>
                         ) : null}
-                    </>
-                ) : (
-                    <>
-                        <Grid item xs={12} md={12}>
-                            <Card variant="outlined">
-                                <CardContent>
-                                    <Box
-                                        sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
-                                    >
-                                        <Typography sx={{ textAlign: 'left' }} variant="h6">
-                                            Your node is offline, please check your node status and try again.
-                                        </Typography>
-                                        <Chip color="error" icon={<CancelIcon />} label={'offline'} />
-                                    </Box>
-                                </CardContent>
-                            </Card>
-                        </Grid>
                     </>
                 )}
             </Grid>

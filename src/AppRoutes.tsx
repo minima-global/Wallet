@@ -28,6 +28,7 @@ import { DRAWERWIDTH } from './shared/constants';
 import SideMenu from './layout/SideMenu';
 import useMinimaInit from './minima/useMinimaInit';
 import { BalanceUpdates } from './App';
+import Offline from './pages/Offline';
 
 export interface RouteType {
     path: string;
@@ -70,6 +71,10 @@ const AppNavigation = () => {
         {
             pathname: '/tokencreate',
             name: 'Mint Token',
+        },
+        {
+            pathname: '/offline',
+            name: 'Node Status',
         },
     ];
 
@@ -145,6 +150,7 @@ const AppNavigation = () => {
                     <Container>
                         <Routes>
                             <Route path="/" element={<Navigate replace to="/balance" />} />
+                            <Route path="/offline" element={<Offline />} />
                             <Route path="/balance" element={<Balance />} />
                             <Route path="balance/:tokenid" element={<TokenDetail />} />
                             <Route path="/send" element={<Send />} />

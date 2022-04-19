@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { callBalance } from '../../minima/rpc-commands';
 import { MinimaToken } from '../../types/minima';
 import {
@@ -46,6 +46,8 @@ const TokenDetail = () => {
     const { tokenid } = useParams();
     const [loading, setLoading] = useState<boolean>(true);
     const [failed, setFailed] = useState<boolean>(false);
+
+    const navigate = useNavigate();
 
     // Copy Feature
     const [copy, setCopy] = useState<boolean>(false);
@@ -122,6 +124,7 @@ const TokenDetail = () => {
                 .catch((err: Error) => {
                     setLoading(false);
                     setFailed(true);
+                    navigate('/offline');
                     console.error(err);
                 });
         }

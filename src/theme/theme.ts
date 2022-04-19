@@ -28,6 +28,9 @@ let theme = createTheme({
             main: '#64748B',
             contrastText: '#fff',
         },
+        error: {
+            main: 'rgb(211, 47, 47)',
+        },
         darkBlack: { main: '#0D0E10' },
         menu: { main: 'rgba(255, 255, 255, 0.95)' },
     },
