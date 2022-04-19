@@ -32,6 +32,7 @@ const Balance = () => {
     const [balance, setBalance] = useState<MinimaToken[]>([]);
     const [filteredBalance, setFilteredBalance] = useState<MinimaToken[]>([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(false);
     const [filterText, setFilterText] = useState('');
 
     const update = useContext(BalanceUpdates);
@@ -57,9 +58,11 @@ const Balance = () => {
                     setBalance(data);
                     setFilteredBalance(data);
                     // setLoading(false);
-                    setTimeout(() => setLoading(false), 1000);
+                    setLoading(false);
                 })
                 .catch((err: Error) => {
+                    setLoading(false);
+                    setError(true);
                     console.error(err);
                     setFilteredBalance([]);
                 });
@@ -158,9 +161,9 @@ const Balance = () => {
             <Grid container spacing={0} mt={2} mb={2}>
                 <Grid item xs={0} md={2}></Grid>
                 <Grid item xs={12} md={8} sx={{ textAlign: 'center' }}>
-                    {loading ? (
+                    {loading && !error ? (
                         <CircularProgress size={32} />
-                    ) : (
+                    ) : !loading && !error ? (
                         <Card variant="outlined">
                             <CardContent
                                 sx={{
@@ -186,6 +189,20 @@ const Balance = () => {
                                         Token not found
                                     </Typography>
                                 ) : null}
+                            </CardContent>
+                        </Card>
+                    ) : (
+                        <Card variant="outlined">
+                            <CardContent
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    justifyContent: 'center',
+                                }}
+                            >
+                                <Typography sx={{ textAlign: 'left' }} variant="h6">
+                                    Your node is offline, please check your node status and try again.
+                                </Typography>
                             </CardContent>
                         </Card>
                     )}

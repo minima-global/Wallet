@@ -159,7 +159,9 @@ const Status = () => {
                                     <Box
                                         sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
                                     >
-                                        <Typography variant="h6">Overview</Typography>
+                                        <Typography sx={{ textAlign: 'left' }} variant="h6">
+                                            Your node is offline, please check your node status and try again.
+                                        </Typography>
                                         <Chip color="error" icon={<CancelIcon />} label={'offline'} />
                                     </Box>
                                 </CardContent>

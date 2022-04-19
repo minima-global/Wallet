@@ -41,6 +41,7 @@ const Receive: FC = () => {
     const [address, setAddress] = useState<string>('');
     const [isCopied, setIsCopied] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(false);
 
     useEffect(() => {
         callAddress()
@@ -49,6 +50,8 @@ const Receive: FC = () => {
                 setLoading(false);
             })
             .catch((err) => {
+                setLoading(false);
+                setError(true);
                 console.error(`${err}`);
             });
     }, []);
@@ -75,9 +78,9 @@ const Receive: FC = () => {
         <Grid container spacing={0} mt={2}>
             <Grid item xs={0} md={2}></Grid>
             <Grid item xs={12} md={8} sx={{ textAlign: 'center' }}>
-                {loading ? (
+                {loading && !error ? (
                     <CircularProgress size={32} />
-                ) : (
+                ) : !loading && !error ? (
                     <Card variant="outlined">
                         <CardContent sx={{ display: 'flex', flexDirection: 'column' }}>
                             <QRCode style={{ alignSelf: 'center' }} level="M" value={address} />
@@ -107,6 +110,14 @@ const Receive: FC = () => {
                             </BootstrapTooltip>
                             <Typography sx={{ textAlign: 'left' }} variant="caption">
                                 Receive any Minima & network tokens with this address.
+                            </Typography>
+                        </CardContent>
+                    </Card>
+                ) : (
+                    <Card>
+                        <CardContent>
+                            <Typography sx={{ textAlign: 'left' }} variant="h6">
+                                Your node is offline, please check your node status and try again.
                             </Typography>
                         </CardContent>
                     </Card>

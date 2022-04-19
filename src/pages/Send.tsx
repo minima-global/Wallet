@@ -45,6 +45,7 @@ const styles = {
 const Send: FC = () => {
     // Loading
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(false);
     // Tokens Data
     const [tokenSelection, setTokenSelection] = useState<MinimaToken[]>([]);
     // Handle Modal
@@ -70,6 +71,8 @@ const Send: FC = () => {
                     setLoading(false);
                 })
                 .catch((err: any) => {
+                    setLoading(false);
+                    setError(true);
                     console.error(err);
                 });
         }
@@ -109,17 +112,17 @@ const Send: FC = () => {
     return (
         <Grid container mt={2} spacing={0}>
             <Grid item xs={0} md={2}></Grid>
-            <Grid item xs={12} md={8} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                {loading ? (
+            <Grid item xs={12} md={8} sx={{ textAlign: 'center' }}>
+                {loading && !error ? (
                     <CircularProgress size={32} />
-                ) : (
+                ) : !loading && !error ? (
                     <>
                         <Card variant="outlined">
                             <CardContent>
                                 <form onSubmit={formik.handleSubmit}>
                                     {tokenSelection && tokenSelection.length > 0 ? (
                                         <Select
-                                            sx={{ marginBottom: 2 }}
+                                            sx={{ marginBottom: 2, textAlign: 'left' }}
                                             id="tokenid"
                                             name="tokenid"
                                             value={formik.values.tokenid}
@@ -232,6 +235,16 @@ const Send: FC = () => {
                                     : 'Please try again later.'
                             }
                         />
+                    </>
+                ) : (
+                    <>
+                        <Card variant="outlined">
+                            <CardContent>
+                                <Typography sx={{ textAlign: 'left' }} variant="h6">
+                                    Your node is offline, please check your node status and try again.
+                                </Typography>
+                            </CardContent>
+                        </Card>
                     </>
                 )}
             </Grid>
