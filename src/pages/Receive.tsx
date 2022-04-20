@@ -19,7 +19,7 @@ import {
     ListItem,
     ListItemText,
 } from '@mui/material';
-import { callAddress } from '../minima/rpc-commands';
+import { callAddress, callGetAddress } from '../minima/rpc-commands';
 import { copy, copyTextToClipboard } from '../shared/functions';
 import QRCode from 'react-qr-code';
 
@@ -46,7 +46,7 @@ const Receive: FC = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        callAddress()
+        callGetAddress()
             .then((res: any) => {
                 setAddress(res.miniaddress);
                 setLoading(false);
