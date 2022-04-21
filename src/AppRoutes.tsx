@@ -23,11 +23,8 @@ import Status from './pages/Status';
 import Receive from './pages/Receive';
 import TokenCreation from './pages/TokenCreation';
 import TokenDetail from './pages/components/TokenDetail';
-
 import { DRAWERWIDTH } from './shared/constants';
 import SideMenu from './layout/SideMenu';
-import useMinimaInit from './minima/useMinimaInit';
-import { BalanceUpdates } from './App';
 import Offline from './pages/Offline';
 
 export interface RouteType {
@@ -36,12 +33,9 @@ export interface RouteType {
     element: JSX.Element;
 }
 
-const AppNavigation = () => {
+const AppNavigation = ({ blockNumber }: { blockNumber: number }) => {
     const [open, setOpen] = useState(false);
     const [pageTitle, setPageTitle] = useState('Balance');
-    // open modal
-    const [showNewBalanceSnack, setShowNewBalanceSnack] = useState(false);
-    const updates = useContext(BalanceUpdates);
 
     // Back Button
     const [onDetail, setOnDetail] = useState(false);
@@ -79,15 +73,6 @@ const AppNavigation = () => {
     ];
 
     useEffect(() => {
-        // if it's empty no need to show a new balance notification
-        if (!updates.length) {
-            return;
-        }
-        setShowNewBalanceSnack(true);
-        setTimeout(() => setShowNewBalanceSnack(false), 3000);
-    }, [updates]);
-
-    useEffect(() => {
         getPageTitle();
         if (location.pathname.substring(0, 9) === '/balance/') {
             // console.log('Token Detail page');
@@ -108,17 +93,6 @@ const AppNavigation = () => {
 
     return (
         <>
-            <Portal>
-                <Snackbar
-                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                    autoHideDuration={3000}
-                    open={showNewBalanceSnack}
-                >
-                    <Alert severity="success" sx={{ backgroundColor: '#317AFF', width: '100%', color: '#fff' }}>
-                        Balance update!
-                    </Alert>
-                </Snackbar>
-            </Portal>
             <AppBar position="static" sx={appwidth}>
                 <Toolbar sx={start} variant="dense">
                     {onDetail ? null : (
@@ -169,16 +143,16 @@ const AppNavigation = () => {
                     ModalProps={{ keepMounted: true }}
                     sx={drawerdisplay}
                 >
-                    <SideMenu handleDrawerToggle={handleDrawerToggle} />
+                    <SideMenu handleDrawerToggle={handleDrawerToggle} blockNumber={blockNumber} />
                 </Drawer>
                 {/* Drawer on desktop is always open */}
                 <Drawer variant="permanent" sx={drawerdisplaydesktop}>
-                    <SideMenu handleDrawerToggle={() => {}} />
+                    <SideMenu handleDrawerToggle={() => {}} blockNumber={blockNumber} />
                 </Drawer>
             </Box>
         </>
     );
-};
+};;;
 const nav = {
     width: { sm: DRAWERWIDTH },
     flexShrink: { sm: 0 },

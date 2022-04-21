@@ -4,7 +4,6 @@ import CssBaseline from '@mui/material/CssBaseline';
 import theme from './theme/theme';
 import { SnackbarProvider } from 'notistack';
 import AppNavigation from './AppRoutes';
-import useMinimaInit from './minima/useMinimaInit';
 import { MinimaToken } from './types/minima';
 import { nodeEvent, ws } from '@minima-global/mds-api';
 import { Commands } from '@minima-global/mds-api';
@@ -16,6 +15,7 @@ let mdsApi: Commands;
 
 export default function App() {
     const [myBalance, setMyBalance] = useState<MinimaToken[]>([]);
+    const [blockNumber, setBlockNumber] = useState(-1);
 
     try {
         mdsApi = new Commands();
@@ -27,35 +27,50 @@ export default function App() {
         if (ws)
             ws.onmessage = (evt: any) => {
                 let data = JSON.parse(evt.data);
-                //console.log(data);
-
-                // console.log('Data after parse', data);
-                // console.log('Data after stringify', JSON.stringify(data.data));
-
-                // Event type
+                console.log('Minima Event', data);
                 const event = data.event;
-                // Data sent with event
                 data = data.data;
                 switch (event) {
                     case 'NEWBALANCE':
-                        //console.log('New balance available.');
-
                         mdsApi
                             .balance()
                             .then((data) => {
-                                // console.log(`Setting balance..`, data);
                                 setMyBalance(data);
                             })
                             .catch((err) => {
                                 console.error(err);
-                                // setMyBalance([]);
                             });
 
+                        break;
+                    case 'NEWBLOCK':
+                        setBlockNumber(parseInt(data.txpow.header.block));
+                        mdsApi
+                            .balance()
+                            .then((data) => {
+                                setMyBalance(data);
+                            })
+                            .catch((err) => {
+                                console.error(err);
+                            });
+
+                        break;
+                    case 'MINING':
+                        // do nothing
                         break;
                     default:
                     //console.error('Unknown event type: ', evt.event);
                 }
             };
+
+        // get balance straight away
+        mdsApi
+            .balance()
+            .then((data) => {
+                setMyBalance(data);
+            })
+            .catch((err) => {
+                console.error(err);
+            });
     }, []);
 
     return (
@@ -63,7 +78,7 @@ export default function App() {
             <SnackbarProvider maxSnack={3}>
                 <CssBaseline />
                 <BalanceUpdates.Provider value={myBalance && myBalance.length ? myBalance : []}>
-                    <AppNavigation />
+                    <AppNavigation blockNumber={blockNumber} />
                 </BalanceUpdates.Provider>
             </SnackbarProvider>
         </ThemeProvider>
