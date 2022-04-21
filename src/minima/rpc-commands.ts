@@ -67,3 +67,7 @@ export const callBalance: any = () => {
 export const callHelp = () => {
     return Minima.help();
 };
+
+export const callGetAddress = () => {
+    return Minima.getaddress();
+};
