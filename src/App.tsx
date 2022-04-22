@@ -1,27 +1,45 @@
-import { createContext, useState, useEffect } from 'react';
+import { createContext, useState, useEffect, useCallback } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import theme from './theme/theme';
 import { SnackbarProvider } from 'notistack';
 import AppNavigation from './AppRoutes';
 import { MinimaToken } from './types/minima';
-import { nodeEvent, ws } from '@minima-global/mds-api';
-import { Commands } from '@minima-global/mds-api';
+import { commands, ws } from '@minima-global/mds-api';
+import { useLocation } from 'react-router-dom';
 
 // Create a context provider to give balance updates to consumers in the app
 const BalanceUpdates = createContext<MinimaToken[]>([]);
-
-let mdsApi: Commands;
 
 export default function App() {
     const [myBalance, setMyBalance] = useState<MinimaToken[]>([]);
     const [blockNumber, setBlockNumber] = useState(-1);
 
-    try {
-        mdsApi = new Commands();
-    } catch (e) {
-        console.log(`Failed to create commands object`);
-    }
+    // call and store balance with timer
+    const callAndStoreBalance = useCallback(
+        (time: number) => {
+            setTimeout(() => {
+                console.log('CALLING BALANCE');
+                commands
+                    .balance()
+                    .then((data) => {
+                        setMyBalance(data);
+                    })
+                    .catch((err) => {
+                        console.error(err);
+                    });
+            }, time);
+        },
+        [commands]
+    );
+
+    // call getBalance on page reload (router navigate)
+    const location = useLocation();
+    useEffect(() => {
+        if (location.pathname === '/balance') {
+            callAndStoreBalance(0);
+        }
+    }, [location]);
 
     useEffect(() => {
         if (ws)
@@ -32,27 +50,15 @@ export default function App() {
                 data = data.data;
                 switch (event) {
                     case 'NEWBALANCE':
-                        mdsApi
-                            .balance()
-                            .then((data) => {
-                                setMyBalance(data);
-                            })
-                            .catch((err) => {
-                                console.error(err);
-                            });
-
+                        callAndStoreBalance(0);
+                        callAndStoreBalance(2 * 60 * 1000); // 2 min
+                        callAndStoreBalance(3 * 60 * 1000); // 3 min
+                        callAndStoreBalance(5 * 60 * 1000); // 5 min
+                        callAndStoreBalance(10 * 60 * 1000); // 10 min
                         break;
                     case 'NEWBLOCK':
                         setBlockNumber(parseInt(data.txpow.header.block));
-                        mdsApi
-                            .balance()
-                            .then((data) => {
-                                setMyBalance(data);
-                            })
-                            .catch((err) => {
-                                console.error(err);
-                            });
-
+                        // callAndStoreBalance();
                         break;
                     case 'MINING':
                         // do nothing
@@ -63,15 +69,8 @@ export default function App() {
             };
 
         // get balance straight away
-        mdsApi
-            .balance()
-            .then((data) => {
-                setMyBalance(data);
-            })
-            .catch((err) => {
-                console.error(err);
-            });
-    }, []);
+        callAndStoreBalance(0);
+    }, [callAndStoreBalance]);
 
     return (
         <ThemeProvider theme={theme}>
