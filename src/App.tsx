@@ -6,7 +6,7 @@ import { SnackbarProvider } from 'notistack';
 import AppNavigation from './AppRoutes';
 import { MinimaToken } from './types/minima';
 import { commands, ws } from '@minima-global/mds-api';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 // Create a context provider to give balance updates to consumers in the app
 const BalanceUpdates = createContext<MinimaToken[]>([]);
@@ -14,6 +14,7 @@ const BalanceUpdates = createContext<MinimaToken[]>([]);
 export default function App() {
     const [myBalance, setMyBalance] = useState<MinimaToken[]>([]);
     const [blockNumber, setBlockNumber] = useState(-1);
+    const navigate = useNavigate();
 
     // call and store balance with timer
     const callAndStoreBalance = useCallback(
@@ -27,10 +28,12 @@ export default function App() {
                     })
                     .catch((err) => {
                         console.error(err);
+                        console.log('navigating');
+                        navigate('/offline');
                     });
             }, time);
         },
-        [commands]
+        [commands, navigate]
     );
 
     // call getBalance on page reload (router navigate)

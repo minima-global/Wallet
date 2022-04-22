@@ -41,6 +41,9 @@ const Balance = () => {
     const balances = useContext(BalanceUpdates);
     const loading = balances.length === 0;
     let filteredBalance = getFilteredBalanceList(balances, filterText);
+    // if (loading) {
+    //     navigate('/offline');
+    // }
 
     function handleInputChange(event: any) {
         const value = event.target.value;
