@@ -50,6 +50,7 @@ const styles = {
 
 const Send: FC = () => {
     const [errMessage, setErrMessage] = useState('');
+    const navigate = useNavigate();
 
     // Handle Modal
     const [open, setOpen] = useState(false);
@@ -62,6 +63,9 @@ const Send: FC = () => {
 
     const balances = useContext(BalanceUpdates);
     const loading = balances.length === 0;
+    if (loading) {
+        navigate('/offline');
+    }
 
     const formik = useFormik({
         initialValues: {

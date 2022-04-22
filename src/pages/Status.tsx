@@ -5,23 +5,16 @@ import {
     Card,
     CardContent,
     Typography,
-    CardActions,
-    Button,
     Box,
     List,
     ListItem,
     ListItemText,
-    ListSubheader,
-    Accordion,
-    AccordionSummary,
-    AccordionDetails,
     CircularProgress,
 } from '@mui/material';
 import { Status as StatusType } from '../types/minima';
 import { callStatus } from '../minima/rpc-commands';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
-import ExpandMoreOutlined from '@mui/icons-material/ExpandMoreOutlined';
 import { useNavigate } from 'react-router-dom';
 
 const Status = () => {
