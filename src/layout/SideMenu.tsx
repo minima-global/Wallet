@@ -26,10 +26,10 @@ interface DrawerItem {
 
 interface IProps {
     handleDrawerToggle: () => void;
-    blockNumber: number;
+    // blockNumber: number;
 }
 
-const SideMenu = ({ handleDrawerToggle, blockNumber }: IProps) => {
+const SideMenu = ({ handleDrawerToggle }: IProps) => {
     const navigate = useNavigate();
     const routerLocation = useLocation();
     const activeRoute = (routeName: string) => {
@@ -114,7 +114,7 @@ const SideMenu = ({ handleDrawerToggle, blockNumber }: IProps) => {
                 <Divider />
             </Grid>
             <Grid item sx={{ backgroundColor: '#fff', pb: 1 }}>
-                <Box sx={{ pl: 2 }}>{blockNumber === -1 ? 'Latest Block: ...' : 'Latest Block: ' + blockNumber}</Box>
+                {/* <Box sx={{ pl: 2 }}>{blockNumber === -1 ? 'Latest Block: ...' : 'Latest Block: ' + blockNumber}</Box> */}
                 <Grid container sx={{ pl: 2, pr: 2, mt: 4, mb: 0, backgroundColor: '#fff' }} alignItems="flex-end">
                     <Grid item xs={4}>
                         <Box sx={{ fontSize: 12, letterSpacing: 0.02, lineHeight: 1.5 }}>Powered by</Box>

@@ -11,19 +11,40 @@ import { useLocation } from 'react-router-dom';
 // Create a context provider to give balance updates to consumers in the app
 const BalanceUpdates = createContext<MinimaToken[]>([]);
 
+interface AllBalance {
+    prevBalance: MinimaToken[];
+    newBalance: MinimaToken[];
+}
+
 export default function App() {
-    const [myBalance, setMyBalance] = useState<MinimaToken[]>([]);
+    // console.log('App re-render');
+    const [myBalance, setMyBalance] = useState<AllBalance>({ prevBalance: [], newBalance: [] });
     const [blockNumber, setBlockNumber] = useState(-1);
+
+    const oldBalance = JSON.stringify(myBalance.prevBalance);
+    const newBalance = JSON.stringify(myBalance.newBalance);
+
+    let isDifferent = false;
+    // console.log(oldBalance);
+    // so we don't get a toast message for the first time we load app since prevBalance is empty && will be different
+    if (oldBalance !== '[]') {
+        isDifferent = oldBalance !== newBalance;
+    }
+
+    //const isDifferent = oldBalance !== newBalance;
+    console.log(`Has balanced changed? `, isDifferent);
 
     // call and store balance with timer
     const callAndStoreBalance = useCallback(
         (time: number) => {
             setTimeout(() => {
-                console.log('CALLING BALANCE');
+                console.log(`CALLING BALANCE @ ${time} min timer`);
                 commands
                     .balance()
                     .then((data) => {
-                        setMyBalance(data);
+                        setMyBalance((oldVal) => {
+                            return { prevBalance: oldVal.newBalance, newBalance: data };
+                        });
                     })
                     .catch((err) => {
                         console.error(err);
@@ -57,7 +78,7 @@ export default function App() {
                         callAndStoreBalance(10 * 60 * 1000); // 10 min
                         break;
                     case 'NEWBLOCK':
-                        setBlockNumber(parseInt(data.txpow.header.block));
+                        // setBlockNumber(parseInt(data.txpow.header.block));
                         // callAndStoreBalance();
                         break;
                     case 'MINING':
@@ -76,8 +97,8 @@ export default function App() {
         <ThemeProvider theme={theme}>
             <SnackbarProvider maxSnack={3}>
                 <CssBaseline />
-                <BalanceUpdates.Provider value={myBalance && myBalance.length ? myBalance : []}>
-                    <AppNavigation blockNumber={blockNumber} />
+                <BalanceUpdates.Provider value={myBalance.newBalance}>
+                    <AppNavigation showNewBalanceSnack={isDifferent} />
                 </BalanceUpdates.Provider>
             </SnackbarProvider>
         </ThemeProvider>

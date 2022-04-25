@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useState, memo } from 'react';
 import {
     List,
     ListItemButton,
@@ -19,6 +19,7 @@ import { MinimaToken } from '../types/minima';
 import { BalanceUpdates } from '../App';
 
 const Balance = () => {
+    console.log(`Balance re-rendering!`);
     const navigate = useNavigate();
     const [filterText, setFilterText] = useState('');
 
@@ -39,6 +40,7 @@ const Balance = () => {
     };
 
     const balances = useContext(BalanceUpdates);
+    console.log(`Balances`, balances);
     const loading = balances.length === 0;
     let filteredBalance = getFilteredBalanceList(balances, filterText);
     if (loading) {

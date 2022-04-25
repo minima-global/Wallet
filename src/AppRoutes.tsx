@@ -33,9 +33,15 @@ export interface RouteType {
     element: JSX.Element;
 }
 
-const AppNavigation = ({ blockNumber }: { blockNumber: number }) => {
+const AppNavigation = ({ showNewBalanceSnack }: { showNewBalanceSnack: boolean }) => {
     const [open, setOpen] = useState(false);
     const [pageTitle, setPageTitle] = useState('Balance');
+
+    const [showToast, setShowToast] = useState(false);
+
+    useEffect(() => {
+        showNewBalanceSnack && setShowToast(true);
+    }, [showNewBalanceSnack]);
 
     // Back Button
     const [onDetail, setOnDetail] = useState(false);
@@ -93,6 +99,23 @@ const AppNavigation = ({ blockNumber }: { blockNumber: number }) => {
 
     return (
         <>
+            <Portal>
+                <Snackbar
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                    autoHideDuration={3000}
+                    open={showToast}
+                    onClose={(event, reason) => {
+                        // `reason === 'escapeKeyDown'` if `Escape` was pressed
+
+                        setShowToast(false);
+                        // call `event.preventDefault` to only close one Snackbar at a time.
+                    }}
+                >
+                    <Alert severity="success" sx={{ backgroundColor: '#317AFF', width: '100%', color: '#fff' }}>
+                        Your balance has changed.
+                    </Alert>
+                </Snackbar>
+            </Portal>
             <AppBar position="static" sx={appwidth}>
                 <Toolbar sx={start} variant="dense">
                     {onDetail ? null : (
@@ -143,16 +166,16 @@ const AppNavigation = ({ blockNumber }: { blockNumber: number }) => {
                     ModalProps={{ keepMounted: true }}
                     sx={drawerdisplay}
                 >
-                    <SideMenu handleDrawerToggle={handleDrawerToggle} blockNumber={blockNumber} />
+                    <SideMenu handleDrawerToggle={handleDrawerToggle} />
                 </Drawer>
                 {/* Drawer on desktop is always open */}
                 <Drawer variant="permanent" sx={drawerdisplaydesktop}>
-                    <SideMenu handleDrawerToggle={() => {}} blockNumber={blockNumber} />
+                    <SideMenu handleDrawerToggle={() => {}} />
                 </Drawer>
             </Box>
         </>
     );
-};;;
+};
 const nav = {
     width: { sm: DRAWERWIDTH },
     flexShrink: { sm: 0 },
