@@ -39,7 +39,7 @@ export default function App() {
         if (location.pathname === '/balance') {
             callAndStoreBalance(0);
         }
-    }, [location]);
+    }, [location, callAndStoreBalance]);
 
     useEffect(() => {
         if (ws)
