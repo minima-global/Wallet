@@ -1,17 +1,5 @@
-import {
-    Snackbar,
-    Alert,
-    IconButton,
-    Toolbar,
-    AppBar,
-    Grid,
-    Drawer,
-    Box,
-    Container,
-    Typography,
-    Portal,
-} from '@mui/material';
-import { useContext, useEffect, useState } from 'react';
+import { IconButton, Toolbar, AppBar, Grid, Drawer, Box, Container, Typography } from '@mui/material';
+import { useEffect, useState } from 'react';
 import { Routes, Route, useLocation, Navigate, useNavigate } from 'react-router-dom';
 
 import MenuIcon from '@mui/icons-material/Menu';
@@ -33,15 +21,9 @@ export interface RouteType {
     element: JSX.Element;
 }
 
-const AppNavigation = ({ showNewBalanceSnack }: { showNewBalanceSnack: boolean }) => {
+const AppNavigation = () => {
     const [open, setOpen] = useState(false);
     const [pageTitle, setPageTitle] = useState('Balance');
-
-    const [showToast, setShowToast] = useState(false);
-
-    useEffect(() => {
-        showNewBalanceSnack && setShowToast(true);
-    }, [showNewBalanceSnack]);
 
     // Back Button
     const [onDetail, setOnDetail] = useState(false);
@@ -99,23 +81,6 @@ const AppNavigation = ({ showNewBalanceSnack }: { showNewBalanceSnack: boolean }
 
     return (
         <>
-            <Portal>
-                <Snackbar
-                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                    autoHideDuration={3000}
-                    open={showToast}
-                    onClose={(event, reason) => {
-                        // `reason === 'escapeKeyDown'` if `Escape` was pressed
-
-                        setShowToast(false);
-                        // call `event.preventDefault` to only close one Snackbar at a time.
-                    }}
-                >
-                    <Alert severity="success" sx={{ backgroundColor: '#317AFF', width: '100%', color: '#fff' }}>
-                        Your balance has changed.
-                    </Alert>
-                </Snackbar>
-            </Portal>
             <AppBar position="static" sx={appwidth}>
                 <Toolbar sx={start} variant="dense">
                     {onDetail ? null : (

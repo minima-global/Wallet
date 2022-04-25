@@ -7,6 +7,7 @@ import AppNavigation from './AppRoutes';
 import { MinimaToken } from './types/minima';
 import { commands, ws } from '@minima-global/mds-api';
 import { useLocation } from 'react-router-dom';
+import Notifications from './layout/Notifications';
 
 // Create a context provider to give balance updates to consumers in the app
 const BalanceUpdates = createContext<MinimaToken[]>([]);
@@ -19,26 +20,20 @@ interface AllBalance {
 export default function App() {
     // console.log('App re-render');
     const [myBalance, setMyBalance] = useState<AllBalance>({ prevBalance: [], newBalance: [] });
-    const [blockNumber, setBlockNumber] = useState(-1);
 
     const oldBalance = JSON.stringify(myBalance.prevBalance);
     const newBalance = JSON.stringify(myBalance.newBalance);
-
     let isDifferent = false;
-    // console.log(oldBalance);
     // so we don't get a toast message for the first time we load app since prevBalance is empty && will be different
     if (oldBalance !== '[]') {
         isDifferent = oldBalance !== newBalance;
     }
-
-    //const isDifferent = oldBalance !== newBalance;
     console.log(`Has balanced changed? `, isDifferent);
 
     // call and store balance with timer
     const callAndStoreBalance = useCallback(
         (time: number) => {
             setTimeout(() => {
-                console.log(`CALLING BALANCE @ ${time} min timer`);
                 commands
                     .balance()
                     .then((data) => {
@@ -63,7 +58,7 @@ export default function App() {
     }, [location, callAndStoreBalance]);
 
     useEffect(() => {
-        if (ws)
+        if (ws) {
             ws.onmessage = (evt: any) => {
                 let data = JSON.parse(evt.data);
                 console.log('Minima Event', data);
@@ -78,8 +73,7 @@ export default function App() {
                         callAndStoreBalance(10 * 60 * 1000); // 10 min
                         break;
                     case 'NEWBLOCK':
-                        // setBlockNumber(parseInt(data.txpow.header.block));
-                        // callAndStoreBalance();
+                        // do nothing
                         break;
                     case 'MINING':
                         // do nothing
@@ -88,6 +82,7 @@ export default function App() {
                     //console.error('Unknown event type: ', evt.event);
                 }
             };
+        }
 
         // get balance straight away
         callAndStoreBalance(0);
@@ -98,7 +93,8 @@ export default function App() {
             <SnackbarProvider maxSnack={3}>
                 <CssBaseline />
                 <BalanceUpdates.Provider value={myBalance.newBalance}>
-                    <AppNavigation showNewBalanceSnack={isDifferent} />
+                    <AppNavigation />
+                    <Notifications showNewBalanceSnack={isDifferent}></Notifications>
                 </BalanceUpdates.Provider>
             </SnackbarProvider>
         </ThemeProvider>
