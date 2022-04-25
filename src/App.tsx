@@ -18,7 +18,6 @@ interface AllBalance {
 }
 
 export default function App() {
-    // console.log('App re-render');
     const [myBalance, setMyBalance] = useState<AllBalance>({ prevBalance: [], newBalance: [] });
 
     const oldBalance = JSON.stringify(myBalance.prevBalance);
