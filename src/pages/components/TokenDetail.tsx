@@ -44,21 +44,21 @@ const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
 
 const TokenDetail = () => {
     const { tokenid } = useParams();
-    const [loading, setLoading] = useState<boolean>(true);
-    const [failed, setFailed] = useState<boolean>(false);
 
     const navigate = useNavigate();
 
     // Copy Feature
     const [copy, setCopy] = useState<boolean>(false);
 
-    const [token, setToken] = useState<MinimaToken>();
     const [dimensions, setDimensions] = useState(128);
 
-    const updates = useContext(BalanceUpdates); // balanceUpdates
-
-    // handle description lines
-    const [maxLines, setMaxLines] = useState<number>(3);
+    // balances context
+    const balances = useContext(BalanceUpdates);
+    const token = balances.find((b: MinimaToken) => b.tokenid === tokenid);
+    if (typeof token === 'undefined') {
+        console.error('can not find token ' + tokenid);
+    }
+    const loading = balances.length === 0;
 
     const handleAvatarDimensions = () => {
         if (dimensions === 128) {
@@ -72,66 +72,7 @@ const TokenDetail = () => {
         copyText(text);
         setCopy(true);
         setTimeout(() => setCopy(false), 1000);
-        // .then(() => {
-        //     // If successful, update the isCopied state value
-        //     setCopy(true);
-
-        //     setTimeout(() => {
-        //         setCopy(false);
-        //     }, 1000);
-        // })
-        // .catch((err) => {
-        //     console.log(err);
-        // });
     };
-
-    async function copyTextToClipboard(text: string) {
-        if ('clipboard' in navigator) {
-            return await navigator.clipboard.writeText(text);
-        } else {
-            alert('error');
-            return document.execCommand('copy', true, text);
-        }
-    }
-
-    useEffect(() => {
-        // console.log('Run useEffect');
-
-        if (updates && updates.length) {
-            updates.forEach((b: MinimaToken) => {
-                if (b.tokenid === tokenid) {
-                    // console.log(b);
-                    setToken(b);
-                }
-            });
-        } else {
-            callBalance()
-                .then((data: any) => {
-                    // console.log('Balance', data);
-                    {
-                        data && data.length
-                            ? data.forEach((b: MinimaToken) => {
-                                  // console.log(`Running through balance`);
-                                  if (b.tokenid === tokenid) {
-                                      // console.log(b);
-                                      setToken(b);
-                                  }
-                              })
-                            : console.log(`Balance not found..`);
-                    }
-                    // setLoading(false);
-                })
-                .catch((err: Error) => {
-                    setLoading(false);
-                    setFailed(true);
-                    navigate('/offline');
-                    console.error(err);
-                });
-        }
-
-        setLoading(false);
-        return () => {};
-    }, [updates]);
 
     return (
         <Grid container spacing={0} mt={2} mb={2}>
@@ -346,7 +287,7 @@ const TokenDetail = () => {
             <Grid item xs={0} md={2}></Grid>
         </Grid>
     );
-};
+};;
 export default TokenDetail;
 
 const copyRow = {

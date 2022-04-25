@@ -30,7 +30,7 @@ const TransferTokenSchema = Yup.object().shape({
     tokenid: Yup.string().required('Field Required'),
     address: Yup.string()
         .matches(/0|M[xX][0-9a-fA-F]+/, 'Invalid Address.')
-        .min(60, 'Invalid Address, too short.')
+        .min(59, 'Invalid Address, too short.')
         .max(66, 'Invalid Address, too long.')
         .required('Field Required'),
     amount: Yup.string()
@@ -49,14 +49,9 @@ const styles = {
 };
 
 const Send: FC = () => {
-    // Loading
-    const [loading, setLoading] = useState(true);
-
     const [errMessage, setErrMessage] = useState('');
-
     const navigate = useNavigate();
-    // Tokens Data
-    const [tokenSelection, setTokenSelection] = useState<MinimaToken[]>([]);
+
     // Handle Modal
     const [open, setOpen] = useState(false);
     const [modalStatus, setModalStatus] = useState('Failed');
@@ -66,27 +61,11 @@ const Send: FC = () => {
         setModalStatus('Failed');
     };
 
-    const update = useContext(BalanceUpdates);
-
-    // Get initial balance
-    useEffect(() => {
-        if (update && update.length) {
-            setTokenSelection(update);
-            setLoading(false);
-        } else {
-            callBalance()
-                .then((data: any) => {
-                    setTokenSelection(data);
-                    setLoading(false);
-                })
-                .catch((err: any) => {
-                    navigate('/offline');
-                    setLoading(false);
-
-                    console.error(err);
-                });
-        }
-    }, [update]);
+    const balances = useContext(BalanceUpdates);
+    const loading = balances.length === 0;
+    if (loading) {
+        navigate('/offline');
+    }
 
     const formik = useFormik({
         initialValues: {
@@ -97,7 +76,9 @@ const Send: FC = () => {
         validationSchema: TransferTokenSchema,
         onSubmit: (data) => {
             callSend(data)
-                .then(() => {
+                .then((res: any) => {
+                    console.log('send response', res);
+                    console.log('send transaction block', parseInt(res.header.block));
                     // SENT
                     formik.resetForm();
                     // Set Modal
@@ -150,7 +131,7 @@ const Send: FC = () => {
                         <Card variant="outlined">
                             <CardContent>
                                 <form onSubmit={formik.handleSubmit}>
-                                    {tokenSelection && tokenSelection.length > 0 ? (
+                                    {balances && balances.length > 0 ? (
                                         <Select
                                             sx={{ marginBottom: 2, textAlign: 'left' }}
                                             id="tokenid"
@@ -160,8 +141,8 @@ const Send: FC = () => {
                                             error={formik.touched.tokenid && Boolean(formik.errors.tokenid)}
                                             fullWidth
                                         >
-                                            {tokenSelection && tokenSelection.length > 0
-                                                ? tokenSelection.map((token: MinimaToken) => (
+                                            {balances && balances.length > 0
+                                                ? balances.map((token: MinimaToken) => (
                                                       <MenuItem
                                                           key={token.tokenid}
                                                           value={token.tokenid}

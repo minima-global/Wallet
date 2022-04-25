@@ -51,7 +51,7 @@ const Receive: FC = () => {
                 setAddress(res.miniaddress);
                 setLoading(false);
             })
-            .catch((err) => {
+            .catch((err: any) => {
                 navigate('/offline');
                 setLoading(false);
 
@@ -65,16 +65,6 @@ const Receive: FC = () => {
         setTimeout(() => {
             setIsCopied(false);
         }, 1500);
-        // copyTextToClipboard(address)
-        // .then(() => {
-        //         setIsCopied(true);
-        //         setTimeout(() => {
-        //             setIsCopied(false);
-        //         }, 1500);
-        //     })
-        //     .catch((err) => {
-        //         console.error(`${err}`);
-        //     });
     };
 
     return (

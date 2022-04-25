@@ -1,17 +1,5 @@
-import {
-    Snackbar,
-    Alert,
-    IconButton,
-    Toolbar,
-    AppBar,
-    Grid,
-    Drawer,
-    Box,
-    Container,
-    Typography,
-    Portal,
-} from '@mui/material';
-import { useContext, useEffect, useState } from 'react';
+import { IconButton, Toolbar, AppBar, Grid, Drawer, Box, Container, Typography } from '@mui/material';
+import { useEffect, useState } from 'react';
 import { Routes, Route, useLocation, Navigate, useNavigate } from 'react-router-dom';
 
 import MenuIcon from '@mui/icons-material/Menu';
@@ -23,11 +11,8 @@ import Status from './pages/Status';
 import Receive from './pages/Receive';
 import TokenCreation from './pages/TokenCreation';
 import TokenDetail from './pages/components/TokenDetail';
-
 import { DRAWERWIDTH } from './shared/constants';
 import SideMenu from './layout/SideMenu';
-import useMinimaInit from './minima/useMinimaInit';
-import { BalanceUpdates } from './App';
 import Offline from './pages/Offline';
 
 export interface RouteType {
@@ -39,9 +24,6 @@ export interface RouteType {
 const AppNavigation = () => {
     const [open, setOpen] = useState(false);
     const [pageTitle, setPageTitle] = useState('Balance');
-    // open modal
-    const [showNewBalanceSnack, setShowNewBalanceSnack] = useState(false);
-    const updates = useContext(BalanceUpdates);
 
     // Back Button
     const [onDetail, setOnDetail] = useState(false);
@@ -79,15 +61,6 @@ const AppNavigation = () => {
     ];
 
     useEffect(() => {
-        // if it's empty no need to show a new balance notification
-        if (!updates.length) {
-            return;
-        }
-        setShowNewBalanceSnack(true);
-        setTimeout(() => setShowNewBalanceSnack(false), 3000);
-    }, [updates]);
-
-    useEffect(() => {
         getPageTitle();
         if (location.pathname.substring(0, 9) === '/balance/') {
             // console.log('Token Detail page');
@@ -108,17 +81,6 @@ const AppNavigation = () => {
 
     return (
         <>
-            <Portal>
-                <Snackbar
-                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                    autoHideDuration={3000}
-                    open={showNewBalanceSnack}
-                >
-                    <Alert severity="success" sx={{ backgroundColor: '#317AFF', width: '100%', color: '#fff' }}>
-                        Balance update!
-                    </Alert>
-                </Snackbar>
-            </Portal>
             <AppBar position="static" sx={appwidth}>
                 <Toolbar sx={start} variant="dense">
                     {onDetail ? null : (

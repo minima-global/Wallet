@@ -1,6 +1,5 @@
-import { useContext } from 'react';
+import { useContext, useState, memo } from 'react';
 import {
-    Alert,
     List,
     ListItemButton,
     Grid,
@@ -8,10 +7,7 @@ import {
     Typography,
     ListItemText,
     ListItemAvatar,
-    Autocomplete,
     TextField,
-    Portal,
-    Snackbar,
     CircularProgress,
     Card,
     CardContent,
@@ -20,89 +16,40 @@ import {
 import { useNavigate } from 'react-router-dom';
 import MinimaIcon from '../assets/images/minimaLogoSquare200x200.png';
 import { MinimaToken } from '../types/minima';
-
-import { useEffect, useState } from 'react';
-import { callBalance } from '../minima/rpc-commands';
-
 import { BalanceUpdates } from '../App';
 
 const Balance = () => {
-    const [page, setPage] = useState<number>(1);
     const navigate = useNavigate();
-    const [balance, setBalance] = useState<MinimaToken[]>([]);
-    const [filteredBalance, setFilteredBalance] = useState<MinimaToken[]>([]);
-    const [loading, setLoading] = useState(true);
     const [filterText, setFilterText] = useState('');
 
-    const update = useContext(BalanceUpdates);
+    const getFilteredBalanceList = (balanceList: any[], filter: string) => {
+        const suggestedData = balanceList.filter(
+            (opt: MinimaToken) =>
+                (typeof opt.token === 'string' && opt.token.toLowerCase().includes(filter.toLowerCase())
+                    ? true
+                    : false) ||
+                (typeof opt.token.name === 'string' && opt.token.name.toLowerCase().includes(filter.toLowerCase())
+                    ? true
+                    : false) ||
+                (typeof opt.tokenid === 'string' && opt.tokenid.toLowerCase().includes(filter.toLowerCase())
+                    ? true
+                    : false)
+        );
+        return suggestedData;
+    };
 
-    useEffect(() => {
-        // console.log('BalancePage update, context data', update);
-        if (update && update.length) {
-            // console.log(`Setting balance...`);
-            setBalance(update);
-            setFilteredBalance(update);
-            // setLoading(false);
-            setTimeout(() => setLoading(false), 1000);
-        } else {
-            setFilteredBalance([]);
-        }
-
-        // TODO: should be just one location doing this, perhaps onCOnnected
-        if (update && !update.length) {
-            // console.log(`first time loading so let's load balance`);
-            callBalance()
-                .then((data: any) => {
-                    // console.log(data);
-                    setBalance(data);
-                    setFilteredBalance(data);
-                    // setLoading(false);
-                    setLoading(false);
-                })
-                .catch((err: Error) => {
-                    console.error(err);
-                    setLoading(false);
-
-                    navigate('/offline');
-                    setFilteredBalance([]);
-                });
-        }
-
-        // setLoading(false);
-        setTimeout(() => setLoading(false), 1000);
-
-        return () => {};
-    }, [update]);
+    const balances = useContext(BalanceUpdates);
+    const loading = balances.length === 0;
+    let filteredBalance = getFilteredBalanceList(balances, filterText);
+    if (loading) {
+        navigate('/offline');
+    }
 
     function handleInputChange(event: any) {
         const value = event.target.value;
-        // console.log('event', event);
-        // console.log('value', value);
         setFilterText(value);
-        if (value.length) {
-            // console.log(value);
-            const suggestedData = balance.filter(
-                (opt: MinimaToken) =>
-                    (typeof opt.token === 'string' && opt.token.toLowerCase().includes(value.toLowerCase())
-                        ? true
-                        : false) ||
-                    (typeof opt.token.name === 'string' && opt.token.name.toLowerCase().includes(value.toLowerCase())
-                        ? true
-                        : false) ||
-                    (typeof opt.tokenid === 'string' && opt.tokenid.toLowerCase().includes(value.toLowerCase())
-                        ? true
-                        : false)
-            );
-            setFilteredBalance(suggestedData);
-        } else {
-            setFilteredBalance(balance);
-        }
+        // when the component re-renders the updated filter text will create a new filteredBalance variable
     }
-    /** Pagination postponed */
-    // function paginate(array: MinimaToken[], page_size: number, page_number: number) {
-    //     // human-readable page numbers usually start with 1, so we reduce 1 in the first argument
-    //     return setFilteredBalance(array.slice((page_number - 1) * page_size, page_number * page_size));
-    // }
 
     const TokenListItem = ({ item }: { item: MinimaToken }) => {
         return (
