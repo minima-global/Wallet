@@ -29,7 +29,7 @@ import { useNavigate } from 'react-router-dom';
 const TransferTokenSchema = Yup.object().shape({
     tokenid: Yup.string().required('Field Required'),
     address: Yup.string()
-        .matches(/0|M[xX][0-9a-fA-F]+/, 'Invalid Address.')
+        .matches(/0|M[xX][0-9a-zA-Z]+/, 'Invalid Address.')
         .min(59, 'Invalid Address, too short.')
         .max(66, 'Invalid Address, too long.')
         .required('Field Required'),
