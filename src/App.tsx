@@ -28,6 +28,7 @@ export default function App() {
         isDifferent = oldBalance !== newBalance;
     }
     console.log(`Has balanced changed? `, isDifferent);
+    console.log('Balance', myBalance);
 
     // call and store balance with timer
     const callAndStoreBalance = useCallback(
