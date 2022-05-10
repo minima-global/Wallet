@@ -207,11 +207,7 @@ const TokenCreation: FC = () => {
                             handleOpen={handleOpen}
                             header={modalStatus === 'Success' ? 'Success!' : 'Failed!'}
                             status="Transaction Status"
-                            subtitle={
-                                modalStatus === 'Success'
-                                    ? 'Your token will be minted shortly'
-                                    : 'Please try again later.'
-                            }
+                            subtitle={modalStatus === 'Success' ? 'NFT created' : 'Please try again later.'}
                         />
                     </>
                 ) : null}

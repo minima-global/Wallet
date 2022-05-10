@@ -14,6 +14,7 @@ import TokenDetail from './pages/components/TokenDetail';
 import { DRAWERWIDTH } from './shared/constants';
 import SideMenu from './layout/SideMenu';
 import Offline from './pages/Offline';
+import NFTs from './pages/NFTs';
 
 export interface RouteType {
     path: string;
@@ -53,6 +54,10 @@ const AppNavigation = () => {
         {
             pathname: '/tokencreate',
             name: 'Mint Token',
+        },
+        {
+            pathname: '/nfts',
+            name: 'NFTs',
         },
         {
             pathname: '/offline',
@@ -119,6 +124,7 @@ const AppNavigation = () => {
                             <Route path="/receive" element={<Receive />} />
                             <Route path="/status" element={<Status />} />
                             <Route path="/tokencreate" element={<TokenCreation />} />
+                            <Route path="/nfts" element={<NFTs />} />
                         </Routes>
                     </Container>
                 </Grid>
