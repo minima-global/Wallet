@@ -1,4 +1,4 @@
-import { SendArgs, Commands, TokenCreateArgs } from '@minima-global/mds-api';
+import { SendArgs, Commands } from '@minima-global/mds-api';
 
 
 const Minima = new Commands(); // this will create a cmds reference
@@ -70,4 +70,8 @@ export const callHelp = () => {
 
 export const callGetAddress = () => {
     return Minima.getaddress();
+}
+
+export const callCreateNFT = (data: any) => {
+    return Minima.custom({name: "tokencreate", args: {name: {name: data.name, description: data.description, url: data.url, nft: true}, amount: 1, decimals:0 }});
 };

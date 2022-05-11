@@ -28,7 +28,7 @@ const Balance = () => {
                 (typeof opt.token === 'string' && opt.token.toLowerCase().includes(filter.toLowerCase())
                     ? true
                     : false) ||
-                (typeof opt.token.name === 'string' && opt.token.name.toLowerCase().includes(filter.toLowerCase())
+                (typeof opt.token !== 'string' && opt.token.name.toLowerCase().includes(filter.toLowerCase())
                     ? true
                     : false) ||
                 (typeof opt.tokenid === 'string' && opt.tokenid.toLowerCase().includes(filter.toLowerCase())

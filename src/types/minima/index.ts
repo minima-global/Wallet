@@ -248,7 +248,7 @@ export interface TxPOW {
 }
 
 export interface MinimaToken {
-  readonly token: string & CustomTokenJson;
+  readonly token: any;
   readonly tokenid: string;
   readonly confirmed: string;
   readonly unconfirmed: string;
@@ -259,6 +259,7 @@ interface CustomTokenJson {
   readonly name: string;
   readonly url?: string;
   readonly description?: string;
+  readonly nft?: boolean;
 }
 
 interface Help {

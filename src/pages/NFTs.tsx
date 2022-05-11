@@ -1,18 +1,43 @@
-import { FC, useState } from 'react';
-import { Grid, Card, CardContent, TextField, Button } from '@mui/material';
+import { FC, useState, useContext } from 'react';
+import { Grid, Card, CardContent, TextField, Button, Stack, CardMedia, Typography } from '@mui/material';
 import MiniModal from '../shared/components/MiniModal';
+
+import { callCreateNFT, callBalance } from '../minima/rpc-commands';
 
 /** form imports */
 import { useFormik } from 'formik';
+import { BalanceUpdates } from '../App'; // balance context
+
+import { MinimaToken } from '../types/minima';
 
 const NFTs: FC = () => {
+    const balances = useContext(BalanceUpdates);
+
     return (
         <>
             <Grid container mt={2} spacing={0}>
                 <Grid item xs={0} md={2}></Grid>
                 <Grid container item xs={12} md={8} spacing={2}>
-                    <NFTListItem name="Test" url="test" description="test" />
-                    <CreateNFTForm />
+                    <Grid container item xs={12} spacing={2}>
+                        {balances.map((b: MinimaToken) => {
+                            if (typeof b.token !== 'string' && b.token.nft) {
+                                return (
+                                    <NFTListItem
+                                        name={b.token.name}
+                                        url={b.token.url}
+                                        description={b.token.description}
+                                    />
+                                );
+                            }
+                        })}
+                        <NFTListItem name="Test" url="test" description="test" />
+                        <NFTListItem name="Test" url="test" description="test" />
+                        <NFTListItem name="Test" url="test" description="test" />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                        <CreateNFTForm />
+                    </Grid>
                 </Grid>
                 <Grid item xs={0} md={2}></Grid>
             </Grid>
@@ -32,7 +57,49 @@ const NFTListItem: FC<NFT> = ({ url, name, description }) => {
     return (
         <>
             <Grid item xs={6}>
-                {url}
+                <Card variant="outlined">
+                    <CardMedia component="img" src={url} />
+                    <CardContent>
+                        <Stack direction="row" justifyContent={'space-between'}>
+                            <Stack>
+                                <Typography
+                                    sx={{
+                                        fontWeight: 600,
+                                        fontSize: 12,
+                                        display: '-webkit-box',
+                                        overflow: 'hidden',
+                                        WebkitBoxOrient: 'vertical',
+                                        WebkitLineClamp: 3,
+                                    }}
+                                    variant="h6"
+                                >
+                                    {name}
+                                </Typography>
+                                <Typography
+                                    sx={{
+                                        fontWeight: 100,
+                                        fontSize: 10,
+                                        display: '-webkit-box',
+                                        overflow: 'hidden',
+                                        WebkitBoxOrient: 'vertical',
+                                        WebkitLineClamp: 3,
+                                    }}
+                                    variant="subtitle1"
+                                >
+                                    {description}
+                                </Typography>
+                            </Stack>
+                            <Stack>
+                                <Typography sx={{ fontWeight: 600, fontSize: 12 }} variant="h6">
+                                    Total
+                                </Typography>
+                                <Typography sx={{ fontWeight: 100, fontSize: 10 }} variant="subtitle1">
+                                    Subtitle
+                                </Typography>
+                            </Stack>
+                        </Stack>
+                    </CardContent>
+                </Card>
             </Grid>
         </>
     );
@@ -58,6 +125,14 @@ const CreateNFTForm: FC = () => {
         },
         onSubmit: (data) => {
             console.log(`Minting NFT`);
+            const customNFT = {
+                name: data.name,
+                url: data.url,
+                description: data.description,
+            };
+            callCreateNFT(customNFT).then((res: any) => {
+                console.log(res);
+            });
         },
     });
     return (
@@ -143,3 +218,11 @@ const styles = {
         paddingLeft: 8,
     },
 };
+
+/**
+ * Abstracting Grid container + items
+ * 
+ * const Container = props => <Grid container {...props} />;
+   const Item = props => <Grid item {...props} />;
+
+ */
