@@ -27,6 +27,8 @@ import AppPagination from './components/AppPagination';
 import * as Yup from 'yup';
 import { INSUFFICIENT } from '../minima/constants';
 
+import PreviewNFTModal from '../shared/components/PreviewNFTModal';
+
 const NFTs: FC = () => {
     const balances = useContext(BalanceUpdates);
     const [allNFTs, setAllNFTs] = useState<MinimaToken[]>([]);
@@ -76,12 +78,11 @@ const NFTs: FC = () => {
     );
 };
 
-export default NFTs;
-
 interface NFT {
     url: string;
     name: string;
     description: string;
+    size: number;
 }
 
 interface allProps {
@@ -93,7 +94,7 @@ const AllNFTs = ({ page, count, nfts }: allProps) => {
     return (
         <Grid item container xs={12} spacing={2}>
             {nfts.slice((page - 1) * count, page * count).map((b: MinimaToken) => {
-                return <NFTListItem name={b.token.name} url={b.token.url} description={b.token.description} />;
+                return <NFTListItem name={b.token.name} url={b.token.url} description={b.token.description} size={6} />;
             })}
             {nfts.length === 0 ? (
                 <Stack justifyContent="center">
@@ -104,10 +105,10 @@ const AllNFTs = ({ page, count, nfts }: allProps) => {
     );
 };
 /** Each NFT */
-const NFTListItem: FC<NFT> = ({ url, name, description }) => {
+const NFTListItem: FC<NFT> = ({ url, name, description, size }) => {
     return (
         <>
-            <Grid item xs={6}>
+            <Grid item xs={size}>
                 <Card sx={NFTCard} variant="outlined">
                     <CardMedia component="img" src={url} />
                     <CardContent>
@@ -301,16 +302,17 @@ const CreateNFTForm: FC = () => {
                             variant="contained"
                             fullWidth
                             type="submit"
+                            sx={{ marginBottom: 2 }}
                         >
                             {formik.isSubmitting ? 'Minting...' : 'Mint'}
                         </Button>
                         <Button
-                            disabled={formik.isSubmitting && !formik.isValid}
+                            disabled={!formik.dirty || !formik.isValid}
                             disableElevation
                             color="primary"
                             variant="outlined"
                             fullWidth
-                            onClick={openPreviewModal}
+                            onClick={() => setOpenPreviewModal(true)}
                         >
                             Preview
                         </Button>
@@ -322,7 +324,13 @@ const CreateNFTForm: FC = () => {
                             status="Transaction Status"
                             subtitle={modalStatus === 'Success' ? 'NFT minted.' : 'Please try again later.'}
                         />
-                        <PreviewNFTModal open={openPreviewModal} handleClose={handle} />
+                        <PreviewNFTModal
+                            open={openPreviewModal}
+                            handleClose={() => setOpenPreviewModal(false)}
+                            name={formik.values.name}
+                            url={formik.values.url}
+                            description={formik.values.description}
+                        />
                     </form>
                 </CardContent>
             </Card>
@@ -357,3 +365,5 @@ const NFTCard = {
    const Item = props => <Grid item {...props} />;
 
  */
+
+export { NFTs, NFTListItem };

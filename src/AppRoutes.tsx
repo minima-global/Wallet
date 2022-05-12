@@ -14,7 +14,7 @@ import TokenDetail from './pages/components/TokenDetail';
 import { DRAWERWIDTH } from './shared/constants';
 import SideMenu from './layout/SideMenu';
 import Offline from './pages/Offline';
-import NFTs from './pages/NFTs';
+import { NFTs } from './pages/NFTs';
 
 export interface RouteType {
     path: string;
