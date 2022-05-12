@@ -1,5 +1,15 @@
-import { FC, useState, useContext } from 'react';
-import { Grid, Card, CardContent, TextField, Button, Stack, CardMedia, Typography } from '@mui/material';
+import { FC, useState, useContext, useEffect } from 'react';
+import {
+    Grid,
+    Card,
+    CardContent,
+    TextField,
+    Button,
+    Stack,
+    CardMedia,
+    Typography,
+    TablePagination,
+} from '@mui/material';
 import MiniModal from '../shared/components/MiniModal';
 
 import { callCreateNFT, callBalance } from '../minima/rpc-commands';
@@ -9,9 +19,28 @@ import { useFormik } from 'formik';
 import { BalanceUpdates } from '../App'; // balance context
 
 import { MinimaToken } from '../types/minima';
+import AppPagination from './components/AppPagination';
 
 const NFTs: FC = () => {
     const balances = useContext(BalanceUpdates);
+    const [allNFTs, setAllNFTs] = useState<MinimaToken[]>([]);
+    const [page, setPage] = useState(1);
+    const COUNT_PER_PAGE = 2;
+
+    useEffect(() => {
+        const allNFTs: MinimaToken[] = balances.filter((b: MinimaToken) => {
+            if (typeof b.token !== 'string' && b.token.nft) {
+                return b;
+            }
+        });
+
+        setAllNFTs(allNFTs);
+    }, [balances]);
+
+    const currentPage = (page: number) => {
+        // console.log(`Setting current page number to: ${page}`);
+        setPage(page);
+    };
 
     return (
         <>
@@ -19,20 +48,14 @@ const NFTs: FC = () => {
                 <Grid item xs={0} md={2}></Grid>
                 <Grid container item xs={12} md={8} spacing={2}>
                     <Grid container item xs={12} spacing={2}>
-                        {balances.map((b: MinimaToken) => {
-                            if (typeof b.token !== 'string' && b.token.nft) {
-                                return (
-                                    <NFTListItem
-                                        name={b.token.name}
-                                        url={b.token.url}
-                                        description={b.token.description}
-                                    />
-                                );
-                            }
+                        {allNFTs.slice((page - 1) * COUNT_PER_PAGE, page * COUNT_PER_PAGE).map((b: MinimaToken) => {
+                            return (
+                                <NFTListItem name={b.token.name} url={b.token.url} description={b.token.description} />
+                            );
                         })}
-                        <NFTListItem name="Test" url="test" description="test" />
-                        <NFTListItem name="Test" url="test" description="test" />
-                        <NFTListItem name="Test" url="test" description="test" />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <AppPagination currentPage={currentPage} totalNFTs={allNFTs.length} />
                     </Grid>
 
                     <Grid item xs={12}>
@@ -57,7 +80,7 @@ const NFTListItem: FC<NFT> = ({ url, name, description }) => {
     return (
         <>
             <Grid item xs={6}>
-                <Card variant="outlined">
+                <Card sx={NFTCard} variant="outlined">
                     <CardMedia component="img" src={url} />
                     <CardContent>
                         <Stack direction="row" justifyContent={'space-between'}>
@@ -69,7 +92,7 @@ const NFTListItem: FC<NFT> = ({ url, name, description }) => {
                                         display: '-webkit-box',
                                         overflow: 'hidden',
                                         WebkitBoxOrient: 'vertical',
-                                        WebkitLineClamp: 3,
+                                        WebkitLineClamp: 1,
                                     }}
                                     variant="h6"
                                 >
@@ -82,21 +105,21 @@ const NFTListItem: FC<NFT> = ({ url, name, description }) => {
                                         display: '-webkit-box',
                                         overflow: 'hidden',
                                         WebkitBoxOrient: 'vertical',
-                                        WebkitLineClamp: 3,
+                                        WebkitLineClamp: 1,
                                     }}
                                     variant="subtitle1"
                                 >
                                     {description}
                                 </Typography>
                             </Stack>
-                            <Stack>
+                            {/* <Stack>
                                 <Typography sx={{ fontWeight: 600, fontSize: 12 }} variant="h6">
                                     Total
                                 </Typography>
                                 <Typography sx={{ fontWeight: 100, fontSize: 10 }} variant="subtitle1">
                                     Subtitle
                                 </Typography>
-                            </Stack>
+                            </Stack> */}
                         </Stack>
                     </CardContent>
                 </Card>
@@ -216,6 +239,15 @@ const styles = {
         color: '#363A3F',
         fontWeight: '400',
         paddingLeft: 8,
+    },
+};
+
+const NFTCard = {
+    '&:hover': {
+        cursor: 'pointer',
+        border: '1px solid',
+        padding: '0px',
+        boxShadow: '0px 3px 1px -2px #FF7357,0px 2px 2px 0px #317aff,0px 1px 5px 0px rgba(0,0,0,0.12)',
     },
 };
 
