@@ -37,7 +37,7 @@ const NFTs: FC = () => {
     const navigate = useNavigate();
     const [allNFTs, setAllNFTs] = useState<MinimaToken[]>([]);
     const [page, setPage] = useState(1);
-    const COUNT_PER_PAGE = 2;
+    const COUNT_PER_PAGE = 4;
 
     const loading = balances.length === 0;
     if (loading) {
