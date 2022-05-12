@@ -28,12 +28,19 @@ import * as Yup from 'yup';
 import { INSUFFICIENT } from '../minima/constants';
 
 import PreviewNFTModal from '../shared/components/PreviewNFTModal';
+import { useNavigate } from 'react-router-dom';
 
 const NFTs: FC = () => {
     const balances = useContext(BalanceUpdates);
+    const navigate = useNavigate();
     const [allNFTs, setAllNFTs] = useState<MinimaToken[]>([]);
     const [page, setPage] = useState(1);
     const COUNT_PER_PAGE = 2;
+
+    const loading = balances.length === 0;
+    if (loading) {
+        navigate('/offline');
+    }
 
     useEffect(() => {
         const allNFTs: MinimaToken[] = balances.filter((b: MinimaToken) => {
@@ -97,9 +104,9 @@ const AllNFTs = ({ page, count, nfts }: allProps) => {
                 return <NFTListItem name={b.token.name} url={b.token.url} description={b.token.description} size={6} />;
             })}
             {nfts.length === 0 ? (
-                <Stack justifyContent="center">
-                    <Typography variant="subtitle1">Your collection will appear here.</Typography>
-                </Stack>
+                <Grid item xs={12} sx={{ textAlign: 'center', display: 'flex', justifyContent: 'center' }}>
+                    <Typography variant="subtitle1">Your NFT collections will appear here.</Typography>
+                </Grid>
             ) : null}
         </Grid>
     );
@@ -213,7 +220,8 @@ const CreateNFTForm: FC = () => {
                     }
 
                     if (err.message !== undefined && err.message.substring(0, 20) === INSUFFICIENT) {
-                        formik.setFieldError('amount', err.message);
+                        // formik.setFieldError('amount', err.message);
+                        setErrMessage(err.message);
                     } else {
                         setErrMessage(err.message);
                     }
@@ -366,4 +374,5 @@ const NFTCard = {
 
  */
 
-export { NFTs, NFTListItem };
+export default NFTs;
+export { NFTListItem };
