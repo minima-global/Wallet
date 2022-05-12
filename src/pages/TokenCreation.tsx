@@ -196,7 +196,7 @@ const TokenCreation: FC = () => {
                                         fullWidth
                                         type="submit"
                                     >
-                                        {formik.isSubmitting ? 'Minting...' : 'Mint'}
+                                        {formik.isSubmitting ? 'Creating...' : 'Create Token'}
                                     </Button>
                                 </form>
                             </CardContent>
@@ -207,7 +207,7 @@ const TokenCreation: FC = () => {
                             handleOpen={handleOpen}
                             header={modalStatus === 'Success' ? 'Success!' : 'Failed!'}
                             status="Transaction Status"
-                            subtitle={modalStatus === 'Success' ? 'NFT created' : 'Please try again later.'}
+                            subtitle={modalStatus === 'Success' ? 'Token created' : 'Please try again later.'}
                         />
                     </>
                 ) : null}

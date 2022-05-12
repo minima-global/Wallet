@@ -1,4 +1,4 @@
-import { Pagination } from '@mui/material';
+import { Pagination, Stack } from '@mui/material';
 
 interface iProps {
     currentPage: (page: number) => void;
@@ -11,12 +11,14 @@ const AppPagination = ({ currentPage, totalNFTs }: iProps) => {
         currentPage(value);
     };
     return (
-        <Pagination
-            onChange={handleChange}
-            count={Math.round(totalNFTs / COUNT_PER_PAGE)}
-            variant="outlined"
-            color="primary"
-        />
+        <Stack justifyContent="center" direction="row">
+            <Pagination
+                onChange={handleChange}
+                count={Math.round(totalNFTs / COUNT_PER_PAGE)}
+                shape="rounded"
+                color="primary"
+            />
+        </Stack>
     );
 };
 export default AppPagination;

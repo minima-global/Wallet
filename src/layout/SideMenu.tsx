@@ -65,7 +65,7 @@ const SideMenu = ({ handleDrawerToggle }: IProps) => {
         },
         {
             pathname: '/tokencreate',
-            name: 'Mint Token',
+            name: 'Create Token',
             onClick: () => navigate('/tokencreate'),
         },
         {

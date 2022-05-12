@@ -53,7 +53,7 @@ const AppNavigation = () => {
         },
         {
             pathname: '/tokencreate',
-            name: 'Mint Token',
+            name: 'Create Token',
         },
         {
             pathname: '/nfts',
