@@ -20,3 +20,24 @@ export function copy(text: string) {
     document.body.removeChild(input);
     return Promise.resolve(result);
 }
+
+// hex to string
+export const hexToString = (str1: string) => {
+    var hex = str1.toString();
+    var str = "";
+    for (var n = 0; n < hex.length; n += 2) {
+        str += String.fromCharCode(parseInt(hex.substr(n, 2), 16));
+    }
+    return str;
+  };
+  
+  
+  // string to hex
+  export const strToHex = (str: string) => {
+    var hex = '';
+    for(var i=0;i<str.length;i++) {
+        hex += ''+str.charCodeAt(i).toString(16);
+    }
+    return hex;
+  }
+  

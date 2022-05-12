@@ -7,6 +7,7 @@ import { callStatus, callToken } from '../minima/rpc-commands';
 import { INSUFFICIENT } from '../minima/constants';
 import { RpcResponse } from '../types/minima';
 import { useNavigate } from 'react-router-dom';
+import { strToHex } from '../shared/functions';
 
 const CreateTokenSchema = Yup.object().shape({
     name: Yup.string()
@@ -15,11 +16,10 @@ const CreateTokenSchema = Yup.object().shape({
     amount: Yup.string()
         .required('Field Required')
         .matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters.'),
-    description: Yup.string()
-        .min(0)
-        .max(255, 'Maximum 255 characters allowed.')
-        .matches(/^[^\\;'"]+$/, 'Invalid characters.'),
-    url: Yup.string().matches(/^[^\\;'"]+$/, 'Invalid characters.'),
+    description: Yup.string().min(0).max(255, 'Maximum 255 characters allowed.'),
+    // .matches(/^[^\\;'"]+$/, 'Invalid characters.'),
+    url: Yup.string(),
+    // .matches(/^[^\\;'"]+$/, 'Invalid characters.'),
 });
 
 const TokenCreation: FC = () => {
@@ -60,13 +60,13 @@ const TokenCreation: FC = () => {
             const customToken = {
                 name: {
                     name: formData.name,
-                    description: formData.description,
-                    url: formData.url,
+                    description: strToHex(formData.description),
+                    url: strToHex(formData.url),
                 },
                 amount: formData.amount,
             };
             callToken(customToken)
-                .then((res: any) => {
+                .then(() => {
                     // console.log(res);
                     // console.log(formData.amount);
                     // SENT

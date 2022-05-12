@@ -17,6 +17,7 @@ import { useNavigate } from 'react-router-dom';
 import MinimaIcon from '../assets/images/minimaLogoSquare200x200.png';
 import { MinimaToken } from '../types/minima';
 import { BalanceUpdates } from '../App';
+import { hexToString } from '../shared/functions';
 
 const Balance = () => {
     const navigate = useNavigate();
@@ -62,7 +63,7 @@ const Balance = () => {
                                 : !item.token.url || item.token.url.length === 0
                                 ? `https://robohash.org/${item.tokenid}`
                                 : item.token.url && item.token.url.length > 0
-                                ? item.token.url
+                                ? hexToString(item.token.url)
                                 : ''
                         }
                         alt={item.token.name ? item.token.name : item.token}

@@ -29,6 +29,8 @@ import { INSUFFICIENT } from '../minima/constants';
 
 import PreviewNFTModal from '../shared/components/PreviewNFTModal';
 import { useNavigate } from 'react-router-dom';
+import { strToHex } from '../shared/functions';
+import { hexToString } from '../shared/functions';
 
 const NFTs: FC = () => {
     const balances = useContext(BalanceUpdates);
@@ -101,7 +103,14 @@ const AllNFTs = ({ page, count, nfts }: allProps) => {
     return (
         <Grid item container xs={12} spacing={2}>
             {nfts.slice((page - 1) * count, page * count).map((b: MinimaToken) => {
-                return <NFTListItem name={b.token.name} url={b.token.url} description={b.token.description} size={6} />;
+                return (
+                    <NFTListItem
+                        name={b.token.name}
+                        url={hexToString(b.token.url)}
+                        description={hexToString(b.token.description)}
+                        size={6}
+                    />
+                );
             })}
             {nfts.length === 0 ? (
                 <Grid item xs={12} sx={{ textAlign: 'center', display: 'flex', justifyContent: 'center' }}>
@@ -168,12 +177,10 @@ const CreateTokenSchema = Yup.object().shape({
     name: Yup.string()
         .required('Field Required')
         .matches(/^[^\\;'"]+$/, 'Invalid characters.'),
-    description: Yup.string()
-        .min(0)
-        .max(255, 'Maximum 255 characters allowed.')
-        .matches(/^[^\\;'"]+$/, 'Invalid characters.'),
+    description: Yup.string().min(0).max(255, 'Maximum 255 characters allowed.'),
+    // .matches(/^[^\\;'"]+$/, 'Invalid characters.'),
     url: Yup.string()
-        .matches(/^[^\\;'"]+$/, 'Invalid characters.')
+        // .matches(/^[^\\;'"]+$/, 'Invalid characters.')
         .required('Field Required'),
 });
 /** NFT form creator */
@@ -200,8 +207,8 @@ const CreateNFTForm: FC = () => {
             console.log(`Minting NFT ${data.name}`);
             const customNFT = {
                 name: data.name,
-                url: data.url,
-                description: data.description,
+                url: strToHex(data.url),
+                description: strToHex(data.description),
             };
             callCreateNFT(customNFT)
                 .then(() => {
