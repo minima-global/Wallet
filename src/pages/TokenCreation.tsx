@@ -1,5 +1,5 @@
 import { FC, useState, useEffect } from 'react';
-import { Grid, Card, CardContent, TextField, Button, Portal, Snackbar, Alert } from '@mui/material';
+import { Grid, Card, CardContent, TextField, Button, Portal, Snackbar, Alert, InputAdornment } from '@mui/material';
 import MiniModal from '../shared/components/MiniModal';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -187,6 +187,13 @@ const TokenCreation: FC = () => {
                                         multiline
                                         rows={4}
                                         sx={{ mb: 2 }}
+                                        InputProps={{
+                                            endAdornment: (
+                                                <InputAdornment position="start">
+                                                    {formik.values.description.length + '/255'}
+                                                </InputAdornment>
+                                            ),
+                                        }}
                                     ></TextField>
                                     <Button
                                         disabled={formik.isSubmitting && !formik.isValid}

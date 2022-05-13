@@ -13,6 +13,7 @@ import {
     Portal,
     Snackbar,
     Alert,
+    InputAdornment,
 } from '@mui/material';
 import MiniModal from '../shared/components/MiniModal';
 
@@ -325,6 +326,13 @@ const CreateNFTForm: FC = () => {
                             multiline
                             rows={4}
                             sx={{ mb: 2 }}
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position="start">
+                                        {formik.values.description.length + '/255'}
+                                    </InputAdornment>
+                                ),
+                            }}
                         ></TextField>
                         <Button
                             disabled={formik.isSubmitting && !formik.isValid}
