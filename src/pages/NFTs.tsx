@@ -1,5 +1,6 @@
 import { FC, useState, useContext, useEffect } from 'react';
 import {
+    Box,
     Grid,
     Card,
     CardContent,
@@ -68,6 +69,12 @@ const NFTs: FC = () => {
                         <Grid item xs={12}>
                             <Card variant="outlined">
                                 <CardContent>
+                                    <Box>
+                                        <Typography variant="h6" pb={2}>
+                                            Your Collections
+                                        </Typography>
+                                    </Box>
+
                                     <AllNFTs nfts={allNFTs} page={page} count={COUNT_PER_PAGE} />
                                 </CardContent>
                                 <CardActions sx={{ justifyContent: 'center', display: 'flex' }}>
@@ -259,6 +266,11 @@ const CreateNFTForm: FC = () => {
 
             <Card variant="outlined">
                 <CardContent>
+                    <Box>
+                        <Typography variant="h6" pb={2}>
+                            Mint New
+                        </Typography>
+                    </Box>
                     <form onSubmit={formik.handleSubmit}>
                         <TextField
                             fullWidth
