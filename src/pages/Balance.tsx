@@ -11,6 +11,7 @@ import {
     CircularProgress,
     Card,
     CardContent,
+    CardActions,
 } from '@mui/material';
 
 import { useNavigate } from 'react-router-dom';
@@ -18,10 +19,15 @@ import MinimaIcon from '../assets/images/minimaLogoSquare200x200.png';
 import { MinimaToken } from '../types/minima';
 import { BalanceUpdates } from '../App';
 import { hexToString } from '../shared/functions';
+import AppPagination from './components/AppPagination';
 
 const Balance = () => {
     const navigate = useNavigate();
     const [filterText, setFilterText] = useState('');
+
+    // pagination
+    const [page, setPage] = useState(1);
+    const COUNT_PER_PAGE = 5;
 
     const getFilteredBalanceList = (balanceList: any[], filter: string) => {
         const suggestedData = balanceList.filter(
@@ -51,6 +57,11 @@ const Balance = () => {
         setFilterText(value);
         // when the component re-renders the updated filter text will create a new filteredBalance variable
     }
+
+    const currentPage = (page: number) => {
+        // console.log(`Setting current page number to: ${page}`);
+        setPage(page);
+    };
 
     const TokenListItem = ({ item }: { item: MinimaToken }) => {
         return (
@@ -128,9 +139,11 @@ const Balance = () => {
                                     onChange={handleInputChange}
                                 />
                                 <List>
-                                    {filteredBalance?.map((item: MinimaToken, i) => (
-                                        <TokenListItem item={item}></TokenListItem>
-                                    ))}
+                                    {filteredBalance
+                                        ?.slice((page - 1) * COUNT_PER_PAGE, page * COUNT_PER_PAGE)
+                                        .map((item: MinimaToken, i) => (
+                                            <TokenListItem item={item}></TokenListItem>
+                                        ))}
                                 </List>
                                 {filteredBalance.length === 0 ? (
                                     <Typography sx={{ textAlign: 'left' }} variant="h6">
@@ -138,6 +151,15 @@ const Balance = () => {
                                     </Typography>
                                 ) : null}
                             </CardContent>
+                            {filterText.length === 0 ? (
+                                <CardActions sx={{ justifyContent: 'center', display: 'flex' }}>
+                                    <AppPagination
+                                        currentPage={currentPage}
+                                        totalNFTs={balances.length}
+                                        countPerPage={COUNT_PER_PAGE}
+                                    />
+                                </CardActions>
+                            ) : null}
                         </Card>
                     )}
                 </Grid>

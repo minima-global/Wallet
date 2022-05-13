@@ -3,9 +3,10 @@ import { Pagination, Stack } from '@mui/material';
 interface iProps {
     currentPage: (page: number) => void;
     totalNFTs: number;
+    countPerPage: number;
 }
-const AppPagination = ({ currentPage, totalNFTs }: iProps) => {
-    const COUNT_PER_PAGE = 4;
+const AppPagination = ({ currentPage, totalNFTs, countPerPage }: iProps) => {
+    // const COUNT_PER_PAGE = 4;
 
     const handleChange = (event: any, value: number) => {
         currentPage(value);
@@ -14,7 +15,7 @@ const AppPagination = ({ currentPage, totalNFTs }: iProps) => {
         <Stack justifyContent="center" direction="row">
             <Pagination
                 onChange={handleChange}
-                count={Math.round(totalNFTs / COUNT_PER_PAGE)}
+                count={Math.round(totalNFTs / countPerPage)}
                 shape="rounded"
                 color="primary"
             />

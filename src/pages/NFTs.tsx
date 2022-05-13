@@ -78,7 +78,11 @@ const NFTs: FC = () => {
                                     <AllNFTs nfts={allNFTs} page={page} count={COUNT_PER_PAGE} />
                                 </CardContent>
                                 <CardActions sx={{ justifyContent: 'center', display: 'flex' }}>
-                                    <AppPagination currentPage={currentPage} totalNFTs={allNFTs.length} />
+                                    <AppPagination
+                                        currentPage={currentPage}
+                                        totalNFTs={allNFTs.length}
+                                        countPerPage={COUNT_PER_PAGE}
+                                    />
                                 </CardActions>
                             </Card>
                         </Grid>
