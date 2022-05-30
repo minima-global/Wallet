@@ -29,7 +29,7 @@ import FileCopyIcon from '@mui/icons-material/FileCopy';
 import ThumbDownOffAltIcon from '@mui/icons-material/ThumbDownOffAlt';
 import { BalanceUpdates } from '../../App';
 
-import { copy as copyText } from '../../shared/functions';
+import { copy as copyText, hexToString } from '../../shared/functions';
 
 const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
     <Tooltip {...props} arrow classes={{ popper: className }} />
@@ -101,7 +101,7 @@ const TokenDetail = () => {
                                                     : !token?.token.url || token?.token.url.length === 0
                                                     ? `https://robohash.org/${token?.tokenid}`
                                                     : token?.token.url && token?.token.url.length > 0
-                                                    ? token.token.url
+                                                    ? hexToString(token.token.url)
                                                     : ''
                                             }
                                             alt={token?.token.name ? token?.token.name : token?.token}
@@ -117,7 +117,7 @@ const TokenDetail = () => {
                                                 letterSpacing: 1,
                                             }}
                                         >
-                                            {token?.token.description ? token?.token.description : ''}
+                                            {token?.token.description ? hexToString(token?.token.description) : ''}
                                         </Typography>
                                         {/* <Button variant="text">Show More</Button> */}
                                     </CardContent>
@@ -287,7 +287,7 @@ const TokenDetail = () => {
             <Grid item xs={0} md={2}></Grid>
         </Grid>
     );
-};;
+};
 export default TokenDetail;
 
 const copyRow = {

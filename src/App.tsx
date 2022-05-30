@@ -27,13 +27,14 @@ export default function App() {
     if (oldBalance !== '[]') {
         isDifferent = oldBalance !== newBalance;
     }
-    console.log(`Has balanced changed? `, isDifferent);
-    console.log('Balance', myBalance);
+    // console.log(`Has balanced changed? `, isDifferent);
+    // console.log('Balance', myBalance);
 
     // call and store balance with timer
     const callAndStoreBalance = useCallback(
         (time: number) => {
             setTimeout(() => {
+                // console.log('APP.tsx Calling balance!');
                 commands
                     .balance()
                     .then((data) => {
@@ -66,6 +67,7 @@ export default function App() {
                 data = data.data;
                 switch (event) {
                     case 'NEWBALANCE':
+                        // console.log(`NEWBALANCE EVENT!`);
                         callAndStoreBalance(0);
                         callAndStoreBalance(2 * 60 * 1000); // 2 min
                         callAndStoreBalance(3 * 60 * 1000); // 3 min

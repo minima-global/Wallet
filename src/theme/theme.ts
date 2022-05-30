@@ -139,9 +139,9 @@ theme = createTheme(theme, {
                     letterSpacing: 1,
                     lineHeight: '21px',
                     minHeight: 44,
-                    '&:hover': {
-                        backgroundColor: '#0D55D9'
-                    },
+                    // '&:hover': {
+                    //     backgroundColor: '#0D55D9'
+                    // },
                     '&:disabled': {
                         backgroundColor: '#5A94FF',
                         color: '#fff'
