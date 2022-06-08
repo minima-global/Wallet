@@ -19,8 +19,8 @@ import {
     ListItem,
     ListItemText,
 } from '@mui/material';
-import { callAddress, callGetAddress } from '../minima/rpc-commands';
-import { copy, copyTextToClipboard } from '../shared/functions';
+import { callGetAddress } from '../minima/rpc-commands';
+import { copy } from '../shared/functions';
 import QRCode from 'react-qr-code';
 
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
@@ -48,7 +48,8 @@ const Receive: FC = () => {
     useEffect(() => {
         callGetAddress()
             .then((res: any) => {
-                setAddress(res.miniaddress);
+                // console.log('getaddress', res);
+                setAddress(res.response.miniaddress);
                 setLoading(false);
             })
             .catch((err: any) => {

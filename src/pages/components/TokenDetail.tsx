@@ -115,6 +115,7 @@ const TokenDetail = () => {
                                             variant="body1"
                                             sx={{
                                                 letterSpacing: 1,
+                                                wordBreak: 'break-all!important',
                                             }}
                                         >
                                             {token?.token.description ? hexToString(token?.token.description) : ''}

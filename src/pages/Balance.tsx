@@ -142,7 +142,7 @@ const Balance = () => {
                                     {filteredBalance
                                         ?.slice((page - 1) * COUNT_PER_PAGE, page * COUNT_PER_PAGE)
                                         .map((item: MinimaToken, i) => (
-                                            <TokenListItem item={item}></TokenListItem>
+                                            <TokenListItem key={item.tokenid} item={item}></TokenListItem>
                                         ))}
                                 </List>
                                 {filteredBalance.length === 0 ? (

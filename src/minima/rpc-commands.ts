@@ -1,44 +1,13 @@
 import { SendArgs, Commands } from '@minima-global/mds-api';
 
+import { MDS } from './mds';
 
 const Minima = new Commands(); // this will create a cmds reference
-// call any generic minima command
-/**
- * TODO
- * Set a generic type for RPC calls + switch between the calling fnc
- * set at any for now..
- */
-// export const callCommand = (command: string): Promise<RpcResponse> => {
-//     return new Promise((resolve, reject) => {
-//         Minima.cmd(command, (data: RpcResponse) => {
-//             if (data.status) {
-//                 resolve(data);
-//             } else {
-//                 reject(data);
-//             }
-//         });
-//     });
-// };
-
-/**
- * 
- * TODO - fix up issue with what you send to tokencreate
- * Error: Invalid JSON parameter for tokencreate @ name:{/"name/":/"wqerqwe/",/"description/":/"/",/"url/":/"/"} 
- * org.minima.utils.json.parser.ParseException: Unexpected character (/) at position 1.
- * 
- */
-/**
- * 
- * TODO I know pass any as record<string, any> doesn't work right
- * must be concise when using Record type
- * update mds-api to type any for name
- */
-
 interface Test {
     name: any;
     amount: number;
 }
-export const callToken = (data: Test) => {
+export const oCallToken = (data: Test) => {
     return Minima.tokencreate({
         name: {
             name: data.name.name, 
@@ -48,30 +17,67 @@ export const callToken = (data: Test) => {
         amount: `${data.amount}`});
 };
 
-export const callSend = (data: SendArgs) => {
+export const oCallSend = (data: SendArgs) => {
     return Minima.send({ amount: data.amount, address: `${data.address}`, tokenid: `${data.tokenid}`});
 };
 
-export const callAddress = () => {
+export const oCallAddress = () => {
     return Minima.newaddress();
 };
 
-export const callStatus = () => {
+export const oCallStatus = () => {
     return Minima.status();
 };
 
-export const callBalance: any = () => {
+export const oCallBalance: any = () => {
     return Minima.balance();
 };
 
-export const callHelp = () => {
+export const oCallHelp = () => {
     return Minima.help();
 };
 
-export const callGetAddress = () => {
+export const oCallGetAddress = () => {
     return Minima.getaddress();
 }
 
-export const callCreateNFT = (data: any) => {
+export const oCallCreateNFT = (data: any) => {
     return Minima.custom({name: "tokencreate", args: {name: {name: data.name, description: data.description, url: data.url, nft: true}, amount: 1, decimals:0 }});
 };
+
+
+/** 
+ * 
+ * mds.js compatibility 
+ * 
+ */
+
+export const callSend = (data: SendArgs) => {
+    return req(`send amount:${data.amount} address:${data.address} tokenid:${data.tokenid}`);
+}
+export const callGetAddress = () => {
+    return req(`getaddress`);
+}
+export const callStatus = () => {
+    return req(`status`);
+}
+export const callToken = (data: Test) => {
+    return req(`tokencreate name:{"name":"${data.name.name}", "description":"${data.name.description}", "url":"${data.name.url}"} amount:${data.amount}`);
+}
+export const callCreateNFT = (data: any) => {
+    return req(`tokencreate name:{"name":"${data.name}", "description":"${data.description}", "url":"${data.url}", "nft":"true"} amount:1 decimals:0`);
+}
+export const callBalance = () => {
+    return req(`balance`);
+}
+
+const req = (command: string) => {
+    
+    return new Promise((resolve) => {
+        
+        MDS.cmd(command, (resp: any) => {
+            resolve(resp);
+        });
+    
+    });
+  }

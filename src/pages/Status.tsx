@@ -26,7 +26,7 @@ const Status = () => {
     useEffect(() => {
         callStatus()
             .then((data: any) => {
-                setStatus(data);
+                setStatus(data.response);
                 setLoading(false);
             })
             .catch((err) => {

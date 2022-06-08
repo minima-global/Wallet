@@ -77,8 +77,9 @@ const Send: FC = () => {
         onSubmit: (data) => {
             callSend(data)
                 .then((res: any) => {
-                    console.log('send response', res);
-                    console.log('send transaction block', parseInt(res.header.block));
+                    if (!res.status) {
+                        throw new Error(res.error ? res.error : res.message); // TODO.. consistent key value
+                    }
                     // SENT
                     formik.resetForm();
                     // Set Modal
@@ -87,6 +88,7 @@ const Send: FC = () => {
                     setOpen(true);
                 })
                 .catch((err) => {
+                    // console.log(`Failed..`);
                     console.error(err.message);
                     // FAILED
                     if (err.message !== undefined && err.message.substring(0, 20) === INSUFFICIENT) {

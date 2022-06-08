@@ -121,6 +121,7 @@ const AllNFTs = ({ page, count, nfts }: allProps) => {
                         url={hexToString(b.token.url)}
                         description={hexToString(b.token.description)}
                         size={6}
+                        key={b.tokenid}
                     />
                 );
             })}
@@ -163,6 +164,8 @@ const NFTListItem: FC<NFT> = ({ url, name, description, size }) => {
                                         overflow: 'hidden',
                                         WebkitBoxOrient: 'vertical',
                                         WebkitLineClamp: 1,
+                                        textOverflow: 'ellipsis',
+                                        wordBreak: 'break-all',
                                     }}
                                     variant="subtitle1"
                                 >
@@ -223,7 +226,10 @@ const CreateNFTForm: FC = () => {
                 description: strToHex(data.description),
             };
             callCreateNFT(customNFT)
-                .then(() => {
+                .then((res: any) => {
+                    if (!res.status) {
+                        throw new Error(res.error ? res.error : res.message); // TODO.. consistent key value
+                    }
                     formik.resetForm();
                     // Set Modal
                     setModalStatus('Success');

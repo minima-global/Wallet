@@ -5,10 +5,12 @@ import theme from './theme/theme';
 import { SnackbarProvider } from 'notistack';
 import AppNavigation from './AppRoutes';
 import { MinimaToken } from './types/minima';
-import { commands, ws } from '@minima-global/mds-api';
+// import { commands, ws } from '@minima-global/mds-api';
 import { useLocation } from 'react-router-dom';
 import Notifications from './layout/Notifications';
 
+import { MDS } from './minima/mds';
+import { callBalance } from './minima/rpc-commands';
 // Create a context provider to give balance updates to consumers in the app
 const BalanceUpdates = createContext<MinimaToken[]>([]);
 
@@ -31,24 +33,21 @@ export default function App() {
     // console.log('Balance', myBalance);
 
     // call and store balance with timer
-    const callAndStoreBalance = useCallback(
-        (time: number) => {
-            setTimeout(() => {
-                // console.log('APP.tsx Calling balance!');
-                commands
-                    .balance()
-                    .then((data) => {
-                        setMyBalance((oldVal) => {
-                            return { prevBalance: oldVal.newBalance, newBalance: data };
-                        });
-                    })
-                    .catch((err) => {
-                        console.error(err);
+    const callAndStoreBalance = useCallback((time: number) => {
+        setTimeout(() => {
+            // console.log('APP.tsx Calling balance!');
+            callBalance()
+                .then((data: any) => {
+                    // console.log(`Myblanace data`, data);
+                    setMyBalance((oldVal) => {
+                        return { prevBalance: oldVal.newBalance, newBalance: data.response };
                     });
-            }, time);
-        },
-        [commands]
-    );
+                })
+                .catch((err) => {
+                    console.error(err);
+                });
+        }, time);
+    }, []);
 
     // call getBalance on page reload (router navigate)
     const location = useLocation();
@@ -59,32 +58,52 @@ export default function App() {
     }, [location, callAndStoreBalance]);
 
     useEffect(() => {
-        if (ws) {
-            ws.onmessage = (evt: any) => {
-                let data = JSON.parse(evt.data);
-                console.log('Minima Event', data);
-                const event = data.event;
-                data = data.data;
-                switch (event) {
-                    case 'NEWBALANCE':
-                        // console.log(`NEWBALANCE EVENT!`);
-                        callAndStoreBalance(0);
-                        callAndStoreBalance(2 * 60 * 1000); // 2 min
-                        callAndStoreBalance(3 * 60 * 1000); // 3 min
-                        callAndStoreBalance(5 * 60 * 1000); // 5 min
-                        callAndStoreBalance(10 * 60 * 1000); // 10 min
-                        break;
-                    case 'NEWBLOCK':
-                        // do nothing
-                        break;
-                    case 'MINING':
-                        // do nothing
-                        break;
-                    default:
-                    //console.error('Unknown event type: ', evt.event);
-                }
-            };
-        }
+        MDS.init((msg: any) => {
+            // console.log(msg);
+            const evt = msg.event;
+
+            switch (evt) {
+                case 'NEWBALANCE':
+                    callAndStoreBalance(0);
+                    callAndStoreBalance(2 * 60 * 1000); // 2 min
+                    callAndStoreBalance(3 * 60 * 1000); // 3 min
+                    callAndStoreBalance(5 * 60 * 1000); // 5 min
+                    callAndStoreBalance(10 * 60 * 1000); // 10 min
+                    break;
+                case 'NEWBLOCK':
+                    break;
+                case 'MINING':
+                    break;
+                default:
+            }
+        });
+
+        // if (ws) {
+        //     ws.onmessage = (evt: any) => {
+        //         let data = JSON.parse(evt.data);
+        //         console.log('Minima Event', data);
+        //         const event = data.event;
+        //         data = data.data;
+        //         switch (event) {
+        //             case 'NEWBALANCE':
+        //                 // console.log(`NEWBALANCE EVENT!`);
+        //                 callAndStoreBalance(0);
+        //                 callAndStoreBalance(2 * 60 * 1000); // 2 min
+        //                 callAndStoreBalance(3 * 60 * 1000); // 3 min
+        //                 callAndStoreBalance(5 * 60 * 1000); // 5 min
+        //                 callAndStoreBalance(10 * 60 * 1000); // 10 min
+        //                 break;
+        //             case 'NEWBLOCK':
+        //                 // do nothing
+        //                 break;
+        //             case 'MINING':
+        //                 // do nothing
+        //                 break;
+        //             default:
+        //             //console.error('Unknown event type: ', evt.event);
+        //         }
+        //     };
+        // }
 
         // get balance straight away
         callAndStoreBalance(0);

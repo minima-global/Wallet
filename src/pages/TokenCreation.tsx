@@ -66,9 +66,10 @@ const TokenCreation: FC = () => {
                 amount: formData.amount,
             };
             callToken(customToken)
-                .then(() => {
-                    // console.log(res);
-                    // console.log(formData.amount);
+                .then((res: any) => {
+                    if (!res.status) {
+                        throw new Error(res.error ? res.error : res.message); // TODO.. consistent key value
+                    }
                     // SENT
                     formik.resetForm();
                     // Set Modal
