@@ -4,10 +4,10 @@
 	 viewBox="0 0 200 200" style="enable-background:new 0 0 200 200;" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:#FFFFFF;}
-	.st1{fill:#17171C;}
-	.st2{fill:#FF522E;}
-	.st3{fill:#317AFF;}
-	.st4{fill:#8F8F9B;}
+	.st1{fill:#17171C!important;}
+	.st2{fill:#FF522E!important;}
+	.st3{fill:#317AFF!important;}
+	.st4{fill:#8F8F9B!important;}
 </style>
 <path class="st0" d="M20,0h160c11,0,20,9,20,20v160c0,11-9,20-20,20H20c-11,0-20-9-20-20V20C0,9,9,0,20,0z"/>
 <g>

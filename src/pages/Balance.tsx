@@ -10,6 +10,7 @@ import {
     Card,
     CardContent,
     CardActions,
+    CardHeader,
 } from '@mui/material';
 
 import { useNavigate } from 'react-router-dom';
@@ -94,6 +95,18 @@ const Balance = () => {
                 loading={loading}
                 children={
                     <Card variant="outlined">
+                        <CardHeader
+                            disableTypography
+                            title={
+                                <TextField
+                                    fullWidth
+                                    placeholder="Search by name or tokenid"
+                                    id="token-search"
+                                    value={filterText}
+                                    onChange={handleInputChange}
+                                />
+                            }
+                        ></CardHeader>
                         <CardContent
                             sx={{
                                 display: 'flex',
@@ -101,13 +114,6 @@ const Balance = () => {
                                 justifyContent: 'center',
                             }}
                         >
-                            <TextField
-                                placeholder="Search by name or tokenid"
-                                sx={{ marginBottom: 4 }}
-                                id="token-search"
-                                value={filterText}
-                                onChange={handleInputChange}
-                            />
                             <List>
                                 {filteredBalance
                                     ?.slice((page - 1) * COUNT_PER_PAGE, page * COUNT_PER_PAGE)
