@@ -25,6 +25,7 @@ import MiniModal from '../shared/components/MiniModal';
 
 import { BalanceUpdates } from '../App';
 import { useNavigate } from 'react-router-dom';
+import GridLayout from './components/GridLayout';
 
 const TransferTokenSchema = Yup.object().shape({
     tokenid: Yup.string().required('Field Required'),
@@ -129,29 +130,25 @@ const Send: FC = () => {
     });
 
     return (
-        <Grid container mt={2} spacing={0}>
-            <Grid item xs={0} md={2}></Grid>
-            <Grid item xs={12} md={8} sx={{ textAlign: 'center' }}>
-                <Portal>
-                    <Snackbar
-                        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                        autoHideDuration={3000}
-                        onDurationChange={() => {
-                            console.log('Closing...');
-                        }}
-                        open={errMessage.length ? true : false}
-                    >
-                        <Alert
-                            severity="error"
-                            sx={{ backgroundColor: 'rgb(211, 47, 47)', width: '100%', color: '#fff' }}
-                        >
-                            {errMessage}
-                        </Alert>
-                    </Snackbar>
-                </Portal>
-                {loading ? (
-                    <CircularProgress size={32} />
-                ) : (
+        <>
+            <Portal>
+                <Snackbar
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                    autoHideDuration={3000}
+                    onDurationChange={() => {
+                        console.log('Closing...');
+                    }}
+                    open={errMessage.length ? true : false}
+                >
+                    <Alert severity="error" sx={{ backgroundColor: 'rgb(211, 47, 47)', width: '100%', color: '#fff' }}>
+                        {errMessage}
+                    </Alert>
+                </Snackbar>
+            </Portal>
+
+            <GridLayout
+                loading={loading}
+                children={
                     <>
                         <Card variant="outlined">
                             <CardContent>
@@ -286,10 +283,9 @@ const Send: FC = () => {
                             }
                         />
                     </>
-                )}
-            </Grid>
-            <Grid item xs={0} md={2}></Grid>
-        </Grid>
+                }
+            />
+        </>
     );
 };
 

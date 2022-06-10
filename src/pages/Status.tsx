@@ -44,7 +44,6 @@ const Status = () => {
                 container
                 md={8}
                 spacing={1}
-                mt={1}
                 sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
             >
                 {loading ? (
@@ -64,55 +63,30 @@ const Status = () => {
                                             label={status?.version ? 'online' : 'offline'}
                                         />
                                     </Box>
-                                    <List>
+                                    <List className="MiniListItem-typography">
                                         <ListItem>
                                             <ListItemText
                                                 primary="Node Version"
                                                 secondary={status?.version ? status.version : null}
-                                                primaryTypographyProps={{ fontWeight: 600 }}
-                                            ></ListItemText>
+                                            />
                                         </ListItem>
                                         <ListItem>
-                                            <ListItemText
-                                                primary="Height"
-                                                secondary={status?.chain.block}
-                                                primaryTypographyProps={{ fontWeight: 600 }}
-                                            ></ListItemText>
+                                            <ListItemText primary="Height" secondary={status?.chain.block} />
                                         </ListItem>
                                         <ListItem>
-                                            <ListItemText
-                                                primary="Timestamp"
-                                                secondary={status?.chain.time}
-                                                primaryTypographyProps={{ fontWeight: 600 }}
-                                            ></ListItemText>
+                                            <ListItemText primary="Timestamp" secondary={status?.chain.time} />
                                         </ListItem>
                                         <ListItem>
-                                            <ListItemText
-                                                primary="Devices"
-                                                secondary={status?.devices}
-                                                primaryTypographyProps={{ fontWeight: 600 }}
-                                            ></ListItemText>
+                                            <ListItemText primary="Devices" secondary={status?.devices} />
                                         </ListItem>
                                         <ListItem>
-                                            <ListItemText
-                                                primary="Ram Usage"
-                                                secondary={status?.memory.ram}
-                                                primaryTypographyProps={{ fontWeight: 600 }}
-                                            ></ListItemText>
+                                            <ListItemText primary="Ram Usage" secondary={status?.memory.ram} />
                                         </ListItem>
                                         <ListItem>
-                                            <ListItemText
-                                                primary="Disk Usage"
-                                                secondary={status?.memory.disk}
-                                                primaryTypographyProps={{ fontWeight: 600 }}
-                                            ></ListItemText>
+                                            <ListItemText primary="Disk Usage" secondary={status?.memory.disk} />
                                         </ListItem>
                                         <ListItem>
-                                            <ListItemText
-                                                primary="User Data"
-                                                secondary={status?.data}
-                                                primaryTypographyProps={{ fontWeight: 600 }}
-                                            ></ListItemText>
+                                            <ListItemText primary="User Data" secondary={status?.data} />
                                         </ListItem>
                                     </List>
                                 </CardContent>
@@ -186,55 +160,27 @@ const Memory: FC<MemoryProps> = (props: MemoryProps) => {
                     <Typography variant="h6">Files</Typography>
                 </Box>
 
-                <List>
+                <List className="MiniListItem-typography">
                     <ListItem>
-                        <ListItemText
-                            primary="TxPoW Database"
-                            secondary={props.memory.files.txpowdb}
-                            primaryTypographyProps={{ fontWeight: 600 }}
-                        ></ListItemText>
+                        <ListItemText primary="TxPoW Database" secondary={props.memory.files.txpowdb} />
                     </ListItem>
                     <ListItem>
-                        <ListItemText
-                            primary="Archive Database"
-                            secondary={props.memory.files.archivedb}
-                            primaryTypographyProps={{ fontWeight: 600 }}
-                        ></ListItemText>
+                        <ListItemText primary="Archive Database" secondary={props.memory.files.archivedb} />
                     </ListItem>
                     <ListItem>
-                        <ListItemText
-                            primary="Chaintree"
-                            secondary={props.memory.files.chaintree}
-                            primaryTypographyProps={{ fontWeight: 600 }}
-                        ></ListItemText>
+                        <ListItemText primary="Chaintree" secondary={props.memory.files.chaintree} />
                     </ListItem>
                     <ListItem>
-                        <ListItemText
-                            primary="Wallet"
-                            secondary={props.memory.files.wallet}
-                            primaryTypographyProps={{ fontWeight: 600 }}
-                        ></ListItemText>
+                        <ListItemText primary="Wallet" secondary={props.memory.files.wallet} />
                     </ListItem>
                     <ListItem>
-                        <ListItemText
-                            primary="User Database"
-                            secondary={props.memory.files.userdb}
-                            primaryTypographyProps={{ fontWeight: 600 }}
-                        ></ListItemText>
+                        <ListItemText primary="User Database" secondary={props.memory.files.userdb} />
                     </ListItem>
                     <ListItem>
-                        <ListItemText
-                            primary="P2P Database"
-                            secondary={props.memory.ram}
-                            primaryTypographyProps={{ fontWeight: 600 }}
-                        ></ListItemText>
+                        <ListItemText primary="P2P Database" secondary={props.memory.ram} />
                     </ListItem>
                     <ListItem>
-                        <ListItemText
-                            primary="Archive Database"
-                            secondary={props.memory.files.p2pdb}
-                            primaryTypographyProps={{ fontWeight: 600 }}
-                        ></ListItemText>
+                        <ListItemText primary="Archive Database" secondary={props.memory.files.p2pdb} />
                     </ListItem>
                 </List>
             </CardContent>
@@ -270,104 +216,29 @@ const Chain: FC<ChainProps> = (props: ChainProps) => {
                     <Typography variant="h6">Chain</Typography>
                 </Box>
 
-                <List>
+                <List className="MiniListItem-typography">
                     <ListItem>
-                        <ListItemText
-                            primary="Branches"
-                            secondary={props.chain.branches}
-                            primaryTypographyProps={{
-                                fontWeight: 600,
-                                textOverflow: 'hidden',
-                            }}
-                        ></ListItemText>
+                        <ListItemText primary="Branches" secondary={props.chain.branches} />
                     </ListItem>
                     <ListItem>
-                        <ListItemText
-                            disableTypography
-                            primary={<Typography variant="h2">Difficulty</Typography>}
-                            secondary={
-                                <Typography
-                                    sx={{
-                                        textOverflow: 'ellipsis',
-                                        overFlowX: 'hidden',
-                                        overflow: 'hidden',
-                                    }}
-                                    variant="body2"
-                                >
-                                    {props.chain.difficulty}
-                                </Typography>
-                            }
-                        ></ListItemText>
+                        <ListItemText primary="Difficulty" secondary={props.chain.difficulty} />
                     </ListItem>
                     <ListItem>
-                        <ListItemText
-                            disableTypography
-                            primary={<Typography variant="h2">Hash</Typography>}
-                            secondary={
-                                <Typography
-                                    sx={{
-                                        textOverflow: 'ellipsis',
-                                        overFlowX: 'hidden',
-                                        overflow: 'hidden',
-                                    }}
-                                    variant="body2"
-                                >
-                                    {props.chain.hash}
-                                </Typography>
-                            }
-                        ></ListItemText>
+                        <ListItemText primary="Hash" secondary={props.chain.hash} />
                     </ListItem>
                     <ListItem>
-                        <ListItemText
-                            disableTypography
-                            primary={<Typography variant="h2">Length</Typography>}
-                            secondary={
-                                <Typography
-                                    sx={{
-                                        textOverflow: 'ellipsis',
-                                        overFlowX: 'hidden',
-                                        overflow: 'hidden',
-                                    }}
-                                    variant="body2"
-                                >
-                                    {props.chain.length}
-                                </Typography>
-                            }
-                        ></ListItemText>
+                        <ListItemText primary="Length" secondary={props.chain.length} />
                     </ListItem>
                     <ListItem>
-                        <ListItemText
-                            disableTypography
-                            primary={<Typography variant="h2">Size</Typography>}
-                            secondary={
-                                <Typography
-                                    sx={{
-                                        textOverflow: 'ellipsis',
-                                        overFlowX: 'hidden',
-                                        overflow: 'hidden',
-                                    }}
-                                    variant="body2"
-                                >
-                                    {props.chain.size}
-                                </Typography>
-                            }
-                        ></ListItemText>
+                        <ListItemText primary="Size" secondary={props.chain.size} />
                     </ListItem>
 
                     <ListItem>
-                        <ListItemText
-                            primary="Speed"
-                            secondary={props.chain.speed}
-                            primaryTypographyProps={{ fontWeight: 600 }}
-                        ></ListItemText>
+                        <ListItemText primary="Speed" secondary={props.chain.speed} />
                     </ListItem>
 
                     <ListItem>
-                        <ListItemText
-                            primary="Weight"
-                            secondary={props.chain.weight}
-                            primaryTypographyProps={{ fontWeight: 600 }}
-                        ></ListItemText>
+                        <ListItemText primary="Weight" secondary={props.chain.weight} />
                     </ListItem>
                 </List>
             </CardContent>

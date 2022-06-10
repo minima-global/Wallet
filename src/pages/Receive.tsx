@@ -1,17 +1,10 @@
-import React, { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import {
-    Grid,
     Typography,
-    Button,
     Card,
     CardContent,
-    Box,
-    TextField,
-    Chip,
-    Tooltip,
-    CircularProgress,
-    Stack,
     styled,
+    Tooltip,
     TooltipProps,
     tooltipClasses,
     ListItemIcon,
@@ -19,6 +12,7 @@ import {
     ListItem,
     ListItemText,
 } from '@mui/material';
+import GridLayout from './components/GridLayout';
 import { callGetAddress } from '../minima/rpc-commands';
 import { copy } from '../shared/functions';
 import QRCode from 'react-qr-code';
@@ -69,48 +63,43 @@ const Receive: FC = () => {
     };
 
     return (
-        <Grid container spacing={0} mt={2}>
-            <Grid item xs={0} md={2}></Grid>
-            <Grid item xs={12} md={8} sx={{ textAlign: 'center' }}>
-                {loading ? (
-                    <CircularProgress size={32} />
-                ) : (
-                    <Card variant="outlined">
-                        <CardContent sx={{ display: 'flex', flexDirection: 'column' }}>
-                            <QRCode style={{ alignSelf: 'center' }} level="M" value={address} />
+        <GridLayout
+            loading={loading}
+            children={
+                <Card variant="outlined">
+                    <CardContent sx={{ display: 'flex', flexDirection: 'column' }}>
+                        <QRCode style={{ alignSelf: 'center' }} level="M" value={address} />
 
-                            <List>
-                                <ListItem>
-                                    <ListItemText
-                                        sx={{ wordBreak: 'break-word' }}
-                                        primary="Wallet Address"
-                                        secondary={address}
-                                        primaryTypographyProps={{ fontWeight: 600 }}
-                                    ></ListItemText>
-                                </ListItem>
-                            </List>
-                            {/* disableHoverListener */}
-                            <BootstrapTooltip placement="top-end" title={!isCopied ? 'Copy Address' : 'Copied!'}>
-                                <ListItemIcon
-                                    onClick={handleCopyClick}
-                                    sx={[copyBtn, { backgroundColor: isCopied ? '#00B74A' : null }]}
-                                >
-                                    {!isCopied ? (
-                                        <ContentCopyIcon sx={{ color: '#fff' }} />
-                                    ) : (
-                                        <FileCopyIcon sx={{ color: '#fff' }} />
-                                    )}
-                                </ListItemIcon>
-                            </BootstrapTooltip>
-                            <Typography sx={{ textAlign: 'left' }} variant="caption">
-                                Receive any Minima & network tokens with this address.
-                            </Typography>
-                        </CardContent>
-                    </Card>
-                )}
-            </Grid>
-            <Grid item xs={0} md={2}></Grid>
-        </Grid>
+                        <List>
+                            <ListItem>
+                                <ListItemText
+                                    sx={{ wordBreak: 'break-word' }}
+                                    primary="Wallet Address"
+                                    secondary={address}
+                                    primaryTypographyProps={{ fontWeight: 600 }}
+                                ></ListItemText>
+                            </ListItem>
+                        </List>
+                        {/* disableHoverListener */}
+                        <BootstrapTooltip placement="top-end" title={!isCopied ? 'Copy Address' : 'Copied!'}>
+                            <ListItemIcon
+                                onClick={handleCopyClick}
+                                sx={[copyBtn, { backgroundColor: isCopied ? '#00B74A' : null }]}
+                            >
+                                {!isCopied ? (
+                                    <ContentCopyIcon sx={{ color: '#fff' }} />
+                                ) : (
+                                    <FileCopyIcon sx={{ color: '#fff' }} />
+                                )}
+                            </ListItemIcon>
+                        </BootstrapTooltip>
+                        <Typography sx={{ textAlign: 'left' }} variant="caption">
+                            Receive any Minima & network tokens with this address.
+                        </Typography>
+                    </CardContent>
+                </Card>
+            }
+        />
     );
 };
 

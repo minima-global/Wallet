@@ -34,6 +34,8 @@ import { useNavigate } from 'react-router-dom';
 import { strToHex } from '../shared/functions';
 import { hexToString } from '../shared/functions';
 
+import GridLayout from './components/GridLayout';
+
 const NFTs: FC = () => {
     const balances = useContext(BalanceUpdates);
     const navigate = useNavigate();
@@ -62,10 +64,10 @@ const NFTs: FC = () => {
     };
 
     return (
-        <>
-            <Grid container mt={2} mb={2}>
-                <Grid item xs={0} md={2}></Grid>
-                <Grid container item xs={12} md={8} spacing={2}>
+        <GridLayout
+            loading={loading}
+            children={
+                <Grid container item xs={12} spacing={2}>
                     <Grid container item xs={12} spacing={2}>
                         <Grid item xs={12}>
                             <Card variant="outlined">
@@ -93,9 +95,8 @@ const NFTs: FC = () => {
                         <CreateNFTForm />
                     </Grid>
                 </Grid>
-                <Grid item xs={0} md={2}></Grid>
-            </Grid>
-        </>
+            }
+        ></GridLayout>
     );
 };
 
