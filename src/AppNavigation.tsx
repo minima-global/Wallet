@@ -122,7 +122,7 @@ const AppNavigation = () => {
                                     <ArrowBackIcon sx={{ color: '#fff' }} />
                                 </IconButton>
                             ) : null}
-                            <Typography variant="h6">{pageTitle}</Typography>
+                            <Typography variant="body1">{pageTitle}</Typography>
                         </Grid>
                         <Grid xs={0} md={2} item />
                     </Grid>

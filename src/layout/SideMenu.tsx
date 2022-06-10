@@ -5,18 +5,16 @@ import {
     Box,
     Divider,
     List,
-    ListItem,
     ListItemIcon,
     Radio,
     Grid,
-    Chip,
     ListItemButton,
 } from '@mui/material';
-import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { ReactComponent as LandscapeLogo } from '../assets/images/LANDSCAPE-01.svg';
 
 import WalletIcon from '../assets/images/minimaWallet-01.png';
-import LensIcon from '@mui/icons-material/Lens';
+import { ReactComponent as WalletSvg } from '../assets/images/wallet.svg';
 
 interface DrawerItem {
     pathname: string;
@@ -91,14 +89,15 @@ const SideMenu = ({ handleDrawerClose, handleDrawerOpen }: IProps) => {
         >
             <Grid item>
                 <Toolbar sx={{ backgroundColor: '#fff', padding: '0px 16px!important' }} variant="dense">
-                    <img src={WalletIcon} alt="walletIcon" id="walletIcon" />
-                    <Typography sx={style.appName} variant="h4">
+                    {/* <img src={WalletIcon} alt="walletIcon" id="walletIcon" /> */}
+                    <WalletSvg className="wallet-svg" />
+                    <Typography sx={style.appName} variant="h6">
                         Wallet
                     </Typography>
                 </Toolbar>
                 <Divider />
 
-                <List sx={{ backgroundColor: '#fefefe', padding: '8px 8px' }}>
+                <List sx={{ padding: '8px 8px' }}>
                     {DrawerItems.map((route: DrawerItem, i) => {
                         return (
                             <ListItemButton
@@ -121,13 +120,12 @@ const SideMenu = ({ handleDrawerClose, handleDrawerOpen }: IProps) => {
                 <Divider />
             </Grid>
             <Grid item sx={{ backgroundColor: '#fff', pb: 1 }}>
-                {/* <Box sx={{ pl: 2 }}>{blockNumber === -1 ? 'Latest Block: ...' : 'Latest Block: ' + blockNumber}</Box> */}
                 <Grid container sx={{ pl: 2, pr: 2, mt: 4, mb: 0, backgroundColor: '#fff' }} alignItems="flex-end">
                     <Grid item xs={4}>
-                        <Box sx={{ letterSpacing: 0.02, lineHeight: 1.5 }}>Powered by</Box>
+                        <Typography variant="subtitle2">Powered by</Typography>
                     </Grid>
                     <Grid item xs={8}>
-                        <LandscapeLogo></LandscapeLogo>
+                        <LandscapeLogo />
                     </Grid>
                 </Grid>
             </Grid>
@@ -139,9 +137,7 @@ export default SideMenu;
 
 const style = {
     appName: {
-        fontWeight: '800',
-        marginLeft: 1,
-        mb: 0.25,
-        ml: 2.5,
+        fontWeight: 600,
+        ml: '12px',
     },
 };

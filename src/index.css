@@ -154,6 +154,11 @@ code {
     width: 32px;
 }
 
+.wallet-svg {
+    height: 48px;
+    width: 48px;
+}
+
 .split-icon {
     color: #fff;
     transform: scale(1.2);
