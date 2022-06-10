@@ -1,14 +1,12 @@
-import { useContext, useState, memo } from 'react';
+import { useContext, useState } from 'react';
 import {
     List,
     ListItemButton,
-    Grid,
     Avatar,
     Typography,
     ListItemText,
     ListItemAvatar,
     TextField,
-    CircularProgress,
     Card,
     CardContent,
     CardActions,
@@ -20,6 +18,7 @@ import { MinimaToken } from '../types/minima';
 import { BalanceUpdates } from '../App';
 import { hexToString } from '../shared/functions';
 import AppPagination from './components/AppPagination';
+import GridLayout from './components/GridLayout';
 
 const Balance = () => {
     const navigate = useNavigate();
@@ -65,7 +64,7 @@ const Balance = () => {
 
     const TokenListItem = ({ item }: { item: MinimaToken }) => {
         return (
-            <ListItemButton key={item.tokenid} sx={{ marginBottom: 2 }} onClick={() => navigate(`${item.tokenid}`)}>
+            <ListItemButton sx={{ mb: 2 }} key={item.tokenid} onClick={() => navigate(`${item.tokenid}`)}>
                 <ListItemAvatar>
                     <Avatar
                         src={
@@ -81,35 +80,9 @@ const Balance = () => {
                     />
                 </ListItemAvatar>
                 <ListItemText
-                    disableTypography
-                    primary={
-                        <Typography
-                            variant="h2"
-                            sx={{
-                                textOverflow: 'ellipsis',
-                                overFlowX: 'hidden',
-                                overflow: 'hidden',
-                                lineHeight: 1.3,
-                                display: '-webkit-box',
-                                WebkitBoxOrient: 'vertical',
-                                WebkitLineClamp: 1,
-                            }}
-                        >
-                            {item.token.name ? item.token.name : item.token}
-                        </Typography>
-                    }
-                    secondary={
-                        <Typography
-                            sx={{
-                                textOverflow: 'ellipsis',
-                                overFlowX: 'hidden',
-                                overflow: 'hidden',
-                            }}
-                            variant="subtitle1"
-                        >
-                            {item.confirmed}
-                        </Typography>
-                    }
+                    className="MiniListItem-typography"
+                    primary={item.token.name ? item.token.name : item.token}
+                    secondary={item.sendable}
                 />
             </ListItemButton>
         );
@@ -117,54 +90,52 @@ const Balance = () => {
 
     return (
         <>
-            <Grid container spacing={0} mt={2} mb={2}>
-                <Grid item xs={0} md={2}></Grid>
-                <Grid item xs={12} md={8} sx={{ textAlign: 'center' }}>
-                    {loading ? (
-                        <CircularProgress size={32} />
-                    ) : (
-                        <Card variant="outlined">
-                            <CardContent
-                                sx={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    justifyContent: 'center',
-                                }}
-                            >
-                                <TextField
-                                    placeholder="Search by name or tokenid"
-                                    sx={{ marginBottom: 4 }}
-                                    id="token-search"
-                                    value={filterText}
-                                    onChange={handleInputChange}
-                                />
-                                <List>
-                                    {filteredBalance
-                                        ?.slice((page - 1) * COUNT_PER_PAGE, page * COUNT_PER_PAGE)
-                                        .map((item: MinimaToken, i) => (
-                                            <TokenListItem key={item.tokenid} item={item}></TokenListItem>
-                                        ))}
-                                </List>
-                                {filteredBalance.length === 0 ? (
-                                    <Typography sx={{ textAlign: 'left' }} variant="h6">
-                                        Token not found
-                                    </Typography>
-                                ) : null}
-                            </CardContent>
-                            {filterText.length === 0 ? (
-                                <CardActions sx={{ justifyContent: 'center', display: 'flex' }}>
-                                    <AppPagination
-                                        currentPage={currentPage}
-                                        totalNFTs={balances.length}
-                                        countPerPage={COUNT_PER_PAGE}
-                                    />
-                                </CardActions>
+            <GridLayout
+                loading={loading}
+                children={
+                    <Card variant="outlined">
+                        <CardContent
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            <TextField
+                                placeholder="Search by name or tokenid"
+                                sx={{ marginBottom: 4 }}
+                                id="token-search"
+                                value={filterText}
+                                onChange={handleInputChange}
+                            />
+                            <List>
+                                {filteredBalance
+                                    ?.slice((page - 1) * COUNT_PER_PAGE, page * COUNT_PER_PAGE)
+                                    .map((item: MinimaToken, i) => (
+                                        <TokenListItem key={item.tokenid} item={item}></TokenListItem>
+                                    ))}
+                            </List>
+                            {filteredBalance.length === 0 ? (
+                                <Typography sx={{ textAlign: 'left' }} variant="h6">
+                                    Token not found
+                                </Typography>
                             ) : null}
-                        </Card>
-                    )}
-                </Grid>
-                <Grid item xs={0} md={2}></Grid>
-            </Grid>
+                        </CardContent>
+                        {filterText.length === 0 ? (
+                            <CardActions
+                                className="MiniBalanceActions"
+                                sx={{ justifyContent: 'center', display: 'flex' }}
+                            >
+                                <AppPagination
+                                    currentPage={currentPage}
+                                    totalNFTs={balances.length}
+                                    countPerPage={COUNT_PER_PAGE}
+                                />
+                            </CardActions>
+                        ) : null}
+                    </Card>
+                }
+            />
         </>
     );
 };

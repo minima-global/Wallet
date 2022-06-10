@@ -13,12 +13,7 @@ const AppPagination = ({ currentPage, totalNFTs, countPerPage }: iProps) => {
     };
     return (
         <Stack justifyContent="center" direction="row">
-            <Pagination
-                onChange={handleChange}
-                count={Math.ceil(totalNFTs / countPerPage)}
-                shape="rounded"
-                color="primary"
-            />
+            <Pagination onChange={handleChange} count={Math.ceil(totalNFTs / countPerPage)} shape="rounded" />
         </Stack>
     );
 };

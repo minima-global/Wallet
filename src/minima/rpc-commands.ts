@@ -71,7 +71,7 @@ export const callBalance = () => {
     return req(`balance`);
 }
 
-const req = (command: string) => {
+export const req = (command: string) => {
     
     return new Promise((resolve) => {
         

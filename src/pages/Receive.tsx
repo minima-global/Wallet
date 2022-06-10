@@ -96,9 +96,9 @@ const Receive: FC = () => {
                                     sx={[copyBtn, { backgroundColor: isCopied ? '#00B74A' : null }]}
                                 >
                                     {!isCopied ? (
-                                        <ContentCopyIcon sx={{ color: '#fff', fontSize: 16 }} />
+                                        <ContentCopyIcon sx={{ color: '#fff' }} />
                                     ) : (
-                                        <FileCopyIcon sx={{ color: '#fff', fontSize: 16 }} />
+                                        <FileCopyIcon sx={{ color: '#fff' }} />
                                     )}
                                 </ListItemIcon>
                             </BootstrapTooltip>

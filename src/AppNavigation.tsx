@@ -1,6 +1,6 @@
 import { IconButton, Toolbar, AppBar, Grid, Drawer, Box, Container, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { Routes, Route, useLocation, Navigate, useNavigate } from 'react-router-dom';
+import { Routes, Route, useLocation, Navigate, useNavigate, Outlet } from 'react-router-dom';
 
 import MenuIcon from '@mui/icons-material/Menu';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -30,8 +30,12 @@ const AppNavigation = () => {
     const [onDetail, setOnDetail] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
-    const handleDrawerToggle = () => {
-        setOpen((op) => !op);
+    const handleDrawerOpen = () => {
+        return open === false ? setOpen(true) : null;
+    };
+
+    const handleDrawerClose = () => {
+        return open === true ? setOpen(false) : null;
     };
 
     const DrawerItems = [
@@ -86,62 +90,71 @@ const AppNavigation = () => {
 
     return (
         <>
-            <AppBar position="static" sx={appwidth}>
+            <AppBar position="static" sx={[appwidth, toolbarPadding]}>
                 <Toolbar sx={start} variant="dense">
-                    {onDetail ? null : (
-                        <IconButton
-                            sx={{ display: { xs: 'flex', sm: 'none' } }}
-                            color="inherit"
-                            aria-label="menu"
-                            onClick={handleDrawerToggle}
+                    <Grid container>
+                        <Grid xs={0} md={2} item />
+                        <Grid
+                            xs={12}
+                            md={8}
+                            item
+                            sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}
                         >
-                            <MenuIcon />
-                        </IconButton>
-                    )}
-                    {onDetail ? (
-                        <IconButton
-                            onClick={() => {
-                                navigate(-1);
-                            }}
-                        >
-                            <ArrowBackIcon sx={{ color: '#fff' }} />
-                        </IconButton>
-                    ) : null}
-                    <Typography mb={0.25} variant="h4">
-                        {pageTitle}
-                    </Typography>
+                            {onDetail ? null : (
+                                <IconButton
+                                    sx={{ display: { xs: 'flex', sm: 'none' }, padding: 0, marginRight: 0.5 }}
+                                    color="inherit"
+                                    aria-label="menu"
+                                    onClick={handleDrawerOpen}
+                                >
+                                    {/* <MenuIcon sx={{ fontSize: 'calc(16px + 1vmin)' }} /> */}
+                                    <MenuIcon />
+                                </IconButton>
+                            )}
+                            {onDetail ? (
+                                <IconButton
+                                    sx={{ padding: 0, marginRight: 0.5 }}
+                                    onClick={() => {
+                                        navigate(-1);
+                                    }}
+                                >
+                                    {/* <ArrowBackIcon sx={{ color: '#fff', fontSize: 'calc(16px + 1vmin)' }} /> */}
+                                    <ArrowBackIcon sx={{ color: '#fff' }} />
+                                </IconButton>
+                            ) : null}
+                            <Typography variant="h6">{pageTitle}</Typography>
+                        </Grid>
+                        <Grid xs={0} md={2} item />
+                    </Grid>
                 </Toolbar>
             </AppBar>
-            <Grid component="main" container sx={appwidth}>
-                <Grid item xs={12}>
-                    <Container>
-                        <Routes>
-                            <Route path="/" element={<Navigate replace to="/balance" />} />
-                            <Route path="/offline" element={<Offline />} />
-                            <Route path="/balance" element={<Balance />} />
-                            <Route path="balance/:tokenid" element={<TokenDetail />} />
-                            <Route path="/send" element={<Send />} />
-                            <Route path="/receive" element={<Receive />} />
-                            <Route path="/status" element={<Status />} />
-                            <Route path="/tokencreate" element={<TokenCreation />} />
-                            <Route path="/nfts" element={<NFTs />} />
-                        </Routes>
-                    </Container>
-                </Grid>
-            </Grid>
+            <Box component="main" sx={[appwidth, contentPadding]}>
+                <Routes>
+                    <Route path="/" element={<Navigate replace to="/balance" />} />
+                    <Route path="/balance" element={<Balance />} />
+                    <Route path="balance/:tokenid" element={<TokenDetail />} />
+                    <Route path="/send" element={<Send />} />
+                    <Route path="/receive" element={<Receive />} />
+                    <Route path="/status" element={<Status />} />
+                    <Route path="/tokencreate" element={<TokenCreation />} />
+                    <Route path="/nfts" element={<NFTs />} />
+                    <Route path="/offline" element={<Offline />} />
+                    <Route path="*" element={<Navigate replace to="/balance" />} />
+                </Routes>
+            </Box>
             <Box component="nav" sx={nav} aria-label="mailbox folders">
                 <Drawer
                     variant="temporary"
                     open={open}
-                    onClose={handleDrawerToggle}
+                    onClose={handleDrawerClose}
                     ModalProps={{ keepMounted: true }}
                     sx={drawerdisplay}
                 >
-                    <SideMenu handleDrawerToggle={handleDrawerToggle} />
+                    <SideMenu handleDrawerOpen={handleDrawerOpen} handleDrawerClose={handleDrawerClose} />
                 </Drawer>
                 {/* Drawer on desktop is always open */}
                 <Drawer variant="permanent" sx={drawerdisplaydesktop}>
-                    <SideMenu handleDrawerToggle={() => {}} />
+                    <SideMenu handleDrawerOpen={handleDrawerOpen} handleDrawerClose={handleDrawerClose} />
                 </Drawer>
             </Box>
         </>
@@ -167,6 +180,14 @@ const drawerdisplay = {
 const drawerdisplaydesktop = {
     display: { xs: 'none', sm: 'block' },
     '& .MuiDrawer-paper': { width: DRAWERWIDTH },
+};
+
+const toolbarPadding = {
+    padding: { xs: '0px 8px!important' },
+};
+
+const contentPadding = {
+    padding: { xs: '8px 8px!important', sm: '8px 0px' },
 };
 
 export default AppNavigation;

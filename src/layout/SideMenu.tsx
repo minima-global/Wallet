@@ -25,11 +25,13 @@ interface DrawerItem {
 }
 
 interface IProps {
-    handleDrawerToggle: () => void;
+    handleDrawerOpen: () => void;
+    handleDrawerClose: () => void;
+
     // blockNumber: number;
 }
 
-const SideMenu = ({ handleDrawerToggle }: IProps) => {
+const SideMenu = ({ handleDrawerClose, handleDrawerOpen }: IProps) => {
     const navigate = useNavigate();
     const routerLocation = useLocation();
     const activeRoute = (routeName: string) => {
@@ -39,7 +41,7 @@ const SideMenu = ({ handleDrawerToggle }: IProps) => {
     //TODO CLOSE MENU ON NAVIGATION
     const handleDrawerOnNavigation = (path: string) => {
         navigate(path);
-        handleDrawerToggle();
+        handleDrawerClose();
     };
 
     const DrawerItems: DrawerItem[] = [
@@ -88,7 +90,7 @@ const SideMenu = ({ handleDrawerToggle }: IProps) => {
             }}
         >
             <Grid item>
-                <Toolbar sx={{ backgroundColor: '#fff' }} variant="dense">
+                <Toolbar sx={{ backgroundColor: '#fff', padding: '0px 16px!important' }} variant="dense">
                     <img src={WalletIcon} alt="walletIcon" id="walletIcon" />
                     <Typography sx={style.appName} variant="h4">
                         Wallet
@@ -96,7 +98,7 @@ const SideMenu = ({ handleDrawerToggle }: IProps) => {
                 </Toolbar>
                 <Divider />
 
-                <List sx={{ backgroundColor: '#fefefe' }}>
+                <List sx={{ backgroundColor: '#fefefe', padding: '8px 8px' }}>
                     {DrawerItems.map((route: DrawerItem, i) => {
                         return (
                             <ListItemButton
@@ -110,7 +112,7 @@ const SideMenu = ({ handleDrawerToggle }: IProps) => {
                                     <Radio sx={{ p: 0 }} checked={activeRoute(route.pathname)} />
                                 </ListItemIcon>
 
-                                <ListItemText primary={route.name}></ListItemText>
+                                <ListItemText primary={route.name} />
                             </ListItemButton>
                         );
                     })}
@@ -122,7 +124,7 @@ const SideMenu = ({ handleDrawerToggle }: IProps) => {
                 {/* <Box sx={{ pl: 2 }}>{blockNumber === -1 ? 'Latest Block: ...' : 'Latest Block: ' + blockNumber}</Box> */}
                 <Grid container sx={{ pl: 2, pr: 2, mt: 4, mb: 0, backgroundColor: '#fff' }} alignItems="flex-end">
                     <Grid item xs={4}>
-                        <Box sx={{ fontSize: 12, letterSpacing: 0.02, lineHeight: 1.5 }}>Powered by</Box>
+                        <Box sx={{ letterSpacing: 0.02, lineHeight: 1.5 }}>Powered by</Box>
                     </Grid>
                     <Grid item xs={8}>
                         <LandscapeLogo></LandscapeLogo>

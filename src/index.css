@@ -25,13 +25,6 @@ code {
 .MuiSelect-select:focus {
     background-color: rgba(255, 255, 255, 0.8);
 }
-.MuiList-root {
-    padding-bottom: 0 !important;
-    padding-top: 0 !important;
-}
-.MuiListItem-root {
-    padding-bottom: 14px !important;
-}
 
 .MuiAutocomplete-input {
     background-color: transparent !important;
@@ -41,13 +34,128 @@ code {
     border-radius: 8px;
 }
 
-@media only screen and (min-width: 600px) {
-    .MuiToolbar-root {
-        padding-left: 16px !important;
-    }
+
+.MuiListItemButton-root .MuiTouchRipple-child {
+    background-color: #EDEDED!important;
 }
 
-.Mui-selected {
-    background-color: rgba(255, 255, 255, 0.2);
-    border-radius: 0 !important;
+
+
+/** Minima Specific Component Styling */
+.MiniListItem-typography .MuiListItemText-primary,
+.MiniListItem-typography .MuiListItemText-secondary {
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+}
+
+.MiniCardToken {
+    padding: 8px 8px;
+}
+
+.MiniCardToken .MuiListItem-root {
+    align-items: flex-start!important;
+    flex-direction: column!important;
+}
+
+.MiniCardToken .MuiTypography-body1 {
+    padding-left: 2px;
+    font-weight: 600;
+}
+
+.MiniCardToken .MuiListItemText-root {
+    width: 100%;
+}
+
+.MiniCardTokenHeader {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    border-bottom: 0.5px solid #EDEDED;
+    padding: 16px 16px;
+}
+.MiniCardTokenHeader .MuiCardHeader-avatar {
+    transform: scale(1.5)
+}
+
+.MiniCardTokenHeader .MuiCardHeader-title {
+    text-overflow: ellipsis!important;
+    overflow-x: hidden!important;
+    overflow:hidden;
+    width: 40vw;
+    font-weight: 700;
+    font-size: 1rem;
+}
+.MiniCardTokenHeader .MuiCardHeader-subheader {
+    word-break: break-all;
+    max-height: 60px;
+}
+
+.MiniCardToken .MuiIconButton-root {
+    border-radius: 0;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #317AFF;
+}
+
+.MiniCardToken .MuiIconButton-root:hover {
+    opacity: 0.7;
+    background-color: #317AFF;
+}
+
+.MiniCardToken .MuiIconButton-root:disabled {
+    background-color: #EDEDED;
+}
+.MiniCardToken .MuiIconButton-root:disabled .split-icon {
+    opacity: 0.7;
+    transform: rotate(-90deg);
+}
+.resize-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+.click-to-resize {
+    display: none;
+    position: relative;
+    right: 0;
+    bottom: 0;
+    color: #16181C;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 0px 8px;
+}
+.MiniCardToken .resize-wrapper:hover .click-to-resize {
+    display: block!important;
+}
+
+.MiniModal {
+    height: auto!important;
+}
+.MiniBalanceActions .MuiPagination-root {
+    transform: scale(0.8);
+    font-size: 1.2rem;
+    color: '#16181C';
+}
+.MiniBalanceActions .MuiPagination-root .MuiPaginationItem-root {
+    font-size: 1.5rem;
+}
+
+.split-icon {
+    color: #fff;
+    transform: scale(1.2);
+    transform: rotate(90deg);
+}
+
+
+
+.center {
+    text-align: 'center';
+}
+.break-text {
+    word-break: break-all!important;
+}
+.align-start {
+    align-items: 'flex-start';
+    flex-direction: 'column';
 }

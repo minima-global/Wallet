@@ -3,14 +3,15 @@ import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import theme from './theme/theme';
 import { SnackbarProvider } from 'notistack';
-import AppNavigation from './AppRoutes';
+import AppNavigation from './AppNavigation';
 import { MinimaToken } from './types/minima';
 // import { commands, ws } from '@minima-global/mds-api';
-import { useLocation } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import Notifications from './layout/Notifications';
 
 import { MDS } from './minima/mds';
 import { callBalance } from './minima/rpc-commands';
+import { Balance } from '@mui/icons-material';
 // Create a context provider to give balance updates to consumers in the app
 const BalanceUpdates = createContext<MinimaToken[]>([]);
 
@@ -77,33 +78,6 @@ export default function App() {
                 default:
             }
         });
-
-        // if (ws) {
-        //     ws.onmessage = (evt: any) => {
-        //         let data = JSON.parse(evt.data);
-        //         console.log('Minima Event', data);
-        //         const event = data.event;
-        //         data = data.data;
-        //         switch (event) {
-        //             case 'NEWBALANCE':
-        //                 // console.log(`NEWBALANCE EVENT!`);
-        //                 callAndStoreBalance(0);
-        //                 callAndStoreBalance(2 * 60 * 1000); // 2 min
-        //                 callAndStoreBalance(3 * 60 * 1000); // 3 min
-        //                 callAndStoreBalance(5 * 60 * 1000); // 5 min
-        //                 callAndStoreBalance(10 * 60 * 1000); // 10 min
-        //                 break;
-        //             case 'NEWBLOCK':
-        //                 // do nothing
-        //                 break;
-        //             case 'MINING':
-        //                 // do nothing
-        //                 break;
-        //             default:
-        //             //console.error('Unknown event type: ', evt.event);
-        //         }
-        //     };
-        // }
 
         // get balance straight away
         callAndStoreBalance(0);

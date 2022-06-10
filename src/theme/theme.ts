@@ -1,11 +1,10 @@
-import ManropRegular from './Manrope-Regular.woff2';
-import FrostedBlue from './frosted-blue.jpg';
+import ManropeRegular from './Manrope-Regular.woff2';
 import uiBackground from '../assets/images/LM.jpeg';
 import { createTheme } from '@mui/material/styles';
 
-// A custom theme for this app
 let theme = createTheme({
     palette: {
+        divider: '#EDEDED',
         primary: {
             main: '#317aff',
         },
@@ -16,7 +15,7 @@ let theme = createTheme({
             default: 'rgba(22, 24, 28, 0.05)',
         },
         text: {
-            primary: '#363a3f',
+            primary: '#16181C',
         },
         warning: {
             main: '#fdefbe',
@@ -37,27 +36,27 @@ let theme = createTheme({
     typography: {
         fontFamily: ['Manrope-regular'].join(','),
         h4: {
-            fontWeight: 700,
-            fontSize: '18px',
+            // fontWeight: 700,
+            // fontSize: 'calc(12px + 1vmin)',
             lineHeight: '27px',
             letterSpacing: '0.02em',
         },
         h2: {
-            fontWeight: 700,
-            fontSize: 18,
+            // fontWeight: 700,
+            // fontSize: 'calc(12px + 1vmin)',
             lineHeight: 1,
         },
         h1: {
-            fontSize: 52,
+            // fontSize: 52,
         },
         h6: {
-            fontWeight: 300,
-            fontSize: 16,
+            // fontWeight: 600,
+            // fontSize: 'calc(12px + 1vmin)',
         },
         body1: {
-            fontSize: 17,
-            fontWeight: 300,
-            lineHeight: 1.04,
+            // fontSize: 'calc(10px + 0.5vmin)',
+            // fontWeight: 500,
+            // lineHeight: 1.04
         },
     },
     shape: {
@@ -71,7 +70,7 @@ let theme = createTheme({
             styleOverrides: `
             @font-face {
                 font-family: Manrope-regular;
-                src: url(${ManropRegular}) format('woff2');
+                src: url(${ManropeRegular}) format('woff2');
             },
             body {
                 background-image: url(${uiBackground});
@@ -132,7 +131,7 @@ theme = createTheme(theme, {
                 // Name of the slot
                 root: {
                     // Some CSS
-                    fontSize: '1rem',
+                    // fontSize: '1rem',
                     borderRadius: 8,
                     textTransform: 'none',
                     fontWeight: 800,
@@ -153,7 +152,6 @@ theme = createTheme(theme, {
             styleOverrides: {
                 root: {
                     backgroundColor: theme.palette.text.primary,
-
                 },
             },
         },
@@ -174,13 +172,13 @@ theme = createTheme(theme, {
                         paddingLeft: 16,
                         borderRadius: 8,
                         fontWeight: '400',
-                        fontSize: '1rem',
+                        // fontSize: '1rem',
                         textOverflow: 'ellipsis',
                         paddingRight: 16,
 
                         '&::placeholder': {
                             color: '#91919D',
-                            fontSize: '1rem',
+                            // fontSize: '1rem',
                             fontWeight: '100',
 
                         },
@@ -194,13 +192,35 @@ theme = createTheme(theme, {
                 }
             }
         },
+        MuiToolbar: {
+            styleOverrides: {
+                root: {
+                    zIndex: 0,
+                    borderBottom: 'none',
+                    padding: '0!important'
+                }
+            }
+        },
+        MuiList: {
+            styleOverrides: {
+                root: {
+                    '&& .Mui-selected, && .Mui-selected:hover': {
+                        color: '#317AFF',
+                        
+                    },
+                }
+            }
+        },
         MuiListItemButton: {
             styleOverrides: {
                 root: {
                     backgroundColor: 'rgba(255, 255, 255, 0.8)',
-                    borderRadius: 8,
-                    minHeight: 64,
-
+                    borderRadius: '8px!important',
+                    minHeight: 44,
+                    // fontSize: 'calc(8px + 1vmin)',
+                    '&:focus': {
+                        background: '#EDEDED'
+                    },
                 }
             }
         },

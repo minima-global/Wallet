@@ -254,6 +254,7 @@ export interface MinimaToken {
   readonly unconfirmed: string;
   readonly sendable: string;
   readonly total: string;
+  readonly coins: string;
 }
 interface CustomTokenJson {
   readonly name: string;
@@ -323,7 +324,9 @@ export interface MiniModalProp {
   readonly header: string;
   readonly subtitle: string;
   handleClose: () => void;
-  handleOpen: () => void;
   open: boolean;
+  handleOpen?: () => void;
+  customFnc?: any;
+  executeName?: string;
 }
 

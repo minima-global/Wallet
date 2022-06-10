@@ -146,7 +146,7 @@ const NFTListItem: FC<NFT> = ({ url, name, description, size }) => {
                                 <Typography
                                     sx={{
                                         fontWeight: 600,
-                                        fontSize: 12,
+                                        // fontSize: 12,
                                         display: '-webkit-box',
                                         overflow: 'hidden',
                                         WebkitBoxOrient: 'vertical',
@@ -159,7 +159,7 @@ const NFTListItem: FC<NFT> = ({ url, name, description, size }) => {
                                 <Typography
                                     sx={{
                                         fontWeight: 100,
-                                        fontSize: 10,
+                                        // fontSize: 10,
                                         display: '-webkit-box',
                                         overflow: 'hidden',
                                         WebkitBoxOrient: 'vertical',
@@ -387,8 +387,8 @@ const styles = {
     helperText: {
         borderBottomRightRadius: 8,
         borderBottomLeftRadius: 8,
-        color: '#363A3F',
-        fontWeight: '400',
+        color: '#D63110',
+        fontWeight: '700',
         paddingLeft: 8,
     },
 };

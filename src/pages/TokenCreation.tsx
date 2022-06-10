@@ -5,7 +5,6 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { callStatus, callToken } from '../minima/rpc-commands';
 import { INSUFFICIENT } from '../minima/constants';
-import { RpcResponse } from '../types/minima';
 import { useNavigate } from 'react-router-dom';
 import { strToHex } from '../shared/functions';
 
@@ -93,7 +92,8 @@ const TokenCreation: FC = () => {
                 })
                 .finally(() => {
                     // NO MATTER WHAT
-                    formik.setSubmitting(false);
+                    setTimeout(() => formik.setSubmitting(false), 2500);
+                    // formik.setSubmitting(false);
                     setTimeout(() => setErrMessage(''), 2500);
                 });
         },
@@ -231,8 +231,8 @@ const styles = {
     helperText: {
         borderBottomRightRadius: 8,
         borderBottomLeftRadius: 8,
-        color: '#363A3F',
-        fontWeight: '400',
+        color: '#D63110',
+        fontWeight: '700',
         paddingLeft: 8,
     },
 };

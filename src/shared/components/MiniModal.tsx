@@ -11,7 +11,7 @@ const MiniModal: FC<MiniModalProp> = (props) => {
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
         >
-            <Box sx={[style, { width: { xs: '80vw', sm: 400 }, minWidth: { xs: 270, sm: 370 } }]}>
+            <Box className="MiniModal" sx={[style, { width: { xs: '90vw', sm: 400 }, minWidth: { xs: 270, sm: 370 } }]}>
                 <Box>
                     <Typography sx={status} id="modal-modal-title" variant="h6" component="h2">
                         {props.status}
@@ -27,8 +27,8 @@ const MiniModal: FC<MiniModalProp> = (props) => {
                     <Button sx={[button, buttonCancel]} variant="text" onClick={props.handleClose}>
                         Cancel
                     </Button>
-                    <Button sx={button} variant="text" onClick={props.handleClose}>
-                        Ok
+                    <Button sx={button} variant="text" onClick={props.customFnc ? props.customFnc : props.handleClose}>
+                        {props.executeName ? props.executeName : 'Ok'}
                     </Button>
                 </Box>
             </Box>

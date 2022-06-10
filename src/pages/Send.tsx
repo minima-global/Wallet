@@ -1,4 +1,4 @@
-import { callBalance, callSend } from '../minima/rpc-commands';
+import { callSend } from '../minima/rpc-commands';
 import {
     Button,
     TextField,
@@ -14,7 +14,7 @@ import {
     Snackbar,
     Alert,
 } from '@mui/material';
-import { FC, useEffect, useContext, useState } from 'react';
+import { FC, useContext, useState } from 'react';
 
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -42,8 +42,8 @@ const styles = {
     helperText: {
         borderBottomRightRadius: 8,
         borderBottomLeftRadius: 8,
-        color: '#363A3F',
-        fontWeight: '400',
+        color: '#D63110',
+        fontWeight: '700',
         paddingLeft: 8,
     },
 };
@@ -51,7 +51,6 @@ const styles = {
 const Send: FC = () => {
     const [errMessage, setErrMessage] = useState('');
     const navigate = useNavigate();
-
     // Handle Modal
     const [open, setOpen] = useState(false);
     const [modalStatus, setModalStatus] = useState('Failed');
@@ -61,8 +60,32 @@ const Send: FC = () => {
         setModalStatus('Failed');
     };
 
+    function handleInputChange(event: any) {
+        const value = event.target.value;
+        setFilterText(value);
+        // when the component re-renders the updated filter text will create a new filteredBalance variable
+    }
+
+    const [filterText, setFilterText] = useState('');
+    const getFilteredBalanceList = (balanceList: any[], filter: string) => {
+        const suggestedData = balanceList.filter(
+            (opt: MinimaToken) =>
+                (typeof opt.token === 'string' && opt.token.toLowerCase().includes(filter.toLowerCase())
+                    ? true
+                    : false) ||
+                (typeof opt.token !== 'string' && opt.token.name.toLowerCase().includes(filter.toLowerCase())
+                    ? true
+                    : false) ||
+                (typeof opt.tokenid === 'string' && opt.tokenid.toLowerCase().includes(filter.toLowerCase())
+                    ? true
+                    : false)
+        );
+        return suggestedData;
+    };
+
     const balances = useContext(BalanceUpdates);
     const loading = balances.length === 0;
+    let filteredBalance = getFilteredBalanceList(balances, filterText);
     if (loading) {
         navigate('/offline');
     }
@@ -142,9 +165,23 @@ const Send: FC = () => {
                                             onChange={formik.handleChange}
                                             error={formik.touched.tokenid && Boolean(formik.errors.tokenid)}
                                             fullWidth
+                                            onKeyDown={() => console.log('hello', filterText)}
                                         >
-                                            {balances && balances.length > 0
-                                                ? balances.map((token: MinimaToken) => (
+                                            <TextField
+                                                fullWidth
+                                                placeholder="Search by name or tokenid"
+                                                id="token-search"
+                                                sx={{
+                                                    position: 'relative',
+                                                    zIndex: 2,
+                                                    padding: '0px 8px',
+                                                    margin: '8px 0px',
+                                                }}
+                                                value={filterText}
+                                                onChange={handleInputChange}
+                                            />
+                                            {filteredBalance && filteredBalance.length > 0
+                                                ? filteredBalance.map((token: MinimaToken) => (
                                                       <MenuItem
                                                           key={token.tokenid}
                                                           value={token.tokenid}
