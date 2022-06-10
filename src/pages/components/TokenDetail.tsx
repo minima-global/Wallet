@@ -21,10 +21,10 @@ import {
     IconButton,
 } from '@mui/material';
 
-import { ReactComponent as MinimaIcon } from '../../assets/images/minimaLogoSquare.svg';
+import MinimaIcon from '../../assets/images/minimaLogoSquare.png';
+import { ReactComponent as MinimaSquareIcon } from '../../assets/images/minimaLogoSquare.svg';
 
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import HeightIcon from '@mui/icons-material/Height';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import CallSplitIcon from '@mui/icons-material/CallSplit';
 import { BalanceUpdates } from '../../App';
@@ -101,18 +101,22 @@ const TokenDetail = () => {
                                         <CardHeader
                                             className="MiniCardTokenHeader"
                                             avatar={
-                                                <Avatar
-                                                    src={
-                                                        token?.tokenid === '0x00'
-                                                            ? MinimaIcon
-                                                            : !token?.token.url || token?.token.url.length === 0
-                                                            ? `https://robohash.org/${token?.tokenid}`
-                                                            : token?.token.url && token?.token.url.length > 0
-                                                            ? hexToString(token.token.url)
-                                                            : ''
-                                                    }
-                                                    alt={token?.token.name ? token?.token.name : token?.token}
-                                                />
+                                                token.tokenid === '0x00' ? (
+                                                    <MinimaSquareIcon className="minima-icon" />
+                                                ) : (
+                                                    <Avatar
+                                                        src={
+                                                            token?.tokenid === '0x00'
+                                                                ? MinimaIcon
+                                                                : !token?.token.url || token?.token.url.length === 0
+                                                                ? `https://robohash.org/${token?.tokenid}`
+                                                                : token?.token.url && token?.token.url.length > 0
+                                                                ? hexToString(token.token.url)
+                                                                : ''
+                                                        }
+                                                        alt={token?.token.name ? token?.token.name : token?.token}
+                                                    />
+                                                )
                                             }
                                             title={token?.token.name ? token.token.name : token.token}
                                             subheader={
@@ -123,30 +127,34 @@ const TokenDetail = () => {
                                                     : null
                                             }
                                         />
-                                        <div
-                                            onClick={() =>
-                                                !enlargenCover ? setEnlargenCover(true) : setEnlargenCover(false)
-                                            }
-                                            className={!enlargenCover ? 'resize-wrapper' : 'resize-wrapper flex-right'}
-                                        >
-                                            <CardMedia
-                                                component="img"
-                                                height={enlargenCover ? '100%' : '194'}
-                                                src={
-                                                    token?.tokenid === '0x00'
-                                                        ? MinimaIcon
-                                                        : !token?.token.url || token?.token.url.length === 0
-                                                        ? `https://robohash.org/${token?.tokenid}`
-                                                        : token?.token.url && token?.token.url.length > 0
-                                                        ? hexToString(token.token.url)
-                                                        : ''
+                                        {token.tokenid !== '0x00' ? (
+                                            <div
+                                                onClick={() =>
+                                                    !enlargenCover ? setEnlargenCover(true) : setEnlargenCover(false)
                                                 }
-                                                alt="Paella dish"
-                                            />
-                                            <Typography className="click-to-resize" variant="subtitle2">
-                                                Click to resize
-                                            </Typography>
-                                        </div>
+                                                className={
+                                                    !enlargenCover ? 'resize-wrapper' : 'resize-wrapper flex-right'
+                                                }
+                                            >
+                                                <CardMedia
+                                                    component="img"
+                                                    height={enlargenCover ? '100%' : '194'}
+                                                    src={
+                                                        token?.tokenid === '0x00'
+                                                            ? MinimaIcon
+                                                            : !token?.token.url || token?.token.url.length === 0
+                                                            ? `https://robohash.org/${token?.tokenid}`
+                                                            : token?.token.url && token?.token.url.length > 0
+                                                            ? hexToString(token.token.url)
+                                                            : ''
+                                                    }
+                                                    alt="Paella dish"
+                                                />
+                                                <Typography className="click-to-resize" variant="subtitle2">
+                                                    Click to resize
+                                                </Typography>
+                                            </div>
+                                        ) : null}
                                         <CardContent>
                                             <List sx={{ borderBottom: '0.5px solid #EDEDED' }}>
                                                 <ListItem>
@@ -248,6 +256,9 @@ const TokenDetail = () => {
                                                             }
                                                         >
                                                             <BootstrapTooltip
+                                                                disableHoverListener={
+                                                                    parseInt(token.sendable) > 0 ? false : true
+                                                                }
                                                                 placement="top-end"
                                                                 title={!copy ? 'Split Coins' : 'Split!'}
                                                             >

@@ -47,9 +47,12 @@ code {
     text-overflow: ellipsis;
     overflow-x: hidden;
 }
+.MiniListItem-typography .MuiListItemText-primary {
+    font-weight: 600;
+}
 
 .MiniCardToken {
-    padding: 8px 8px;
+    padding: 8px 0px;
 }
 
 .MiniCardToken .MuiListItem-root {
@@ -73,7 +76,8 @@ code {
     padding: 16px 16px;
 }
 .MiniCardTokenHeader .MuiCardHeader-avatar {
-    transform: scale(1.5)
+    transform: scale(1.5);
+    margin: 8px;
 }
 
 .MiniCardTokenHeader .MuiCardHeader-title {
@@ -83,10 +87,12 @@ code {
     width: 40vw;
     font-weight: 700;
     font-size: 1rem;
+    margin-left: 16px;
 }
 .MiniCardTokenHeader .MuiCardHeader-subheader {
     word-break: break-all;
     max-height: 60px;
+    margin-left: 16px;
 }
 
 .MiniCardToken .MuiIconButton-root {
@@ -122,8 +128,10 @@ code {
     right: 0;
     bottom: 0;
     color: #16181C;
+    font-weight: 600!important;
     background-color: rgba(255, 255, 255, 0.8);
-    padding: 0px 8px;
+    padding: 2px 16px;
+    border: 0.5px solid #EDEDED;
 }
 .MiniCardToken .resize-wrapper:hover .click-to-resize {
     display: block!important;
@@ -139,6 +147,11 @@ code {
 }
 .MiniBalanceActions .MuiPagination-root .MuiPaginationItem-root {
     font-size: 1.5rem;
+}
+
+.minima-icon {
+    height: 32px;
+    width: 32px;
 }
 
 .split-icon {
