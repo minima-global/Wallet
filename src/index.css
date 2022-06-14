@@ -54,10 +54,17 @@ body {
 .MiniListItem-typography .MuiListItemText-secondary {
     text-overflow: ellipsis;
     overflow-x: hidden;
+    white-space: nowrap;
+    max-width: 40vw;
 }
 .MiniListItem-typography .MuiListItemText-primary {
     font-weight: 600;
 }
+
+.MiniList-balance .MuiListItemButton-root {
+    margin-bottom: 8px;
+}
+
 
 .MiniCardToken {
     padding: 8px 0px;
@@ -161,6 +168,9 @@ body {
     font-size: 0.9rem;
     font-family: Manrope-semibold;
     color: #363A3F;
+}
+.MiniSideMenu .MuiListItemButton-root {
+    margin-bottom: 8px;
 }
 
 .minima-icon {

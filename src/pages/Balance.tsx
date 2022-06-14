@@ -1,25 +1,13 @@
 import { useContext, useState } from 'react';
-import {
-    List,
-    ListItemButton,
-    Avatar,
-    Typography,
-    ListItemText,
-    ListItemAvatar,
-    TextField,
-    Card,
-    CardContent,
-    CardActions,
-    CardHeader,
-} from '@mui/material';
+import { List, Typography, TextField, Card, CardContent, CardActions, CardHeader } from '@mui/material';
 
 import { useNavigate } from 'react-router-dom';
-import MinimaIcon from '../assets/images/minimaLogoSquare200x200.png';
 import { MinimaToken } from '../types/minima';
 import { BalanceUpdates } from '../App';
-import { hexToString } from '../shared/functions';
 import AppPagination from './components/AppPagination';
 import GridLayout from './components/GridLayout';
+
+import TokenListItem from './components/tokens/TokenListItem';
 
 const Balance = () => {
     const navigate = useNavigate();
@@ -59,34 +47,7 @@ const Balance = () => {
     }
 
     const currentPage = (page: number) => {
-        // console.log(`Setting current page number to: ${page}`);
         setPage(page);
-    };
-
-    const TokenListItem = ({ item }: { item: MinimaToken }) => {
-        return (
-            <ListItemButton sx={{ mb: 2 }} key={item.tokenid} onClick={() => navigate(`${item.tokenid}`)}>
-                <ListItemAvatar>
-                    <Avatar
-                        src={
-                            item.tokenid === '0x00'
-                                ? MinimaIcon
-                                : !item.token.url || item.token.url.length === 0
-                                ? `https://robohash.org/${item.tokenid}`
-                                : item.token.url && item.token.url.length > 0
-                                ? hexToString(item.token.url)
-                                : ''
-                        }
-                        alt={item.token.name ? item.token.name : item.token}
-                    />
-                </ListItemAvatar>
-                <ListItemText
-                    className="MiniListItem-typography"
-                    primary={item.token.name ? item.token.name : item.token}
-                    secondary={item.sendable}
-                />
-            </ListItemButton>
-        );
     };
 
     return (
@@ -114,11 +75,11 @@ const Balance = () => {
                                 justifyContent: 'center',
                             }}
                         >
-                            <List>
+                            <List className="MiniList-balance">
                                 {filteredBalance
                                     ?.slice((page - 1) * COUNT_PER_PAGE, page * COUNT_PER_PAGE)
                                     .map((item: MinimaToken, i) => (
-                                        <TokenListItem key={item.tokenid} item={item}></TokenListItem>
+                                        <TokenListItem key={item.tokenid} item={item} nav={true}></TokenListItem>
                                     ))}
                             </List>
                             {filteredBalance.length === 0 ? (

@@ -1,23 +1,18 @@
-import { callSend } from '../minima/rpc-commands';
 import {
     Button,
     TextField,
     Card,
     CardContent,
-    Grid,
     Select,
-    MenuItem,
-    Chip,
-    CircularProgress,
     Typography,
     Portal,
     Snackbar,
     Alert,
     ListSubheader,
-    ListItem,
-    ListItemText,
+    MenuItem,
 } from '@mui/material';
 import { FC, useContext, useState, useMemo } from 'react';
+import { callSend } from '../minima/rpc-commands';
 
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -31,6 +26,8 @@ import { useNavigate } from 'react-router-dom';
 import GridLayout from './components/GridLayout';
 
 import { containsText, isPropertyString } from '../shared/functions';
+
+import TokenListItem from './components/tokens/TokenListItem';
 
 const TransferTokenSchema = Yup.object().shape({
     tokenid: Yup.string().required('Field Required'),
@@ -88,7 +85,6 @@ const Send: FC = () => {
     if (loading) {
         navigate('/offline');
     }
-    console.log(`Displayed opts`, displayedOptions);
 
     const formik = useFormik({
         initialValues: {
@@ -154,6 +150,7 @@ const Send: FC = () => {
                                 <form onSubmit={formik.handleSubmit}>
                                     {balances && balances.length > 0 ? (
                                         <Select
+                                            MenuProps={{ autoFocus: false }}
                                             sx={{ marginBottom: 2, textAlign: 'left' }}
                                             id="tokenid"
                                             name="tokenid"
@@ -164,6 +161,7 @@ const Send: FC = () => {
                                         >
                                             <ListSubheader>
                                                 <TextField
+                                                    autoFocus
                                                     fullWidth
                                                     placeholder="Search by name or tokenid"
                                                     id="token-search"
@@ -175,15 +173,34 @@ const Send: FC = () => {
                                                     }}
                                                     value={filterText}
                                                     onChange={handleInputChange}
+                                                    onKeyDown={(e) => {
+                                                        if (e.key !== 'Escape') {
+                                                            // Prevents autoselecting item while typing (default Select behaviour)
+                                                            e.stopPropagation();
+                                                        }
+                                                    }}
                                                 />
                                             </ListSubheader>
-                                            {displayedOptions.map((token: MinimaToken) => (
-                                                <TokenListItem
-                                                    key={token.tokenid}
-                                                    tokenId={token.tokenid}
-                                                    tokenName={token.token.name ? token.token.name : token.token}
-                                                />
-                                            ))}
+                                            {displayedOptions.length ? (
+                                                displayedOptions.map((token: MinimaToken) => (
+                                                    <MenuItem
+                                                        sx={{ '&:hover': { background: 'transparent' } }}
+                                                        value={token.tokenid}
+                                                        key={token.tokenid}
+                                                    >
+                                                        <TokenListItem
+                                                            value={token.tokenid}
+                                                            key={token.tokenid}
+                                                            item={token}
+                                                            nav={false}
+                                                        />
+                                                    </MenuItem>
+                                                ))
+                                            ) : (
+                                                <Typography p={3} variant="caption">
+                                                    Token not found
+                                                </Typography>
+                                            )}
                                         </Select>
                                     ) : null}
 
@@ -262,11 +279,3 @@ const Send: FC = () => {
 };
 
 export default Send;
-
-const TokenListItem = ({ tokenName, tokenId }: any) => {
-    return (
-        <ListItem>
-            <ListItemText primary={tokenName} secondary={tokenId}></ListItemText>
-        </ListItem>
-    );
-};
