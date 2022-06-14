@@ -1,19 +1,19 @@
 import {
+    Avatar,
     Toolbar,
     Typography,
     ListItemText,
-    Box,
     Divider,
     List,
     ListItemIcon,
     Radio,
     Grid,
     ListItemButton,
+    Stack,
 } from '@mui/material';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { ReactComponent as LandscapeLogo } from '../assets/images/LANDSCAPE-01.svg';
 
-import WalletIcon from '../assets/images/minimaWallet-01.png';
 import { ReactComponent as WalletSvg } from '../assets/images/wallet.svg';
 
 interface DrawerItem {
@@ -25,8 +25,6 @@ interface DrawerItem {
 interface IProps {
     handleDrawerOpen: () => void;
     handleDrawerClose: () => void;
-
-    // blockNumber: number;
 }
 
 const SideMenu = ({ handleDrawerClose, handleDrawerOpen }: IProps) => {
@@ -88,16 +86,17 @@ const SideMenu = ({ handleDrawerClose, handleDrawerOpen }: IProps) => {
             }}
         >
             <Grid item>
-                <Toolbar sx={{ backgroundColor: '#fff', padding: '0px 16px!important' }} variant="dense">
-                    {/* <img src={WalletIcon} alt="walletIcon" id="walletIcon" /> */}
-                    <WalletSvg className="wallet-svg" />
-                    <Typography sx={style.appName} variant="h6">
+                <Toolbar sx={{ borderRight: '0.5px solid #363A3F' }} variant="dense">
+                    <Avatar sx={{ ml: 1, height: 32, width: 32 }} variant="rounded">
+                        <WalletSvg className="wallet-svg" />
+                    </Avatar>
+                    <Typography sx={{ ml: 1 }} variant="h6">
                         Wallet
                     </Typography>
                 </Toolbar>
                 <Divider />
 
-                <List sx={{ padding: '8px 8px' }}>
+                <List className="MiniSideMenu" sx={{ padding: '8px 8px' }}>
                     {DrawerItems.map((route: DrawerItem, i) => {
                         return (
                             <ListItemButton
@@ -107,7 +106,7 @@ const SideMenu = ({ handleDrawerClose, handleDrawerOpen }: IProps) => {
                                 key={i}
                                 selected={activeRoute(route.pathname)}
                             >
-                                <ListItemIcon>
+                                <ListItemIcon sx={{ minWidth: '34px!important' }}>
                                     <Radio sx={{ p: 0 }} checked={activeRoute(route.pathname)} />
                                 </ListItemIcon>
 
@@ -116,28 +115,15 @@ const SideMenu = ({ handleDrawerClose, handleDrawerOpen }: IProps) => {
                         );
                     })}
                 </List>
-
-                <Divider />
             </Grid>
-            <Grid item sx={{ backgroundColor: '#fff', pb: 1 }}>
-                <Grid container sx={{ pl: 2, pr: 2, mt: 4, mb: 0, backgroundColor: '#fff' }} alignItems="flex-end">
-                    <Grid item xs={4}>
-                        <Typography variant="subtitle2">Powered by</Typography>
-                    </Grid>
-                    <Grid item xs={8}>
-                        <LandscapeLogo />
-                    </Grid>
-                </Grid>
-            </Grid>
+            <Stack sx={{ padding: '24px 8px' }} justifyContent="space-around" direction="row">
+                <Typography variant="caption" sx={{ letterSpacing: 1 }}>
+                    Powered by
+                </Typography>
+                <LandscapeLogo className="minima-landscape" />
+            </Stack>
         </Grid>
     );
 };
 
 export default SideMenu;
-
-const style = {
-    appName: {
-        fontWeight: 600,
-        ml: '12px',
-    },
-};

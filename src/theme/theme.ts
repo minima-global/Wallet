@@ -1,4 +1,3 @@
-import ManropeRegular from './Manrope-Regular.woff2';
 import uiBackground from '../assets/images/LM.jpeg';
 import { createTheme } from '@mui/material/styles';
 
@@ -34,30 +33,19 @@ let theme = createTheme({
         menu: { main: 'rgba(255, 255, 255, 0.95)' },
     },
     typography: {
-        fontFamily: ['Manrope-regular'].join(','),
+        fontFamily: [
+            'Manrope-regular'
+        ].join(','),
         h4: {
-            // fontWeight: 700,
-            // fontSize: 'calc(12px + 1vmin)',
             lineHeight: '27px',
             letterSpacing: '0.02em',
         },
         h2: {
-            // fontWeight: 700,
-            // fontSize: 'calc(12px + 1vmin)',
             lineHeight: 1,
         },
-        h1: {
-            // fontSize: 52,
-        },
-        h6: {
-            // fontWeight: 600,
-            // fontSize: 'calc(12px + 1vmin)',
-        },
-        body1: {
-            // fontSize: 'calc(10px + 0.5vmin)',
-            // fontWeight: 500,
-            // lineHeight: 1.04
-        },
+        caption: {
+            fontFamily: 'Manrope-semibold'
+        }
     },
     shape: {
         borderRadius: 8,
@@ -68,10 +56,6 @@ let theme = createTheme({
     components: {
         MuiCssBaseline: {
             styleOverrides: `
-            @font-face {
-                font-family: Manrope-regular;
-                src: url(${ManropeRegular}) format('woff2');
-            },
             body {
                 background-image: url(${uiBackground});
                 background-size: cover;
@@ -131,16 +115,13 @@ theme = createTheme(theme, {
                 // Name of the slot
                 root: {
                     // Some CSS
-                    // fontSize: '1rem',
                     borderRadius: 8,
                     textTransform: 'none',
                     fontWeight: 800,
                     letterSpacing: 1,
                     lineHeight: '21px',
                     minHeight: 44,
-                    // '&:hover': {
-                    //     backgroundColor: '#0D55D9'
-                    // },
+                    
                     '&:disabled': {
                         backgroundColor: '#5A94FF',
                         color: '#fff'
@@ -161,6 +142,9 @@ theme = createTheme(theme, {
                 paperAnchorLeft: {
                     backgroundColor: theme.palette.menu.main,
                 },
+                paper: {
+                    borderRight: 'none'
+                }
             },
         },
         MuiTextField: {
@@ -197,7 +181,9 @@ theme = createTheme(theme, {
                 root: {
                     zIndex: 0,
                     borderBottom: 'none',
-                    padding: '0!important'
+                    backgroundColor: '#0D0E10',
+                    color: '#fff',
+                    padding: '0px 8px!important',
                 }
             }
         },
@@ -215,12 +201,7 @@ theme = createTheme(theme, {
             styleOverrides: {
                 root: {
                     backgroundColor: 'rgba(255, 255, 255, 0.8)',
-                    borderRadius: '8px!important',
-                    minHeight: 44,
-                    // fontSize: 'calc(8px + 1vmin)',
-                    '&:focus': {
-                        background: '#EDEDED'
-                    },
+                    borderRadius: 8
                 }
             }
         },
@@ -255,8 +236,7 @@ theme = createTheme(theme, {
                     }
                 },
             },
-        },
-        
+        },     
     },
 });
 

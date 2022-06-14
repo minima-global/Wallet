@@ -90,44 +90,44 @@ const AppNavigation = () => {
 
     return (
         <>
-            <AppBar position="static" sx={[appwidth, toolbarPadding]}>
-                <Toolbar sx={start} variant="dense">
-                    <Grid container>
-                        <Grid xs={0} md={2} item />
-                        <Grid
-                            xs={12}
-                            md={8}
-                            item
-                            sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}
-                        >
-                            {onDetail ? null : (
-                                <IconButton
-                                    sx={{ display: { xs: 'flex', sm: 'none' }, padding: 0, marginRight: 0.5 }}
-                                    color="inherit"
-                                    aria-label="menu"
-                                    onClick={handleDrawerOpen}
-                                >
-                                    {/* <MenuIcon sx={{ fontSize: 'calc(16px + 1vmin)' }} /> */}
-                                    <MenuIcon />
-                                </IconButton>
-                            )}
-                            {onDetail ? (
-                                <IconButton
-                                    sx={{ padding: 0, marginRight: 0.5 }}
-                                    onClick={() => {
-                                        navigate(-1);
-                                    }}
-                                >
-                                    {/* <ArrowBackIcon sx={{ color: '#fff', fontSize: 'calc(16px + 1vmin)' }} /> */}
-                                    <ArrowBackIcon sx={{ color: '#fff' }} />
-                                </IconButton>
-                            ) : null}
-                            <Typography variant="body1">{pageTitle}</Typography>
-                        </Grid>
-                        <Grid xs={0} md={2} item />
+            <Toolbar sx={[start, appwidth]} variant="dense">
+                <Grid container>
+                    <Grid xs={0} md={2} item />
+                    <Grid
+                        xs={12}
+                        md={8}
+                        item
+                        sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}
+                    >
+                        {onDetail ? null : (
+                            <IconButton
+                                sx={{ display: { xs: 'flex', sm: 'none' }, padding: 0, marginRight: 0.5 }}
+                                color="inherit"
+                                aria-label="menu"
+                                onClick={handleDrawerOpen}
+                            >
+                                <MenuIcon />
+                            </IconButton>
+                        )}
+                        {onDetail ? (
+                            <IconButton
+                                sx={{ padding: 0, marginRight: 0.5 }}
+                                onClick={() => {
+                                    navigate(-1);
+                                }}
+                            >
+                                <ArrowBackIcon sx={{ color: '#fff' }} />
+                            </IconButton>
+                        ) : null}
+                        <Typography variant="body1" sx={{ fontWeight: '700' }}>
+                            {pageTitle}
+                        </Typography>
                     </Grid>
-                </Toolbar>
-            </AppBar>
+                    <Grid xs={0} md={2} item />
+                </Grid>
+            </Toolbar>
+            {/* <AppBar position="static" sx={[appwidth, toolbarPadding]}>
+            </AppBar> */}
             <Box component="main" sx={[appwidth, contentPadding]}>
                 <Routes>
                     <Route path="/" element={<Navigate replace to="/balance" />} />
@@ -152,7 +152,6 @@ const AppNavigation = () => {
                 >
                     <SideMenu handleDrawerOpen={handleDrawerOpen} handleDrawerClose={handleDrawerClose} />
                 </Drawer>
-                {/* Drawer on desktop is always open */}
                 <Drawer variant="permanent" sx={drawerdisplaydesktop}>
                     <SideMenu handleDrawerOpen={handleDrawerOpen} handleDrawerClose={handleDrawerClose} />
                 </Drawer>
@@ -180,10 +179,6 @@ const drawerdisplay = {
 const drawerdisplaydesktop = {
     display: { xs: 'none', sm: 'block' },
     '& .MuiDrawer-paper': { width: DRAWERWIDTH },
-};
-
-const toolbarPadding = {
-    padding: { xs: '0px 8px!important' },
 };
 
 const contentPadding = {

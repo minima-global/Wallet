@@ -13,8 +13,11 @@ import {
     Portal,
     Snackbar,
     Alert,
+    ListSubheader,
+    ListItem,
+    ListItemText,
 } from '@mui/material';
-import { FC, useContext, useState } from 'react';
+import { FC, useContext, useState, useMemo } from 'react';
 
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -26,6 +29,8 @@ import MiniModal from '../shared/components/MiniModal';
 import { BalanceUpdates } from '../App';
 import { useNavigate } from 'react-router-dom';
 import GridLayout from './components/GridLayout';
+
+import { containsText, isPropertyString } from '../shared/functions';
 
 const TransferTokenSchema = Yup.object().shape({
     tokenid: Yup.string().required('Field Required'),
@@ -68,28 +73,22 @@ const Send: FC = () => {
     }
 
     const [filterText, setFilterText] = useState('');
-    const getFilteredBalanceList = (balanceList: any[], filter: string) => {
-        const suggestedData = balanceList.filter(
+    const getFilteredBalanceList = (arr: MinimaToken[], filterText: string) => {
+        return arr.filter(
             (opt: MinimaToken) =>
-                (typeof opt.token === 'string' && opt.token.toLowerCase().includes(filter.toLowerCase())
-                    ? true
-                    : false) ||
-                (typeof opt.token !== 'string' && opt.token.name.toLowerCase().includes(filter.toLowerCase())
-                    ? true
-                    : false) ||
-                (typeof opt.tokenid === 'string' && opt.tokenid.toLowerCase().includes(filter.toLowerCase())
-                    ? true
-                    : false)
+                (isPropertyString(opt.token) && containsText(opt.token, filterText)) ||
+                (!isPropertyString(opt.token) && containsText(opt.token.name, filterText)) ||
+                (isPropertyString(opt.tokenid) && containsText(opt.tokenid, filterText))
         );
-        return suggestedData;
     };
 
     const balances = useContext(BalanceUpdates);
+    const displayedOptions = useMemo(() => getFilteredBalanceList(balances, filterText), [filterText]);
     const loading = balances.length === 0;
-    let filteredBalance = getFilteredBalanceList(balances, filterText);
     if (loading) {
         navigate('/offline');
     }
+    console.log(`Displayed opts`, displayedOptions);
 
     const formik = useFormik({
         initialValues: {
@@ -162,56 +161,29 @@ const Send: FC = () => {
                                             onChange={formik.handleChange}
                                             error={formik.touched.tokenid && Boolean(formik.errors.tokenid)}
                                             fullWidth
-                                            onKeyDown={() => console.log('hello', filterText)}
                                         >
-                                            <TextField
-                                                fullWidth
-                                                placeholder="Search by name or tokenid"
-                                                id="token-search"
-                                                sx={{
-                                                    position: 'relative',
-                                                    zIndex: 2,
-                                                    padding: '0px 8px',
-                                                    margin: '8px 0px',
-                                                }}
-                                                value={filterText}
-                                                onChange={handleInputChange}
-                                            />
-                                            {filteredBalance && filteredBalance.length > 0
-                                                ? filteredBalance.map((token: MinimaToken) => (
-                                                      <MenuItem
-                                                          key={token.tokenid}
-                                                          value={token.tokenid}
-                                                          sx={{
-                                                              justifyContent: 'space-between',
-                                                          }}
-                                                      >
-                                                          <Typography
-                                                              variant="h6"
-                                                              sx={{
-                                                                  display: 'inline',
-                                                                  maxWidth: '20vw',
-                                                                  overflowX: 'hidden',
-                                                                  textOverflow: 'ellipsis',
-                                                                  fontSize: '1rem',
-                                                              }}
-                                                          >
-                                                              {token.token.name ? token.token.name : token.token}
-                                                          </Typography>
-                                                          <Chip
-                                                              sx={{ ml: 2 }}
-                                                              color="primary"
-                                                              label={
-                                                                  token.tokenid === '0x00'
-                                                                      ? '0x00'
-                                                                      : token.tokenid.substring(0, 8) +
-                                                                        '...' +
-                                                                        token.tokenid.substring(58, 66)
-                                                              }
-                                                          />
-                                                      </MenuItem>
-                                                  ))
-                                                : null}
+                                            <ListSubheader>
+                                                <TextField
+                                                    fullWidth
+                                                    placeholder="Search by name or tokenid"
+                                                    id="token-search"
+                                                    sx={{
+                                                        position: 'relative',
+                                                        zIndex: 2,
+                                                        padding: '0px 8px',
+                                                        margin: '8px 0px',
+                                                    }}
+                                                    value={filterText}
+                                                    onChange={handleInputChange}
+                                                />
+                                            </ListSubheader>
+                                            {displayedOptions.map((token: MinimaToken) => (
+                                                <TokenListItem
+                                                    key={token.tokenid}
+                                                    tokenId={token.tokenid}
+                                                    tokenName={token.token.name ? token.token.name : token.token}
+                                                />
+                                            ))}
                                         </Select>
                                     ) : null}
 
@@ -290,3 +262,11 @@ const Send: FC = () => {
 };
 
 export default Send;
+
+const TokenListItem = ({ tokenName, tokenId }: any) => {
+    return (
+        <ListItem>
+            <ListItemText primary={tokenName} secondary={tokenId}></ListItemText>
+        </ListItem>
+    );
+};

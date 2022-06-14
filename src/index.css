@@ -1,21 +1,29 @@
 html,
 body {
-    height: 100%;
-    margin: 0;
+    margin: 0 auto;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
         'Droid Sans', 'Helvetica Neue', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+@font-face {
+    font-family: Manrope-regular;
+    src: url('./assets/fonts/Manrope/Manrope-Regular.ttf');
+}
+@font-face {
+    font-family: Manrope-bold;
+    src: url('./assets/fonts/Manrope/Manrope-Bold.ttf');
+}
+@font-face {
+    font-family: Manrope-light;
+    src: url('./assets/fonts/Manrope/Manrope-Light.ttf');
+}
+@font-face {
+    font-family: Manrope-semibold;
+    src: url('./assets/fonts/Manrope/Manrope-SemiBold.ttf');
 }
 
-#walletIcon {
-    width: 32px;
-    height: 32px;
-}
 
 .MuiSelect-select {
     padding-top: 14px !important;
@@ -149,15 +157,21 @@ code {
     font-size: 1.5rem;
 }
 
+.MiniSideMenu .MuiListItemText-primary {
+    font-size: 0.9rem;
+    font-family: Manrope-semibold;
+    color: #363A3F;
+}
+
 .minima-icon {
     height: 32px;
     width: 32px;
 }
 
-.wallet-svg {
-    height: 48px;
-    width: 48px;
+.minima-landscape {
+    width: 120px;
 }
+
 
 .split-icon {
     color: #fff;

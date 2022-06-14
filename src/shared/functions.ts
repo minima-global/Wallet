@@ -40,4 +40,11 @@ export const hexToString = (str1: string) => {
     }
     return hex;
   }
+
+  // contains text filter
+  export const containsText = (text: string, searchText: string) =>
+    text.toLowerCase().indexOf(searchText.toLowerCase()) > -1;
   
+  // is it a string
+  export const isPropertyString = (prop: any) => 
+    typeof prop === 'string' ? true : false
