@@ -145,6 +145,7 @@ const Send: FC = () => {
                 loading={loading}
                 children={
                     <>
+                        {/* TODO - FIX SEND WHEN NO TOKEN SELECTION WITH SEARCH */}
                         <Card variant="outlined">
                             <CardContent>
                                 <form onSubmit={formik.handleSubmit}>
@@ -157,6 +158,7 @@ const Send: FC = () => {
                                             value={formik.values.tokenid}
                                             onChange={formik.handleChange}
                                             error={formik.touched.tokenid && Boolean(formik.errors.tokenid)}
+                                            onClose={() => setFilterText('')}
                                             fullWidth
                                         >
                                             <ListSubheader>
