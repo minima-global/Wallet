@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useState, useMemo } from 'react';
 import { List, Typography, TextField, Card, CardContent, CardActions, CardHeader } from '@mui/material';
 
 import { useNavigate } from 'react-router-dom';
@@ -6,6 +6,8 @@ import { MinimaToken } from '../types/minima';
 import { BalanceUpdates } from '../App';
 import AppPagination from './components/AppPagination';
 import GridLayout from './components/GridLayout';
+
+import { isPropertyString, containsText } from '../shared/functions';
 
 import TokenListItem from './components/tokens/TokenListItem';
 
@@ -17,25 +19,18 @@ const Balance = () => {
     const [page, setPage] = useState(1);
     const COUNT_PER_PAGE = 5;
 
-    const getFilteredBalanceList = (balanceList: any[], filter: string) => {
-        const suggestedData = balanceList.filter(
+    const getFilteredBalanceList = (arr: MinimaToken[], filterText: string) => {
+        return arr.filter(
             (opt: MinimaToken) =>
-                (typeof opt.token === 'string' && opt.token.toLowerCase().includes(filter.toLowerCase())
-                    ? true
-                    : false) ||
-                (typeof opt.token !== 'string' && opt.token.name.toLowerCase().includes(filter.toLowerCase())
-                    ? true
-                    : false) ||
-                (typeof opt.tokenid === 'string' && opt.tokenid.toLowerCase().includes(filter.toLowerCase())
-                    ? true
-                    : false)
+                (isPropertyString(opt.token) && containsText(opt.token, filterText)) ||
+                (!isPropertyString(opt.token) && containsText(opt.token.name, filterText)) ||
+                (isPropertyString(opt.tokenid) && containsText(opt.tokenid, filterText))
         );
-        return suggestedData;
     };
 
     const balances = useContext(BalanceUpdates);
     const loading = balances.length === 0;
-    let filteredBalance = getFilteredBalanceList(balances, filterText);
+    const displayedOptions = useMemo(() => getFilteredBalanceList(balances, filterText), [filterText]);
     if (loading) {
         navigate('/offline');
     }
@@ -76,16 +71,16 @@ const Balance = () => {
                             }}
                         >
                             <List className="MiniList-balance">
-                                {filteredBalance
+                                {displayedOptions
                                     ?.slice((page - 1) * COUNT_PER_PAGE, page * COUNT_PER_PAGE)
                                     .map((item: MinimaToken, i) => (
                                         <TokenListItem key={item.tokenid} item={item} nav={true}></TokenListItem>
                                     ))}
                             </List>
-                            {filteredBalance.length === 0 ? (
-                                <Typography sx={{ textAlign: 'left' }} variant="h6">
-                                    Token not found
-                                </Typography>
+                            {displayedOptions.length === 0 && filterText.length ? (
+                                <Typography variant="caption">Token not found</Typography>
+                            ) : displayedOptions.length === 0 && !filterText.length ? (
+                                <Typography variant="caption">Tokens not found</Typography>
                             ) : null}
                         </CardContent>
                         {filterText.length === 0 ? (
