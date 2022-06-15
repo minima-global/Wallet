@@ -93,7 +93,7 @@ const Receive: FC = () => {
                                 )}
                             </ListItemIcon>
                         </BootstrapTooltip>
-                        <Typography sx={{ textAlign: 'left' }} variant="caption">
+                        <Typography variant="caption">
                             Receive any Minima & network tokens with this address.
                         </Typography>
                     </CardContent>

@@ -6,9 +6,10 @@ import * as Yup from 'yup';
 import { callStatus, callToken } from '../minima/rpc-commands';
 import { INSUFFICIENT } from '../minima/constants';
 import { useNavigate } from 'react-router-dom';
-import { strToHex } from '../shared/functions';
+import { insufficientFundsError, strToHex } from '../shared/functions';
 
 import GridLayout from './components/GridLayout';
+import TokenConfirmationModal from './components/forms/TokenConfirmationModal';
 
 const CreateTokenSchema = Yup.object().shape({
     name: Yup.string()
@@ -21,9 +22,14 @@ const CreateTokenSchema = Yup.object().shape({
     // .matches(/^[^\\;'"]+$/, 'Invalid characters.'),
     url: Yup.string(),
     // .matches(/^[^\\;'"]+$/, 'Invalid characters.'),
+    burn: Yup.string().matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters.'),
 });
 
 const TokenCreation: FC = () => {
+    // Handle Confirmation Modal
+    const [openConfirmationModal, setOpenConfirmationModal] = useState(false);
+    const handleCloseConfirmationModal = () => setOpenConfirmationModal(false);
+
     // Handle Modal
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -55,6 +61,7 @@ const TokenCreation: FC = () => {
             amount: 0,
             url: '',
             description: '',
+            burn: '',
         },
         validationSchema: CreateTokenSchema,
         onSubmit: (formData) => {
@@ -65,6 +72,7 @@ const TokenCreation: FC = () => {
                     url: strToHex(formData.url),
                 },
                 amount: formData.amount,
+                burn: formData.burn && formData.burn.length ? formData.burn : 0,
             };
             callToken(customToken)
                 .then((res: any) => {
@@ -75,27 +83,30 @@ const TokenCreation: FC = () => {
                     formik.resetForm();
                     // Set Modal
                     setModalStatus('Success');
+                    // Close Modals
+                    setOpenConfirmationModal(false);
                     // Open Modal
                     setOpen(true);
                 })
                 .catch((err: any) => {
-                    console.log(err);
-
                     if (err === undefined || err.message === undefined) {
                         setErrMessage('Something went wrong!  Open a Discord Support ticket for assistance.');
-                        // alert('Something went wrong, error message undefined.  Open a support ticket!');
                     }
 
-                    if (err.message !== undefined && err.message.substring(0, 20) === INSUFFICIENT) {
+                    if (insufficientFundsError(err.message)) {
                         formik.setFieldError('amount', err.message);
-                    } else {
+                    }
+
+                    if (err.message !== undefined) {
+                        console.error(err.message);
                         setErrMessage(err.message);
                     }
+
+                    setOpenConfirmationModal(false);
                 })
                 .finally(() => {
                     // NO MATTER WHAT
-                    setTimeout(() => formik.setSubmitting(false), 2500);
-                    // formik.setSubmitting(false);
+                    formik.setSubmitting(false);
                     setTimeout(() => setErrMessage(''), 2500);
                 });
         },
@@ -198,18 +209,25 @@ const TokenCreation: FC = () => {
                                     }}
                                 ></TextField>
                                 <Button
-                                    disabled={formik.isSubmitting && !formik.isValid}
+                                    disabled={!(formik.isValid && formik.dirty)}
                                     disableElevation
                                     color="primary"
                                     variant="contained"
                                     fullWidth
-                                    type="submit"
+                                    onClick={() => setOpenConfirmationModal(true)}
                                 >
-                                    {formik.isSubmitting ? 'Creating...' : 'Create Token'}
+                                    Next
                                 </Button>
                             </form>
                         </CardContent>
                     </Card>
+
+                    <TokenConfirmationModal
+                        handleClose={handleCloseConfirmationModal}
+                        open={openConfirmationModal}
+                        formik={formik}
+                    />
+
                     <MiniModal
                         open={open}
                         handleClose={handleClose}

@@ -25,7 +25,7 @@ import { BalanceUpdates } from '../App';
 import { useNavigate } from 'react-router-dom';
 import GridLayout from './components/GridLayout';
 
-import { checkFunds, containsText, isPropertyString } from '../shared/functions';
+import { containsText, insufficientFundsError, isPropertyString } from '../shared/functions';
 
 import TokenListItem from './components/tokens/TokenListItem';
 import ConfirmationModal from './components/forms/ConfirmationModal';
@@ -86,6 +86,7 @@ const Send: FC = () => {
     };
 
     const balances = useContext(BalanceUpdates);
+
     const displayedOptions = useMemo(() => getFilteredBalanceList(balances, filterText), [balances, filterText]);
     const loading = balances.length === 0;
     if (loading) {
@@ -117,16 +118,22 @@ const Send: FC = () => {
                     setOpen(true);
                 })
                 .catch((err) => {
-                    // console.log(`Failed..`);
-                    console.error(err.message);
-                    setOpenConfirmationModal(false);
-                    // FAILED
-                    if (err.message !== undefined && err.message.substring(0, 20) === INSUFFICIENT) {
-                        setErrMessage(err.message);
+                    if (err === undefined || err.message === undefined) {
+                        setErrMessage('Something went wrong!  Open a Discord Support ticket for assistance.');
+                    }
+
+                    if (insufficientFundsError(err.message)) {
                         formik.setFieldError('amount', err.message);
-                    } else if (err.message) {
+                        console.error(err.message);
                         setErrMessage(err.message);
                     }
+
+                    if (err.message !== undefined) {
+                        console.error(err.message);
+                        setErrMessage(err.message);
+                    }
+
+                    setOpenConfirmationModal(false);
                 })
                 .finally(() => {
                     // NO MATTER WHAT
@@ -168,7 +175,7 @@ const Send: FC = () => {
                                             sx={{ marginBottom: 2, textAlign: 'left' }}
                                             id="tokenid"
                                             name="tokenid"
-                                            value={formik.values.tokenid}
+                                            value={formik.values.tokenid ? formik.values.tokenid : ''}
                                             onChange={formik.handleChange}
                                             error={formik.touched.tokenid && Boolean(formik.errors.tokenid)}
                                             onClose={() => setFilterText('')}

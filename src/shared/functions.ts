@@ -1,3 +1,4 @@
+import { INSUFFICIENT } from './../minima/constants';
 /** Copy to clipboard */
 
 export async function copyTextToClipboard(text: string) {
@@ -53,4 +54,18 @@ export const hexToString = (str1: string) => {
   export const checkFunds = (balance: any[], tokenid: string, amount: number) => {
       const tkn = balance.find((v) => v.tokenid === tokenid);
       return parseInt(tkn.sendable) > amount; 
+  }
+
+  const isDefined = (testObj: any) => typeof testObj !== 'undefined' ? true : false;
+
+  // test against insufficient fund error
+  export const insufficientFundsError = (msg: string) => {
+      
+
+    if (isDefined(msg) && containsText(msg, INSUFFICIENT)) {
+        return true;
+    }
+
+    return false;
+
   }
