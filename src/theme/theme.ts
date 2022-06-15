@@ -45,6 +45,16 @@ let theme = createTheme({
         },
         caption: {
             fontFamily: 'Manrope-semibold'
+        },
+        subtitle1: {
+            fontSize: "0.9rem",
+            fontFamily: "Manrope-semibold",
+            color: '#363A3F'
+        },
+        body2: {
+            fontSize: "0.9rem",
+            fontFamily: "Manrope-semibold",
+            color: '#363A3F!important'
         }
     },
     shape: {
@@ -118,13 +128,13 @@ theme = createTheme(theme, {
                     borderRadius: 8,
                     textTransform: 'none',
                     fontWeight: 800,
-                    letterSpacing: 1,
+                    letterSpacing: 2,
                     lineHeight: '21px',
                     minHeight: 44,
                     
                     '&:disabled': {
-                        backgroundColor: '#5A94FF',
-                        color: '#fff'
+                        backgroundColor: '#EDEDED',
+                        opacity: 0.5,
                     }
                 },
             },

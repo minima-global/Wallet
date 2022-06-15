@@ -65,6 +65,17 @@ body {
     margin-bottom: 8px;
 }
 
+/** SendPage Select */
+.MuiMenu-list {
+    max-height: 65vh;
+    overflow-y: scroll;
+    overflow-y: visible;
+}
+.MuiMenu-list .MuiListSubheader-root {
+    background-color: #fff;
+}
+
+
 
 .MiniCardToken {
     padding: 8px 0px;
@@ -154,6 +165,9 @@ body {
 
 .MiniModal {
     height: auto!important;
+}
+.MiniModal:focus {
+    border: 0;
 }
 .MiniBalanceActions .MuiPagination-root {
     transform: scale(0.8);

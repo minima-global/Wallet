@@ -70,8 +70,8 @@ const buttonWrap = {
     justifyContent: 'flex-end',
 };
 const status = {
-    borderBottom: 1,
-    borderColor: '#91919D',
+    borderBottom: 0.5,
+    borderColor: '#D3D3D8',
     lineHeight: '40px',
     fontWeight: '400',
     fontSize: 14,

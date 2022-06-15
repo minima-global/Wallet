@@ -25,9 +25,10 @@ import { BalanceUpdates } from '../App';
 import { useNavigate } from 'react-router-dom';
 import GridLayout from './components/GridLayout';
 
-import { containsText, isPropertyString } from '../shared/functions';
+import { checkFunds, containsText, isPropertyString } from '../shared/functions';
 
 import TokenListItem from './components/tokens/TokenListItem';
+import ConfirmationModal from './components/forms/ConfirmationModal';
 
 const TransferTokenSchema = Yup.object().shape({
     tokenid: Yup.string().required('Field Required'),
@@ -39,6 +40,7 @@ const TransferTokenSchema = Yup.object().shape({
     amount: Yup.string()
         .required('Field Required')
         .matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters.'),
+    burn: Yup.string().matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters.'),
 });
 
 const styles = {
@@ -56,12 +58,16 @@ const Send: FC = () => {
     const navigate = useNavigate();
     // Handle Modal
     const [open, setOpen] = useState(false);
+    // Handle Confirmation Modal
+    const [openConfirmationModal, setOpenConfirmationModal] = useState(false);
     const [modalStatus, setModalStatus] = useState('Failed');
     const handleOpen = () => setOpen(true);
     const handleClose = () => {
         setOpen(false);
         setModalStatus('Failed');
     };
+
+    const handleCloseConfirmationModal = () => setOpenConfirmationModal(false);
 
     function handleInputChange(event: any) {
         const value = event.target.value;
@@ -80,7 +86,7 @@ const Send: FC = () => {
     };
 
     const balances = useContext(BalanceUpdates);
-    const displayedOptions = useMemo(() => getFilteredBalanceList(balances, filterText), [filterText]);
+    const displayedOptions = useMemo(() => getFilteredBalanceList(balances, filterText), [balances, filterText]);
     const loading = balances.length === 0;
     if (loading) {
         navigate('/offline');
@@ -91,6 +97,7 @@ const Send: FC = () => {
             tokenid: '0x00',
             amount: 0,
             address: '',
+            burn: 0,
         },
         validationSchema: TransferTokenSchema,
         onSubmit: (data) => {
@@ -101,6 +108,9 @@ const Send: FC = () => {
                     }
                     // SENT
                     formik.resetForm();
+                    // Close Modals
+                    setOpenConfirmationModal(false);
+
                     // Set Modal
                     setModalStatus('Success');
                     // Open Modal
@@ -109,8 +119,10 @@ const Send: FC = () => {
                 .catch((err) => {
                     // console.log(`Failed..`);
                     console.error(err.message);
+                    setOpenConfirmationModal(false);
                     // FAILED
                     if (err.message !== undefined && err.message.substring(0, 20) === INSUFFICIENT) {
+                        setErrMessage(err.message);
                         formik.setFieldError('amount', err.message);
                     } else if (err.message) {
                         setErrMessage(err.message);
@@ -122,6 +134,7 @@ const Send: FC = () => {
                     setTimeout(() => setErrMessage(''), 2000);
                 });
         },
+        validateOnChange: true,
     });
 
     return (
@@ -160,6 +173,7 @@ const Send: FC = () => {
                                             error={formik.touched.tokenid && Boolean(formik.errors.tokenid)}
                                             onClose={() => setFilterText('')}
                                             fullWidth
+                                            className="MiniSelect-tokens"
                                         >
                                             <ListSubheader>
                                                 <TextField
@@ -247,19 +261,26 @@ const Send: FC = () => {
                                                     : { borderBottomLeftRadius: 8, borderBottomRightRadius: 8 },
                                         }}
                                     />
+
                                     <Button
-                                        disabled={formik.isSubmitting && !formik.isValid}
+                                        disabled={!(formik.isValid && formik.dirty)}
                                         disableElevation
                                         color="primary"
                                         variant="contained"
                                         fullWidth
-                                        type="submit"
+                                        onClick={() => setOpenConfirmationModal(true)}
                                     >
-                                        {formik.isSubmitting ? 'Sending...' : 'Send'}
+                                        Next
                                     </Button>
                                 </form>
                             </CardContent>
                         </Card>
+
+                        <ConfirmationModal
+                            handleClose={handleCloseConfirmationModal}
+                            open={openConfirmationModal}
+                            formik={formik}
+                        />
 
                         <MiniModal
                             open={open}

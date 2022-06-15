@@ -48,3 +48,9 @@ export const hexToString = (str1: string) => {
   // is it a string
   export const isPropertyString = (prop: any) => 
     typeof prop === 'string' ? true : false
+
+  // does user have funds to spend?
+  export const checkFunds = (balance: any[], tokenid: string, amount: number) => {
+      const tkn = balance.find((v) => v.tokenid === tokenid);
+      return parseInt(tkn.sendable) > amount; 
+  }
