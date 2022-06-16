@@ -43,10 +43,10 @@ const NFTs: FC = () => {
     const [page, setPage] = useState(1);
     const COUNT_PER_PAGE = 4;
 
-    const loading = balances.length === 0;
-    if (loading) {
-        navigate('/offline');
-    }
+    // const loading = balances.length === 0;
+    // if (loading) {
+    //     navigate('/offline');
+    // }
 
     useEffect(() => {
         const allNFTs: MinimaToken[] = balances.filter((b: MinimaToken) => {
@@ -65,7 +65,7 @@ const NFTs: FC = () => {
 
     return (
         <GridLayout
-            loading={loading}
+            // loading={loading}
             children={
                 <Grid container item xs={12} spacing={2}>
                     <Grid container item xs={12} spacing={2}>

@@ -59,7 +59,7 @@ import { MDS } from './mds';
     burn: number;
   }
 
-export const callSend = (data: SendArgs) => {
+export const callSend = (data: any) => {
     return req(`send amount:${data.amount} address:${data.address} tokenid:${data.tokenid} burn:${data.burn}`);
 }
 export const callGetAddress = () => {

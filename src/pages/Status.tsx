@@ -1,4 +1,4 @@
-import React, { useState, useEffect, FC } from 'react';
+import React, { useState, useEffect, FC, useContext } from 'react';
 import {
     Chip,
     Grid,
@@ -16,12 +16,15 @@ import { callStatus } from '../minima/rpc-commands';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { useNavigate } from 'react-router-dom';
+import { BalanceUpdates } from '../App';
 
 const Status = () => {
     const [status, setStatus] = useState<StatusType>();
     const [loading, setLoading] = useState(true);
 
-    const navigate = useNavigate();
+    const balances = useContext(BalanceUpdates);
+
+    // const navigate = useNavigate();
 
     useEffect(() => {
         callStatus()
@@ -30,11 +33,11 @@ const Status = () => {
                 setLoading(false);
             })
             .catch((err) => {
-                navigate('/offline');
-                setLoading(false);
+                // navigate('/offline');
+                // setLoading(false);
                 console.error(err);
             });
-    }, []);
+    }, [balances]);
 
     return (
         <Grid container spacing={0} mb={2}>
@@ -46,8 +49,8 @@ const Status = () => {
                 spacing={1}
                 sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
             >
-                {loading ? (
-                    <CircularProgress size={32} />
+                {balances.length === 0 ? (
+                    <CircularProgress sx={{ mt: 2 }} size={32} />
                 ) : (
                     <>
                         <Grid item xs={12} md={12}>

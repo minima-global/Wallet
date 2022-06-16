@@ -1,5 +1,5 @@
-import { FC, useState, useEffect } from 'react';
-import { Card, CardContent, TextField, Button, Portal, Snackbar, Alert, InputAdornment } from '@mui/material';
+import { FC, useState, useEffect, useContext } from 'react';
+import { Card, CardContent, TextField, Button, Portal, Snackbar, Alert, InputAdornment, Skeleton } from '@mui/material';
 import MiniModal from '../shared/components/MiniModal';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -10,6 +10,7 @@ import { insufficientFundsError, strToHex } from '../shared/functions';
 
 import GridLayout from './components/GridLayout';
 import TokenConfirmationModal from './components/forms/TokenConfirmationModal';
+import { BalanceUpdates } from '../App';
 
 const CreateTokenSchema = Yup.object().shape({
     name: Yup.string()
@@ -41,6 +42,7 @@ const TokenCreation: FC = () => {
         setModalStatus('Failed');
     };
     const navigate = useNavigate();
+    const balances = useContext(BalanceUpdates);
 
     useEffect(() => {
         callStatus()
@@ -50,7 +52,7 @@ const TokenCreation: FC = () => {
             .catch((err) => {
                 console.error(err);
                 setLoading(false);
-                navigate('/offline');
+                // navigate('/offline');
             });
     }, []);
 
@@ -58,7 +60,7 @@ const TokenCreation: FC = () => {
     const formik = useFormik({
         initialValues: {
             name: '',
-            amount: 0,
+            amount: '',
             url: '',
             description: '',
             burn: '',
@@ -71,7 +73,7 @@ const TokenCreation: FC = () => {
                     description: strToHex(formData.description),
                     url: strToHex(formData.url),
                 },
-                amount: formData.amount,
+                amount: formData.amount && formData.amount.length ? formData.amount : 0,
                 burn: formData.burn && formData.burn.length ? formData.burn : 0,
             };
             callToken(customToken)
@@ -137,77 +139,108 @@ const TokenCreation: FC = () => {
                     <Card variant="outlined">
                         <CardContent>
                             <form onSubmit={formik.handleSubmit}>
-                                <TextField
-                                    fullWidth
-                                    id="name"
-                                    name="name"
-                                    placeholder="name"
-                                    value={formik.values.name}
-                                    onChange={formik.handleChange}
-                                    error={formik.touched.name && Boolean(formik.errors.name)}
-                                    helperText={formik.touched.name && formik.errors.name}
-                                    sx={{ mb: 2 }}
-                                    FormHelperTextProps={{
-                                        style: styles.helperText,
-                                    }}
-                                    InputProps={{
-                                        style:
-                                            formik.touched.name && Boolean(formik.errors.name)
-                                                ? { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }
-                                                : { borderBottomLeftRadius: 8, borderBottomRightRadius: 8 },
-                                    }}
-                                ></TextField>
-                                <TextField
-                                    fullWidth
-                                    id="amount"
-                                    name="amount"
-                                    placeholder="0.0"
-                                    value={formik.values.amount}
-                                    onChange={formik.handleChange}
-                                    error={formik.touched.amount && Boolean(formik.errors.amount)}
-                                    helperText={formik.touched.amount && formik.errors.amount}
-                                    sx={{ mb: 2 }}
-                                    FormHelperTextProps={{
-                                        style: styles.helperText,
-                                    }}
-                                    InputProps={{
-                                        style:
-                                            formik.touched.amount && Boolean(formik.errors.amount)
-                                                ? { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }
-                                                : { borderBottomLeftRadius: 8, borderBottomRightRadius: 8 },
-                                    }}
-                                ></TextField>
-                                <TextField
-                                    fullWidth
-                                    id="url"
-                                    name="url"
-                                    placeholder="url"
-                                    value={formik.values.url}
-                                    onChange={formik.handleChange}
-                                    error={formik.touched.url && Boolean(formik.errors.url)}
-                                    helperText={formik.touched.url && formik.errors.url}
-                                    sx={{ mb: 2 }}
-                                ></TextField>
-                                <TextField
-                                    fullWidth
-                                    id="description"
-                                    name="description"
-                                    placeholder="description"
-                                    value={formik.values.description}
-                                    onChange={formik.handleChange}
-                                    error={formik.touched.description && Boolean(formik.errors.description)}
-                                    helperText={formik.touched.description && formik.errors.description}
-                                    multiline
-                                    rows={4}
-                                    sx={{ mb: 2 }}
-                                    InputProps={{
-                                        endAdornment: (
-                                            <InputAdornment position="start">
-                                                {formik.values.description.length + '/255'}
-                                            </InputAdornment>
-                                        ),
-                                    }}
-                                ></TextField>
+                                {balances.length === 0 ? (
+                                    <>
+                                        <Skeleton
+                                            sx={{ borderRadius: '8px', mb: 2 }}
+                                            variant="rectangular"
+                                            width="100%"
+                                            height={60}
+                                        />
+                                        <Skeleton
+                                            sx={{ borderRadius: '8px', mb: 2 }}
+                                            variant="rectangular"
+                                            width="100%"
+                                            height={60}
+                                        />
+                                        <Skeleton
+                                            sx={{ borderRadius: '8px', mb: 2 }}
+                                            variant="rectangular"
+                                            width="100%"
+                                            height={60}
+                                        />
+                                        <Skeleton
+                                            sx={{ borderRadius: '8px', mb: 2 }}
+                                            variant="rectangular"
+                                            width="100%"
+                                            height={170}
+                                        />
+                                    </>
+                                ) : (
+                                    <>
+                                        <TextField
+                                            fullWidth
+                                            id="name"
+                                            name="name"
+                                            placeholder="name"
+                                            value={formik.values.name}
+                                            onChange={formik.handleChange}
+                                            error={formik.touched.name && Boolean(formik.errors.name)}
+                                            helperText={formik.touched.name && formik.errors.name}
+                                            sx={{ mb: 2 }}
+                                            FormHelperTextProps={{
+                                                style: styles.helperText,
+                                            }}
+                                            InputProps={{
+                                                style:
+                                                    formik.touched.name && Boolean(formik.errors.name)
+                                                        ? { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }
+                                                        : { borderBottomLeftRadius: 8, borderBottomRightRadius: 8 },
+                                            }}
+                                        ></TextField>
+                                        <TextField
+                                            fullWidth
+                                            id="amount"
+                                            name="amount"
+                                            placeholder="0.0"
+                                            value={formik.values.amount}
+                                            onChange={formik.handleChange}
+                                            error={formik.touched.amount && Boolean(formik.errors.amount)}
+                                            helperText={formik.touched.amount && formik.errors.amount}
+                                            sx={{ mb: 2 }}
+                                            FormHelperTextProps={{
+                                                style: styles.helperText,
+                                            }}
+                                            InputProps={{
+                                                style:
+                                                    formik.touched.amount && Boolean(formik.errors.amount)
+                                                        ? { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }
+                                                        : { borderBottomLeftRadius: 8, borderBottomRightRadius: 8 },
+                                            }}
+                                        ></TextField>
+                                        <TextField
+                                            fullWidth
+                                            id="url"
+                                            name="url"
+                                            placeholder="url"
+                                            value={formik.values.url}
+                                            onChange={formik.handleChange}
+                                            error={formik.touched.url && Boolean(formik.errors.url)}
+                                            helperText={formik.touched.url && formik.errors.url}
+                                            sx={{ mb: 2 }}
+                                        ></TextField>
+                                        <TextField
+                                            fullWidth
+                                            id="description"
+                                            name="description"
+                                            placeholder="description"
+                                            value={formik.values.description}
+                                            onChange={formik.handleChange}
+                                            error={formik.touched.description && Boolean(formik.errors.description)}
+                                            helperText={formik.touched.description && formik.errors.description}
+                                            multiline
+                                            rows={4}
+                                            sx={{ mb: 2 }}
+                                            InputProps={{
+                                                endAdornment: (
+                                                    <InputAdornment position="start">
+                                                        {formik.values.description.length + '/255'}
+                                                    </InputAdornment>
+                                                ),
+                                            }}
+                                        ></TextField>
+                                    </>
+                                )}
                                 <Button
                                     disabled={!(formik.isValid && formik.dirty)}
                                     disableElevation

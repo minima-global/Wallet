@@ -52,7 +52,7 @@ const ConfirmationModal = ({ open, handleClose, handleSubmit, formik }: any) => 
                     </Box>
 
                     <Stack direction="column" sx={{ maxWidth: 'inherit', mt: 2, mb: 2 }}>
-                        <ListItemButton>
+                        {/* <ListItemButton>
                             <ListItemIcon sx={{ minWidth: '20px', mr: 2 }}>
                                 <Avatar sx={{ width: '32px', height: '32px', background: '#EDEDED' }} variant="rounded">
                                     <AlternateEmailIcon color="primary" />
@@ -66,7 +66,7 @@ const ConfirmationModal = ({ open, handleClose, handleSubmit, formik }: any) => 
                                 }}
                                 primary={formik.values.address}
                             ></ListItemText>
-                        </ListItemButton>
+                        </ListItemButton> */}
 
                         <ModalStackedCol
                             children={
@@ -121,7 +121,7 @@ const ConfirmationModal = ({ open, handleClose, handleSubmit, formik }: any) => 
                                 <Chip
                                     disabled={!(formik.isValid && formik.dirty)}
                                     color="primary"
-                                    label="Next"
+                                    label={formik.values.burn === '' ? 'Skip' : 'Next'}
                                     onClick={() => setOpenFinal(true)}
                                 />
                             </>

@@ -119,6 +119,8 @@ body {
     word-break: break-all;
     max-height: 60px;
     margin-left: 16px;
+    overflow: scroll;
+    text-overflow: ellipsis;
 }
 
 .MiniCardToken .MuiIconButton-root {

@@ -10,13 +10,13 @@ import {
     Alert,
     ListSubheader,
     MenuItem,
+    Skeleton,
 } from '@mui/material';
 import { FC, useContext, useState, useMemo } from 'react';
 import { callSend } from '../minima/rpc-commands';
 
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { INSUFFICIENT } from '../minima/constants';
 
 import { MinimaToken } from '../types/minima';
 import MiniModal from '../shared/components/MiniModal';
@@ -40,6 +40,7 @@ const TransferTokenSchema = Yup.object().shape({
     amount: Yup.string()
         .required('Field Required')
         .matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters.'),
+
     burn: Yup.string().matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters.'),
 });
 
@@ -88,21 +89,23 @@ const Send: FC = () => {
     const balances = useContext(BalanceUpdates);
 
     const displayedOptions = useMemo(() => getFilteredBalanceList(balances, filterText), [balances, filterText]);
-    const loading = balances.length === 0;
-    if (loading) {
-        navigate('/offline');
-    }
 
     const formik = useFormik({
         initialValues: {
             tokenid: '0x00',
-            amount: 0,
+            amount: '',
             address: '',
-            burn: 0,
+            burn: '',
         },
         validationSchema: TransferTokenSchema,
         onSubmit: (data) => {
-            callSend(data)
+            const modifyData = {
+                ...data,
+                burn: data.burn && data.burn.length ? data.burn : 0,
+                amount: data.amount && data.amount.length ? data.amount : 0,
+            };
+            console.log('Modified Data', modifyData);
+            callSend(modifyData)
                 .then((res: any) => {
                     if (!res.status) {
                         throw new Error(res.error ? res.error : res.message); // TODO.. consistent key value
@@ -162,7 +165,7 @@ const Send: FC = () => {
             </Portal>
 
             <GridLayout
-                loading={loading}
+                // loading={loading}
                 children={
                     <>
                         {/* TODO - FIX SEND WHEN NO TOKEN SELECTION WITH SEARCH */}
@@ -170,105 +173,126 @@ const Send: FC = () => {
                             <CardContent>
                                 <form onSubmit={formik.handleSubmit}>
                                     {balances && balances.length > 0 ? (
-                                        <Select
-                                            MenuProps={{ autoFocus: false }}
-                                            sx={{ marginBottom: 2, textAlign: 'left' }}
-                                            id="tokenid"
-                                            name="tokenid"
-                                            value={formik.values.tokenid ? formik.values.tokenid : ''}
-                                            onChange={formik.handleChange}
-                                            error={formik.touched.tokenid && Boolean(formik.errors.tokenid)}
-                                            onClose={() => setFilterText('')}
-                                            fullWidth
-                                            className="MiniSelect-tokens"
-                                        >
-                                            <ListSubheader>
-                                                <TextField
-                                                    autoFocus
-                                                    fullWidth
-                                                    placeholder="Search by name or tokenid"
-                                                    id="token-search"
-                                                    sx={{
-                                                        position: 'relative',
-                                                        zIndex: 2,
-                                                        padding: '0px 8px',
-                                                        margin: '8px 0px',
-                                                    }}
-                                                    value={filterText}
-                                                    onChange={handleInputChange}
-                                                    onKeyDown={(e) => {
-                                                        if (e.key !== 'Escape') {
-                                                            // Prevents autoselecting item while typing (default Select behaviour)
-                                                            e.stopPropagation();
-                                                        }
-                                                    }}
-                                                />
-                                            </ListSubheader>
-                                            {displayedOptions.length ? (
-                                                displayedOptions.map((token: MinimaToken) => (
-                                                    <MenuItem
-                                                        sx={{ '&:hover': { background: 'transparent' } }}
-                                                        value={token.tokenid}
-                                                        key={token.tokenid}
-                                                    >
-                                                        <TokenListItem
+                                        <>
+                                            <Select
+                                                MenuProps={{ autoFocus: false }}
+                                                sx={{ marginBottom: 2, textAlign: 'left' }}
+                                                id="tokenid"
+                                                name="tokenid"
+                                                value={formik.values.tokenid ? formik.values.tokenid : ''}
+                                                onChange={formik.handleChange}
+                                                error={formik.touched.tokenid && Boolean(formik.errors.tokenid)}
+                                                onClose={() => setFilterText('')}
+                                                fullWidth
+                                                className="MiniSelect-tokens"
+                                            >
+                                                <ListSubheader>
+                                                    <TextField
+                                                        autoFocus
+                                                        fullWidth
+                                                        placeholder="Search by name or tokenid"
+                                                        id="token-search"
+                                                        sx={{
+                                                            position: 'relative',
+                                                            zIndex: 2,
+                                                            padding: '0px 8px',
+                                                            margin: '8px 0px',
+                                                        }}
+                                                        value={filterText}
+                                                        onChange={handleInputChange}
+                                                        onKeyDown={(e) => {
+                                                            if (e.key !== 'Escape') {
+                                                                // Prevents autoselecting item while typing (default Select behaviour)
+                                                                e.stopPropagation();
+                                                            }
+                                                        }}
+                                                    />
+                                                </ListSubheader>
+                                                {displayedOptions.length ? (
+                                                    displayedOptions.map((token: MinimaToken) => (
+                                                        <MenuItem
+                                                            sx={{ '&:hover': { background: 'transparent' } }}
                                                             value={token.tokenid}
                                                             key={token.tokenid}
-                                                            item={token}
-                                                            nav={false}
-                                                        />
-                                                    </MenuItem>
-                                                ))
-                                            ) : (
-                                                <Typography p={3} variant="caption">
-                                                    Token not found
-                                                </Typography>
-                                            )}
-                                        </Select>
-                                    ) : null}
+                                                        >
+                                                            <TokenListItem
+                                                                value={token.tokenid}
+                                                                key={token.tokenid}
+                                                                item={token}
+                                                                nav={false}
+                                                            />
+                                                        </MenuItem>
+                                                    ))
+                                                ) : (
+                                                    <Typography p={3} variant="caption">
+                                                        Token not found
+                                                    </Typography>
+                                                )}
+                                            </Select>
+                                            <TextField
+                                                fullWidth
+                                                id="address"
+                                                name="address"
+                                                placeholder="Address"
+                                                value={formik.values.address}
+                                                onChange={formik.handleChange}
+                                                error={formik.touched.address && Boolean(formik.errors.address)}
+                                                helperText={formik.touched.address && formik.errors.address}
+                                                sx={{ marginBottom: 2 }}
+                                                FormHelperTextProps={{
+                                                    style: styles.helperText,
+                                                }}
+                                                InputProps={{
+                                                    style:
+                                                        formik.touched.address && Boolean(formik.errors.address)
+                                                            ? { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }
+                                                            : { borderBottomLeftRadius: 8, borderBottomRightRadius: 8 },
+                                                }}
+                                            />
 
-                                    <TextField
-                                        fullWidth
-                                        id="address"
-                                        name="address"
-                                        placeholder="Address"
-                                        value={formik.values.address}
-                                        onChange={formik.handleChange}
-                                        error={formik.touched.address && Boolean(formik.errors.address)}
-                                        helperText={formik.touched.address && formik.errors.address}
-                                        sx={{ marginBottom: 2 }}
-                                        FormHelperTextProps={{
-                                            style: styles.helperText,
-                                        }}
-                                        InputProps={{
-                                            style:
-                                                formik.touched.address && Boolean(formik.errors.address)
-                                                    ? { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }
-                                                    : { borderBottomLeftRadius: 8, borderBottomRightRadius: 8 },
-                                        }}
-                                    />
-
-                                    <TextField
-                                        fullWidth
-                                        id="amount"
-                                        name="amount"
-                                        placeholder="0.0"
-                                        value={formik.values.amount}
-                                        onChange={formik.handleChange}
-                                        error={formik.touched.amount && Boolean(formik.errors.amount)}
-                                        helperText={formik.touched.amount && formik.errors.amount}
-                                        sx={{ marginBottom: 2 }}
-                                        FormHelperTextProps={{
-                                            style: styles.helperText,
-                                        }}
-                                        InputProps={{
-                                            style:
-                                                formik.touched.amount && Boolean(formik.errors.amount)
-                                                    ? { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }
-                                                    : { borderBottomLeftRadius: 8, borderBottomRightRadius: 8 },
-                                        }}
-                                    />
-
+                                            <TextField
+                                                fullWidth
+                                                id="amount"
+                                                name="amount"
+                                                placeholder="0.0"
+                                                value={formik.values.amount}
+                                                onChange={formik.handleChange}
+                                                error={formik.touched.amount && Boolean(formik.errors.amount)}
+                                                helperText={formik.touched.amount && formik.errors.amount}
+                                                sx={{ marginBottom: 2 }}
+                                                FormHelperTextProps={{
+                                                    style: styles.helperText,
+                                                }}
+                                                InputProps={{
+                                                    style:
+                                                        formik.touched.amount && Boolean(formik.errors.amount)
+                                                            ? { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }
+                                                            : { borderBottomLeftRadius: 8, borderBottomRightRadius: 8 },
+                                                }}
+                                            />
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Skeleton
+                                                sx={{ borderRadius: '8px', mb: 2 }}
+                                                variant="rectangular"
+                                                width="100%"
+                                                height={80}
+                                            />
+                                            <Skeleton
+                                                sx={{ borderRadius: '8px', mb: 2 }}
+                                                variant="rectangular"
+                                                width="100%"
+                                                height={60}
+                                            />
+                                            <Skeleton
+                                                sx={{ borderRadius: '8px', mb: 2 }}
+                                                variant="rectangular"
+                                                width="100%"
+                                                height={60}
+                                            />
+                                        </>
+                                    )}
                                     <Button
                                         disabled={!(formik.isValid && formik.dirty)}
                                         disableElevation

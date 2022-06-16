@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useState, useContext } from 'react';
 import {
     Typography,
     Card,
@@ -11,6 +11,7 @@ import {
     List,
     ListItem,
     ListItemText,
+    Skeleton,
 } from '@mui/material';
 import GridLayout from './components/GridLayout';
 import { callGetAddress } from '../minima/rpc-commands';
@@ -20,6 +21,7 @@ import QRCode from 'react-qr-code';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import { useNavigate } from 'react-router-dom';
+import { BalanceUpdates } from '../App';
 
 const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
     <Tooltip {...props} arrow classes={{ popper: className }} />
@@ -37,22 +39,28 @@ const Receive: FC = () => {
     const [isCopied, setIsCopied] = useState(false);
     const [loading, setLoading] = useState(true);
 
-    const navigate = useNavigate();
+    const balances = useContext(BalanceUpdates);
+
+    // const navigate = useNavigate();
 
     useEffect(() => {
+        // console.log('Calling addr.');
         callGetAddress()
             .then((res: any) => {
-                // console.log('getaddress', res);
-                setAddress(res.response.miniaddress);
+                console.log('getaddress', res);
+                if (res.response && res.response.miniaddress) {
+                    setAddress(res.response.miniaddress);
+                }
+                // setAddress(res.response.miniaddress);
                 setLoading(false);
             })
             .catch((err: any) => {
-                navigate('/offline');
-                setLoading(false);
+                // navigate('/offline');
+                // setLoading(false);
 
                 console.error(`${err}`);
             });
-    }, []);
+    }, [balances]);
 
     const handleCopyClick = () => {
         copy(address);
@@ -68,34 +76,50 @@ const Receive: FC = () => {
             children={
                 <Card variant="outlined">
                     <CardContent sx={{ display: 'flex', flexDirection: 'column' }}>
-                        <QRCode style={{ alignSelf: 'center' }} level="M" value={address} />
+                        {address && address.length > 0 ? (
+                            <QRCode style={{ alignSelf: 'center' }} level="M" value={address} />
+                        ) : (
+                            <Skeleton sx={{ alignSelf: 'center' }} variant="rectangular" width={260} height={260} />
+                        )}
 
                         <List>
                             <ListItem>
-                                <ListItemText
-                                    sx={{ wordBreak: 'break-word' }}
-                                    primary="Wallet Address"
-                                    secondary={address}
-                                    primaryTypographyProps={{ fontWeight: 600 }}
-                                ></ListItemText>
+                                {address && address.length > 0 ? (
+                                    <ListItemText
+                                        sx={{ wordBreak: 'break-word' }}
+                                        primary="Wallet Address"
+                                        secondary={address}
+                                        primaryTypographyProps={{ fontWeight: 600 }}
+                                    />
+                                ) : (
+                                    <ListItemText
+                                        sx={{ wordBreak: 'break-word' }}
+                                        primary={<Skeleton variant="text" width={100} />}
+                                        secondary={<Skeleton variant="text" />}
+                                        primaryTypographyProps={{ fontWeight: 600 }}
+                                    />
+                                )}
                             </ListItem>
                         </List>
-                        {/* disableHoverListener */}
-                        <BootstrapTooltip placement="top-end" title={!isCopied ? 'Copy Address' : 'Copied!'}>
-                            <ListItemIcon
-                                onClick={handleCopyClick}
-                                sx={[copyBtn, { backgroundColor: isCopied ? '#00B74A' : null }]}
-                            >
-                                {!isCopied ? (
-                                    <ContentCopyIcon sx={{ color: '#fff' }} />
-                                ) : (
-                                    <FileCopyIcon sx={{ color: '#fff' }} />
-                                )}
-                            </ListItemIcon>
-                        </BootstrapTooltip>
-                        <Typography variant="caption">
-                            Receive any Minima & network tokens with this address.
-                        </Typography>
+                        {address && address.length > 0 ? (
+                            <>
+                                <BootstrapTooltip placement="top-end" title={!isCopied ? 'Copy Address' : 'Copied!'}>
+                                    <ListItemIcon
+                                        onClick={handleCopyClick}
+                                        sx={[copyBtn, { backgroundColor: isCopied ? '#00B74A' : null }]}
+                                    >
+                                        {!isCopied ? (
+                                            <ContentCopyIcon sx={{ color: '#fff' }} />
+                                        ) : (
+                                            <FileCopyIcon sx={{ color: '#fff' }} />
+                                        )}
+                                    </ListItemIcon>
+                                </BootstrapTooltip>
+                                <Typography variant="caption">
+                                    Receive any Minima & network tokens with this address.
+                                </Typography>
+                            </>
+                        ) : null}
                     </CardContent>
                 </Card>
             }
