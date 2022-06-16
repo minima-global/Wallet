@@ -133,7 +133,7 @@ const TokenFinalConfirmationModal = ({ open, handleClose, formik }: any) => {
                         <ListItemIcon sx={{ minWidth: '20px', mr: 2 }}>
                             <Avatar sx={{ width: '48px', height: '48px', background: '#EDEDED' }} variant="rounded">
                                 {formik.values.url && formik.values.url.length ? (
-                                    <img src={formik.values.url} />
+                                    <img className="MiniTokenConfirmationModal-img" src={formik.values.url} />
                                 ) : (
                                     <QuestionMarkIcon color="primary" />
                                 )}

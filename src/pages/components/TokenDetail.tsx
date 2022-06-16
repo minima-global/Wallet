@@ -105,6 +105,7 @@ const TokenDetail = () => {
                                                     <MinimaSquareIcon className="minima-icon" />
                                                 ) : (
                                                     <Avatar
+                                                        variant="rounded"
                                                         src={
                                                             token?.tokenid === '0x00'
                                                                 ? MinimaIcon

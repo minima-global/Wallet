@@ -1,193 +1,23 @@
-import { FC, useState, useContext, useEffect } from 'react';
+import { useState } from 'react';
 import {
     Box,
-    Grid,
     Card,
     CardContent,
     TextField,
     Button,
-    Stack,
-    CardMedia,
     Typography,
-    CardActions,
     Portal,
     Snackbar,
     Alert,
     InputAdornment,
 } from '@mui/material';
-import MiniModal from '../shared/components/MiniModal';
-
-import { callCreateNFT } from '../minima/rpc-commands';
-
-/** form imports */
 import { useFormik } from 'formik';
-import { BalanceUpdates } from '../App'; // balance context
-
-import { MinimaToken } from '../types/minima';
-import AppPagination from './components/AppPagination';
-
 import * as Yup from 'yup';
-import { INSUFFICIENT } from '../minima/constants';
+import { insufficientFundsError, strToHex } from '../../../shared/functions';
+import { callCreateNFT } from '../../../minima/rpc-commands';
 
-import PreviewNFTModal from '../shared/components/PreviewNFTModal';
-import { useNavigate } from 'react-router-dom';
-import { strToHex } from '../shared/functions';
-import { hexToString } from '../shared/functions';
-
-import GridLayout from './components/GridLayout';
-
-const NFTs: FC = () => {
-    const balances = useContext(BalanceUpdates);
-    const navigate = useNavigate();
-    const [allNFTs, setAllNFTs] = useState<MinimaToken[]>([]);
-    const [page, setPage] = useState(1);
-    const COUNT_PER_PAGE = 4;
-
-    // const loading = balances.length === 0;
-    // if (loading) {
-    //     navigate('/offline');
-    // }
-
-    useEffect(() => {
-        const allNFTs: MinimaToken[] = balances.filter((b: MinimaToken) => {
-            if (typeof b.token !== 'string' && b.token.nft) {
-                return b;
-            }
-        });
-
-        setAllNFTs(allNFTs);
-    }, [balances]);
-
-    const currentPage = (page: number) => {
-        // console.log(`Setting current page number to: ${page}`);
-        setPage(page);
-    };
-
-    return (
-        <GridLayout
-            // loading={loading}
-            children={
-                <Grid container item xs={12} spacing={2}>
-                    <Grid container item xs={12} spacing={2}>
-                        <Grid item xs={12}>
-                            <Card variant="outlined">
-                                <CardContent>
-                                    <Box>
-                                        <Typography variant="h6" pb={2}>
-                                            Your Collections
-                                        </Typography>
-                                    </Box>
-
-                                    <AllNFTs nfts={allNFTs} page={page} count={COUNT_PER_PAGE} />
-                                </CardContent>
-                                <CardActions sx={{ justifyContent: 'center', display: 'flex' }}>
-                                    <AppPagination
-                                        currentPage={currentPage}
-                                        totalNFTs={allNFTs.length}
-                                        countPerPage={COUNT_PER_PAGE}
-                                    />
-                                </CardActions>
-                            </Card>
-                        </Grid>
-                    </Grid>
-
-                    <Grid item xs={12}>
-                        <CreateNFTForm />
-                    </Grid>
-                </Grid>
-            }
-        ></GridLayout>
-    );
-};
-
-interface NFT {
-    url: string;
-    name: string;
-    description: string;
-    size: number;
-}
-
-interface allProps {
-    page: number;
-    count: number;
-    nfts: MinimaToken[];
-}
-const AllNFTs = ({ page, count, nfts }: allProps) => {
-    return (
-        <Grid item container xs={12} spacing={2}>
-            {nfts.slice((page - 1) * count, page * count).map((b: MinimaToken) => {
-                return (
-                    <NFTListItem
-                        name={b.token.name}
-                        url={hexToString(b.token.url)}
-                        description={hexToString(b.token.description)}
-                        size={6}
-                        key={b.tokenid}
-                    />
-                );
-            })}
-            {nfts.length === 0 ? (
-                <Grid item xs={12} sx={{ textAlign: 'center', display: 'flex', justifyContent: 'center' }}>
-                    <Typography variant="subtitle1">Your NFT collections will appear here.</Typography>
-                </Grid>
-            ) : null}
-        </Grid>
-    );
-};
-/** Each NFT */
-const NFTListItem: FC<NFT> = ({ url, name, description, size }) => {
-    return (
-        <>
-            <Grid item xs={size}>
-                <Card sx={NFTCard} variant="outlined">
-                    <CardMedia component="img" src={url} sx={{ height: '280px' }} />
-                    <CardContent>
-                        <Stack direction="row" justifyContent={'space-between'}>
-                            <Stack>
-                                <Typography
-                                    sx={{
-                                        fontWeight: 600,
-                                        // fontSize: 12,
-                                        display: '-webkit-box',
-                                        overflow: 'hidden',
-                                        WebkitBoxOrient: 'vertical',
-                                        WebkitLineClamp: 1,
-                                    }}
-                                    variant="h6"
-                                >
-                                    {name}
-                                </Typography>
-                                <Typography
-                                    sx={{
-                                        fontWeight: 100,
-                                        // fontSize: 10,
-                                        display: '-webkit-box',
-                                        overflow: 'hidden',
-                                        WebkitBoxOrient: 'vertical',
-                                        WebkitLineClamp: 1,
-                                        textOverflow: 'ellipsis',
-                                        wordBreak: 'break-all',
-                                    }}
-                                    variant="subtitle1"
-                                >
-                                    {description}
-                                </Typography>
-                            </Stack>
-                            {/* <Stack>
-                                <Typography sx={{ fontWeight: 600, fontSize: 12 }} variant="h6">
-                                    Total
-                                </Typography>
-                                <Typography sx={{ fontWeight: 100, fontSize: 10 }} variant="subtitle1">
-                                    Subtitle
-                                </Typography>
-                            </Stack> */}
-                        </Stack>
-                    </CardContent>
-                </Card>
-            </Grid>
-        </>
-    );
-};
+import PreviewNFTModal from '../../../shared/components/PreviewNFTModal';
+import MiniModal from '../../../shared/components/MiniModal';
 
 const CreateTokenSchema = Yup.object().shape({
     name: Yup.string()
@@ -199,8 +29,8 @@ const CreateTokenSchema = Yup.object().shape({
         // .matches(/^[^\\;'"]+$/, 'Invalid characters.')
         .required('Field Required'),
 });
-/** NFT form creator */
-const CreateNFTForm: FC = () => {
+
+const CreateNFT = () => {
     const [openPreviewModal, setOpenPreviewModal] = useState(false);
     const [open, setOpen] = useState(false);
     const [modalStatus, setModalStatus] = useState('Failed');
@@ -217,6 +47,7 @@ const CreateNFTForm: FC = () => {
             name: '',
             url: '',
             description: '',
+            amount: '',
         },
         validationSchema: CreateTokenSchema,
         onSubmit: (data) => {
@@ -245,10 +76,9 @@ const CreateNFTForm: FC = () => {
                         // alert('Something went wrong, error message undefined.  Open a support ticket!');
                     }
 
-                    if (err.message !== undefined && err.message.substring(0, 20) === INSUFFICIENT) {
-                        // formik.setFieldError('amount', err.message);
-                        setErrMessage(err.message);
-                    } else {
+                    if (insufficientFundsError(err.message)) {
+                        formik.setFieldError('amount', err.message);
+                        console.error(err.message);
                         setErrMessage(err.message);
                     }
                 })
@@ -259,6 +89,7 @@ const CreateNFTForm: FC = () => {
                 });
         },
     });
+
     return (
         <>
             <Portal>
@@ -384,6 +215,8 @@ const CreateNFTForm: FC = () => {
     );
 };
 
+export default CreateNFT;
+
 const styles = {
     helperText: {
         borderBottomRightRadius: 8,
@@ -393,24 +226,3 @@ const styles = {
         paddingLeft: 8,
     },
 };
-
-const NFTCard = {
-    '&:hover': {
-        cursor: 'pointer',
-        border: '1px solid',
-        padding: '0px',
-        boxShadow: '0px 3px 1px -2px #FF7357,0px 2px 2px 0px #317aff,0px 1px 5px 0px rgba(0,0,0,0.12)',
-    },
-    height: '100%',
-};
-
-/**
- * Abstracting Grid container + items
- * 
- * const Container = props => <Grid container {...props} />;
-   const Item = props => <Grid item {...props} />;
-
-*/
-
-export default NFTs;
-export { NFTListItem };

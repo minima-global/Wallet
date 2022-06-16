@@ -50,6 +50,7 @@ body {
 
 
 /** Minima Specific Component Styling */
+.MiniModal .MuiListItemText-primary,
 .MiniListItem-typography .MuiListItemText-primary,
 .MiniListItem-typography .MuiListItemText-secondary {
     text-overflow: ellipsis;
@@ -121,6 +122,11 @@ body {
     margin-left: 16px;
     overflow: scroll;
     text-overflow: ellipsis;
+}
+
+.MiniTokenConfirmationModal-img, .MiniTokenListItem-img {
+    width: inherit;
+    height: inherit;
 }
 
 .MiniCardToken .MuiIconButton-root {
