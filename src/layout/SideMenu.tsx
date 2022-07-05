@@ -66,11 +66,11 @@ const SideMenu = ({ handleDrawerClose, handleDrawerOpen }: IProps) => {
             name: 'Create Token',
             onClick: () => navigate('/tokencreate'),
         },
-        {
-            pathname: '/nfts',
-            name: 'NFTs',
-            onClick: () => navigate('/nfts'),
-        },
+        // {
+        //     pathname: '/nfts',
+        //     name: 'NFTs',
+        //     onClick: () => navigate('/nfts'),
+        // },
     ];
 
     return (

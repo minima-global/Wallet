@@ -189,10 +189,6 @@ const FinalConfirmation = ({ open, mode, handleClose, formik, handleCloseBurn }:
                                     <Typography variant="subtitle1">
                                         You are about to split a coin/UTXO in half.
                                     </Typography>
-                                    <Typography variant="body2">
-                                        Splitting a coin will create you more outputs that can be used to create more
-                                        transactions.
-                                    </Typography>
                                 </>
                             }
                         />
