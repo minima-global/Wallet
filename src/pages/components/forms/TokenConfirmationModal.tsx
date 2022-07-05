@@ -104,12 +104,17 @@ const TokenConfirmationModal = ({ open, handleClose, handleSubmit, formik }: any
                 </Box>
             </Modal>
 
-            <TokenFinalConfirmationModal formik={formik} open={openFinal} handleClose={handleCloseFinalModal} />
+            <TokenFinalConfirmationModal
+                formik={formik}
+                open={openFinal}
+                handleCloseBurn={handleClose}
+                handleClose={handleCloseFinalModal}
+            />
         </>
     );
 };
 
-const TokenFinalConfirmationModal = ({ open, handleClose, formik }: any) => {
+const TokenFinalConfirmationModal = ({ open, handleClose, handleCloseBurn, formik }: any) => {
     return (
         <>
             <Modal
@@ -202,7 +207,8 @@ const TokenFinalConfirmationModal = ({ open, handleClose, formik }: any) => {
                                     onClick={() => {
                                         formik.handleSubmit();
 
-                                        setTimeout(() => handleClose(), 2000);
+                                        handleCloseBurn();
+                                        handleClose();
                                     }}
                                 />
                             </>

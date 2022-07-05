@@ -214,7 +214,7 @@ body {
 
 
 .center {
-    text-align: 'center';
+    text-align: center;
 }
 .break-text {
     word-break: break-all!important;
@@ -223,3 +223,32 @@ body {
     align-items: 'flex-start';
     flex-direction: 'column';
 }
+
+
+
+
+@keyframes fade-inout {
+    0%{ opacity: 1;}
+    100%{ opacity: 0;}
+  }
+  /* support for opera */
+  @-o-keyframes fade-inout{
+    0%{ opacity: 1;}
+    100%{ opacity: 0;}
+  }
+  /* support for mozila */
+  @-moz-keyframes fade-inout{
+    0%{ opacity: 1;}
+    100%{ opacity: 0;}
+  }
+  /* support for safari and chrome */
+  @-webkit-keyframes fade-inout{
+    0%{ opacity: 1;}
+    100%{ opacity: 0;}
+  }
+  .fade-in-fade-out {
+     -webkit-animation: fade-inout 1s infinite alternate;
+     -moz-animation: fade-inout 1s infinite alternate;
+     -o-animation: fade-inout 1s infinite alternate;
+      animation: fade-inout 1s infinite alternate;
+  }

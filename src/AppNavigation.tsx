@@ -1,4 +1,4 @@
-import { IconButton, Toolbar, AppBar, Grid, Drawer, Box, Container, Typography } from '@mui/material';
+import { IconButton, Toolbar, AppBar, Grid, Drawer, Box, Container, Typography, Stack } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { Routes, Route, useLocation, Navigate, useNavigate, Outlet } from 'react-router-dom';
 
@@ -15,6 +15,7 @@ import { DRAWERWIDTH } from './shared/constants';
 import SideMenu from './layout/SideMenu';
 import Offline from './pages/Offline';
 import NFTs from './pages/NFTs';
+import MiningCog from './pages/components/mining/MiningCog';
 
 export interface RouteType {
     path: string;
@@ -22,7 +23,7 @@ export interface RouteType {
     element: JSX.Element;
 }
 
-const AppNavigation = () => {
+const AppNavigation = ({ isMining }: any) => {
     const [open, setOpen] = useState(false);
     const [pageTitle, setPageTitle] = useState('Balance');
 
@@ -97,31 +98,35 @@ const AppNavigation = () => {
                         xs={12}
                         md={8}
                         item
-                        sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}
+                        sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
                     >
-                        {onDetail ? null : (
-                            <IconButton
-                                sx={{ display: { xs: 'flex', sm: 'none' }, padding: 0, marginRight: 0.5 }}
-                                color="inherit"
-                                aria-label="menu"
-                                onClick={handleDrawerOpen}
-                            >
-                                <MenuIcon />
-                            </IconButton>
-                        )}
-                        {onDetail ? (
-                            <IconButton
-                                sx={{ padding: 0, marginRight: 0.5 }}
-                                onClick={() => {
-                                    navigate(-1);
-                                }}
-                            >
-                                <ArrowBackIcon sx={{ color: '#fff' }} />
-                            </IconButton>
-                        ) : null}
-                        <Typography variant="body1" sx={{ fontWeight: '700' }}>
-                            {pageTitle}
-                        </Typography>
+                        <Stack direction="row">
+                            {onDetail ? null : (
+                                <IconButton
+                                    sx={{ display: { xs: 'flex', sm: 'none' }, padding: 0, marginRight: 0.5 }}
+                                    color="inherit"
+                                    aria-label="menu"
+                                    onClick={handleDrawerOpen}
+                                >
+                                    <MenuIcon />
+                                </IconButton>
+                            )}
+                            {onDetail ? (
+                                <IconButton
+                                    sx={{ padding: 0, marginRight: 0.5 }}
+                                    onClick={() => {
+                                        navigate(-1);
+                                    }}
+                                >
+                                    <ArrowBackIcon sx={{ color: '#fff' }} />
+                                </IconButton>
+                            ) : null}
+                            <Typography variant="body1" sx={{ fontWeight: '700' }}>
+                                {pageTitle}
+                            </Typography>
+                        </Stack>
+
+                        <MiningCog isMining={isMining} />
                     </Grid>
                     <Grid xs={0} md={2} item />
                 </Grid>

@@ -130,14 +130,19 @@ const ConfirmationModal = ({ open, handleClose, handleSubmit, formik }: any) => 
                 </Box>
             </Modal>
 
-            <FinalConfirmation formik={formik} open={openFinal} handleClose={handleCloseFinalModal} />
+            <FinalConfirmation
+                formik={formik}
+                open={openFinal}
+                handleClose={handleCloseFinalModal}
+                handleCloseBurn={handleClose}
+            />
         </>
     );
 };
 
 export default ConfirmationModal;
 
-const FinalConfirmation = ({ open, handleClose, formik }: any) => {
+const FinalConfirmation = ({ open, handleClose, formik, handleCloseBurn }: any) => {
     return (
         <>
             <Modal
@@ -212,7 +217,8 @@ const FinalConfirmation = ({ open, handleClose, formik }: any) => {
                                     onClick={() => {
                                         formik.handleSubmit();
 
-                                        setTimeout(() => handleClose(), 2000);
+                                        handleClose();
+                                        handleCloseBurn();
                                     }}
                                 />
                             </>

@@ -41,7 +41,6 @@ const TokenCreation: FC = () => {
         setOpen(false);
         setModalStatus('Failed');
     };
-    const navigate = useNavigate();
     const balances = useContext(BalanceUpdates);
 
     useEffect(() => {
@@ -86,7 +85,7 @@ const TokenCreation: FC = () => {
                     // Set Modal
                     setModalStatus('Success');
                     // Close Modals
-                    setOpenConfirmationModal(false);
+                    // setOpenConfirmationModal(false);
                     // Open Modal
                     setOpen(true);
                 })
@@ -104,7 +103,7 @@ const TokenCreation: FC = () => {
                         setErrMessage(err.message);
                     }
 
-                    setOpenConfirmationModal(false);
+                    // setOpenConfirmationModal(false);
                 })
                 .finally(() => {
                     // NO MATTER WHAT
@@ -116,7 +115,7 @@ const TokenCreation: FC = () => {
 
     return (
         <GridLayout
-            loading={loading}
+            // loading={loading}
             children={
                 <>
                     <Portal>
@@ -169,6 +168,7 @@ const TokenCreation: FC = () => {
                                 ) : (
                                     <>
                                         <TextField
+                                            disabled={formik.isSubmitting}
                                             fullWidth
                                             id="name"
                                             name="name"
@@ -189,6 +189,7 @@ const TokenCreation: FC = () => {
                                             }}
                                         ></TextField>
                                         <TextField
+                                            disabled={formik.isSubmitting}
                                             fullWidth
                                             id="amount"
                                             name="amount"
@@ -209,6 +210,7 @@ const TokenCreation: FC = () => {
                                             }}
                                         ></TextField>
                                         <TextField
+                                            disabled={formik.isSubmitting}
                                             fullWidth
                                             id="url"
                                             name="url"
@@ -220,6 +222,7 @@ const TokenCreation: FC = () => {
                                             sx={{ mb: 2 }}
                                         ></TextField>
                                         <TextField
+                                            disabled={formik.isSubmitting}
                                             fullWidth
                                             id="description"
                                             name="description"
@@ -242,14 +245,14 @@ const TokenCreation: FC = () => {
                                     </>
                                 )}
                                 <Button
-                                    disabled={!(formik.isValid && formik.dirty)}
+                                    disabled={!(formik.isValid && formik.dirty && !formik.isSubmitting)}
                                     disableElevation
                                     color="primary"
                                     variant="contained"
                                     fullWidth
                                     onClick={() => setOpenConfirmationModal(true)}
                                 >
-                                    Next
+                                    {formik.isSubmitting ? 'Please wait...' : 'Next'}
                                 </Button>
                             </form>
                         </CardContent>

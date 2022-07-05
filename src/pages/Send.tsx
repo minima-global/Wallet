@@ -22,7 +22,6 @@ import { MinimaToken } from '../types/minima';
 import MiniModal from '../shared/components/MiniModal';
 
 import { BalanceUpdates } from '../App';
-import { useNavigate } from 'react-router-dom';
 import GridLayout from './components/GridLayout';
 
 import { containsText, insufficientFundsError, isPropertyString } from '../shared/functions';
@@ -56,7 +55,7 @@ const styles = {
 
 const Send: FC = () => {
     const [errMessage, setErrMessage] = useState('');
-    const navigate = useNavigate();
+
     // Handle Modal
     const [open, setOpen] = useState(false);
     // Handle Confirmation Modal
@@ -104,16 +103,17 @@ const Send: FC = () => {
                 burn: data.burn && data.burn.length ? data.burn : 0,
                 amount: data.amount && data.amount.length ? data.amount : 0,
             };
-            console.log('Modified Data', modifyData);
+
             callSend(modifyData)
                 .then((res: any) => {
+                    console.log(res);
                     if (!res.status) {
                         throw new Error(res.error ? res.error : res.message); // TODO.. consistent key value
                     }
                     // SENT
                     formik.resetForm();
                     // Close Modals
-                    setOpenConfirmationModal(false);
+                    // setOpenConfirmationModal(false);
 
                     // Set Modal
                     setModalStatus('Success');
@@ -136,9 +136,10 @@ const Send: FC = () => {
                         setErrMessage(err.message);
                     }
 
-                    setOpenConfirmationModal(false);
+                    // setOpenConfirmationModal(false);
                 })
                 .finally(() => {
+                    // handleCloseConfirmationModal();
                     // NO MATTER WHAT
                     formik.setSubmitting(false);
                     setTimeout(() => setErrMessage(''), 2000);
@@ -175,6 +176,7 @@ const Send: FC = () => {
                                     {balances && balances.length > 0 ? (
                                         <>
                                             <Select
+                                                disabled={formik.isSubmitting}
                                                 MenuProps={{ autoFocus: false }}
                                                 sx={{ marginBottom: 2, textAlign: 'left' }}
                                                 id="tokenid"
@@ -230,6 +232,7 @@ const Send: FC = () => {
                                                 )}
                                             </Select>
                                             <TextField
+                                                disabled={formik.isSubmitting}
                                                 fullWidth
                                                 id="address"
                                                 name="address"
@@ -251,6 +254,7 @@ const Send: FC = () => {
                                             />
 
                                             <TextField
+                                                disabled={formik.isSubmitting}
                                                 fullWidth
                                                 id="amount"
                                                 name="amount"
@@ -294,14 +298,14 @@ const Send: FC = () => {
                                         </>
                                     )}
                                     <Button
-                                        disabled={!(formik.isValid && formik.dirty)}
+                                        disabled={!(formik.isValid && formik.dirty && !formik.isSubmitting)}
                                         disableElevation
                                         color="primary"
                                         variant="contained"
                                         fullWidth
                                         onClick={() => setOpenConfirmationModal(true)}
                                     >
-                                        Next
+                                        {formik.isSubmitting ? 'Please wait...' : 'Next'}
                                     </Button>
                                 </form>
                             </CardContent>
