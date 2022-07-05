@@ -4,7 +4,7 @@ import { hexToString } from '../../../shared/functions';
 
 import MinimaIcon from '../../../assets/images/minimaLogoSquare.png';
 
-const TokenListItem = ({ item, nav }: any) => {
+const TokenListItem = ({ item, nav, mode }: any) => {
     let navigate = useNavigate();
 
     return (
@@ -30,7 +30,13 @@ const TokenListItem = ({ item, nav }: any) => {
             <ListItemText
                 className="MiniListItem-typography"
                 primary={item.token.name ? item.token.name : item.token}
-                secondary={item.sendable}
+                secondary={
+                    mode === 1
+                        ? item.sendable
+                        : mode === 2
+                        ? item.coins + ` ${item.coins > 1 ? 'coins' : 'coin'} available`
+                        : null
+                }
             />
         </ListItemButton>
     );

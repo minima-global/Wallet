@@ -13,7 +13,7 @@ import {
     TextField,
 } from '@mui/material';
 
-import { ModalButtonWrapper, ModalStackedCol } from '../../../shared/components/modals/ModalWrappers';
+import { ModalButtonWrapper, ModalStackedCol, ModalStackedRow } from '../../../shared/components/modals/ModalWrappers';
 
 import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
 
@@ -27,7 +27,7 @@ const styles = {
     },
 };
 
-const ConfirmationModal = ({ open, handleClose, handleSubmit, formik }: any) => {
+const ConfirmationModal = ({ open, mode, handleClose, handleSubmit, formik }: any) => {
     const [openFinal, setOpenFinal] = useState(false);
 
     const handleCloseFinalModal = () => setOpenFinal(false);
@@ -52,22 +52,6 @@ const ConfirmationModal = ({ open, handleClose, handleSubmit, formik }: any) => 
                     </Box>
 
                     <Stack direction="column" sx={{ maxWidth: 'inherit', mt: 2, mb: 2 }}>
-                        {/* <ListItemButton>
-                            <ListItemIcon sx={{ minWidth: '20px', mr: 2 }}>
-                                <Avatar sx={{ width: '32px', height: '32px', background: '#EDEDED' }} variant="rounded">
-                                    <AlternateEmailIcon color="primary" />
-                                </Avatar>
-                            </ListItemIcon>
-                            <ListItemText
-                                sx={{
-                                    whiteSpace: 'normal',
-                                    wordBreak: 'break-all',
-                                    ' .MuiListItemText-primary': { fontFamily: 'Manrope-light', color: '#317Aff' },
-                                }}
-                                primary={formik.values.address}
-                            ></ListItemText>
-                        </ListItemButton> */}
-
                         <ModalStackedCol
                             children={
                                 <>
@@ -119,7 +103,6 @@ const ConfirmationModal = ({ open, handleClose, handleSubmit, formik }: any) => 
                                     }}
                                 />
                                 <Chip
-                                    disabled={!(formik.isValid && formik.dirty)}
                                     color="primary"
                                     label={formik.values.burn === '' ? 'Skip' : 'Next'}
                                     onClick={() => setOpenFinal(true)}
@@ -131,6 +114,7 @@ const ConfirmationModal = ({ open, handleClose, handleSubmit, formik }: any) => 
             </Modal>
 
             <FinalConfirmation
+                mode={mode}
                 formik={formik}
                 open={openFinal}
                 handleClose={handleCloseFinalModal}
@@ -142,7 +126,8 @@ const ConfirmationModal = ({ open, handleClose, handleSubmit, formik }: any) => 
 
 export default ConfirmationModal;
 
-const FinalConfirmation = ({ open, handleClose, formik, handleCloseBurn }: any) => {
+const FinalConfirmation = ({ open, mode, handleClose, formik, handleCloseBurn }: any) => {
+    console.log('MODE', mode);
     return (
         <>
             <Modal
@@ -162,32 +147,56 @@ const FinalConfirmation = ({ open, handleClose, formik, handleCloseBurn }: any) 
                         </Typography>
                     </Box>
 
-                    <Stack direction="column" mt={2}>
-                        <ListItemButton>
-                            <ListItemIcon sx={{ minWidth: '20px', mr: 2 }}>
-                                <Avatar sx={{ width: '32px', height: '32px', background: '#EDEDED' }} variant="rounded">
-                                    <AlternateEmailIcon color="primary" />
-                                </Avatar>
-                            </ListItemIcon>
-                            <ListItemText
-                                sx={{
-                                    whiteSpace: 'normal',
-                                    wordBreak: 'break-all',
-                                    ' .MuiListItemText-primary': { fontFamily: 'Manrope-light', color: '#317Aff' },
-                                }}
-                                primary={formik.values.address}
-                            ></ListItemText>
-                        </ListItemButton>
-                    </Stack>
+                    {mode === 1 ? (
+                        <>
+                            <Stack direction="column" mt={2}>
+                                <ListItemButton>
+                                    <ListItemIcon sx={{ minWidth: '20px', mr: 2 }}>
+                                        <Avatar
+                                            sx={{ width: '32px', height: '32px', background: '#EDEDED' }}
+                                            variant="rounded"
+                                        >
+                                            <AlternateEmailIcon color="primary" />
+                                        </Avatar>
+                                    </ListItemIcon>
+                                    <ListItemText
+                                        sx={{
+                                            whiteSpace: 'normal',
+                                            wordBreak: 'break-all',
+                                            ' .MuiListItemText-primary': {
+                                                fontFamily: 'Manrope-light',
+                                                color: '#317Aff',
+                                            },
+                                        }}
+                                        primary={formik.values.address}
+                                    ></ListItemText>
+                                </ListItemButton>
+                            </Stack>
 
-                    <ModalStackedCol
-                        children={
-                            <>
-                                <Typography variant="subtitle1">Amount:</Typography>
-                                <Typography variant="body2">{formik.values.amount}</Typography>
-                            </>
-                        }
-                    />
+                            <ModalStackedCol
+                                children={
+                                    <>
+                                        <Typography variant="subtitle1">Amount:</Typography>
+                                        <Typography variant="body2">{formik.values.amount}</Typography>
+                                    </>
+                                }
+                            />
+                        </>
+                    ) : mode === 2 ? (
+                        <ModalStackedRow
+                            children={
+                                <>
+                                    <Typography variant="subtitle1">
+                                        You are about to split a coin/UTXO in half.
+                                    </Typography>
+                                    <Typography variant="body2">
+                                        Splitting a coin will create you more outputs that can be used to create more
+                                        transactions.
+                                    </Typography>
+                                </>
+                            }
+                        />
+                    ) : null}
 
                     <ModalStackedCol
                         children={

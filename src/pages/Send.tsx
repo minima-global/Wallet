@@ -28,6 +28,7 @@ import { containsText, insufficientFundsError, isPropertyString } from '../share
 
 import TokenListItem from './components/tokens/TokenListItem';
 import ConfirmationModal from './components/forms/ConfirmationModal';
+import { splitCoin } from '../minima/utils';
 
 const TransferTokenSchema = Yup.object().shape({
     tokenid: Yup.string().required('Field Required'),
@@ -39,9 +40,15 @@ const TransferTokenSchema = Yup.object().shape({
     amount: Yup.string()
         .required('Field Required')
         .matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters.'),
-
     burn: Yup.string().matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters.'),
 });
+
+const CoinSplitterSchema = Yup.object().shape({
+    tokenid: Yup.string().required('Field Required'),
+    burn: Yup.string().matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters.'),
+});
+
+const validationSchema = [null, TransferTokenSchema, CoinSplitterSchema];
 
 const styles = {
     helperText: {
@@ -54,7 +61,10 @@ const styles = {
 };
 
 const Send: FC = () => {
+    console.log(`RERENDER SEND!`);
     const [errMessage, setErrMessage] = useState('');
+
+    const [mode, setMode] = useState(1);
 
     // Handle Modal
     const [open, setOpen] = useState(false);
@@ -89,14 +99,22 @@ const Send: FC = () => {
 
     const displayedOptions = useMemo(() => getFilteredBalanceList(balances, filterText), [balances, filterText]);
 
+    // change validation according to mode set
+    const dynamicValidation = useMemo(() => {
+        return validationSchema[mode];
+    }, [mode]);
+
+    // console.log('Dynamic Validation', dynamicValidation);
+
     const formik = useFormik({
         initialValues: {
+            mode: 1,
             tokenid: '0x00',
             amount: '',
             address: '',
             burn: '',
         },
-        validationSchema: TransferTokenSchema,
+        validationSchema: dynamicValidation,
         onSubmit: (data) => {
             const modifyData = {
                 ...data,
@@ -104,49 +122,110 @@ const Send: FC = () => {
                 amount: data.amount && data.amount.length ? data.amount : 0,
             };
 
-            callSend(modifyData)
-                .then((res: any) => {
-                    console.log(res);
-                    if (!res.status) {
-                        throw new Error(res.error ? res.error : res.message); // TODO.. consistent key value
-                    }
-                    // SENT
-                    formik.resetForm();
-                    // Close Modals
-                    // setOpenConfirmationModal(false);
+            if (mode === 1) {
+                // do normal value transfer
+                callSend(modifyData)
+                    .then((res: any) => {
+                        console.log(res);
+                        if (!res.status) {
+                            throw new Error(res.error ? res.error : res.message); // TODO.. consistent key value
+                        }
+                        // SENT
+                        formik.resetForm();
+                        // Close Modals
+                        // setOpenConfirmationModal(false);
 
-                    // Set Modal
-                    setModalStatus('Success');
-                    // Open Modal
-                    setOpen(true);
-                })
-                .catch((err) => {
-                    if (err === undefined || err.message === undefined) {
-                        setErrMessage('Something went wrong!  Open a Discord Support ticket for assistance.');
-                    }
+                        // Set Modal
+                        setModalStatus('Success');
+                        // Open Modal
+                        setOpen(true);
+                    })
+                    .catch((err) => {
+                        if (err === undefined || err.message === undefined) {
+                            setErrMessage('Something went wrong!  Open a Discord Support ticket for assistance.');
+                        }
 
-                    if (insufficientFundsError(err.message)) {
-                        formik.setFieldError('amount', err.message);
-                        console.error(err.message);
-                        setErrMessage(err.message);
-                    }
+                        if (insufficientFundsError(err.message)) {
+                            formik.setFieldError('amount', err.message);
+                            console.error(err.message);
+                            setErrMessage(err.message);
+                        }
 
-                    if (err.message !== undefined) {
-                        console.error(err.message);
-                        setErrMessage(err.message);
-                    }
+                        if (err.message !== undefined) {
+                            console.error(err.message);
+                            setErrMessage(err.message);
+                        }
 
-                    // setOpenConfirmationModal(false);
-                })
-                .finally(() => {
-                    // handleCloseConfirmationModal();
-                    // NO MATTER WHAT
-                    formik.setSubmitting(false);
-                    setTimeout(() => setErrMessage(''), 2000);
-                });
+                        // setOpenConfirmationModal(false);
+                    })
+                    .finally(() => {
+                        // handleCloseConfirmationModal();
+                        // NO MATTER WHAT
+                        formik.setSubmitting(false);
+                        setTimeout(() => setErrMessage(''), 2000);
+                    });
+            } else if (mode === 2) {
+                console.log(`COINSPLIT`);
+                // get token to split
+                const tkn = balances.find((v) => v.tokenid === data.tokenid);
+
+                if (tkn) {
+                    // do coin split
+                    splitCoin(tkn.tokenid, tkn.sendable, tkn.coins, modifyData.burn)
+                        .then((res: any) => {
+                            console.log(res);
+                            if (!res.status) {
+                                throw new Error(res.error ? res.error : res.message); // TODO.. consistent key value
+                            }
+                            // SENT
+                            formik.resetForm();
+                            // Close Modals
+                            // setOpenConfirmationModal(false);
+
+                            // Set Modal
+                            setModalStatus('Success');
+                            // Open Modal
+                            setOpen(true);
+                        })
+                        .catch((err) => {
+                            if (err === undefined || err.message === undefined) {
+                                setErrMessage('Something went wrong!  Open a Discord Support ticket for assistance.');
+                            }
+
+                            if (insufficientFundsError(err.message)) {
+                                formik.setFieldError('amount', err.message);
+                                console.error(err.message);
+                                setErrMessage(err.message);
+                            }
+
+                            if (err.message !== undefined) {
+                                console.error(err.message);
+                                setErrMessage(err.message);
+                            }
+
+                            // setOpenConfirmationModal(false);
+                        })
+                        .finally(() => {
+                            // handleCloseConfirmationModal();
+                            // NO MATTER WHAT
+                            formik.setSubmitting(false);
+                            setTimeout(() => setErrMessage(''), 2000);
+                        });
+                } else {
+                    setErrMessage('Token not found!  Please report this to Minidapp admin');
+                }
+            }
         },
         validateOnChange: true,
     });
+
+    // change mode
+    useMemo(() => {
+        console.log(`CHANGEMODE`, formik.values.mode);
+        console.log(`LASTMODE`, mode);
+
+        return setMode(formik.values.mode);
+    }, [formik.values.mode]);
 
     return (
         <>
@@ -154,9 +233,6 @@ const Send: FC = () => {
                 <Snackbar
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                     autoHideDuration={3000}
-                    onDurationChange={() => {
-                        console.log('Closing...');
-                    }}
                     open={errMessage.length ? true : false}
                 >
                     <Alert severity="error" sx={{ backgroundColor: 'rgb(211, 47, 47)', width: '100%', color: '#fff' }}>
@@ -175,6 +251,18 @@ const Send: FC = () => {
                                 <form onSubmit={formik.handleSubmit}>
                                     {balances && balances.length > 0 ? (
                                         <>
+                                            <Select
+                                                fullWidth
+                                                sx={{ mb: 2 }}
+                                                disabled={formik.isSubmitting}
+                                                id="send-select-mode"
+                                                name="mode"
+                                                value={formik.values.mode}
+                                                onChange={formik.handleChange}
+                                            >
+                                                <MenuItem value={1}>Value Transfer</MenuItem>
+                                                <MenuItem value={2}>Coin Split</MenuItem>
+                                            </Select>
                                             <Select
                                                 disabled={formik.isSubmitting}
                                                 MenuProps={{ autoFocus: false }}
@@ -216,12 +304,14 @@ const Send: FC = () => {
                                                             sx={{ '&:hover': { background: 'transparent' } }}
                                                             value={token.tokenid}
                                                             key={token.tokenid}
+                                                            disabled={token.sendable === '0'}
                                                         >
                                                             <TokenListItem
                                                                 value={token.tokenid}
                                                                 key={token.tokenid}
                                                                 item={token}
                                                                 nav={false}
+                                                                mode={formik.values.mode}
                                                             />
                                                         </MenuItem>
                                                     ))
@@ -231,49 +321,65 @@ const Send: FC = () => {
                                                     </Typography>
                                                 )}
                                             </Select>
-                                            <TextField
-                                                disabled={formik.isSubmitting}
-                                                fullWidth
-                                                id="address"
-                                                name="address"
-                                                placeholder="Address"
-                                                value={formik.values.address}
-                                                onChange={formik.handleChange}
-                                                error={formik.touched.address && Boolean(formik.errors.address)}
-                                                helperText={formik.touched.address && formik.errors.address}
-                                                sx={{ marginBottom: 2 }}
-                                                FormHelperTextProps={{
-                                                    style: styles.helperText,
-                                                }}
-                                                InputProps={{
-                                                    style:
-                                                        formik.touched.address && Boolean(formik.errors.address)
-                                                            ? { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }
-                                                            : { borderBottomLeftRadius: 8, borderBottomRightRadius: 8 },
-                                                }}
-                                            />
 
-                                            <TextField
-                                                disabled={formik.isSubmitting}
-                                                fullWidth
-                                                id="amount"
-                                                name="amount"
-                                                placeholder="0.0"
-                                                value={formik.values.amount}
-                                                onChange={formik.handleChange}
-                                                error={formik.touched.amount && Boolean(formik.errors.amount)}
-                                                helperText={formik.touched.amount && formik.errors.amount}
-                                                sx={{ marginBottom: 2 }}
-                                                FormHelperTextProps={{
-                                                    style: styles.helperText,
-                                                }}
-                                                InputProps={{
-                                                    style:
-                                                        formik.touched.amount && Boolean(formik.errors.amount)
-                                                            ? { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }
-                                                            : { borderBottomLeftRadius: 8, borderBottomRightRadius: 8 },
-                                                }}
-                                            />
+                                            {formik.values.mode === 1 ? (
+                                                <>
+                                                    <TextField
+                                                        disabled={formik.isSubmitting}
+                                                        fullWidth
+                                                        id="address"
+                                                        name="address"
+                                                        placeholder="Address"
+                                                        value={formik.values.address}
+                                                        onChange={formik.handleChange}
+                                                        error={formik.touched.address && Boolean(formik.errors.address)}
+                                                        helperText={formik.touched.address && formik.errors.address}
+                                                        sx={{ marginBottom: 2 }}
+                                                        FormHelperTextProps={{
+                                                            style: styles.helperText,
+                                                        }}
+                                                        InputProps={{
+                                                            style:
+                                                                formik.touched.address && Boolean(formik.errors.address)
+                                                                    ? {
+                                                                          borderBottomLeftRadius: 0,
+                                                                          borderBottomRightRadius: 0,
+                                                                      }
+                                                                    : {
+                                                                          borderBottomLeftRadius: 8,
+                                                                          borderBottomRightRadius: 8,
+                                                                      },
+                                                        }}
+                                                    />
+                                                    <TextField
+                                                        disabled={formik.isSubmitting}
+                                                        fullWidth
+                                                        id="amount"
+                                                        name="amount"
+                                                        placeholder="0.0"
+                                                        value={formik.values.amount}
+                                                        onChange={formik.handleChange}
+                                                        error={formik.touched.amount && Boolean(formik.errors.amount)}
+                                                        helperText={formik.touched.amount && formik.errors.amount}
+                                                        sx={{ marginBottom: 2 }}
+                                                        FormHelperTextProps={{
+                                                            style: styles.helperText,
+                                                        }}
+                                                        InputProps={{
+                                                            style:
+                                                                formik.touched.amount && Boolean(formik.errors.amount)
+                                                                    ? {
+                                                                          borderBottomLeftRadius: 0,
+                                                                          borderBottomRightRadius: 0,
+                                                                      }
+                                                                    : {
+                                                                          borderBottomLeftRadius: 8,
+                                                                          borderBottomRightRadius: 8,
+                                                                      },
+                                                        }}
+                                                    />
+                                                </>
+                                            ) : null}
                                         </>
                                     ) : (
                                         <>
@@ -298,7 +404,11 @@ const Send: FC = () => {
                                         </>
                                     )}
                                     <Button
-                                        disabled={!(formik.isValid && formik.dirty && !formik.isSubmitting)}
+                                        disabled={
+                                            formik.values.mode === 1
+                                                ? !(formik.isValid && formik.dirty && !formik.isSubmitting)
+                                                : formik.isSubmitting
+                                        }
                                         disableElevation
                                         color="primary"
                                         variant="contained"
@@ -307,6 +417,15 @@ const Send: FC = () => {
                                     >
                                         {formik.isSubmitting ? 'Please wait...' : 'Next'}
                                     </Button>
+
+                                    {mode === 2 ? (
+                                        <>
+                                            <Typography variant="caption">
+                                                Coin split will divide an unspent coin into two, providing you with
+                                                additional coins to use as inputs to new transactions
+                                            </Typography>
+                                        </>
+                                    ) : null}
                                 </form>
                             </CardContent>
                         </Card>
@@ -314,6 +433,7 @@ const Send: FC = () => {
                         <ConfirmationModal
                             handleClose={handleCloseConfirmationModal}
                             open={openConfirmationModal}
+                            mode={formik.values.mode}
                             formik={formik}
                         />
 
