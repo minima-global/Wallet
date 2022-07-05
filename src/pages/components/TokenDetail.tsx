@@ -75,17 +75,17 @@ const TokenDetail = () => {
     };
 
     // handle a split
-    const handleSplit = (token: MinimaToken) => {
-        splitCoin(token.tokenid, token.sendable, token.coins)
-            .then((res) => {
-                console.log(res);
-                // close Modal
-                setOpen(false);
-            })
-            .catch((err) => {
-                console.error(err);
-            });
-    };
+    // const handleSplit = (token: MinimaToken, burn: number) => {
+    //     splitCoin(token.tokenid, token.sendable, token.coins, burn)
+    //         .then((res) => {
+    //             console.log(res);
+    //             // close Modal
+    //             setOpen(false);
+    //         })
+    //         .catch((err) => {
+    //             console.error(err);
+    //         });
+    // };
 
     return (
         <>
@@ -105,6 +105,7 @@ const TokenDetail = () => {
                                                     <MinimaSquareIcon className="minima-icon" />
                                                 ) : (
                                                     <Avatar
+                                                        variant="rounded"
                                                         src={
                                                             token?.tokenid === '0x00'
                                                                 ? MinimaIcon
@@ -254,33 +255,7 @@ const TokenDetail = () => {
                                                                     {token.coins}
                                                                 </Typography>
                                                             }
-                                                        >
-                                                            <BootstrapTooltip
-                                                                disableHoverListener={
-                                                                    parseInt(token.sendable) > 0 ? false : true
-                                                                }
-                                                                placement="top-end"
-                                                                title={!copy ? 'Split Coins' : 'Split!'}
-                                                            >
-                                                                <IconButton
-                                                                    disabled={
-                                                                        parseInt(token.sendable) > 0 ? false : true
-                                                                    }
-                                                                    onClick={() => {
-                                                                        return parseInt(token.sendable) > 0
-                                                                            ? setOpen(true)
-                                                                            : null;
-                                                                    }}
-                                                                    sx={[
-                                                                        {
-                                                                            backgroundColor: copy ? '#00B74A' : null,
-                                                                        },
-                                                                    ]}
-                                                                >
-                                                                    <CallSplitIcon className="split-icon" />
-                                                                </IconButton>
-                                                            </BootstrapTooltip>
-                                                        </ListItemText>
+                                                        ></ListItemText>
                                                     </Box>
                                                 </ListItem>
                                             </List>
@@ -342,18 +317,18 @@ const TokenDetail = () => {
                 }
             />
 
-            <MiniModal
+            {/* <MiniModal
                 open={open}
                 handleClose={handleCloseSplitModal}
                 customFnc={() => {
-                    return token ? handleSplit(token) : null;
+                    //return token ? handleSplit(token) : null;
                     // handleSplit(token);
                 }}
                 executeName="Split"
                 status="Coin Split"
                 header="You are about to split your coin/UTXO in half."
                 subtitle="Splitting your coin means you do not have to wait for an unconfirmed coin to execute another transaction at the same time."
-            />
+            /> */}
         </>
     );
 };

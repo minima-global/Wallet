@@ -1,14 +1,13 @@
 {
     "name": "wallet",
-    "version": "1.0.0",
+    "version": "1.3.0",
     "private": true,
     "scripts": {
         "start": "react-scripts start",
         "build": "react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject",
-        "build-zip": "npm run build && rm wallet_202* && date=$(date +%Y_%m_%d_%H%M) && cd build && zip -r wallet_${date}.mds.zip . && mv wallet_${date}.mds.zip ../",
-        "build-mdjs": "npm run build && rm wallet_* && date=$(date +%Y_%m_%d_%H%M) && cd build && zip -r wallet_${date}.minidapp . && mv wallet_${date}.minidapp ../",
+        "build-zip": "npm run build && rm wallet_* && date=$(date +%Y_%m_%d_%H%M) && cd build && zip -r wallet_${date}.mds.zip . && mv wallet_${date}.mds.zip ../",
         "reload": "rm -r node_modules/ && npm i && npm run start",
         "mds-uninstall": "curl -X POST http://localhost:8090/mds/manage/uninstall -d '{\"port\": \"8081\"}'",
         "mds-install": "curl --form package=\"@/Users/eliasnemr/projects/v2/wallet/wallet.zip\" http://localhost:8090/mds/manage/install -v",

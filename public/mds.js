@@ -12,7 +12,7 @@ var MDS_MAIN_CALLBACK = null;
 /**
  * Main MINIMA Object for all interaction
  */
-export var MDS = {
+var MDS = {
     //RPC Host for Minima
     mainhost: '',
 
@@ -121,7 +121,7 @@ export var MDS = {
         getParams: function (parameterName) {
             var result = null,
                 tmp = [];
-            var items = window.location.search.substr(1).split('&');
+            var items = location.search.substr(1).split('&');
             for (var index = 0; index < items.length; index++) {
                 tmp = items[index].split('=');
                 //console.log("TMP:"+tmp);
@@ -146,8 +146,8 @@ var PollCounter = 0;
 var PollSeries = 0;
 function PollListener() {
     //The POLL host
-    var pollhost = MDS.mainhost + 'poll?' + 'uid=' + MDS.minidappuid;
-    var polldata = 'series=' + PollSeries + '&counter=' + PollCounter;
+    pollhost = MDS.mainhost + 'poll?' + 'uid=' + MDS.minidappuid;
+    polldata = 'series=' + PollSeries + '&counter=' + PollCounter;
 
     httpPostAsyncPoll(pollhost, polldata, function (msg) {
         //Are we on the right Series..

@@ -123,8 +123,6 @@ const Balance = () => {
                             </List>
                             {displayedOptions.length === 0 && filterText.length ? (
                                 <Typography variant="caption">Token not found</Typography>
-                            ) : displayedOptions.length === 0 && !filterText.length ? (
-                                <Typography variant="caption">Tokens not found</Typography>
                             ) : null}
                         </CardContent>
                         {filterText.length === 0 && balances.length ? (

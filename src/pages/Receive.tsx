@@ -72,7 +72,7 @@ const Receive: FC = () => {
 
     return (
         <GridLayout
-            loading={loading}
+            // loading={loading}
             children={
                 <Card variant="outlined">
                     <CardContent sx={{ display: 'flex', flexDirection: 'column' }}>

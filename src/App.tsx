@@ -7,8 +7,9 @@ import AppNavigation from './AppNavigation';
 import { MinimaToken } from './types/minima';
 import Notifications from './layout/Notifications';
 
-import { MDS } from './minima/mds';
+// import { MDS } from '../public/mds';
 import { callBalance } from './minima/rpc-commands';
+import { Alert, Snackbar } from '@mui/material';
 // Create a context provider to give balance updates to consumers in the app
 const BalanceUpdates = createContext<MinimaToken[]>([]);
 
@@ -19,6 +20,7 @@ interface AllBalance {
 
 export default function App() {
     const [myBalance, setMyBalance] = useState<AllBalance>({ prevBalance: [], newBalance: [] });
+    const [isMining, setIsMining] = useState<boolean>(false);
 
     const oldBalance = JSON.stringify(myBalance.prevBalance);
     const newBalance = JSON.stringify(myBalance.newBalance);
@@ -67,6 +69,24 @@ export default function App() {
                 case 'NEWBLOCK':
                     break;
                 case 'MINING':
+                    const isMining = msg.data.mining;
+                    const isTransaction = msg.data.txpow.body.txn.inputs.length > 0 ? true : false;
+
+                    console.log(msg.data.txpow);
+
+                    console.log('Is mining?', msg.data.mining);
+                    console.log('am i transaction?', msg.data.txpow.body.txn.inputs.length > 0);
+
+                    if (isMining && isTransaction) {
+                        console.log(`Node is mining your transaction...`);
+                        setIsMining(true);
+                    }
+
+                    if (!isMining && isTransaction) {
+                        console.log(`Node has finished mining your transaction...`);
+                        setIsMining(false);
+                    }
+
                     break;
                 default:
             }
@@ -78,7 +98,7 @@ export default function App() {
             <SnackbarProvider maxSnack={3}>
                 <CssBaseline />
                 <BalanceUpdates.Provider value={myBalance.newBalance}>
-                    <AppNavigation />
+                    <AppNavigation isMining={isMining} />
                     <Notifications showNewBalanceSnack={isDifferent}></Notifications>
                 </BalanceUpdates.Provider>
             </SnackbarProvider>

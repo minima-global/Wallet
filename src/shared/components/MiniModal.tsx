@@ -1,54 +1,48 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import Modal from '@mui/material/Modal';
-import { Box, Typography, Button } from '@mui/material';
+import { Box, Typography, Chip } from '@mui/material';
 import { MiniModalProp } from '../../types/minima';
 
-const MiniModal: FC<MiniModalProp> = (props) => {
+import { ModalButtonWrapper } from './modals/ModalWrappers';
+
+const MiniModal: FC<MiniModalProp> = ({ open, handleClose, executeName, customFnc, status, header, subtitle }: any) => {
     return (
         <Modal
-            open={props.open}
-            onClose={props.handleClose}
+            open={open}
+            onClose={handleClose}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
         >
             <Box className="MiniModal" sx={[style, { width: { xs: '90vw', sm: 400 }, minWidth: { xs: 270, sm: 370 } }]}>
                 <Box>
-                    <Typography sx={status} id="modal-modal-title" variant="h6" component="h2">
-                        {props.status}
+                    <Typography sx={statusCss} id="modal-modal-title" variant="h6" component="h2">
+                        {status}
                     </Typography>
                     <Typography sx={heading} id="modal-modal-heading" variant="h6" component="h3">
-                        {props.header}
+                        {header}
                     </Typography>
-                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                        {props.subtitle}
+                    <Typography id="modal-modal-description" sx={{ mt: 1 }}>
+                        {subtitle}
                     </Typography>
                 </Box>
-                <Box sx={buttonWrap}>
-                    <Button sx={[button, buttonCancel]} variant="text" onClick={props.handleClose}>
-                        Cancel
-                    </Button>
-                    <Button sx={button} variant="text" onClick={props.customFnc ? props.customFnc : props.handleClose}>
-                        {props.executeName ? props.executeName : 'Ok'}
-                    </Button>
-                </Box>
+                <ModalButtonWrapper
+                    children={
+                        <>
+                            <Chip sx={{ marginRight: 2 }} variant="outlined" label="Cancel" onClick={handleClose} />
+                            <Chip
+                                color="primary"
+                                label={executeName ? executeName : 'Ok'}
+                                onClick={customFnc ? customFnc : handleClose}
+                            />
+                        </>
+                    }
+                />
             </Box>
         </Modal>
     );
 };
 
 export default MiniModal;
-
-const button = {
-    '&:hover': {
-        backgroundColor: 'transparent',
-        opacity: 0.8,
-    },
-    letterSpacing: 3,
-    paddingRight: 0,
-};
-const buttonCancel = {
-    color: '#363A3F',
-};
 
 const style = {
     position: 'absolute',
@@ -65,11 +59,7 @@ const style = {
     display: 'flex',
     flexDirection: 'column',
 };
-const buttonWrap = {
-    display: 'flex',
-    justifyContent: 'flex-end',
-};
-const status = {
+const statusCss = {
     borderBottom: 0.5,
     borderColor: '#D3D3D8',
     lineHeight: '40px',
@@ -83,5 +73,5 @@ const heading = {
     fontSize: 24,
     lineHeight: '32.78px',
     letter: 1,
-    marginTop: '24px',
+    marginTop: 2,
 };

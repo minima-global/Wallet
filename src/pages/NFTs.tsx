@@ -14,6 +14,8 @@ import {
     Snackbar,
     Alert,
     InputAdornment,
+    CardHeader,
+    Chip,
 } from '@mui/material';
 import MiniModal from '../shared/components/MiniModal';
 
@@ -35,18 +37,14 @@ import { strToHex } from '../shared/functions';
 import { hexToString } from '../shared/functions';
 
 import GridLayout from './components/GridLayout';
+import NFTGrid from './components/nfts/NFTGrid';
+import NFTCard from './components/nfts/NFTCard';
 
 const NFTs: FC = () => {
     const balances = useContext(BalanceUpdates);
-    const navigate = useNavigate();
     const [allNFTs, setAllNFTs] = useState<MinimaToken[]>([]);
     const [page, setPage] = useState(1);
     const COUNT_PER_PAGE = 4;
-
-    // const loading = balances.length === 0;
-    // if (loading) {
-    //     navigate('/offline');
-    // }
 
     useEffect(() => {
         const allNFTs: MinimaToken[] = balances.filter((b: MinimaToken) => {
@@ -54,7 +52,7 @@ const NFTs: FC = () => {
                 return b;
             }
         });
-
+        console.log('All my NFTs', allNFTs);
         setAllNFTs(allNFTs);
     }, [balances]);
 
@@ -65,9 +63,44 @@ const NFTs: FC = () => {
 
     return (
         <GridLayout
-            // loading={loading}
             children={
-                <Grid container item xs={12} spacing={2}>
+                <>
+                    <Card variant="outlined">
+                        <CardHeader
+                            title={
+                                <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={1}>
+                                    <Typography variant="h6">Collections</Typography>
+                                    <Chip color="primary" label="Create"></Chip>
+                                </Stack>
+                            }
+                        />
+                        <CardContent>
+                            <Stack spacing={2}>
+                                <TextField fullWidth id="search" placeholder="Search by name" />
+
+                                <NFTGrid
+                                    children={
+                                        <>
+                                            {allNFTs.map((n) => {
+                                                return <NFTCard key={n.tokenid} NFT={n} />;
+                                            })}
+                                        </>
+                                    }
+                                />
+                            </Stack>
+                        </CardContent>
+                    </Card>
+                </>
+            }
+        ></GridLayout>
+    );
+};
+
+/**
+ * OLD NFT PAGE
+ * 
+ 
+<Grid container item xs={12} spacing={2}>
                     <Grid container item xs={12} spacing={2}>
                         <Grid item xs={12}>
                             <Card variant="outlined">
@@ -95,10 +128,8 @@ const NFTs: FC = () => {
                         <CreateNFTForm />
                     </Grid>
                 </Grid>
-            }
-        ></GridLayout>
-    );
-};
+ * 
+ */
 
 interface NFT {
     url: string;
@@ -139,7 +170,7 @@ const NFTListItem: FC<NFT> = ({ url, name, description, size }) => {
     return (
         <>
             <Grid item xs={size}>
-                <Card sx={NFTCard} variant="outlined">
+                <Card sx={NFTCardOld} variant="outlined">
                     <CardMedia component="img" src={url} sx={{ height: '280px' }} />
                     <CardContent>
                         <Stack direction="row" justifyContent={'space-between'}>
@@ -394,7 +425,7 @@ const styles = {
     },
 };
 
-const NFTCard = {
+const NFTCardOld = {
     '&:hover': {
         cursor: 'pointer',
         border: '1px solid',
@@ -410,7 +441,23 @@ const NFTCard = {
  * const Container = props => <Grid container {...props} />;
    const Item = props => <Grid item {...props} />;
 
- */
+*/
 
 export default NFTs;
 export { NFTListItem };
+
+/**
+ *
+ *
+ *
+ *
+ * @@@ NFT @@@
+ *
+ *
+ * NFT - BOOLEAN
+ * OWNER - STRING
+ * NAME - STRING
+ * DESCRIPTION - STRING
+ * URL - STRING
+ *
+ */
