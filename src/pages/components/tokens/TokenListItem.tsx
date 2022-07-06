@@ -31,7 +31,7 @@ const TokenListItem = ({ item, nav, mode }: any) => {
                 className="MiniListItem-typography"
                 primary={item.token.name ? item.token.name : item.token}
                 secondary={
-                    mode === 1
+                    mode === 1 || mode === undefined
                         ? item.sendable
                         : mode === 2
                         ? item.coins + ` ${item.coins > 1 ? 'coins' : 'coin'} available`
