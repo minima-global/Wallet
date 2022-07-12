@@ -3,10 +3,10 @@ import { INSUFFICIENT } from './../minima/constants';
 
 export async function copyTextToClipboard(text: string) {
     if ('clipboard' in navigator) {
-        console.log('using clipboard');
+        // console.log('using clipboard');
         return await navigator.clipboard.writeText(text);
     } else {
-        console.log('using document.execCommand');
+        // console.log('using document.execCommand');
         return copy(text);
     }
 }

@@ -20,6 +20,7 @@ export const callBalance = () => {
     return req(`balance`);
 }
 
+
 export const req = (command: string) => {
     
     return new Promise((resolve) => {

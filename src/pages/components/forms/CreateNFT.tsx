@@ -51,7 +51,7 @@ const CreateNFT = () => {
         },
         validationSchema: CreateTokenSchema,
         onSubmit: (data) => {
-            console.log(`Minting NFT ${data.name}`);
+            // console.log(`Minting NFT ${data.name}`);
             const customNFT = {
                 name: data.name,
                 url: strToHex(data.url),
@@ -96,9 +96,6 @@ const CreateNFT = () => {
                 <Snackbar
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                     autoHideDuration={3000}
-                    onDurationChange={() => {
-                        console.log('Closing...');
-                    }}
                     open={errMessage.length ? true : false}
                 >
                     <Alert severity="error" sx={{ backgroundColor: 'rgb(211, 47, 47)', width: '100%', color: '#fff' }}>

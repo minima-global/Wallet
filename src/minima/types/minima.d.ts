@@ -1,3 +1,19 @@
+interface RewardIncentiveCashUserRewards {
+  dailyRewards: number;
+  previousRewards: number;
+  communityRewards: number;
+  inviterRewards: number;
+}
+interface DetailIncentiveCashUserRewards {
+  inviteCode?: string;
+  lastPing?: string;
+  rewards?: RewardIncentiveCashUserRewards;
+}
+export interface IncentiveCashUserRewards {
+  uid: string;
+  details?: DetailIncentiveCashUserRewards;
+}
+
 interface Status {
   version: string;
   devices: number;

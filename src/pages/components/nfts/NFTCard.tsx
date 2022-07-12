@@ -2,7 +2,7 @@ import { Card, CardMedia, CardContent, Typography } from '@mui/material';
 import { ModalStackedCol, ModalStackedRow } from '../../../shared/components/modals/ModalWrappers';
 import { hexToString } from '../../../shared/functions';
 const NFTCard = ({ NFT }: any) => {
-    console.log('NFT', NFT);
+    // console.log('NFT', NFT);
     return (
         <Card variant="outlined">
             <CardMedia src={hexToString(NFT.token.url)} component="img" />

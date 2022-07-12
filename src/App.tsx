@@ -7,9 +7,8 @@ import AppNavigation from './AppNavigation';
 import { MinimaToken } from './types/minima';
 import Notifications from './layout/Notifications';
 
-// import { MDS } from '../public/mds';
 import { callBalance } from './minima/rpc-commands';
-import { Alert, Snackbar } from '@mui/material';
+
 // Create a context provider to give balance updates to consumers in the app
 const BalanceUpdates = createContext<MinimaToken[]>([]);
 
@@ -29,16 +28,12 @@ export default function App() {
     if (oldBalance !== '[]') {
         isDifferent = oldBalance !== newBalance;
     }
-    // console.log(`Has balanced changed? `, isDifferent);
-    // console.log('Balance', myBalance);
 
     // call and store balance with timer
     const callAndStoreBalance = useCallback((time: number) => {
         setTimeout(() => {
-            // console.log('APP.tsx Calling balance!');
             callBalance()
                 .then((data: any) => {
-                    // console.log(`Myblanace data`, data);
                     setMyBalance((oldVal) => {
                         return { prevBalance: oldVal.newBalance, newBalance: data.response };
                     });
@@ -50,8 +45,11 @@ export default function App() {
     }, []);
 
     useEffect(() => {
+        // MDS.DEBUG_HOST = '127.0.0.1';
+        // MDS.DEBUG_PORT = 9003;
+        // MDS.DEBUG_MINIDAPPID = '0x3D520CF721D06484C18AF669442CD28B3DDED1A2516B263BF58398AA66F32C31';
+
         MDS.init((msg: any) => {
-            // console.log(msg);
             const evt = msg.event;
 
             switch (evt) {
@@ -72,18 +70,18 @@ export default function App() {
                     const isMining = msg.data.mining;
                     const isTransaction = msg.data.txpow.body.txn.inputs.length > 0 ? true : false;
 
-                    console.log(msg.data.txpow);
+                    // console.log(msg.data.txpow);
 
-                    console.log('Is mining?', msg.data.mining);
-                    console.log('am i transaction?', msg.data.txpow.body.txn.inputs.length > 0);
+                    // console.log('Is mining?', msg.data.mining);
+                    // console.log('am i transaction?', msg.data.txpow.body.txn.inputs.length > 0);
 
                     if (isMining && isTransaction) {
-                        console.log(`Node is mining your transaction...`);
+                        // console.log(`Node is mining your transaction...`);
                         setIsMining(true);
                     }
 
                     if (!isMining && isTransaction) {
-                        console.log(`Node has finished mining your transaction...`);
+                        // console.log(`Node has finished mining your transaction...`);
                         setIsMining(false);
                     }
 

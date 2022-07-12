@@ -127,7 +127,7 @@ const ConfirmationModal = ({ open, mode, handleClose, handleSubmit, formik }: an
 export default ConfirmationModal;
 
 const FinalConfirmation = ({ open, mode, handleClose, formik, handleCloseBurn }: any) => {
-    console.log('MODE', mode);
+    // console.log('MODE', mode);
     return (
         <>
             <Modal

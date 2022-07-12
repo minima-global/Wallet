@@ -61,7 +61,7 @@ const styles = {
 };
 
 const Send: FC = () => {
-    console.log(`RERENDER SEND!`);
+    // console.log(`RERENDER SEND!`);
     const [errMessage, setErrMessage] = useState('');
 
     const [mode, setMode] = useState(1);
@@ -126,7 +126,7 @@ const Send: FC = () => {
                 // do normal value transfer
                 callSend(modifyData)
                     .then((res: any) => {
-                        console.log(res);
+                        // console.log(res);
                         if (!res.status) {
                             throw new Error(res.error ? res.error : res.message); // TODO.. consistent key value
                         }
@@ -165,7 +165,7 @@ const Send: FC = () => {
                         setTimeout(() => setErrMessage(''), 2000);
                     });
             } else if (mode === 2) {
-                console.log(`COINSPLIT`);
+                // console.log(`COINSPLIT`);
                 // get token to split
                 const tkn = balances.find((v) => v.tokenid === data.tokenid);
 
@@ -173,7 +173,7 @@ const Send: FC = () => {
                     // do coin split
                     splitCoin(tkn.tokenid, tkn.sendable, tkn.coins, modifyData.burn)
                         .then((res: any) => {
-                            console.log(res);
+                            // console.log(res);
                             if (!res.status) {
                                 throw new Error(res.error ? res.error : res.message); // TODO.. consistent key value
                             }
@@ -221,8 +221,8 @@ const Send: FC = () => {
 
     // change mode
     useMemo(() => {
-        console.log(`CHANGEMODE`, formik.values.mode);
-        console.log(`LASTMODE`, mode);
+        // console.log(`CHANGEMODE`, formik.values.mode);
+        // console.log(`LASTMODE`, mode);
 
         return setMode(formik.values.mode);
     }, [formik.values.mode]);

@@ -122,9 +122,6 @@ const TokenCreation: FC = () => {
                         <Snackbar
                             anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                             autoHideDuration={3000}
-                            onDurationChange={() => {
-                                console.log('Closing...');
-                            }}
                             open={errMessage.length ? true : false}
                         >
                             <Alert

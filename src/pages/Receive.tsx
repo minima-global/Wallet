@@ -47,7 +47,7 @@ const Receive: FC = () => {
         // console.log('Calling addr.');
         callGetAddress()
             .then((res: any) => {
-                console.log('getaddress', res);
+                // console.log('getaddress', res);
                 if (res.response && res.response.miniaddress) {
                     setAddress(res.response.miniaddress);
                 }

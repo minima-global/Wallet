@@ -116,10 +116,7 @@ const SideMenu = ({ handleDrawerClose, handleDrawerOpen }: IProps) => {
                     })}
                 </List>
             </Grid>
-            <Stack sx={{ padding: '24px 8px' }} justifyContent="space-around" direction="row">
-                <Typography variant="caption" sx={{ letterSpacing: 1 }}>
-                    Powered by
-                </Typography>
+            <Stack sx={{ padding: '16px 16px' }} direction="row">
                 <LandscapeLogo className="minima-landscape" />
             </Stack>
         </Grid>
