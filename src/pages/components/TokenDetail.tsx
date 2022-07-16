@@ -26,14 +26,12 @@ import { ReactComponent as MinimaSquareIcon } from '../../assets/images/minimaLo
 
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
-import CallSplitIcon from '@mui/icons-material/CallSplit';
-import { BalanceUpdates } from '../../App';
 
 import { copy as copyText, hexToString } from '../../shared/functions';
 import GridLayout from './GridLayout';
 
-import { splitCoin } from '../../minima/utils';
-import MiniModal from '../../shared/components/MiniModal';
+import { useAppSelector } from '../../minima/redux/hooks';
+import { selectBalance } from '../../minima/redux/slices/balanceSlice';
 
 const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
     <Tooltip {...props} arrow classes={{ popper: className }} />
@@ -53,15 +51,12 @@ const TokenDetail = () => {
 
     // open Split Modal
     const [open, setOpen] = useState(false);
-    const handleCloseSplitModal = () => {
-        return open ? setOpen(false) : null;
-    };
 
     // Copy Feature
     const [copy, setCopy] = useState<boolean>(false);
 
     // balances context
-    const balances = useContext(BalanceUpdates);
+    const balances = useAppSelector(selectBalance);
     const token = balances.find((b: MinimaToken) => b.tokenid === tokenid);
     if (typeof token === 'undefined') {
         console.error('can not find token ' + tokenid);
@@ -73,19 +68,6 @@ const TokenDetail = () => {
         setCopy(true);
         setTimeout(() => setCopy(false), 1000);
     };
-
-    // handle a split
-    // const handleSplit = (token: MinimaToken, burn: number) => {
-    //     splitCoin(token.tokenid, token.sendable, token.coins, burn)
-    //         .then((res) => {
-    //             console.log(res);
-    //             // close Modal
-    //             setOpen(false);
-    //         })
-    //         .catch((err) => {
-    //             console.error(err);
-    //         });
-    // };
 
     return (
         <>

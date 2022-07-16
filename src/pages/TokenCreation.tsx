@@ -1,16 +1,17 @@
-import { FC, useState, useEffect, useContext } from 'react';
-import { Card, CardContent, TextField, Button, Portal, Snackbar, Alert, InputAdornment, Skeleton } from '@mui/material';
+import { FC, useState, useEffect } from 'react';
+import { Card, CardContent, TextField, Button, InputAdornment, Skeleton } from '@mui/material';
 import MiniModal from '../shared/components/MiniModal';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { callStatus, callToken } from '../minima/rpc-commands';
-import { INSUFFICIENT } from '../minima/constants';
-import { useNavigate } from 'react-router-dom';
 import { insufficientFundsError, strToHex } from '../shared/functions';
 
 import GridLayout from './components/GridLayout';
 import TokenConfirmationModal from './components/forms/TokenConfirmationModal';
 import { BalanceUpdates } from '../App';
+import { useAppDispatch, useAppSelector } from '../minima/redux/hooks';
+import { toggleNotification } from '../minima/redux/slices/notificationSlice';
+import { selectBalance } from '../minima/redux/slices/balanceSlice';
 
 const CreateTokenSchema = Yup.object().shape({
     name: Yup.string()
@@ -27,6 +28,7 @@ const CreateTokenSchema = Yup.object().shape({
 });
 
 const TokenCreation: FC = () => {
+    const dispatch = useAppDispatch();
     // Handle Confirmation Modal
     const [openConfirmationModal, setOpenConfirmationModal] = useState(false);
     const handleCloseConfirmationModal = () => setOpenConfirmationModal(false);
@@ -35,13 +37,13 @@ const TokenCreation: FC = () => {
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(true);
     const [modalStatus, setModalStatus] = useState('Failed');
-    const [errMessage, setErrMessage] = useState('');
+
     const handleOpen = () => setOpen(true);
     const handleClose = () => {
         setOpen(false);
         setModalStatus('Failed');
     };
-    const balances = useContext(BalanceUpdates);
+    const balances = useAppSelector(selectBalance);
 
     useEffect(() => {
         callStatus()
@@ -51,7 +53,6 @@ const TokenCreation: FC = () => {
             .catch((err) => {
                 console.error(err);
                 setLoading(false);
-                // navigate('/offline');
             });
     }, []);
 
@@ -91,7 +92,13 @@ const TokenCreation: FC = () => {
                 })
                 .catch((err: any) => {
                     if (err === undefined || err.message === undefined) {
-                        setErrMessage('Something went wrong!  Open a Discord Support ticket for assistance.');
+                        dispatch(
+                            toggleNotification(
+                                'Something went wrong!  Open a Discord Support ticket for assistance.',
+                                'error',
+                                'error'
+                            )
+                        );
                     }
 
                     if (insufficientFundsError(err.message)) {
@@ -100,7 +107,7 @@ const TokenCreation: FC = () => {
 
                     if (err.message !== undefined) {
                         console.error(err.message);
-                        setErrMessage(err.message);
+                        dispatch(toggleNotification(err.message, 'error', 'error'));
                     }
 
                     // setOpenConfirmationModal(false);
@@ -108,7 +115,6 @@ const TokenCreation: FC = () => {
                 .finally(() => {
                     // NO MATTER WHAT
                     formik.setSubmitting(false);
-                    setTimeout(() => setErrMessage(''), 2500);
                 });
         },
     });
@@ -118,20 +124,6 @@ const TokenCreation: FC = () => {
             // loading={loading}
             children={
                 <>
-                    <Portal>
-                        <Snackbar
-                            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                            autoHideDuration={3000}
-                            open={errMessage.length ? true : false}
-                        >
-                            <Alert
-                                severity="error"
-                                sx={{ backgroundColor: 'rgb(211, 47, 47)', width: '100%', color: '#fff' }}
-                            >
-                                {errMessage}
-                            </Alert>
-                        </Snackbar>
-                    </Portal>
                     <Card variant="outlined">
                         <CardContent>
                             <form onSubmit={formik.handleSubmit}>

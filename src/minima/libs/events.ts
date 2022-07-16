@@ -1,4 +1,8 @@
+import { callAndStoreBalance } from './../redux/slices/balanceSlice';
+import { useAppDispatch } from './../redux/hooks';
 import { Txpow } from "../types/minima";
+
+import { store} from '../redux/store';
 
 ////////////// response interfaces //////////
 interface InitResponse {
@@ -80,21 +84,25 @@ const initializeMinima = () => {
 
   // MDS.DEBUG_HOST = "127.0.0.1";
   // MDS.DEBUG_PORT = 9003;
-  // MDS.DEBUG_MINIDAPPID = '0xCEA23BCDE5F30AC9C13408FD3AF905AE837EA1D3CFC9EA43047AE3DDC58586ED'
+  // MDS.DEBUG_MINIDAPPID = '0xF26FB35B794F48949E38ACF247DB88B472F1C7EB7CB7186D60C8BBAD41907615'
 
   MDS.init((nodeEvent: InitResponse | MiningResponse | NewBlockResponse | MinimaLogResponse | NewBalanceResponse | MaximaResponse) => {
 
       switch (nodeEvent.event) {
           case 'inited':
-              whenInit()
+              
+              // will have to dispatch from here..
+              // whenInit()
+
+              store.dispatch(callAndStoreBalance(0));
               break;
           case 'NEWBLOCK':
               const newBlockData = nodeEvent.data
               whenNewBlock(newBlockData);
               break;
           case 'MINING':
-              const minimgData = nodeEvent.data
-              whenMining(minimgData);
+              const miningData = nodeEvent.data
+              whenMining(miningData);
               break;
           case 'MAXIMA':
               const maximaData = nodeEvent.data
@@ -115,7 +123,7 @@ const initializeMinima = () => {
 };
 
 // Do registration
-// initializeMinima();
+initializeMinima();
 
 ///////////////////////// application registers custom callbacks ///////////////////////
 

@@ -17,12 +17,14 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { useNavigate } from 'react-router-dom';
 import { BalanceUpdates } from '../App';
+import { useAppSelector } from '../minima/redux/hooks';
+import { selectBalance } from '../minima/redux/slices/balanceSlice';
 
 const Status = () => {
     const [status, setStatus] = useState<StatusType>();
     const [loading, setLoading] = useState(true);
 
-    const balances = useContext(BalanceUpdates);
+    const balances = useAppSelector(selectBalance);
 
     // const navigate = useNavigate();
 
