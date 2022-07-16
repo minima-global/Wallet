@@ -329,4 +329,3 @@ export interface MiniModalProp {
   customFnc?: any;
   executeName?: string;
 }
-

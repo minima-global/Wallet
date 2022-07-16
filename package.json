@@ -1,6 +1,6 @@
 {
     "name": "wallet",
-    "version": "1.6.2",
+    "version": "1.7.0",
     "private": true,
     "scripts": {
         "start": "react-scripts start",
@@ -23,12 +23,13 @@
         ]
     },
     "dependencies": {
-        "@minima-global/mds-api": "latest",
         "@emotion/react": "^11.7.1",
         "@emotion/styled": "^11.6.0",
+        "@minima-global/mds-api": "latest",
         "@mui/icons-material": "^5.3.1",
         "@mui/material": "^5.3.1",
         "@mui/system": "^5.3.0",
+        "@reduxjs/toolkit": "^1.8.3",
         "@testing-library/jest-dom": "^5.16.1",
         "@testing-library/react": "^12.1.2",
         "@testing-library/user-event": "^13.5.0",
@@ -43,6 +44,7 @@
         "react": "^17.0.2",
         "react-dom": "^17.0.2",
         "react-qr-code": "^2.0.3",
+        "react-redux": "^8.0.2",
         "react-router-dom": "^6.2.1",
         "react-scripts": "5.0.0",
         "typescript": "^4.5.5",
@@ -66,5 +68,8 @@
         "semi": true,
         "singleQuote": true,
         "printWidth": 120
+    },
+    "devDependencies": {
+        "@redux-devtools/core": "^3.13.1"
     }
 }

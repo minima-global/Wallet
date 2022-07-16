@@ -4,6 +4,9 @@ import { HashRouter } from 'react-router-dom';
 import App from './App';
 import './index.css';
 
+import { store } from './minima/redux/store';
+import { Provider } from 'react-redux';
+
 /*
  * HashRouter to allow us to run the index.html directly from the file system.
  *
@@ -14,9 +17,11 @@ import './index.css';
 const Main = () => {
     return (
         <React.StrictMode>
-            <HashRouter>
-                <App />
-            </HashRouter>
+            <Provider store={store}>
+                <HashRouter>
+                    <App />
+                </HashRouter>
+            </Provider>
         </React.StrictMode>
     );
 };

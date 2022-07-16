@@ -29,6 +29,9 @@ import { containsText, insufficientFundsError, isPropertyString } from '../share
 import TokenListItem from './components/tokens/TokenListItem';
 import ConfirmationModal from './components/forms/ConfirmationModal';
 import { splitCoin } from '../minima/utils';
+import { useAppDispatch, useAppSelector } from '../minima/redux/hooks';
+import { selectBalance } from '../minima/redux/slices/balanceSlice';
+import { toggleNotification } from '../minima/redux/slices/notificationSlice';
 
 const TransferTokenSchema = Yup.object().shape({
     tokenid: Yup.string().required('Field Required'),
@@ -61,8 +64,7 @@ const styles = {
 };
 
 const Send: FC = () => {
-    // console.log(`RERENDER SEND!`);
-    const [errMessage, setErrMessage] = useState('');
+    const dispatch = useAppDispatch();
 
     const [mode, setMode] = useState(1);
 
@@ -95,7 +97,8 @@ const Send: FC = () => {
         );
     };
 
-    const balances = useContext(BalanceUpdates);
+    // const balances = useContext(BalanceUpdates);
+    const balances = useAppSelector(selectBalance);
 
     const displayedOptions = useMemo(() => getFilteredBalanceList(balances, filterText), [balances, filterText]);
 
@@ -142,18 +145,24 @@ const Send: FC = () => {
                     })
                     .catch((err) => {
                         if (err === undefined || err.message === undefined) {
-                            setErrMessage('Something went wrong!  Open a Discord Support ticket for assistance.');
+                            dispatch(
+                                toggleNotification(
+                                    'Something went wrong!  Open a Discord Support ticket for assistance.',
+                                    'error',
+                                    'error'
+                                )
+                            );
                         }
 
                         if (insufficientFundsError(err.message)) {
                             formik.setFieldError('amount', err.message);
                             console.error(err.message);
-                            setErrMessage(err.message);
+                            dispatch(toggleNotification(err.message, 'error', 'error'));
                         }
 
                         if (err.message !== undefined) {
                             console.error(err.message);
-                            setErrMessage(err.message);
+                            dispatch(toggleNotification(err.message, 'error', 'error'));
                         }
 
                         // setOpenConfirmationModal(false);
@@ -162,7 +171,6 @@ const Send: FC = () => {
                         // handleCloseConfirmationModal();
                         // NO MATTER WHAT
                         formik.setSubmitting(false);
-                        setTimeout(() => setErrMessage(''), 2000);
                     });
             } else if (mode === 2) {
                 // console.log(`COINSPLIT`);
@@ -189,18 +197,27 @@ const Send: FC = () => {
                         })
                         .catch((err) => {
                             if (err === undefined || err.message === undefined) {
-                                setErrMessage('Something went wrong!  Open a Discord Support ticket for assistance.');
+                                const balanceNotification = {
+                                    message: 'New balance update',
+                                    severity: 'info',
+                                    type: 'info',
+                                };
+                                dispatch(
+                                    toggleNotification(
+                                        balanceNotification.message,
+                                        balanceNotification.severity,
+                                        balanceNotification.type
+                                    )
+                                );
                             }
 
                             if (insufficientFundsError(err.message)) {
                                 formik.setFieldError('amount', err.message);
                                 console.error(err.message);
-                                setErrMessage(err.message);
                             }
 
                             if (err.message !== undefined) {
                                 console.error(err.message);
-                                setErrMessage(err.message);
                             }
 
                             // setOpenConfirmationModal(false);
@@ -209,10 +226,11 @@ const Send: FC = () => {
                             // handleCloseConfirmationModal();
                             // NO MATTER WHAT
                             formik.setSubmitting(false);
-                            setTimeout(() => setErrMessage(''), 2000);
                         });
                 } else {
-                    setErrMessage('Token not found!  Please report this to Minidapp admin');
+                    dispatch(
+                        toggleNotification('Token not found!  Please open a Discord support ticket', 'error', 'error')
+                    );
                 }
             }
         },
@@ -229,7 +247,7 @@ const Send: FC = () => {
 
     return (
         <>
-            <Portal>
+            {/* <Portal>
                 <Snackbar
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                     autoHideDuration={3000}
@@ -239,7 +257,7 @@ const Send: FC = () => {
                         {errMessage}
                     </Alert>
                 </Snackbar>
-            </Portal>
+            </Portal> */}
 
             <GridLayout
                 // loading={loading}

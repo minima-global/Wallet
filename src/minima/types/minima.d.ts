@@ -93,6 +93,7 @@ interface NetworkPeer {
 
 interface MinimaToken {
   token: string & CustomTokenJson;
+  coin: string;
   tokenid: string;
   confirmed: string;
   unconfirmed: string;

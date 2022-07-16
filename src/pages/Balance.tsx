@@ -10,6 +10,8 @@ import GridLayout from './components/GridLayout';
 import { isPropertyString, containsText } from '../shared/functions';
 
 import TokenListItem from './components/tokens/TokenListItem';
+import { useAppSelector } from '../minima/redux/hooks';
+import { selectBalance } from '../minima/redux/slices/balanceSlice';
 
 const Balance = () => {
     const navigate = useNavigate();
@@ -28,7 +30,8 @@ const Balance = () => {
         );
     };
 
-    const balances = useContext(BalanceUpdates);
+    // const balances = useContext(BalanceUpdates);
+    const balances = useAppSelector(selectBalance);
     const displayedOptions = useMemo(() => getFilteredBalanceList(balances, filterText), [balances, filterText]);
     // const loading = balances.length === 0;
     // if (loading) {
