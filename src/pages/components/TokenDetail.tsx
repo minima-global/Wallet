@@ -1,6 +1,5 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { MinimaToken } from '../../types/minima';
 import {
     Box,
     Card,
@@ -31,7 +30,7 @@ import { copy as copyText, hexToString } from '../../shared/functions';
 import GridLayout from './GridLayout';
 
 import { useAppSelector } from '../../minima/redux/hooks';
-import { selectBalance } from '../../minima/redux/slices/balanceSlice';
+import { selectTokenWithID } from '../../minima/redux/slices/balanceSlice';
 
 const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
     <Tooltip {...props} arrow classes={{ popper: className }} />
@@ -49,19 +48,16 @@ const TokenDetail = () => {
 
     const [enlargenCover, setEnlargenCover] = useState(false);
 
-    // open Split Modal
-    const [open, setOpen] = useState(false);
-
     // Copy Feature
     const [copy, setCopy] = useState<boolean>(false);
 
-    // balances context
-    const balances = useAppSelector(selectBalance);
-    const token = balances.find((b: MinimaToken) => b.tokenid === tokenid);
+    // const token = balances.find((b: MinimaToken) => b.tokenid === tokenid);
+    const token = useAppSelector(selectTokenWithID(typeof tokenid !== 'undefined' ? tokenid : ''));
+
     if (typeof token === 'undefined') {
         console.error('can not find token ' + tokenid);
     }
-    const loading = balances.length === 0;
+    const loading = typeof token === 'undefined';
 
     const handleCopyBtn = (text: string) => {
         copyText(text);

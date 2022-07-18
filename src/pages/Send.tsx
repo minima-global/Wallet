@@ -30,7 +30,7 @@ import TokenListItem from './components/tokens/TokenListItem';
 import ConfirmationModal from './components/forms/ConfirmationModal';
 import { splitCoin } from '../minima/utils';
 import { useAppDispatch, useAppSelector } from '../minima/redux/hooks';
-import { selectBalance } from '../minima/redux/slices/balanceSlice';
+import { selectBalance, selectBalanceFilter } from '../minima/redux/slices/balanceSlice';
 import { toggleNotification } from '../minima/redux/slices/notificationSlice';
 
 const TransferTokenSchema = Yup.object().shape({
@@ -88,19 +88,12 @@ const Send: FC = () => {
     }
 
     const [filterText, setFilterText] = useState('');
-    const getFilteredBalanceList = (arr: MinimaToken[], filterText: string) => {
-        return arr.filter(
-            (opt: MinimaToken) =>
-                (isPropertyString(opt.token) && containsText(opt.token, filterText)) ||
-                (!isPropertyString(opt.token) && containsText(opt.token.name, filterText)) ||
-                (isPropertyString(opt.tokenid) && containsText(opt.tokenid, filterText))
-        );
-    };
+    const getFilteredBalanceList = useAppSelector(selectBalanceFilter(filterText));
 
     // const balances = useContext(BalanceUpdates);
     const balances = useAppSelector(selectBalance);
 
-    const displayedOptions = useMemo(() => getFilteredBalanceList(balances, filterText), [balances, filterText]);
+    // const displayedOptions = useMemo(() => getFilteredBalanceList(balances, filterText), [balances, filterText]);
 
     // change validation according to mode set
     const dynamicValidation = useMemo(() => {
@@ -316,8 +309,8 @@ const Send: FC = () => {
                                                         }}
                                                     />
                                                 </ListSubheader>
-                                                {displayedOptions.length ? (
-                                                    displayedOptions.map((token: MinimaToken) => (
+                                                {getFilteredBalanceList.length ? (
+                                                    getFilteredBalanceList.map((token: MinimaToken) => (
                                                         <MenuItem
                                                             sx={{ '&:hover': { background: 'transparent' } }}
                                                             value={token.tokenid}

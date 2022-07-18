@@ -1,3 +1,4 @@
+import { isPropertyString, containsText } from './../../../shared/functions';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { MinimaToken } from './../../../types/minima/index';
 import { AppThunk, RootState } from '../store';
@@ -46,3 +47,21 @@ export default balanceSlice.reducer;
 export const selectBalance = (state: RootState): MinimaToken[] => {
   return state.balance.funds;
 };
+
+// Return token
+export const selectTokenWithID = (id: string) => (state: RootState): MinimaToken | undefined => {
+  return state.balance.funds.find((b: MinimaToken) => b.tokenid === id);
+};
+
+
+// Return filtered list
+export const selectBalanceFilter = (filterText: string) => (state: RootState): MinimaToken[] => {
+    return state.balance.funds.filter(
+        (opt: MinimaToken) =>
+            (isPropertyString(opt.token) && containsText(opt.token, filterText)) ||
+            (!isPropertyString(opt.token) && containsText(opt.token.name, filterText)) ||
+            (isPropertyString(opt.tokenid) && containsText(opt.tokenid, filterText))
+    );
+};
+
+
