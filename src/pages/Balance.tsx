@@ -1,9 +1,8 @@
-import { useContext, useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { List, Typography, TextField, Card, CardContent, CardActions, CardHeader, Skeleton } from '@mui/material';
 
 import { useNavigate } from 'react-router-dom';
 import { MinimaToken } from '../types/minima';
-// import { BalanceUpdates } from '../App';
 import AppPagination from './components/AppPagination';
 import GridLayout from './components/GridLayout';
 
@@ -14,7 +13,6 @@ import { useAppSelector } from '../minima/redux/hooks';
 import { selectBalance } from '../minima/redux/slices/balanceSlice';
 
 const Balance = () => {
-    const navigate = useNavigate();
     const [filterText, setFilterText] = useState('');
 
     // pagination
@@ -33,10 +31,6 @@ const Balance = () => {
     // const balances = useContext(BalanceUpdates);
     const balances = useAppSelector(selectBalance);
     const displayedOptions = useMemo(() => getFilteredBalanceList(balances, filterText), [balances, filterText]);
-    // const loading = balances.length === 0;
-    // if (loading) {
-    //     navigate('/offline');
-    // }
 
     function handleInputChange(event: any) {
         const value = event.target.value;
