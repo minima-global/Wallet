@@ -16,7 +16,7 @@ import { callStatus } from '../minima/rpc-commands';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { useNavigate } from 'react-router-dom';
-import { BalanceUpdates } from '../App';
+// import { BalanceUpdates } from '../App';
 import { useAppSelector } from '../minima/redux/hooks';
 import { selectBalance } from '../minima/redux/slices/balanceSlice';
 

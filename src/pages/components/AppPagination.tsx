@@ -6,8 +6,6 @@ interface iProps {
     countPerPage: number;
 }
 const AppPagination = ({ currentPage, totalNFTs, countPerPage }: iProps) => {
-    // const COUNT_PER_PAGE = 4;
-
     const handleChange = (event: any, value: number) => {
         currentPage(value);
     };

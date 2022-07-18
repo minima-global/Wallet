@@ -7,20 +7,12 @@ import AppNavigation from './AppNavigation';
 import { MinimaToken } from './types/minima';
 import Notifications from './layout/Notifications';
 
-import { callBalance } from './minima/rpc-commands';
-
-import { useAppDispatch, useAppSelector } from './minima/redux/hooks';
-import { callAndStoreBalance, selectBalance } from './minima/redux/slices/balanceSlice';
+import { useAppDispatch } from './minima/redux/hooks';
+import { callAndStoreBalance } from './minima/redux/slices/balanceSlice';
 import { events } from './minima/libs/events';
+
 import { toggleNotification } from './minima/redux/slices/notificationSlice';
-
-// Create a context provider to give balance updates to consumers in the app
-const BalanceUpdates = createContext<MinimaToken[]>([]);
-
-interface AllBalance {
-    prevBalance: MinimaToken[];
-    newBalance: MinimaToken[];
-}
+import { updateMiningState } from './minima/redux/slices/miningSlice';
 
 export default function App() {
     // const [myBalance, setMyBalance] = useState<AllBalance>({ prevBalance: [], newBalance: [] });
@@ -28,6 +20,10 @@ export default function App() {
 
     const dispatch = useAppDispatch();
     useEffect(() => {
+        events.onInit(() => {
+            dispatch(callAndStoreBalance(0));
+        });
+
         events.onNewBalance(() => {
             const balanceNotification = {
                 message: 'New balance update',
@@ -42,6 +38,24 @@ export default function App() {
             dispatch(callAndStoreBalance(3 * 60 * 1000)); // 3 mins
             dispatch(callAndStoreBalance(5 * 60 * 1000)); // 5 mins
             dispatch(callAndStoreBalance(10 * 60 * 1000)); // 10 mins
+        });
+
+        events.onMining((data) => {
+            const isMining = data.mining;
+            const isTransaction = data.txpow.body.txn.inputs.length > 0 ? true : false;
+
+            // console.log(data.txpow);
+
+            // console.log('Is mining?', data.mining);
+            // console.log('am i transaction?', data.txpow.body.txn.inputs.length > 0);
+
+            if (isMining && isTransaction) {
+                dispatch(updateMiningState(true));
+            }
+
+            if (!isMining && isTransaction) {
+                dispatch(updateMiningState(false));
+            }
         });
     }, []);
 
@@ -120,13 +134,9 @@ export default function App() {
         <ThemeProvider theme={theme}>
             <SnackbarProvider maxSnack={3}>
                 <CssBaseline />
-                <AppNavigation isMining={isMining} />
+                <AppNavigation />
                 <Notifications></Notifications>
-                {/* <BalanceUpdates.Provider value={myBalance.newBalance}>
-                </BalanceUpdates.Provider> */}
             </SnackbarProvider>
         </ThemeProvider>
     );
 }
-
-export { BalanceUpdates };

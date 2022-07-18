@@ -23,7 +23,7 @@ import { callCreateNFT } from '../minima/rpc-commands';
 
 /** form imports */
 import { useFormik } from 'formik';
-import { BalanceUpdates } from '../App'; // balance context
+// import { BalanceUpdates } from '../App'; // balance context
 
 import { MinimaToken } from '../types/minima';
 import AppPagination from './components/AppPagination';
@@ -41,20 +41,20 @@ import NFTGrid from './components/nfts/NFTGrid';
 import NFTCard from './components/nfts/NFTCard';
 
 const NFTs: FC = () => {
-    const balances = useContext(BalanceUpdates);
+    // const balances = useContext(BalanceUpdates);
     const [allNFTs, setAllNFTs] = useState<MinimaToken[]>([]);
     const [page, setPage] = useState(1);
     const COUNT_PER_PAGE = 4;
 
     useEffect(() => {
-        const allNFTs: MinimaToken[] = balances.filter((b: MinimaToken) => {
-            if (typeof b.token !== 'string' && b.token.nft) {
-                return b;
-            }
-        });
+        // const allNFTs: MinimaToken[] = balances.filter((b: MinimaToken) => {
+        //     if (typeof b.token !== 'string' && b.token.nft) {
+        //         return b;
+        //     }
+        // });
         console.log('All my NFTs', allNFTs);
         setAllNFTs(allNFTs);
-    }, [balances]);
+    }, []);
 
     const currentPage = (page: number) => {
         // console.log(`Setting current page number to: ${page}`);

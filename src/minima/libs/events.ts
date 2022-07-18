@@ -1,8 +1,6 @@
-import { callAndStoreBalance } from './../redux/slices/balanceSlice';
-import { useAppDispatch } from './../redux/hooks';
+
 import { Txpow } from "../types/minima";
 
-import { store} from '../redux/store';
 
 ////////////// response interfaces //////////
 interface InitResponse {
@@ -72,7 +70,7 @@ let whenNewBalance = (d: NewBalanceData) => {
   // console.log("NEW BALANCE event ... please resgister custom callback", d);
 };
 let whenInit = () => {
-  // console.log("INIT event ... please resgister custom callback");
+  console.log("INIT event ... please resgister custom callback");
 };
 let whenMinimaLog = (d: MinimaLogData) => {
   // console.log("MINIMA LOG event ... please resgister custom callback", d);
@@ -82,19 +80,16 @@ let whenMinimaLog = (d: MinimaLogData) => {
 
 const initializeMinima = () => {
 
-  // MDS.DEBUG_HOST = "127.0.0.1";
-  // MDS.DEBUG_PORT = 9003;
-  // MDS.DEBUG_MINIDAPPID = '0xF26FB35B794F48949E38ACF247DB88B472F1C7EB7CB7186D60C8BBAD41907615'
+  MDS.DEBUG_HOST = "127.0.0.1";
+  MDS.DEBUG_PORT = 9003;
+  MDS.DEBUG_MINIDAPPID = '0xF26FB35B794F48949E38ACF247DB88B472F1C7EB7CB7186D60C8BBAD41907615'
 
   MDS.init((nodeEvent: InitResponse | MiningResponse | NewBlockResponse | MinimaLogResponse | NewBalanceResponse | MaximaResponse) => {
 
       switch (nodeEvent.event) {
           case 'inited':
-              
               // will have to dispatch from here..
-              // whenInit()
-
-              store.dispatch(callAndStoreBalance(0));
+              whenInit()
               break;
           case 'NEWBLOCK':
               const newBlockData = nodeEvent.data
@@ -123,7 +118,7 @@ const initializeMinima = () => {
 };
 
 // Do registration
-initializeMinima();
+// initializeMinima();
 
 ///////////////////////// application registers custom callbacks ///////////////////////
 
@@ -145,6 +140,8 @@ function onNewBalance(callback: (data: NewBalanceData) => void) {
 
 function onInit(callback: () => void) {
   whenInit = callback;
+
+  initializeMinima();
 }
 
 function onMinimaLog(callback: (data: MinimaLogData) => void) {

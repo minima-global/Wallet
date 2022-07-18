@@ -21,7 +21,7 @@ import * as Yup from 'yup';
 import { MinimaToken } from '../types/minima';
 import MiniModal from '../shared/components/MiniModal';
 
-import { BalanceUpdates } from '../App';
+// import { BalanceUpdates } from '../App';
 import GridLayout from './components/GridLayout';
 
 import { containsText, insufficientFundsError, isPropertyString } from '../shared/functions';

@@ -1,17 +1,18 @@
-import EngineeringIcon from '@mui/icons-material/Engineering';
+import OfflineBoltIcon from '@mui/icons-material/OfflineBolt';
 import { Stack, Typography } from '@mui/material';
 const MiningCog = ({ isMining }: any) => {
     return (
         <Stack
             sx={{ display: isMining ? 'flex' : 'none' }}
-            direction="column"
+            direction="row"
             alignItems="center"
             justifyContent="flex-end"
+            spacing={1}
         >
-            <EngineeringIcon fontSize="small" color="secondary" />
             <Typography className="fade-in-fade-out" color="inherit" variant="caption">
-                Mining...
+                Mining TxPoW
             </Typography>
+            <OfflineBoltIcon className="fade-in-fade-out" fontSize="medium" color="secondary" />
         </Stack>
     );
 };

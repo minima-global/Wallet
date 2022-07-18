@@ -8,7 +8,7 @@ import { insufficientFundsError, strToHex } from '../shared/functions';
 
 import GridLayout from './components/GridLayout';
 import TokenConfirmationModal from './components/forms/TokenConfirmationModal';
-import { BalanceUpdates } from '../App';
+
 import { useAppDispatch, useAppSelector } from '../minima/redux/hooks';
 import { toggleNotification } from '../minima/redux/slices/notificationSlice';
 import { selectBalance } from '../minima/redux/slices/balanceSlice';
@@ -25,6 +25,7 @@ const CreateTokenSchema = Yup.object().shape({
     url: Yup.string(),
     // .matches(/^[^\\;'"]+$/, 'Invalid characters.'),
     burn: Yup.string().matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters.'),
+    webvalidate: Yup.string(),
 });
 
 const TokenCreation: FC = () => {
@@ -64,6 +65,7 @@ const TokenCreation: FC = () => {
             url: '',
             description: '',
             burn: '',
+            webvalidate: '',
         },
         validationSchema: CreateTokenSchema,
         onSubmit: (formData) => {
@@ -72,9 +74,11 @@ const TokenCreation: FC = () => {
                     name: formData.name,
                     description: strToHex(formData.description),
                     url: strToHex(formData.url),
+                    webvalidate: formData.webvalidate,
                 },
                 amount: formData.amount && formData.amount.length ? formData.amount : 0,
                 burn: formData.burn && formData.burn.length ? formData.burn : 0,
+                webvalidate: '',
             };
             callToken(customToken)
                 .then((res: any) => {
@@ -230,6 +234,18 @@ const TokenCreation: FC = () => {
                                                     </InputAdornment>
                                                 ),
                                             }}
+                                        ></TextField>
+                                        <TextField
+                                            disabled={formik.isSubmitting}
+                                            fullWidth
+                                            id="webvalidate"
+                                            name="webvalidate"
+                                            placeholder="web validate url"
+                                            value={formik.values.webvalidate}
+                                            onChange={formik.handleChange}
+                                            error={formik.touched.webvalidate && Boolean(formik.errors.webvalidate)}
+                                            helperText={formik.touched.webvalidate && formik.errors.webvalidate}
+                                            sx={{ mb: 2 }}
                                         ></TextField>
                                     </>
                                 )}

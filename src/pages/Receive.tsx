@@ -1,4 +1,4 @@
-import { FC, useEffect, useState, useContext } from 'react';
+import { FC, useEffect, useState } from 'react';
 import {
     Typography,
     Card,
@@ -20,8 +20,9 @@ import QRCode from 'react-qr-code';
 
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
-import { useNavigate } from 'react-router-dom';
-import { BalanceUpdates } from '../App';
+import { useAppSelector } from '../minima/redux/hooks';
+import { selectBalance } from '../minima/redux/slices/balanceSlice';
+// import { BalanceUpdates } from '../App';
 
 const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
     <Tooltip {...props} arrow classes={{ popper: className }} />
@@ -39,7 +40,9 @@ const Receive: FC = () => {
     const [isCopied, setIsCopied] = useState(false);
     const [loading, setLoading] = useState(true);
 
-    const balances = useContext(BalanceUpdates);
+    // const balances = useContext(BalanceUpdates);
+
+    const balances = useAppSelector(selectBalance);
 
     // const navigate = useNavigate();
 

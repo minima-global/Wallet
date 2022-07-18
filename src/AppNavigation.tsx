@@ -16,6 +16,8 @@ import SideMenu from './layout/SideMenu';
 import Offline from './pages/Offline';
 import NFTs from './pages/NFTs';
 import MiningCog from './pages/components/mining/MiningCog';
+import { useAppSelector } from './minima/redux/hooks';
+import { selectMiningState } from './minima/redux/slices/miningSlice';
 
 export interface RouteType {
     path: string;
@@ -23,9 +25,11 @@ export interface RouteType {
     element: JSX.Element;
 }
 
-const AppNavigation = ({ isMining }: any) => {
+const AppNavigation = () => {
     const [open, setOpen] = useState(false);
     const [pageTitle, setPageTitle] = useState('Balance');
+
+    const isMining = useAppSelector(selectMiningState);
 
     // Back Button
     const [onDetail, setOnDetail] = useState(false);

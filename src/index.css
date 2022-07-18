@@ -229,22 +229,22 @@ body {
 
 @keyframes fade-inout {
     0%{ opacity: 1;}
-    100%{ opacity: 0;}
+    100%{ opacity: 0.5;}
   }
   /* support for opera */
   @-o-keyframes fade-inout{
     0%{ opacity: 1;}
-    100%{ opacity: 0;}
+    100%{ opacity: 0.5;}
   }
   /* support for mozila */
   @-moz-keyframes fade-inout{
     0%{ opacity: 1;}
-    100%{ opacity: 0;}
+    100%{ opacity: 0.5;}
   }
   /* support for safari and chrome */
   @-webkit-keyframes fade-inout{
     0%{ opacity: 1;}
-    100%{ opacity: 0;}
+    100%{ opacity: 0.5;}
   }
   .fade-in-fade-out {
      -webkit-animation: fade-inout 1s infinite alternate;

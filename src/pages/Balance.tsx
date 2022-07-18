@@ -3,7 +3,7 @@ import { List, Typography, TextField, Card, CardContent, CardActions, CardHeader
 
 import { useNavigate } from 'react-router-dom';
 import { MinimaToken } from '../types/minima';
-import { BalanceUpdates } from '../App';
+// import { BalanceUpdates } from '../App';
 import AppPagination from './components/AppPagination';
 import GridLayout from './components/GridLayout';
 
