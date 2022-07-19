@@ -9,6 +9,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 import { callCreateNFT } from '../../minima/rpc-commands';
+import { buildUserNFT } from '../../minima/libs/nft';
 
 const validation = Yup.object().shape({});
 
@@ -37,14 +38,11 @@ const getDataUrlFromBlob = (blob: Blob): Promise<string> => {
 };
 
 const CreateNFTForm = () => {
-    const [myImage, setMyImage] = React.useState<File | null>(null);
     const inp = React.useRef<any>();
-
-    console.log(`myImage `, myImage);
 
     const formik = useFormik({
         initialValues: {
-            image: '',
+            image: null,
             amount: '',
             name: '',
             description: '',
@@ -54,23 +52,23 @@ const CreateNFTForm = () => {
             webvalidate: '',
         },
         onSubmit: (data: any) => {
-            console.log(data.image);
+            console.log(data);
+            const COMPRESSION_FACTOR_LOW = 0.1;
+            const COMPRESSION_FACTOR_MEDIUM = 0.5;
+            const COMPRESSION_FACTOR_HIGH = 0.9;
 
-            if (isBlob(myImage)) {
-                getDataUrlFromBlob(myImage)
+            if (isBlob(data.image)) {
+                getDataUrlFromBlob(data.image)
                     .then((f) => {
-                        data.image = f.slice(f.indexOf(',') + 1);
-                        console.log(`image data object`, data.image);
-                        callCreateNFT(data)
+                        buildUserNFT(f, COMPRESSION_FACTOR_MEDIUM, data)
                             .then((res: any) => {
-                                console.log(`callCreateNFT result`, res);
+                                console.log(`buildUserNFT`, res);
                                 if (res.status) {
-                                    console.log(`CREATED NFT SUJCCESSFULLY`);
                                     formik.resetForm();
                                 }
                             })
                             .catch((err) => {
-                                console.error(`callCreateNFT FAILED`, err);
+                                console.error(`buildUserNFT error`, err);
                             });
                     })
                     .catch((err) => {});
@@ -94,8 +92,11 @@ const CreateNFTForm = () => {
                     File types supported: BMP, JPEG, PNG, SVG+XML, GIF.
                 </Typography>
                 <Box component="label" className={styles['form-image-preview-box']}>
-                    {myImage ? (
-                        <img className={styles['form-image-preview-box-img']} src={URL.createObjectURL(myImage)} />
+                    {formik.values.image ? (
+                        <img
+                            className={styles['form-image-preview-box-img']}
+                            src={URL.createObjectURL(formik.values.image)}
+                        />
                     ) : null}
                     <input
                         ref={inp}
@@ -105,19 +106,21 @@ const CreateNFTForm = () => {
                         hidden
                         accept="image/*"
                         onChange={(e: any) => {
-                            setMyImage(e.target.files[0]);
+                            if (e.target.files[0]) {
+                                formik.setFieldValue('image', e.target.files[0]);
+                            }
                         }}
                     />
 
-                    {myImage ? (
+                    {formik.values.image ? (
                         <>
                             <ClearIcon
                                 color="inherit"
                                 className={styles['clear-icon']}
-                                onClick={() => setMyImage(null)}
+                                onClick={() => formik.setFieldValue('image', '')}
                             />
                             <Box className={styles['info-label-image-upload']}>
-                                <Typography variant="caption">{myImage.name}</Typography>
+                                <Typography variant="caption">{formik.values.image['name']}</Typography>
                             </Box>
                         </>
                     ) : (
