@@ -1,5 +1,5 @@
 import { Modal, Grid, Box, Button } from '@mui/material';
-import { NFTListItem } from '../../pages/NFTs';
+import { NFTListItem } from '../../pages/NFTs/NFTs';
 
 interface iPreview {
     open: boolean;

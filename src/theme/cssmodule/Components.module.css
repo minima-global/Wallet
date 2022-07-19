@@ -29,3 +29,88 @@
   justify-content: center;
   align-items: flex-start;
 }
+
+/** NFTPAGE */
+.required {
+  color: red;
+}
+.form-image-title {
+  font-family: Manrope-semibold;
+}
+.create-nft-btn:hover {
+  cursor: pointer;
+}
+/** NFT FORM */
+.info-upload-overlay {
+  height: 100%;
+  background-color: transparent;
+  border-radius: 8px;
+}
+.form-image-preview-box {
+  border-radius: 8px;
+  border-style: dashed;
+  border-color: #CCC;
+  width: 300px;
+  height: 257px;
+  border-width: 2px;
+  object-fit: cover;
+  position: relative;
+  padding: 8px;
+}
+.form-image-preview-box:hover {
+  cursor: pointer;
+}
+.form-image-preview-box:hover .info-upload-overlay {
+  background-color: #ccc;
+}
+.form-image-preview-box:hover .info-label-image-upload {
+  display: block;
+}
+.form-image-preview-box:hover .clear-icon {
+  display: block!important;
+}
+.form-image-preview-box-img {
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
+  border-radius: 8px;
+}
+
+.clear-icon {
+  display: none !important;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.clear-icon:hover {
+  opacity: 1;
+}
+.info-label-image-upload {
+  display: none;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 10%;
+  text-align: left;
+  background-color: #EDEDED;
+  color: #000;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  padding: 0px 8px;
+}
+
+
+/** Forms */
+
+.form-helper-text {
+  border-bottom-right-radius: 8px;
+  border-bottom-left-radius: 8px;
+  color: #D63110;
+  font-weight: 700;
+  padding: 0px 8px;
+}
+
+.form-help-caption {
+  opacity: 0.7;
+}

@@ -17,44 +17,39 @@ import {
     CardHeader,
     Chip,
 } from '@mui/material';
-import MiniModal from '../shared/components/MiniModal';
+import MiniModal from '../../shared/components/MiniModal';
 
-import { callCreateNFT } from '../minima/rpc-commands';
+import { callCreateNFT } from '../../minima/rpc-commands';
 
 /** form imports */
 import { useFormik } from 'formik';
 // import { BalanceUpdates } from '../App'; // balance context
 
-import { MinimaToken } from '../types/minima';
-import AppPagination from './components/AppPagination';
+import { MinimaToken } from '../../types/minima';
+import AppPagination from '../components/AppPagination';
 
 import * as Yup from 'yup';
-import { INSUFFICIENT } from '../minima/constants';
+import { INSUFFICIENT } from '../../minima/constants';
 
-import PreviewNFTModal from '../shared/components/PreviewNFTModal';
+import PreviewNFTModal from '../../shared/components/PreviewNFTModal';
 import { useNavigate } from 'react-router-dom';
-import { strToHex } from '../shared/functions';
-import { hexToString } from '../shared/functions';
+import { strToHex } from '../../shared/functions';
+import { hexToString } from '../../shared/functions';
 
-import GridLayout from './components/GridLayout';
-import NFTGrid from './components/nfts/NFTGrid';
-import NFTCard from './components/nfts/NFTCard';
+import GridLayout from '../components/GridLayout';
+import NFTGrid from '../components/nfts/NFTGrid';
+import NFTCard from '../components/nfts/NFTCard';
+import { useAppSelector } from '../../minima/redux/hooks';
+import { selectNFTs } from '../../minima/redux/slices/balanceSlice';
+
+import styles from '../../theme/cssmodule/Components.module.css';
 
 const NFTs: FC = () => {
-    // const balances = useContext(BalanceUpdates);
-    const [allNFTs, setAllNFTs] = useState<MinimaToken[]>([]);
+    const navigate = useNavigate();
     const [page, setPage] = useState(1);
     const COUNT_PER_PAGE = 4;
-
-    useEffect(() => {
-        // const allNFTs: MinimaToken[] = balances.filter((b: MinimaToken) => {
-        //     if (typeof b.token !== 'string' && b.token.nft) {
-        //         return b;
-        //     }
-        // });
-        console.log('All my NFTs', allNFTs);
-        setAllNFTs(allNFTs);
-    }, []);
+    const allNFTs = useAppSelector(selectNFTs);
+    console.log('My NFTs', allNFTs);
 
     const currentPage = (page: number) => {
         // console.log(`Setting current page number to: ${page}`);
@@ -70,7 +65,16 @@ const NFTs: FC = () => {
                             title={
                                 <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={1}>
                                     <Typography variant="h6">Collections</Typography>
-                                    <Chip color="primary" label="Create"></Chip>
+                                    <Button
+                                        disableElevation
+                                        variant="contained"
+                                        className={styles['create-nft-btn']}
+                                        color="primary"
+                                        size="small"
+                                        onClick={() => navigate('/createnft')}
+                                    >
+                                        Create
+                                    </Button>
                                 </Stack>
                             }
                         />
@@ -81,9 +85,11 @@ const NFTs: FC = () => {
                                 <NFTGrid
                                     children={
                                         <>
-                                            {allNFTs.map((n) => {
-                                                return <NFTCard key={n.tokenid} NFT={n} />;
-                                            })}
+                                            {allNFTs && typeof allNFTs !== 'undefined'
+                                                ? allNFTs.map((n) => {
+                                                      return <NFTCard key={n.tokenid} NFT={n} />;
+                                                  })
+                                                : null}
                                         </>
                                     }
                                 />
@@ -326,7 +332,7 @@ const CreateNFTForm: FC = () => {
                             helperText={formik.touched.name && formik.errors.name}
                             sx={{ mb: 2 }}
                             FormHelperTextProps={{
-                                style: styles.helperText,
+                                style: stylesOther.helperText,
                             }}
                             InputProps={{
                                 style:
@@ -415,7 +421,7 @@ const CreateNFTForm: FC = () => {
     );
 };
 
-const styles = {
+const stylesOther = {
     helperText: {
         borderBottomRightRadius: 8,
         borderBottomLeftRadius: 8,

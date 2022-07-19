@@ -52,7 +52,14 @@ export const selectBalance = (state: RootState): MinimaToken[] => {
 export const selectTokenWithID = (id: string) => (state: RootState): MinimaToken | undefined => {
   return state.balance.funds.find((b: MinimaToken) => b.tokenid === id);
 };
-
+// Return NFTs
+export const selectNFTs= (state: RootState): MinimaToken[] | undefined => {
+  return state.balance.funds.filter((b: MinimaToken) => b.token && b.token.hasOwnProperty("nft") && b.token.nft);
+};
+// Return Filter NFTs
+export const selectFilterNFTs = (id: string) => (state: RootState): MinimaToken | undefined => {
+    return state.balance.funds.find((b: MinimaToken) => b.tokenid === id);
+  };
 
 // Return filtered list
 export const selectBalanceFilter = (filterText: string) => (state: RootState): MinimaToken[] => {

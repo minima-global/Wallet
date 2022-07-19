@@ -14,10 +14,12 @@ import TokenDetail from './pages/components/TokenDetail';
 import { DRAWERWIDTH } from './shared/constants';
 import SideMenu from './layout/SideMenu';
 import Offline from './pages/Offline';
-import NFTs from './pages/NFTs';
+import NFTs from './pages/NFTs/NFTs';
 import MiningCog from './pages/components/mining/MiningCog';
 import { useAppSelector } from './minima/redux/hooks';
 import { selectMiningState } from './minima/redux/slices/miningSlice';
+import CreateNFT from './pages/NFTs/CreateNFT';
+import NFTDetail from './pages/NFTs/NFTDetail';
 
 export interface RouteType {
     path: string;
@@ -146,7 +148,10 @@ const AppNavigation = () => {
                     <Route path="/receive" element={<Receive />} />
                     <Route path="/status" element={<Status />} />
                     <Route path="/tokencreate" element={<TokenCreation />} />
-                    <Route path="/nfts" element={<NFTs />} />
+                    <Route path="/nfts" element={<NFTs />}>
+                        <Route path="nftdetails/:id" element={<NFTDetail />} />
+                    </Route>
+                    <Route path="/createnft" element={<CreateNFT />} />
                     <Route path="/offline" element={<Offline />} />
                     <Route path="*" element={<Navigate replace to="/balance" />} />
                 </Routes>
