@@ -15,12 +15,7 @@ const ModalStackedCol = ({ children }: any) => {
 
 const ModalStackedRow = ({ children }: any) => {
     return (
-        <Stack
-            direction="column"
-            sx={{ maxWidth: 'inherit', mt: 2, mb: 2 }}
-            justifyContent="flex-start"
-            alignItems="flex-start"
-        >
+        <Stack direction="column" sx={{ maxWidth: 'inherit' }} justifyContent="flex-start" alignItems="flex-start">
             {children}
         </Stack>
     );

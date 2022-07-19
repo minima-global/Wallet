@@ -1,4 +1,4 @@
-import { FC, useState, useContext, useEffect } from 'react';
+import { FC, useState } from 'react';
 import {
     Box,
     Grid,
@@ -16,6 +16,8 @@ import {
     InputAdornment,
     CardHeader,
     Chip,
+    Tabs,
+    Tab,
 } from '@mui/material';
 import MiniModal from '../../shared/components/MiniModal';
 
@@ -40,16 +42,27 @@ import GridLayout from '../components/GridLayout';
 import NFTGrid from '../components/nfts/NFTGrid';
 import NFTCard from '../components/nfts/NFTCard';
 import { useAppSelector } from '../../minima/redux/hooks';
-import { selectNFTs } from '../../minima/redux/slices/balanceSlice';
+import { selectFavouriteNFTs, selectNFTs } from '../../minima/redux/slices/balanceSlice';
 
 import styles from '../../theme/cssmodule/Components.module.css';
 
 const NFTs: FC = () => {
     const navigate = useNavigate();
     const [page, setPage] = useState(1);
+    const [tabsValue, setTabsValue] = useState('one');
     const COUNT_PER_PAGE = 4;
-    const allNFTs = useAppSelector(selectNFTs);
-    console.log('My NFTs', allNFTs);
+    let allNFTs = useAppSelector(selectNFTs);
+    const favourited = useAppSelector(selectFavouriteNFTs);
+    // console.log('My NFTs', allNFTs);
+
+    if (tabsValue === 'two') {
+        allNFTs = allNFTs?.filter((t: MinimaToken) => favourited?.includes(t));
+        // console.log('Favourited', allNFTs);
+    }
+
+    const handleTabSelection = () => {
+        setTabsValue(tabsValue === 'one' ? 'two' : 'one');
+    };
 
     const currentPage = (page: number) => {
         // console.log(`Setting current page number to: ${page}`);
@@ -64,7 +77,16 @@ const NFTs: FC = () => {
                         <CardHeader
                             title={
                                 <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={1}>
-                                    <Typography variant="h6">Collections</Typography>
+                                    <Tabs
+                                        value={tabsValue}
+                                        onChange={handleTabSelection}
+                                        textColor="inherit"
+                                        indicatorColor="primary"
+                                        aria-label="secondary tabs example"
+                                    >
+                                        <Tab value="one" label="Collected" className={styles['nft-tabs-tab']} />
+                                        <Tab value="two" label="Favorited" className={styles['nft-tabs-tab']} />
+                                    </Tabs>
                                     <Button
                                         disableElevation
                                         variant="contained"
@@ -79,7 +101,7 @@ const NFTs: FC = () => {
                             }
                         />
                         <CardContent>
-                            <Stack spacing={2}>
+                            <Stack spacing={1}>
                                 <TextField fullWidth id="search" placeholder="Search by name" />
 
                                 <NFTGrid

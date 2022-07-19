@@ -60,7 +60,7 @@ const CreateNFTForm = () => {
             if (isBlob(data.image)) {
                 getDataUrlFromBlob(data.image)
                     .then((f) => {
-                        buildUserNFT(f, COMPRESSION_FACTOR_MEDIUM, data)
+                        buildUserNFT(f, COMPRESSION_FACTOR_HIGH, data)
                             .then((res: any) => {
                                 console.log(`buildUserNFT`, res);
                                 if (res.status) {

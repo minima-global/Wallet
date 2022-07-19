@@ -24,7 +24,7 @@ const Notifications = () => {
             <Portal>
                 <Snackbar
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                    autoHideDuration={3000}
+                    autoHideDuration={6000}
                     open={notificationStatus.display}
                 >
                     <Alert

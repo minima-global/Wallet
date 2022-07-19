@@ -24,7 +24,7 @@ export const toggleNotification =
 
       setTimeout(() => {
         dispatch(updateState({display: false, ...props}))
-      }, 3000);
+      }, 6000);
         
 };
 
