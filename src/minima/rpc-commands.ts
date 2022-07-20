@@ -27,7 +27,7 @@ export const req = (command: string) => {
     return new Promise((resolve) => {
         
         MDS.cmd(command, (resp: any) => {
-            console.log(resp);
+            //console.log(resp);
             resolve(resp);
             
         });

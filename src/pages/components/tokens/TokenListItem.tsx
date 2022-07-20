@@ -1,6 +1,5 @@
 import { ListItemButton, ListItemAvatar, Avatar, ListItemText } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { hexToString } from '../../../shared/functions';
 
 import MinimaIcon from '../../../assets/images/minimaLogoSquare.png';
 
@@ -21,7 +20,7 @@ const TokenListItem = ({ item, nav, mode }: any) => {
                             item.tokenid !== '0x00' && !item.token.url
                                 ? `https://robohash.org/${item.tokenid}`
                                 : item.token.url && item.token.url.length > 0
-                                ? hexToString(item.token.url)
+                                ? item.token.url
                                 : ''
                         }
                     />

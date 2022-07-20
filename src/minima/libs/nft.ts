@@ -73,19 +73,24 @@ const FAVORITESTABLE = 'FAVORITES';
 export function createFavoritesTable() {
   const Q = `create table if not exists ${FAVORITESTABLE} (id int auto_increment primary key, tokenid varchar(255))`;
 
-  MDS.sql(Q, function(res) {
-    MDS.log(`MDS.SQL, ${Q}`);
-    console.log(res);
+  return new Promise((resolve, reject) => {
+    MDS.sql(Q, function(res) {
+      // MDS.log(`MDS.SQL, ${Q}`);
+      // console.log(res);
+      if (res.status) {
+        resolve(true)
+      } else {
+        reject(`${res.error}`);
+      }
+    })
   })
-
 }
 export function selectFavorites() {
   const Q = `SELECT * FROM ${FAVORITESTABLE}`;
   return new Promise((resolve, reject) => {
-    
     MDS.sql(Q, function(res) {
-      MDS.log(`MDS.SQL, ${Q}`);
-      console.log(res);
+      // MDS.log(`MDS.SQL, ${Q}`);
+      // console.log(res);
       if (res.status) {
         if (res.count) {
           resolve(res.rows); // {ID, TOKENID}[]
@@ -93,7 +98,7 @@ export function selectFavorites() {
           resolve([])
         }
       } else {
-        reject("SQL ERROR")
+        reject("SQL error, please report logs to admin.")
       }
     })
   })
@@ -102,9 +107,16 @@ export function selectFavorites() {
 export function addTokenToFavoritesTable(tokenid: string) {
   const Q = `insert into ${FAVORITESTABLE}(tokenid) values('${tokenid}')`;
   
-  MDS.sql(Q, function(res) {
-    MDS.log(`MDS.SQL, ${Q}`);
-    console.log(res);
+  return new Promise((resolve, reject) => {
+    MDS.sql(Q, function(res) {
+      // MDS.log(`MDS.SQL, ${Q}`);
+      // console.log(res);
+      if (res.status) {
+        resolve(true)
+      } else {
+        reject(`${res.error}`);
+      }
+    })
   })
   
 }
@@ -113,9 +125,16 @@ export function addTokenToFavoritesTable(tokenid: string) {
 export function removeTokenFromFavoritesTable(tokenid: string) {
   const Q = `DELETE FROM ${FAVORITESTABLE} WHERE TOKENID='${tokenid}'`;
   
-  MDS.sql(Q, function(res) {
-    MDS.log(`MDS.SQL, ${Q}`);
-    console.log(res);
+  return new Promise((resolve, reject) => {
+    MDS.sql(Q, function(res) {
+      // MDS.log(`MDS.SQL, ${Q}`);
+      // console.log(res);
+      if (res.status) {
+        resolve(true)
+      } else {
+        reject(`${res.error}`);
+      }
+    })
   })
   
 }

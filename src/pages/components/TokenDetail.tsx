@@ -26,7 +26,7 @@ import { ReactComponent as MinimaSquareIcon } from '../../assets/images/minimaLo
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 
-import { copy as copyText, hexToString } from '../../shared/functions';
+import { copy as copyText } from '../../shared/functions';
 import GridLayout from './GridLayout';
 
 import { useAppSelector } from '../../minima/redux/hooks';
@@ -90,7 +90,7 @@ const TokenDetail = () => {
                                                                 : !token?.token.url || token?.token.url.length === 0
                                                                 ? `https://robohash.org/${token?.tokenid}`
                                                                 : token?.token.url && token?.token.url.length > 0
-                                                                ? hexToString(token.token.url)
+                                                                ? token.token.url
                                                                 : ''
                                                         }
                                                         alt={token?.token.name ? token?.token.name : token?.token}
@@ -100,7 +100,7 @@ const TokenDetail = () => {
                                             title={token?.token.name ? token.token.name : token.token}
                                             subheader={
                                                 token?.token.description
-                                                    ? hexToString(token.token.description)
+                                                    ? token.token.description
                                                     : token.tokenid === '0x00'
                                                     ? 'Official Minima Token'
                                                     : null
@@ -124,7 +124,7 @@ const TokenDetail = () => {
                                                             : !token?.token.url || token?.token.url.length === 0
                                                             ? `https://robohash.org/${token?.tokenid}`
                                                             : token?.token.url && token?.token.url.length > 0
-                                                            ? hexToString(token.token.url)
+                                                            ? token.token.url
                                                             : ''
                                                     }
                                                     alt="Paella dish"

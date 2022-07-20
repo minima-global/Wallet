@@ -81,19 +81,16 @@ const AppNavigation = () => {
 
     useEffect(() => {
         getPageTitle();
+        setOnDetail(false);
         if (location.pathname.substring(0, 9) === '/balance/') {
-            // console.log('Token Detail page');
+            console.log('Token Detail page');
             setOnDetail(true);
             setPageTitle('Token Details');
-        } else {
-            setOnDetail(false);
         }
         if (location.pathname.substring(0, 6) === '/nfts/') {
             // console.log('Token Detail page');
             setOnDetail(true);
             setPageTitle('NFT Details');
-        } else {
-            setOnDetail(false);
         }
 
         if (location.pathname.substring(0, 10) === '/createnft') {

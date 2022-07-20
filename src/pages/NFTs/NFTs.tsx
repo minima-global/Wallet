@@ -57,7 +57,6 @@ const NFTs: FC = () => {
 
     if (tabsValue === 'two') {
         allNFTs = allNFTs?.filter((t: MinimaToken) => favourited?.includes(t));
-        console.log('Favourited', allNFTs);
     }
 
     const handleTabSelection = () => {

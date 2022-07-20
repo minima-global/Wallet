@@ -2,14 +2,12 @@ import React from 'react';
 import { Box, Button, Stack, TextField, Typography } from '@mui/material';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { mixed } from 'yup';
 
 import styles from '../../theme/cssmodule/Components.module.css';
 
 import ClearIcon from '@mui/icons-material/Clear';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
-import { callCreateNFT } from '../../minima/rpc-commands';
 import { buildUserNFT } from '../../minima/libs/nft';
 import { strToHex } from '../../shared/functions';
 
@@ -175,7 +173,7 @@ const CreateNFTForm = () => {
                     onChange={formik.handleChange}
                     error={formik.touched.name && Boolean(formik.errors.name)}
                     helperText={formik.touched.name && formik.errors.name}
-                    FormHelperTextProps={styles['form-helper-text']}
+                    // FormHelperTextProps={styles['form-helper-text']}
                     InputProps={{
                         style:
                             formik.touched.name && Boolean(formik.errors.name)
@@ -193,7 +191,7 @@ const CreateNFTForm = () => {
                     onChange={formik.handleChange}
                     error={formik.touched.amount && Boolean(formik.errors.amount)}
                     helperText={formik.touched.amount && formik.errors.amount}
-                    FormHelperTextProps={styles['form-helper-text']}
+                    // FormHelperTextProps={styles['form-helper-text']}
                     InputProps={{
                         style:
                             formik.touched.amount && Boolean(formik.errors.amount)
@@ -214,7 +212,7 @@ const CreateNFTForm = () => {
                     onChange={formik.handleChange}
                     error={formik.touched.external_url && Boolean(formik.errors.external_url)}
                     helperText={formik.touched.external_url && formik.errors.external_url}
-                    FormHelperTextProps={styles['form-helper-text']}
+                    // FormHelperTextProps={styles['form-helper-text']}
                     InputProps={{
                         style:
                             formik.touched.external_url && Boolean(formik.errors.external_url)
@@ -232,7 +230,7 @@ const CreateNFTForm = () => {
                     onChange={formik.handleChange}
                     error={formik.touched.description && Boolean(formik.errors.description)}
                     helperText={formik.touched.description && formik.errors.description}
-                    FormHelperTextProps={styles['form-helper-text']}
+                    // FormHelperTextProps={styles['form-helper-text']}
                     InputProps={{
                         style:
                             formik.touched.description && Boolean(formik.errors.description)
@@ -256,7 +254,7 @@ const CreateNFTForm = () => {
                     onChange={formik.handleChange}
                     error={formik.touched.owner && Boolean(formik.errors.owner)}
                     helperText={formik.touched.owner && formik.errors.owner}
-                    FormHelperTextProps={styles['form-helper-text']}
+                    // FormHelperTextProps={styles['form-helper-text']}
                     InputProps={{
                         style:
                             formik.touched.owner && Boolean(formik.errors.owner)
@@ -278,7 +276,7 @@ const CreateNFTForm = () => {
                     onChange={formik.handleChange}
                     error={formik.touched.webvalidate && Boolean(formik.errors.webvalidate)}
                     helperText={formik.touched.webvalidate && formik.errors.webvalidate}
-                    FormHelperTextProps={styles['form-helper-text']}
+                    // FormHelperTextProps={styles['form-helper-text']}
                     InputProps={{
                         style:
                             formik.touched.webvalidate && Boolean(formik.errors.webvalidate)

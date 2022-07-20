@@ -4,7 +4,6 @@ import { useAppDispatch, useAppSelector } from '../../../minima/redux/hooks';
 import {
     addFavoritesTableAndUpdate,
     removeFromFavoritesTableAndUpdate,
-    removeFromFavouriteNFT,
     selectFavouriteNFTs,
 } from '../../../minima/redux/slices/balanceSlice';
 import { ModalStackedRow } from '../../../shared/components/modals/ModalWrappers';

@@ -1,3 +1,4 @@
+import { toggleNotification } from './notificationSlice';
 import { isPropertyString, containsText, hexToString } from './../../../shared/functions';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { MinimaToken } from './../../../types/minima/index';
@@ -43,30 +44,34 @@ export const initFavoritesTableAndUpdate =
 export const addFavoritesTableAndUpdate =
     (tokenid: string): AppThunk =>
     async (dispatch, getState) => {
-        dispatch(addFavouriteNFT(tokenid));
-        setTimeout(() => {
+        addTokenToFavoritesTable(tokenid).then(() => {
             selectFavorites().then((data: any) => {
                 const tokenids = data.map((d: any) => d.TOKENID);
                 dispatch(initFavoritesTable(tokenids))
             }).catch((err) => {
                 console.error(err);
             })
-        }, 1000);
+        }).catch((err) => {
+            console.error(err);
+            dispatch(toggleNotification("SQL error, please report logs to admin", "error", "error"))
+        })
+        
 };
 export const removeFromFavoritesTableAndUpdate =
     (tokenid: string): AppThunk =>
     async (dispatch, getState) => {
-        dispatch(removeFromFavouriteNFT(tokenid));
-        
-        
-        setTimeout(() => {
+        removeTokenFromFavoritesTable(tokenid).then(() => {
             selectFavorites().then((data: any) => {
                 const tokenids = data.map((d: any) => d.TOKENID);
                 dispatch(initFavoritesTable(tokenids))
             }).catch((err) => {
                 console.error(err);
             })
-        }, 1000);
+
+        }).catch((err) => {
+            console.error(err);
+            dispatch(toggleNotification("SQL error, please report logs to admin", "error", "error"))
+        })
 };
 
 
@@ -84,16 +89,13 @@ export const balanceSlice = createSlice({
                     b.token.external_url =  hexToString(b.token.external_url);
                     b.token.name = hexToString(b.token.name);
                 }
+
+                if (typeof b.token === 'object' && !b.token.hasOwnProperty("nft") && b.token.hasOwnProperty("url")) {
+                    b.token.url = hexToString(b.token.url);
+                    b.token.description = hexToString(b.token.description);
+                }
             })
             state.funds = balance;
-        },
-        addFavouriteNFT: (state, action: PayloadAction<any>) => {
-            const tokenid = action.payload;
-            addTokenToFavoritesTable(tokenid);
-        },
-        removeFromFavouriteNFT: (state, action: PayloadAction<any>) => {
-            const tokenid = action.payload;
-            removeTokenFromFavoritesTable(tokenid);
         },
         initFavoritesTable: (state, action: PayloadAction<any>) => {
             const tokenids = action.payload;
@@ -102,7 +104,7 @@ export const balanceSlice = createSlice({
     },
 });
 
-export const { updateBalance, initFavoritesTable, addFavouriteNFT, removeFromFavouriteNFT } = balanceSlice.actions;
+export const { updateBalance, initFavoritesTable } = balanceSlice.actions;
 export default balanceSlice.reducer;
 
 // Return balance
