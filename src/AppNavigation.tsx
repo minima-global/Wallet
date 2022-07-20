@@ -30,7 +30,6 @@ export interface RouteType {
 const AppNavigation = () => {
     const [open, setOpen] = useState(false);
     const [pageTitle, setPageTitle] = useState('Balance');
-
     const isMining = useAppSelector(selectMiningState);
 
     // Back Button
@@ -71,6 +70,10 @@ const AppNavigation = () => {
             name: 'NFTs',
         },
         {
+            pathname: '/createnft',
+            name: 'Create NFT',
+        },
+        {
             pathname: '/offline',
             name: 'Node Status',
         },
@@ -84,6 +87,18 @@ const AppNavigation = () => {
             setPageTitle('Token Details');
         } else {
             setOnDetail(false);
+        }
+        if (location.pathname.substring(0, 6) === '/nfts/') {
+            // console.log('Token Detail page');
+            setOnDetail(true);
+            setPageTitle('NFT Details');
+        } else {
+            setOnDetail(false);
+        }
+
+        if (location.pathname.substring(0, 10) === '/createnft') {
+            // console.log('Token Detail page');
+            setOnDetail(true);
         }
     }, [location]);
 
@@ -145,15 +160,15 @@ const AppNavigation = () => {
                     <Route path="/balance" element={<Balance />} />
                     <Route path="balance/:tokenid" element={<TokenDetail />} />
                     <Route path="/send" element={<Send />} />
+                    <Route path="send/:tokenid" element={<Send />} />
                     <Route path="/receive" element={<Receive />} />
                     <Route path="/status" element={<Status />} />
                     <Route path="/tokencreate" element={<TokenCreation />} />
-                    <Route path="/nfts" element={<NFTs />}>
-                        <Route path="nftdetails/:id" element={<NFTDetail />} />
-                    </Route>
+                    <Route path="/nfts" element={<NFTs />}></Route>
+                    <Route path="nfts/:tokenid" element={<NFTDetail />} />
                     <Route path="/createnft" element={<CreateNFT />} />
                     <Route path="/offline" element={<Offline />} />
-                    <Route path="*" element={<Navigate replace to="/balance" />} />
+                    {/* <Route path="*" element={<Navigate replace to="/balance" />} /> */}
                 </Routes>
             </Box>
             <Box component="nav" sx={nav} aria-label="mailbox folders">

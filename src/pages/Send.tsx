@@ -32,6 +32,7 @@ import { splitCoin } from '../minima/utils';
 import { useAppDispatch, useAppSelector } from '../minima/redux/hooks';
 import { selectBalance, selectBalanceFilter } from '../minima/redux/slices/balanceSlice';
 import { toggleNotification } from '../minima/redux/slices/notificationSlice';
+import { useParams } from 'react-router-dom';
 
 const TransferTokenSchema = Yup.object().shape({
     tokenid: Yup.string().required('Field Required'),
@@ -65,6 +66,7 @@ const styles = {
 
 const Send: FC = () => {
     const dispatch = useAppDispatch();
+    const { tokenid } = useParams();
 
     const [mode, setMode] = useState(1);
 
@@ -105,7 +107,7 @@ const Send: FC = () => {
     const formik = useFormik({
         initialValues: {
             mode: 1,
-            tokenid: '0x00',
+            tokenid: tokenid && tokenid.length ? tokenid : '0x00',
             amount: '',
             address: '',
             burn: '',

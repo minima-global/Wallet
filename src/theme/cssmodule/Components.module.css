@@ -32,8 +32,8 @@
 
 /** NFTPAGE */
 .nft-tabs-tab {
-  text-transform: none;
-  font-family: Manrope-semibold;
+  text-transform: none!important;
+  font-family: Manrope-semibold!important;
 }
 
 /** *****NFTCARD***** */
@@ -151,3 +151,34 @@
 .form-help-caption {
   opacity: 0.7;
 }
+
+/** Reusable Components */
+.nft-title {
+  font-family: Manrope-semibold;
+}
+.nft-description {
+
+}
+.custom-list-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 100%;
+}
+.custom-list-item-title {
+  padding: 0 8px;
+  font-family: Manrope-semibold;
+}
+.custom-list-item-value {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.custom-list-item-value-wrapper {
+  width: 100%;
+  background: #fff;
+  border-radius: 8px;
+  padding: 8px 8px;
+}
+

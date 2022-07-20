@@ -71,7 +71,9 @@ const CreateNFTForm = () => {
                                 console.error(`buildUserNFT error`, err);
                             });
                     })
-                    .catch((err) => {});
+                    .catch((err) => {
+                        console.error(err);
+                    });
             } else {
                 console.error('not blob!');
             }
@@ -209,7 +211,7 @@ const CreateNFTForm = () => {
                     multiline
                 />
                 <Typography className={styles['form-help-caption']} variant="caption">
-                    An address can be added as a parameter of ownership.
+                    An address or name can be added as a parameter of ownership.
                 </Typography>
                 <TextField
                     disabled={formik.isSubmitting}

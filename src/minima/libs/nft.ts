@@ -56,7 +56,7 @@ function createNFTWithImage(encodedImage: string, data: any): Promise<string | T
       var imageXmlString = serializer.serializeToString(xmlDoc)
 
       data.image = imageXmlString;
-
+      console.log(`CREANFT WITHIMAGE`)
       callCreateNFT(data).then((res: any) => {
         console.log(`callCreateNFT result`, res);
         resolve(res)
@@ -65,21 +65,6 @@ function createNFTWithImage(encodedImage: string, data: any): Promise<string | T
         reject(err);
       })
       
-      // const command = `tokencreate name:${nftName} amount:1.0 description:${imageXmlString}`
-
-      // MDS.cmd(command, (res) => {
-      //     if (
-      //         res.status &&
-      //         res.response &&
-      //         res.response.txpow &&
-      //         res.response.txpow.body &&
-      //         res.response.txpow.body.txn &&
-      //         res.response.txpow.body.txn.tokengen
-      //     ) {
-      //         resolve(res.response.txpow.body.txn.tokengen)
-      //     } else {
-      //         reject(res.message)
-      //     }
-      // })
+      
   })
 }

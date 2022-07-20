@@ -1,5 +1,5 @@
 import { MinimaToken } from '@minima-global/mds-api';
-import { Card, CardMedia, CardContent, Typography, CardActions, Stack, Chip, Button, Box, Radio } from '@mui/material';
+import { Box, Card, CardMedia, CardContent, Typography, CardActions, Stack, Button, Radio } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../../minima/redux/hooks';
 import {
     addFavouriteNFT,
@@ -13,10 +13,12 @@ import styles from '../../../theme/cssmodule/Components.module.css';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { toggleNotification } from '../../../minima/redux/slices/notificationSlice';
+import { useNavigate } from 'react-router-dom';
 
 const NFTCard = ({ NFT }: any) => {
     // console.log('NFT', NFT);
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
 
     const listOfFavourites = useAppSelector<MinimaToken[] | undefined>(selectFavouriteNFTs);
 
@@ -85,6 +87,7 @@ const NFTCard = ({ NFT }: any) => {
                         </Stack>
                     </Box>
                     <Button
+                        onClick={() => navigate(`${NFT.tokenid}`, { replace: false })}
                         variant="outlined"
                         disableElevation
                         fullWidth
@@ -93,13 +96,14 @@ const NFTCard = ({ NFT }: any) => {
                         Details
                     </Button>
                     <Button
+                        onClick={() => navigate(`/send/${NFT.tokenid}`, { replace: false })}
                         variant="contained"
                         disableElevation
                         color="primary"
                         fullWidth
                         className={styles['nft-card-actions-buttons-btn-trade']}
                     >
-                        Trade
+                        Transfer
                     </Button>
                 </Stack>
             </CardActions>
