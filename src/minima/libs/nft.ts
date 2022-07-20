@@ -1,10 +1,10 @@
-import { callCreateNFT } from './../rpc-commands';
 // /**
 //  * 
 //  * Handle NFT Image Compression + Building
 //  * 
 //  */
 
+import { callCreateNFT } from './../rpc-commands';
 import { Token } from "../types/minima"
 
 export const buildUserNFT = (imageDataUrl: string, compressionFactor: number, data: any): Promise<string | Token> => {
@@ -67,4 +67,55 @@ function createNFTWithImage(encodedImage: string, data: any): Promise<string | T
       
       
   })
+}
+
+const FAVORITESTABLE = 'FAVORITES';
+export function createFavoritesTable() {
+  const Q = `create table if not exists ${FAVORITESTABLE} (id int auto_increment primary key, tokenid varchar(255))`;
+
+  MDS.sql(Q, function(res) {
+    MDS.log(`MDS.SQL, ${Q}`);
+    console.log(res);
+  })
+
+}
+export function selectFavorites() {
+  const Q = `SELECT * FROM ${FAVORITESTABLE}`;
+  return new Promise((resolve, reject) => {
+    
+    MDS.sql(Q, function(res) {
+      MDS.log(`MDS.SQL, ${Q}`);
+      console.log(res);
+      if (res.status) {
+        if (res.count) {
+          resolve(res.rows); // {ID, TOKENID}[]
+        } else {
+          resolve([])
+        }
+      } else {
+        reject("SQL ERROR")
+      }
+    })
+  })
+}
+
+export function addTokenToFavoritesTable(tokenid: string) {
+  const Q = `insert into ${FAVORITESTABLE}(tokenid) values('${tokenid}')`;
+  
+  MDS.sql(Q, function(res) {
+    MDS.log(`MDS.SQL, ${Q}`);
+    console.log(res);
+  })
+  
+}
+
+
+export function removeTokenFromFavoritesTable(tokenid: string) {
+  const Q = `DELETE FROM ${FAVORITESTABLE} WHERE TOKENID='${tokenid}'`;
+  
+  MDS.sql(Q, function(res) {
+    MDS.log(`MDS.SQL, ${Q}`);
+    console.log(res);
+  })
+  
 }

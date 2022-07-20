@@ -66,17 +66,47 @@
   border: 0.5px solid #ccc;
 }
 
+.create-nft-btn {
+  padding: 0.2em 2.1em!important;
+  margin:0!important;
+}
+@media all and (max-width: 350px) {
+  .create-nft-btn {
+    padding: 0.2em 1.8em!important;
+  }
+}
+@media all and (max-width: 330px) {
+  .create-nft-btn {
+    padding: 0.2em 1.2em!important;
+  }
+}
+@media all and (max-width: 310px) {
+  .create-nft-btn {
+    padding: 0.2em 0.8em!important;
+  }
+}
 
+.create-nft-btn:hover {
+  cursor: pointer;
+}
+/** NFT FORM */
 .required {
   color: red;
 }
 .form-image-title {
   font-family: Manrope-semibold;
 }
-.create-nft-btn:hover {
-  cursor: pointer;
+.form-helper-text {
+  border-bottom-right-radius: 8px;
+  border-bottom-left-radius: 8px;
+  color: #D63110;
+  font-weight: 700;
+  padding: 0px 8px;
 }
-/** NFT FORM */
+
+.form-help-caption {
+  opacity: 0.7;
+}
 
 .info-upload-overlay {
   height: 100%;
@@ -138,26 +168,14 @@
 }
 
 
-/** Forms */
-
-.form-helper-text {
-  border-bottom-right-radius: 8px;
-  border-bottom-left-radius: 8px;
-  color: #D63110;
-  font-weight: 700;
-  padding: 0px 8px;
-}
-
-.form-help-caption {
-  opacity: 0.7;
-}
 
 /** Reusable Components */
 .nft-title {
-  font-family: Manrope-semibold;
+  font-family: Manrope-semibold!important;
 }
-.nft-description {
-
+.nft-owner {
+  opacity: 0.8!important;
+  font-family: Manrope-semibold!important;
 }
 .custom-list-item {
   display: flex;
@@ -182,3 +200,19 @@
   padding: 8px 8px;
 }
 
+
+/** CSS Animate */
+
+.heart:hover {
+  animation: 1.5s ease 0s infinite beat;
+}
+
+@keyframes beat {
+  0%, 50%, 100% { transform: scale(1, 1); }
+  30%, 80% { transform: scale(0.92, 0.95); }
+}
+
+@keyframes pulse {
+  0%, 50%, 100% {  background: #fee; }
+  30%, 80% { background: #fff; }
+}

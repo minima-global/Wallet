@@ -8,11 +8,12 @@ import { MinimaToken } from './types/minima';
 import Notifications from './layout/Notifications';
 
 import { useAppDispatch } from './minima/redux/hooks';
-import { callAndStoreBalance } from './minima/redux/slices/balanceSlice';
+import { callAndStoreBalance, initFavoritesTableAndUpdate } from './minima/redux/slices/balanceSlice';
 import { events } from './minima/libs/events';
 
 import { toggleNotification } from './minima/redux/slices/notificationSlice';
 import { updateMiningState } from './minima/redux/slices/miningSlice';
+import { createFavoritesTable } from './minima/libs/nft';
 
 export default function App() {
     // const [myBalance, setMyBalance] = useState<AllBalance>({ prevBalance: [], newBalance: [] });
@@ -22,6 +23,10 @@ export default function App() {
     useEffect(() => {
         events.onInit(() => {
             dispatch(callAndStoreBalance(0));
+
+            // init sql tables
+            createFavoritesTable();
+            dispatch(initFavoritesTableAndUpdate());
         });
 
         events.onNewBalance(() => {

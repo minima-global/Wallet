@@ -53,7 +53,7 @@ const NFTDetail = () => {
         if (NFT && NFT.tokenid) {
             callTokenValidate(NFT.tokenid)
                 .then((res: any) => {
-                    console.log(`callTokenValidate`, res);
+                    // console.log(`callTokenValidate`, res);
                     if (res.status) {
                         if (res.response.web.valid) {
                             // is valid token
@@ -82,7 +82,7 @@ const NFTDetail = () => {
                                     </Typography>
                                     {isTokenValidated ? <VerifiedIcon color="primary" /> : null}
                                 </Stack>
-                                <Typography variant="caption">
+                                <Typography className={styles['nft-owner']} variant="caption">
                                     {NFT.token.owner && NFT.token.owner.length
                                         ? 'Created by ' + NFT.token.owner
                                         : 'Created by anonymous'}
@@ -94,7 +94,7 @@ const NFTDetail = () => {
                                 </Typography>
                             </Stack>
 
-                            <Stack mt={2} spacing={1}>
+                            <Stack mt={2} mb={3} spacing={1}>
                                 <CustomListItem title="Total Minted" value={NFT.total} />
                                 <CustomListItem title="Token ID" value={NFT.tokenid} />
                                 <CustomListItem
@@ -113,15 +113,15 @@ const NFTDetail = () => {
                                         )
                                     }
                                 />
-                                <Button
-                                    disableElevation
-                                    variant="contained"
-                                    onClick={() => navigate(`/send/${NFT.tokenid}`, { replace: true })}
-                                    fullWidth
-                                >
-                                    Transfer
-                                </Button>
                             </Stack>
+                            <Button
+                                disableElevation
+                                variant="contained"
+                                onClick={() => navigate(`/send/${NFT.tokenid}`, { replace: true })}
+                                fullWidth
+                            >
+                                Transfer
+                            </Button>
                         </CardContent>
                     </Card>
                 </>

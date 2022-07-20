@@ -1,13 +1,14 @@
-import { isPropertyString, containsText } from './../../../shared/functions';
+import { isPropertyString, containsText, hexToString } from './../../../shared/functions';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { MinimaToken } from './../../../types/minima/index';
 import { AppThunk, RootState } from '../store';
 
 import { callBalance } from '../../rpc-commands';
+import { addTokenToFavoritesTable, removeTokenFromFavoritesTable, selectFavorites } from '../../libs/nft';
 
 export interface BalanceState {
     funds: MinimaToken[];
-    favouriteNFT: MinimaToken[];
+    favouriteNFT: string[];
 }
 const initialState: BalanceState = {
     funds: [],
@@ -29,6 +30,44 @@ export const callAndStoreBalance =
                 });
         }, ms);
 };
+export const initFavoritesTableAndUpdate =
+    (): AppThunk =>
+    async (dispatch, getState) => {
+        selectFavorites().then((data: any) => {
+            const tokenids = data.map((d: any) => d.TOKENID);
+            dispatch(initFavoritesTable(tokenids));
+        }).catch((err) => {
+            console.error(err);
+        })
+};
+export const addFavoritesTableAndUpdate =
+    (tokenid: string): AppThunk =>
+    async (dispatch, getState) => {
+        dispatch(addFavouriteNFT(tokenid));
+        setTimeout(() => {
+            selectFavorites().then((data: any) => {
+                const tokenids = data.map((d: any) => d.TOKENID);
+                dispatch(initFavoritesTable(tokenids))
+            }).catch((err) => {
+                console.error(err);
+            })
+        }, 1000);
+};
+export const removeFromFavoritesTableAndUpdate =
+    (tokenid: string): AppThunk =>
+    async (dispatch, getState) => {
+        dispatch(removeFromFavouriteNFT(tokenid));
+        
+        
+        setTimeout(() => {
+            selectFavorites().then((data: any) => {
+                const tokenids = data.map((d: any) => d.TOKENID);
+                dispatch(initFavoritesTable(tokenids))
+            }).catch((err) => {
+                console.error(err);
+            })
+        }, 1000);
+};
 
 
 export const balanceSlice = createSlice({
@@ -37,26 +76,33 @@ export const balanceSlice = createSlice({
     reducers: {
         updateBalance: (state, action: PayloadAction<any>) => {
             // console.log(action);
-            const balance = action.payload;
+            let balance = action.payload;
+            balance.forEach((b: MinimaToken) => {
+                if (typeof b.token === 'object' && b.token['nft']) {
+                    b.token.description = hexToString(b.token.description);
+                    b.token.owner =  hexToString(b.token.owner);
+                    b.token.external_url =  hexToString(b.token.external_url);
+                    b.token.name = hexToString(b.token.name);
+                }
+            })
             state.funds = balance;
         },
         addFavouriteNFT: (state, action: PayloadAction<any>) => {
-            // console.log(`ADDING TO FAVOURITE`);
-            const token = action.payload;
-            //console.log(`Token chosen`, token)
-            state.favouriteNFT.push(token);
+            const tokenid = action.payload;
+            addTokenToFavoritesTable(tokenid);
         },
         removeFromFavouriteNFT: (state, action: PayloadAction<any>) => {
-            const token = action.payload;
-            const index = state.favouriteNFT.findIndex((t: MinimaToken) => t.tokenid === token.tokenid);
-            console.log('FOUND INDEX OF REMOVAL', index);
-            
-            state.favouriteNFT.splice(index, 1);
-        }
+            const tokenid = action.payload;
+            removeTokenFromFavoritesTable(tokenid);
+        },
+        initFavoritesTable: (state, action: PayloadAction<any>) => {
+            const tokenids = action.payload;
+            state.favouriteNFT = tokenids;
+        },
     },
 });
 
-export const { updateBalance, addFavouriteNFT, removeFromFavouriteNFT } = balanceSlice.actions;
+export const { updateBalance, initFavoritesTable, addFavouriteNFT, removeFromFavouriteNFT } = balanceSlice.actions;
 export default balanceSlice.reducer;
 
 // Return balance
@@ -78,7 +124,8 @@ export const selectFilterNFTs = (id: string) => (state: RootState): MinimaToken 
 };
 // Return Favourite NFTs
 export const selectFavouriteNFTs = (state: RootState): MinimaToken[] | undefined => {
-    return state.balance.favouriteNFT;
+
+    return state.balance.funds.filter((t: MinimaToken) => state.balance.favouriteNFT?.includes(t.tokenid));
 };
 
 // Return filtered list

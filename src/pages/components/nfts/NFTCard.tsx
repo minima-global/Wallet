@@ -2,12 +2,13 @@ import { MinimaToken } from '@minima-global/mds-api';
 import { Box, Card, CardMedia, CardContent, Typography, CardActions, Stack, Button, Radio } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../../minima/redux/hooks';
 import {
-    addFavouriteNFT,
+    addFavoritesTableAndUpdate,
+    removeFromFavoritesTableAndUpdate,
     removeFromFavouriteNFT,
     selectFavouriteNFTs,
 } from '../../../minima/redux/slices/balanceSlice';
-import { ModalStackedCol, ModalStackedRow } from '../../../shared/components/modals/ModalWrappers';
-import { hexToString } from '../../../shared/functions';
+import { ModalStackedRow } from '../../../shared/components/modals/ModalWrappers';
+
 import styles from '../../../theme/cssmodule/Components.module.css';
 
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
@@ -67,19 +68,21 @@ const NFTCard = ({ NFT }: any) => {
                         <Stack justifyContent="flex-end" alignItems="flex-end" direction="row">
                             {isFavourite === -1 ? (
                                 <FavoriteBorderIcon
+                                    className={styles['heart']}
                                     fontSize="large"
                                     color="inherit"
                                     onClick={() => {
-                                        dispatch(addFavouriteNFT(NFT));
+                                        dispatch(addFavoritesTableAndUpdate(NFT.tokenid));
                                         dispatch(toggleNotification('Added to favorites!', 'success', 'success'));
                                     }}
                                 />
                             ) : (
                                 <FavoriteIcon
+                                    className={styles['heart']}
                                     fontSize="large"
                                     color="secondary"
                                     onClick={() => {
-                                        dispatch(removeFromFavouriteNFT(NFT));
+                                        dispatch(removeFromFavoritesTableAndUpdate(NFT.tokenid));
                                         dispatch(toggleNotification('Removed from favorites.', 'error', 'error'));
                                     }}
                                 />

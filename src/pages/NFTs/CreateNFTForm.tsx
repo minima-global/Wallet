@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Button, Stack, TextField, Typography } from '@mui/material';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { mixed } from 'yup';
 
 import styles from '../../theme/cssmodule/Components.module.css';
 
@@ -10,19 +11,19 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 import { callCreateNFT } from '../../minima/rpc-commands';
 import { buildUserNFT } from '../../minima/libs/nft';
+import { strToHex } from '../../shared/functions';
 
-const validation = Yup.object().shape({});
+const validation = Yup.object().shape({
+    name: Yup.string().required('This field is required.'),
+    image: Yup.mixed().required('This field is required.'),
+    amount: Yup.string()
+        .required('Field Required')
+        .matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters.'),
+});
 
 function isBlob(blob: null | Blob): blob is Blob {
     return (blob as Blob) !== null && (blob as Blob).type !== undefined;
 }
-const toBase64 = (file: File) =>
-    new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = (error) => reject(error);
-    });
 const getDataUrlFromBlob = (blob: Blob): Promise<string> => {
     return new Promise((resolve, reject) => {
         var reader = new FileReader();
@@ -56,6 +57,11 @@ const CreateNFTForm = () => {
             const COMPRESSION_FACTOR_LOW = 0.1;
             const COMPRESSION_FACTOR_MEDIUM = 0.5;
             const COMPRESSION_FACTOR_HIGH = 0.9;
+
+            data.description = strToHex(data.description);
+            data.external_url = strToHex(data.external_url);
+            data.owner = strToHex(data.owner);
+            data.name = strToHex(data.name);
 
             if (isBlob(data.image)) {
                 getDataUrlFromBlob(data.image)
@@ -93,7 +99,34 @@ const CreateNFTForm = () => {
                 <Typography className={styles['form-help-caption']} variant="caption">
                     File types supported: BMP, JPEG, PNG, SVG+XML, GIF.
                 </Typography>
-                <Box component="label" className={styles['form-image-preview-box']}>
+                <Box
+                    component="label"
+                    sx={{
+                        borderColor:
+                            formik.touched.image && Boolean(formik.errors.image) ? '#FCBEBD!important' : 'none',
+                        padding: formik.touched.image && Boolean(formik.errors.image) ? '0!important' : '8px',
+                        marginBottom: formik.touched.image && Boolean(formik.errors.image) ? '30px!important' : '8px',
+
+                        '::after': {
+                            display: formik.touched.image && Boolean(formik.errors.image) ? 'flex' : 'none',
+                            content:
+                                formik.touched.image && Boolean(formik.errors.image)
+                                    ? `"${formik.errors.image}"`
+                                    : '" "',
+                            color: 'rgb(211, 47, 47)',
+                            backgroundColor: '#FCBEBD',
+                            width: '100%',
+                            textAlign: 'center',
+                            fontSize: '0.8rem',
+                            fontFamily: 'Manrope-semibold',
+                            padding: '5px',
+                            borderBottomLeftRadius: '8px',
+                            borderBottomRightRadius: '8px',
+                            marginTop: '0.5px',
+                        },
+                    }}
+                    className={styles['form-image-preview-box']}
+                >
                     {formik.values.image ? (
                         <img
                             className={styles['form-image-preview-box-img']}
@@ -253,8 +286,8 @@ const CreateNFTForm = () => {
                                 : { borderBottomLeftRadius: 8, borderBottomRightRadius: 8 },
                     }}
                 />
-                <Button type="submit" variant="contained" fullWidth disableElevation>
-                    Mint
+                <Button disabled={formik.isSubmitting} type="submit" variant="contained" fullWidth disableElevation>
+                    {formik.isSubmitting ? 'Please wait...' : 'Mint'}
                 </Button>
             </Stack>
         </form>
