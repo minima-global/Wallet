@@ -1,3 +1,4 @@
+import { callCreateNFTWithBlob } from './../rpc-commands';
 // /**
 //  * 
 //  * Handle NFT Image Compression + Building
@@ -9,13 +10,13 @@ import { Token } from "../types/minima"
 
 export const buildUserNFT = (imageDataUrl: string, compressionFactor: number, data: any): Promise<string | Token> => {
   return resizeImage(imageDataUrl, compressionFactor).then((resizedImageDataUrl) => {
-      console.log('resizedImageDataUrl', resizedImageDataUrl)
+      //console.log('resizedImageDataUrl', resizedImageDataUrl)
       const onlyString = resizedImageDataUrl.slice(resizedImageDataUrl.indexOf(',') + 1)
       return createNFTWithImage(onlyString, data)
   })
 }
 
-export function resizeImage(imageDataUrl: string, compressionFactor: number): Promise<string> {
+export function resizeImage(imageDataUrl: string, compressionFactor: number): Promise<any> {
   return new Promise((resolve, reject) => {
       let imageNode = document.createElement('img')
       imageNode.src = imageDataUrl
@@ -45,7 +46,7 @@ export function resizeImage(imageDataUrl: string, compressionFactor: number): Pr
 }
 
 
-function createNFTWithImage(encodedImage: string, data: any): Promise<string | Token> {
+function createNFTWithImage(encodedImage: string, data: any): Promise<any> {
   return new Promise((resolve, reject) => {
       // handle image compression part..
       var xmlString = '<artimage></artimage>'
@@ -55,17 +56,12 @@ function createNFTWithImage(encodedImage: string, data: any): Promise<string | T
       var serializer = new XMLSerializer()
       var imageXmlString = serializer.serializeToString(xmlDoc)
 
-      data.image = imageXmlString;
-      console.log(`CREANFT WITHIMAGE`)
-      callCreateNFT(data).then((res: any) => {
-        console.log(`callCreateNFT result`, res);
+      callCreateNFTWithBlob(data, imageXmlString).then((res: any) => {
         resolve(res)
       }).catch((err) => {
         console.error(`callCreateNFT error`, err);
         reject(err);
       })
-      
-      
   })
 }
 

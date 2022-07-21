@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Button, Stack, TextField, Typography } from '@mui/material';
-import { useFormik } from 'formik';
+import { FormikConsumer, useFormik } from 'formik';
 import * as Yup from 'yup';
 
 import styles from '../../theme/cssmodule/Components.module.css';
@@ -9,7 +9,9 @@ import ClearIcon from '@mui/icons-material/Clear';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 import { buildUserNFT } from '../../minima/libs/nft';
-import { strToHex } from '../../shared/functions';
+import { insufficientFundsError, strToHex } from '../../shared/functions';
+import { useAppDispatch } from '../../minima/redux/hooks';
+import { toggleNotification } from '../../minima/redux/slices/notificationSlice';
 
 const validation = Yup.object().shape({
     name: Yup.string().required('This field is required.'),
@@ -23,9 +25,12 @@ function isBlob(blob: null | Blob): blob is Blob {
     return (blob as Blob) !== null && (blob as Blob).type !== undefined;
 }
 const getDataUrlFromBlob = (blob: Blob): Promise<string> => {
+    //console.log('get data url?');
+
+    const copy = blob;
     return new Promise((resolve, reject) => {
         var reader = new FileReader();
-        reader.readAsDataURL(blob);
+        reader.readAsDataURL(copy);
         reader.onload = function () {
             if (typeof reader.result === 'string') {
                 resolve(reader.result);
@@ -37,11 +42,13 @@ const getDataUrlFromBlob = (blob: Blob): Promise<string> => {
 };
 
 const CreateNFTForm = () => {
-    const inp = React.useRef<any>();
+    const inp = React.useRef<any>(undefined);
+    const dispatch = useAppDispatch();
+    const [previewImage, setPreviewImage] = React.useState(undefined);
 
     const formik = useFormik({
         initialValues: {
-            image: null,
+            image: undefined,
             amount: '',
             name: '',
             description: '',
@@ -51,35 +58,63 @@ const CreateNFTForm = () => {
             webvalidate: '',
         },
         onSubmit: (data: any) => {
-            console.log(data);
             const COMPRESSION_FACTOR_LOW = 0.1;
             const COMPRESSION_FACTOR_MEDIUM = 0.5;
             const COMPRESSION_FACTOR_HIGH = 0.9;
 
-            data.description = strToHex(data.description);
-            data.external_url = strToHex(data.external_url);
-            data.owner = strToHex(data.owner);
-            data.name = strToHex(data.name);
+            const oNFT = {
+                image: new File([data.image], 'imageData'),
+                amount: data.amount,
+                name: strToHex(data.name),
+                description: strToHex(data.description),
+                external_url: strToHex(data.external_url),
+                owner: strToHex(data.owner),
+                creation_date: data.creation_date,
+                webvalidate: data.webvalidate,
+            };
 
-            if (isBlob(data.image)) {
-                getDataUrlFromBlob(data.image)
-                    .then((f) => {
-                        buildUserNFT(f, COMPRESSION_FACTOR_HIGH, data)
-                            .then((res: any) => {
-                                console.log(`buildUserNFT`, res);
-                                if (res.status) {
+            // check if is blob
+            const _isBlob = isBlob(oNFT.image);
+            if (_isBlob) {
+                getDataUrlFromBlob(oNFT.image)
+                    .then((dataUrl) => {
+                        // time to compress & send to the blockchain
+                        buildUserNFT(dataUrl, COMPRESSION_FACTOR_HIGH, oNFT)
+                            .then((result: any) => {
+                                if (result.status) {
+                                    // success, reset form, set previewImage to undefined again
                                     formik.resetForm();
+                                    setPreviewImage(undefined);
+                                }
+
+                                if (!result.status) {
+                                    throw new Error(result.error ? result.error : result.message);
                                 }
                             })
                             .catch((err) => {
-                                console.error(`buildUserNFT error`, err);
+                                console.error('buildUserNFT', err);
+                                formik.setSubmitting(false);
+                                dispatch(toggleNotification(`${err}`, 'error', 'error'));
+
+                                if (insufficientFundsError(err.message)) {
+                                    formik.setFieldError('amount', err.message);
+                                    dispatch(toggleNotification(`${err.message}`, 'error', 'error'));
+                                }
+
+                                if (err.message) {
+                                    dispatch(toggleNotification(`${err.message}`, 'error', 'error'));
+                                }
                             });
                     })
                     .catch((err) => {
-                        console.error(err);
+                        console.error('getDataUrlFromBlob', err);
+                        dispatch(toggleNotification(`${err}`, 'error', 'error'));
+                        formik.setSubmitting(false);
                     });
             } else {
-                console.error('not blob!');
+                console.error('Selected image is not of type Blob');
+                dispatch(toggleNotification('Image is not of type Blob, please report bug to admin', 'error', 'error'));
+                formik.setSubmitting(false);
             }
         },
         validationSchema: validation,
@@ -125,11 +160,8 @@ const CreateNFTForm = () => {
                     }}
                     className={styles['form-image-preview-box']}
                 >
-                    {formik.values.image ? (
-                        <img
-                            className={styles['form-image-preview-box-img']}
-                            src={URL.createObjectURL(formik.values.image)}
-                        />
+                    {previewImage ? (
+                        <img src={URL.createObjectURL(previewImage)} className={styles['form-image-preview-box-img']} />
                     ) : null}
                     <input
                         ref={inp}
@@ -139,13 +171,19 @@ const CreateNFTForm = () => {
                         hidden
                         accept="image/*"
                         onChange={(e: any) => {
+                            if (previewImage) {
+                                // console.log('revoking url object..');
+                                URL.revokeObjectURL(previewImage);
+                            }
                             if (e.target.files[0]) {
+                                //console.log('setting FIle to subscribers');
+                                setPreviewImage(e.target.files[0]);
                                 formik.setFieldValue('image', e.target.files[0]);
                             }
                         }}
                     />
 
-                    {formik.values.image ? (
+                    {previewImage ? (
                         <>
                             <ClearIcon
                                 color="inherit"
@@ -153,7 +191,7 @@ const CreateNFTForm = () => {
                                 onClick={() => formik.setFieldValue('image', '')}
                             />
                             <Box className={styles['info-label-image-upload']}>
-                                <Typography variant="caption">{formik.values.image['name']}</Typography>
+                                <Typography variant="caption">{previewImage ? previewImage['name'] : null}</Typography>
                             </Box>
                         </>
                     ) : (

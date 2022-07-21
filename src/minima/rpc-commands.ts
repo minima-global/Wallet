@@ -14,6 +14,9 @@ export const callToken = (data: any) => {
 export const callCreateNFT = (data: any) => {
     return req(`tokencreate name:{"name":"${data.name}", "description":"${data.description}", "external_url":"${data.external_url}", "image":"${data.image}", "owner":"${data.owner}", "nft":"true"} amount:${data.amount} decimals:0 webvalidate:${data.webvalidate}`);
 }
+export const callCreateNFTWithBlob = (data: any, image: string) => {
+    return req(`tokencreate name:{"name":"${data.name}", "description":"${data.description}", "external_url":"${data.external_url}", "image":"${image}", "owner":"${data.owner}", "nft":"true"} amount:${data.amount} decimals:0 webvalidate:${data.webvalidate}`);
+}
 export const callBalance = () => {
     return req(`balance`);
 }

@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useState, useMemo } from 'react';
 import {
     Box,
     Grid,
@@ -34,7 +34,7 @@ import * as Yup from 'yup';
 import { INSUFFICIENT } from '../../minima/constants';
 
 import { useNavigate } from 'react-router-dom';
-import { strToHex } from '../../shared/functions';
+import { containsText, isPropertyString, strToHex } from '../../shared/functions';
 import { hexToString } from '../../shared/functions';
 
 import GridLayout from '../components/GridLayout';
@@ -47,9 +47,15 @@ import styles from '../../theme/cssmodule/Components.module.css';
 
 const NFTs: FC = () => {
     const navigate = useNavigate();
-    // const [page, setPage] = useState(1);
     const [tabsValue, setTabsValue] = useState('one');
-    // const COUNT_PER_PAGE = 4;
+    const [filterText, setFilterText] = useState('');
+
+    // Pagination
+    const [page, setPage] = useState(1);
+    const COUNT_PER_PAGE = 5;
+    const currentPage = (page: number) => {
+        setPage(page);
+    };
     let allNFTs = useAppSelector(selectNFTs);
 
     const favourited = useAppSelector(selectFavouriteNFTs);
@@ -59,9 +65,28 @@ const NFTs: FC = () => {
         allNFTs = allNFTs?.filter((t: MinimaToken) => favourited?.includes(t));
     }
 
+    const getFilteredBalanceList = (arr: MinimaToken[], filterText: string) => {
+        return arr.filter(
+            (opt: MinimaToken) =>
+                (isPropertyString(opt.token) && containsText(opt.token, filterText)) ||
+                (!isPropertyString(opt.token) && containsText(opt.token.name, filterText)) ||
+                (isPropertyString(opt.tokenid) && containsText(opt.tokenid, filterText))
+        );
+    };
+    const displayedOptions = useMemo(
+        () => getFilteredBalanceList(allNFTs ? allNFTs : [], filterText),
+        [allNFTs, filterText]
+    );
+
     const handleTabSelection = () => {
         setTabsValue(tabsValue === 'one' ? 'two' : 'one');
     };
+
+    function handleInputChange(event: any) {
+        const value = event.target.value;
+        setFilterText(value);
+        // when the component re-renders the updated filter text will create a new filteredBalance variable
+    }
 
     // const currentPage = (page: number) => {
     //     // console.log(`Setting current page number to: ${page}`);
@@ -101,13 +126,19 @@ const NFTs: FC = () => {
                         />
                         <CardContent>
                             <Stack spacing={3}>
-                                <TextField fullWidth id="search" placeholder="Search by name" />
+                                <TextField
+                                    fullWidth
+                                    id="search"
+                                    value={filterText}
+                                    onChange={handleInputChange}
+                                    placeholder="Search by name"
+                                />
 
                                 <NFTGrid
                                     children={
                                         <>
-                                            {allNFTs && typeof allNFTs !== 'undefined' ? (
-                                                allNFTs.map((n) => {
+                                            {displayedOptions && typeof displayedOptions !== 'undefined' ? (
+                                                displayedOptions.map((n) => {
                                                     return <NFTCard key={n.tokenid} NFT={n} />;
                                                 })
                                             ) : (
@@ -125,10 +156,22 @@ const NFTs: FC = () => {
                                 ) : null}
                             </Stack>
                         </CardContent>
+                        {filterText.length === 0 && allNFTs && allNFTs.length ? (
+                            <CardActions
+                                className="MiniBalanceActions"
+                                sx={{ justifyContent: 'center', display: 'flex' }}
+                            >
+                                <AppPagination
+                                    currentPage={currentPage}
+                                    totalNFTs={allNFTs.length}
+                                    countPerPage={COUNT_PER_PAGE}
+                                />
+                            </CardActions>
+                        ) : null}
                     </Card>
                 </>
             }
-        ></GridLayout>
+        />
     );
 };
 
