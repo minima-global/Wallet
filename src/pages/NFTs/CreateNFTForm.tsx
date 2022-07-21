@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Button, Stack, TextField, Typography } from '@mui/material';
-import { FormikConsumer, useFormik } from 'formik';
+import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
 import styles from '../../theme/cssmodule/Components.module.css';
@@ -8,10 +8,12 @@ import styles from '../../theme/cssmodule/Components.module.css';
 import ClearIcon from '@mui/icons-material/Clear';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
+import Burn from '../components/forms/Burn';
 import { buildUserNFT } from '../../minima/libs/nft';
 import { insufficientFundsError, strToHex } from '../../shared/functions';
 import { useAppDispatch } from '../../minima/redux/hooks';
 import { toggleNotification } from '../../minima/redux/slices/notificationSlice';
+import ModalManager from '../components/managers/ModalManager';
 
 const validation = Yup.object().shape({
     name: Yup.string().required('This field is required.'),
@@ -25,8 +27,6 @@ function isBlob(blob: null | Blob): blob is Blob {
     return (blob as Blob) !== null && (blob as Blob).type !== undefined;
 }
 const getDataUrlFromBlob = (blob: Blob): Promise<string> => {
-    //console.log('get data url?');
-
     const copy = blob;
     return new Promise((resolve, reject) => {
         var reader = new FileReader();
@@ -44,7 +44,15 @@ const getDataUrlFromBlob = (blob: Blob): Promise<string> => {
 const CreateNFTForm = () => {
     const inp = React.useRef<any>(undefined);
     const dispatch = useAppDispatch();
+    const [modalEmployee, setModalEmployee] = React.useState('burn');
     const [previewImage, setPreviewImage] = React.useState(undefined);
+
+    const handleClose = () => {
+        setModalEmployee('');
+    };
+    const handleProceed = () => {
+        setModalEmployee('confirmation');
+    };
 
     const formik = useFormik({
         initialValues: {
@@ -56,6 +64,7 @@ const CreateNFTForm = () => {
             owner: '',
             creation_date: '',
             webvalidate: '',
+            burn: '',
         },
         onSubmit: (data: any) => {
             const COMPRESSION_FACTOR_LOW = 0.1;
@@ -71,6 +80,7 @@ const CreateNFTForm = () => {
                 owner: strToHex(data.owner),
                 creation_date: data.creation_date,
                 webvalidate: data.webvalidate,
+                burn: '',
             };
 
             // check if is blob
@@ -326,6 +336,15 @@ const CreateNFTForm = () => {
                     {formik.isSubmitting ? 'Please wait...' : 'Mint'}
                 </Button>
             </Stack>
+            {/* closeFn, modal, title, children, formik  */}
+            <ModalManager
+                proceedFn={handleProceed} // move onto confirmation
+                children={<></>}
+                modal={modalEmployee}
+                title="Confirmation"
+                formik={formik}
+                closeFn={handleClose}
+            />
         </form>
     );
 };

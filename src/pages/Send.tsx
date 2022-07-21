@@ -33,6 +33,10 @@ import { useAppDispatch, useAppSelector } from '../minima/redux/hooks';
 import { selectBalance, selectBalanceFilter } from '../minima/redux/slices/balanceSlice';
 import { toggleNotification } from '../minima/redux/slices/notificationSlice';
 import { useParams } from 'react-router-dom';
+import ModalManager from './components/managers/ModalManager';
+
+import ValueTransferConfirmation from './components/forms/common/ValueTransferConfirmation';
+import CoinSplitConfirmation from './components/forms/common/CoinSplitConfirmation';
 
 const TransferTokenSchema = Yup.object().shape({
     tokenid: Yup.string().required('Field Required'),
@@ -69,6 +73,14 @@ const Send: FC = () => {
     const { tokenid } = useParams();
 
     const [mode, setMode] = useState(1);
+
+    const [modalEmployee, setModalEmployee] = useState('');
+    const handleCloseModalManager = () => {
+        setModalEmployee('');
+    };
+    const handleProceed = () => {
+        setModalEmployee('confirmation');
+    };
 
     // Handle Modal
     const [open, setOpen] = useState(false);
@@ -114,6 +126,7 @@ const Send: FC = () => {
         },
         validationSchema: dynamicValidation,
         onSubmit: (data) => {
+            setModalEmployee(''); // close modals
             const modifyData = {
                 ...data,
                 burn: data.burn && data.burn.length ? data.burn : 0,
@@ -209,18 +222,14 @@ const Send: FC = () => {
                             if (insufficientFundsError(err.message)) {
                                 formik.setFieldError('amount', err.message);
                                 console.error(err.message);
+                                dispatch(toggleNotification(`${err.message}`, 'error', 'error'));
                             }
 
                             if (err.message !== undefined) {
                                 console.error(err.message);
+                                dispatch(toggleNotification(`${err.message}`, 'error', 'error'));
                             }
-
                             // setOpenConfirmationModal(false);
-                        })
-                        .finally(() => {
-                            // handleCloseConfirmationModal();
-                            // NO MATTER WHAT
-                            formik.setSubmitting(false);
                         });
                 } else {
                     dispatch(
@@ -242,18 +251,6 @@ const Send: FC = () => {
 
     return (
         <>
-            {/* <Portal>
-                <Snackbar
-                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                    autoHideDuration={3000}
-                    open={errMessage.length ? true : false}
-                >
-                    <Alert severity="error" sx={{ backgroundColor: 'rgb(211, 47, 47)', width: '100%', color: '#fff' }}>
-                        {errMessage}
-                    </Alert>
-                </Snackbar>
-            </Portal> */}
-
             <GridLayout
                 // loading={loading}
                 children={
@@ -426,7 +423,10 @@ const Send: FC = () => {
                                         color="primary"
                                         variant="contained"
                                         fullWidth
-                                        onClick={() => setOpenConfirmationModal(true)}
+                                        onClick={() => {
+                                            console.log('next');
+                                            setModalEmployee('burn');
+                                        }}
                                     >
                                         {formik.isSubmitting ? 'Please wait...' : 'Next'}
                                     </Button>
@@ -448,6 +448,20 @@ const Send: FC = () => {
                             open={openConfirmationModal}
                             mode={formik.values.mode}
                             formik={formik}
+                        />
+
+                        <ModalManager
+                            formik={formik}
+                            modal={modalEmployee}
+                            closeFn={handleCloseModalManager}
+                            proceedFn={handleProceed}
+                            children={
+                                mode === 1 ? (
+                                    <ValueTransferConfirmation formik={formik} />
+                                ) : (
+                                    <CoinSplitConfirmation formik={formik} />
+                                )
+                            }
                         />
 
                         <MiniModal

@@ -44,6 +44,7 @@ import { useAppSelector } from '../../minima/redux/hooks';
 import { selectFavouriteNFTs, selectNFTs } from '../../minima/redux/slices/balanceSlice';
 
 import styles from '../../theme/cssmodule/Components.module.css';
+import Burn from '../components/forms/Burn';
 
 const NFTs: FC = () => {
     const navigate = useNavigate();

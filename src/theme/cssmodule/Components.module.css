@@ -216,3 +216,110 @@
   0%, 50%, 100% {  background: #fee; }
   30%, 80% { background: #fff; }
 }
+
+
+/** Modals */
+
+/**
+
+~~~Burn 
+
+**/
+
+.burn-modal {
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 0;
+}
+.burn-modal-title {
+  color:#fff!important;
+}
+.burn-modal:focus {
+  outline:0;
+}
+.burn-modal-hdr {
+  height: 48px;
+  display: flex;
+  align-items: center;
+}
+.burn-skip-btn {
+  margin: 0px 16px!important;
+}
+@media all and (min-width: 600px) {
+  .burn-modal-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .burn-modal {
+    height: auto;
+    width: 425px;
+    min-height: 360px!important;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .burn-modal-hdr {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+  }
+}
+
+
+/**
+
+~~~ValueTransferConfirmation 
+
+**/
+.value-transfer-address-wrapper {
+  padding: 8px 8px;
+  background: #fff;
+}
+.value-transfer-icon {
+  width: 24px;
+  height: 24px;
+  background: #EDEDED;
+}
+.value-transfer-address {
+  white-space: normal;
+  word-break: break-all;
+  font-size: 0.8rem;
+  font-family: monospace!important;
+  font-variant-numeric: tabular-nums;
+}
+
+
+/**
+
+~~~Success/Error Modal 
+
+**/
+.success-error-modal-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+}
+.success-error-modal {
+  background-color: rgba(255, 255, 255, 0.9);
+  outline: 0;
+  width: 360px;
+  height: auto;
+  min-height: 360px;
+  border-radius: 8px;
+  padding: 16px;
+}
+.success-error-modal-hdr {
+  height: 48px;
+}
+.success-error-ok-btn {
+  margin-left: 16px!important;
+}
+
+@media all and (max-width: 370px) {
+  .success-error-modal {
+    width: 280px;
+    min-height: 300px;
+  }
+}

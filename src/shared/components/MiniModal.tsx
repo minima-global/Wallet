@@ -1,9 +1,10 @@
 import { FC } from 'react';
 import Modal from '@mui/material/Modal';
-import { Box, Typography, Chip } from '@mui/material';
+import { Box, Typography, Chip, Button, Stack } from '@mui/material';
 import { MiniModalProp } from '../../types/minima';
 
 import { ModalButtonWrapper } from './modals/ModalWrappers';
+import styles from '../../theme/cssmodule/Components.module.css';
 
 const MiniModal: FC<MiniModalProp> = ({ open, handleClose, executeName, customFnc, status, header, subtitle }: any) => {
     return (
@@ -12,9 +13,10 @@ const MiniModal: FC<MiniModalProp> = ({ open, handleClose, executeName, customFn
             onClose={handleClose}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
+            className={styles['success-error-modal-wrapper']}
         >
-            <Box className="MiniModal" sx={[style, { width: { xs: '90vw', sm: 400 }, minWidth: { xs: 270, sm: 370 } }]}>
-                <Box>
+            <Stack spacing={2} className={styles['success-error-modal']} justifyContent="space-between">
+                <Box component="div" className={styles['success-error-modal-hdr']}>
                     <Typography sx={statusCss} id="modal-modal-title" variant="h6" component="h2">
                         {status}
                     </Typography>
@@ -25,19 +27,26 @@ const MiniModal: FC<MiniModalProp> = ({ open, handleClose, executeName, customFn
                         {subtitle}
                     </Typography>
                 </Box>
+
                 <ModalButtonWrapper
                     children={
                         <>
-                            <Chip sx={{ marginRight: 2 }} variant="outlined" label="Cancel" onClick={handleClose} />
-                            <Chip
+                            <Button variant="outlined" color="inherit" onClick={handleClose}>
+                                Cancel
+                            </Button>
+                            <Button
+                                variant="contained"
+                                disableElevation
                                 color="primary"
-                                label={executeName ? executeName : 'Ok'}
+                                className={styles['success-error-ok-btn']}
                                 onClick={customFnc ? customFnc : handleClose}
-                            />
+                            >
+                                {executeName ? executeName : 'Ok'}
+                            </Button>
                         </>
                     }
                 />
-            </Box>
+            </Stack>
         </Modal>
     );
 };
