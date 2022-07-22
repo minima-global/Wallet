@@ -12,6 +12,7 @@ import {
     ListItem,
     ListItemText,
     Skeleton,
+    Stack,
 } from '@mui/material';
 import GridLayout from './components/GridLayout';
 import { callGetAddress } from '../minima/rpc-commands';
@@ -22,6 +23,7 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import { useAppSelector } from '../minima/redux/hooks';
 import { selectBalance } from '../minima/redux/slices/balanceSlice';
+import CustomListItem from '../shared/components/CustomListItem';
 // import { BalanceUpdates } from '../App';
 
 const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
@@ -85,44 +87,39 @@ const Receive: FC = () => {
                             <Skeleton sx={{ alignSelf: 'center' }} variant="rectangular" width={260} height={260} />
                         )}
 
-                        <List>
-                            <ListItem>
-                                {address && address.length > 0 ? (
-                                    <ListItemText
-                                        sx={{ wordBreak: 'break-word' }}
-                                        primary="Wallet Address"
-                                        secondary={address}
-                                        primaryTypographyProps={{ fontWeight: 600 }}
-                                    />
-                                ) : (
-                                    <ListItemText
-                                        sx={{ wordBreak: 'break-word' }}
-                                        primary={<Skeleton variant="text" width={100} />}
-                                        secondary={<Skeleton variant="text" />}
-                                        primaryTypographyProps={{ fontWeight: 600 }}
-                                    />
-                                )}
-                            </ListItem>
-                        </List>
-                        {address && address.length > 0 ? (
-                            <>
-                                <BootstrapTooltip placement="top-end" title={!isCopied ? 'Copy Address' : 'Copied!'}>
-                                    <ListItemIcon
-                                        onClick={handleCopyClick}
-                                        sx={[copyBtn, { backgroundColor: isCopied ? '#00B74A' : null }]}
+                        <Stack spacing={2} sx={{ mt: 2 }}>
+                            {address && address.length > 0 ? (
+                                <CustomListItem title="Wallet Address" value={address} />
+                            ) : (
+                                <CustomListItem
+                                    title={<Skeleton variant="text" width={100} />}
+                                    value={<Skeleton variant="text" />}
+                                />
+                            )}
+
+                            {address && address.length > 0 ? (
+                                <>
+                                    <BootstrapTooltip
+                                        placement="top-end"
+                                        title={!isCopied ? 'Copy Address' : 'Copied!'}
                                     >
-                                        {!isCopied ? (
-                                            <ContentCopyIcon sx={{ color: '#fff' }} />
-                                        ) : (
-                                            <FileCopyIcon sx={{ color: '#fff' }} />
-                                        )}
-                                    </ListItemIcon>
-                                </BootstrapTooltip>
-                                <Typography variant="caption">
-                                    Receive any Minima & network tokens with this address.
-                                </Typography>
-                            </>
-                        ) : null}
+                                        <ListItemIcon
+                                            onClick={handleCopyClick}
+                                            sx={[copyBtn, { backgroundColor: isCopied ? '#00B74A' : null }]}
+                                        >
+                                            {!isCopied ? (
+                                                <ContentCopyIcon sx={{ color: '#fff' }} />
+                                            ) : (
+                                                <FileCopyIcon sx={{ color: '#fff' }} />
+                                            )}
+                                        </ListItemIcon>
+                                    </BootstrapTooltip>
+                                </>
+                            ) : null}
+                            <Typography variant="caption">
+                                Receive any Minima & network tokens with this address.
+                            </Typography>
+                        </Stack>
                     </CardContent>
                 </Card>
             }
