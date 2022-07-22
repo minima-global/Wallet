@@ -28,9 +28,9 @@ const NFTDetail = () => {
     const { tokenid } = useParams();
     const navigate = useNavigate();
     const NFTs = useAppSelector(selectNFTs);
-    console.log(tokenid);
+    // console.log(tokenid);
     const NFT: any = NFTs ? NFTs.find((n: MinimaToken) => n.tokenid === tokenid) : undefined;
-    console.log(`NFT`, NFT);
+    // console.log(`NFT`, NFT);
 
     let imageUrl = null; // populate with image if we have one, or keep null if we don't
     try {

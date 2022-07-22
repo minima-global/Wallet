@@ -81,7 +81,7 @@ const NFTCard = ({ NFT }: any) => {
                                 <Typography variant="h6" className={styles['nft-title']}>
                                     {NFT.token.name}
                                 </Typography>
-                                {!isTokenValidated ? <VerifiedIcon fontSize="inherit" color="primary" /> : null}
+                                {isTokenValidated ? <VerifiedIcon fontSize="inherit" color="primary" /> : null}
                             </Stack>
                             <Typography className={styles['nft-owner']} variant="caption">
                                 {NFT.token.owner && NFT.token.owner.length

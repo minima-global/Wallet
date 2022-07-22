@@ -314,14 +314,14 @@ const CreateNFTForm = () => {
                     >{`'${formik.values.description.length} / 255'`}</Box>
                 </TextField>
                 <Typography className={styles['form-help-caption']} variant="caption">
-                    An address or name can be added as a parameter of ownership.
+                    A creator address or name can be added as an identity.
                 </Typography>
                 <TextField
                     disabled={formik.isSubmitting}
                     fullWidth
                     id="owner"
                     name="owner"
-                    placeholder="owner address"
+                    placeholder="creator id/name"
                     value={formik.values.owner}
                     onChange={formik.handleChange}
                     error={formik.touched.owner && Boolean(formik.errors.owner)}

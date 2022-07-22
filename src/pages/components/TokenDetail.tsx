@@ -12,6 +12,7 @@ import {
     Fade,
     Stack,
     Divider,
+    Skeleton,
 } from '@mui/material';
 
 import MinimaIcon from '../../assets/images/minimaLogoSquare.png';
@@ -39,6 +40,24 @@ const TokenDetail = () => {
     }
     const loading = typeof token === 'undefined';
 
+    let imageUrl = null; // populate with image if we have one, or keep null if we don't
+    if (token && token.token.nft) {
+        try {
+            var parser = new DOMParser();
+            const doc = parser.parseFromString(token.token.image, 'application/xml');
+            const errorNode2 = doc.querySelector('parsererror');
+            if (errorNode2) {
+                console.error('Token does not contain an image: ' + token);
+            } else {
+                // console.log('parsing succeeded');
+                var imageString = doc.getElementsByTagName('artimage')[0].innerHTML;
+                imageUrl = `data:image/jpeg;base64,${imageString}`;
+            }
+        } catch (err) {
+            console.error('Token does not contain an image: ' + token);
+        }
+    }
+
     return (
         <>
             <GridLayout
@@ -54,6 +73,12 @@ const TokenDetail = () => {
                                             avatar={
                                                 token.tokenid === '0x00' ? (
                                                     <MinimaSquareIcon className="minima-icon" />
+                                                ) : token.token.nft && imageUrl ? (
+                                                    <Avatar
+                                                        variant="rounded"
+                                                        src={imageUrl}
+                                                        alt={token?.token.name ? token?.token.name : token?.token}
+                                                    />
                                                 ) : (
                                                     <Avatar
                                                         variant="rounded"
@@ -92,13 +117,20 @@ const TokenDetail = () => {
                                                     component="img"
                                                     height={enlargenCover ? '100%' : '194'}
                                                     src={
-                                                        token?.tokenid === '0x00'
-                                                            ? MinimaIcon
-                                                            : !token?.token.url || token?.token.url.length === 0
-                                                            ? `https://robohash.org/${token?.tokenid}`
-                                                            : token?.token.url && token?.token.url.length > 0
-                                                            ? token.token.url
-                                                            : ''
+                                                        token?.tokenid === '0x00' ? (
+                                                            MinimaIcon
+                                                        ) : (!token?.token.url && !token.token.nft) ||
+                                                          (token.token.url &&
+                                                              token?.token.url.length === 0 &&
+                                                              !token.token.nft) ? (
+                                                            `https://robohash.org/${token?.tokenid}`
+                                                        ) : token?.token.url && token?.token.url.length > 0 ? (
+                                                            token.token.url
+                                                        ) : token.token.nft && imageUrl ? (
+                                                            imageUrl
+                                                        ) : (
+                                                            <Skeleton variant="rectangular" />
+                                                        )
                                                     }
                                                     alt="Paella dish"
                                                 />
