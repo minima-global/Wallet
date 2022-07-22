@@ -14,6 +14,7 @@ import { insufficientFundsError, strToHex } from '../../shared/functions';
 import { useAppDispatch } from '../../minima/redux/hooks';
 import { toggleNotification } from '../../minima/redux/slices/notificationSlice';
 import ModalManager from '../components/managers/ModalManager';
+import NFTConfirmation from '../components/forms/common/NFTConfirmation';
 
 const validation = Yup.object().shape({
     name: Yup.string().required('This field is required.'),
@@ -44,7 +45,7 @@ const getDataUrlFromBlob = (blob: Blob): Promise<string> => {
 const CreateNFTForm = () => {
     const inp = React.useRef<any>(undefined);
     const dispatch = useAppDispatch();
-    const [modalEmployee, setModalEmployee] = React.useState('burn');
+    const [modalEmployee, setModalEmployee] = React.useState('');
     const [previewImage, setPreviewImage] = React.useState(undefined);
 
     const handleClose = () => {
@@ -70,6 +71,7 @@ const CreateNFTForm = () => {
             const COMPRESSION_FACTOR_LOW = 0.1;
             const COMPRESSION_FACTOR_MEDIUM = 0.5;
             const COMPRESSION_FACTOR_HIGH = 0.9;
+            setModalEmployee('');
 
             const oNFT = {
                 image: new File([data.image], 'imageData'),
@@ -332,14 +334,20 @@ const CreateNFTForm = () => {
                                 : { borderBottomLeftRadius: 8, borderBottomRightRadius: 8 },
                     }}
                 />
-                <Button disabled={formik.isSubmitting} type="submit" variant="contained" fullWidth disableElevation>
+                <Button
+                    disabled={formik.isSubmitting}
+                    onClick={() => setModalEmployee('burn')}
+                    variant="contained"
+                    fullWidth
+                    disableElevation
+                >
                     {formik.isSubmitting ? 'Please wait...' : 'Mint'}
                 </Button>
             </Stack>
             {/* closeFn, modal, title, children, formik  */}
             <ModalManager
                 proceedFn={handleProceed} // move onto confirmation
-                children={<></>}
+                children={<NFTConfirmation formik={formik}></NFTConfirmation>}
                 modal={modalEmployee}
                 title="Confirmation"
                 formik={formik}

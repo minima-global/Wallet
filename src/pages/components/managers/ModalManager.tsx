@@ -2,7 +2,6 @@ import Burn from '../forms/Burn';
 import Confirmation from '../forms/Confirmation';
 
 const ModalManager = ({ proceedFn, closeFn, modal, title, children, formik }: any) => {
-    console.log(modal);
     return (
         <>
             <Burn formik={formik} open={modal === 'burn'} closeFn={closeFn} proceedFn={proceedFn} />

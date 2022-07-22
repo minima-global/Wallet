@@ -230,6 +230,7 @@
   height: 100%;
   background-color: rgba(255, 255, 255, 0.9);
   padding: 0;
+  overflow-y: scroll;
 }
 .burn-modal-title {
   color:#fff!important;
@@ -255,6 +256,7 @@
     height: auto;
     width: 425px;
     min-height: 360px!important;
+    max-height: 95vh;
     border-radius: 8px;
     display: flex;
     flex-direction: column;
@@ -322,4 +324,15 @@
     width: 280px;
     min-height: 300px;
   }
+}
+
+/**
+
+~~~NFT Confirmation Modal 
+
+**/
+.nft-confirmation-card {
+  margin: 16px 0px;
+  max-height: auto;
+  max-width: 180px;
 }
