@@ -44,7 +44,6 @@ import { useAppSelector } from '../../minima/redux/hooks';
 import { selectFavouriteNFTs, selectNFTs } from '../../minima/redux/slices/balanceSlice';
 
 import styles from '../../theme/cssmodule/Components.module.css';
-import Burn from '../components/forms/Burn';
 
 const NFTs: FC = () => {
     const navigate = useNavigate();
@@ -52,11 +51,11 @@ const NFTs: FC = () => {
     const [filterText, setFilterText] = useState('');
 
     // Pagination
-    const [page, setPage] = useState(1);
-    const COUNT_PER_PAGE = 5;
-    const currentPage = (page: number) => {
-        setPage(page);
-    };
+    // const [page, setPage] = useState(1);
+    // const COUNT_PER_PAGE = 5;
+    // const currentPage = (page: number) => {
+    //     setPage(page);
+    // };
     let allNFTs = useAppSelector(selectNFTs);
 
     const favourited = useAppSelector(selectFavouriteNFTs);
@@ -71,6 +70,7 @@ const NFTs: FC = () => {
             (opt: MinimaToken) =>
                 (isPropertyString(opt.token) && containsText(opt.token, filterText)) ||
                 (!isPropertyString(opt.token) && containsText(opt.token.name, filterText)) ||
+                (!isPropertyString(opt.token) && containsText(opt.token.owner, filterText)) ||
                 (isPropertyString(opt.tokenid) && containsText(opt.tokenid, filterText))
         );
     };
@@ -159,7 +159,7 @@ const NFTs: FC = () => {
                                 </Grid>
                             </Stack>
                         </CardContent>
-                        {filterText.length === 0 && allNFTs && allNFTs.length ? (
+                        {/* {filterText.length === 0 && allNFTs && allNFTs.length ? (
                             <CardActions
                                 className="MiniBalanceActions"
                                 sx={{ justifyContent: 'center', display: 'flex' }}
@@ -170,7 +170,7 @@ const NFTs: FC = () => {
                                     countPerPage={COUNT_PER_PAGE}
                                 />
                             </CardActions>
-                        ) : null}
+                        ) : null} */}
                     </Card>
                 </>
             }

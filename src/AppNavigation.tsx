@@ -149,8 +149,7 @@ const AppNavigation = () => {
                     <Grid xs={0} md={2} item />
                 </Grid>
             </Toolbar>
-            {/* <AppBar position="static" sx={[appwidth, toolbarPadding]}>
-            </AppBar> */}
+
             <Box component="main" sx={[appwidth, contentPadding]}>
                 <Routes>
                     <Route path="/" element={<Navigate replace to="/balance" />} />
@@ -208,7 +207,7 @@ const drawerdisplaydesktop = {
 };
 
 const contentPadding = {
-    padding: { xs: '8px 8px!important', sm: '8px 0px' },
+    padding: { xs: '16px 8px!important' },
 };
 
 export default AppNavigation;
