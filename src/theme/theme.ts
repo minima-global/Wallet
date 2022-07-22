@@ -44,15 +44,16 @@ let theme = createTheme({
             lineHeight: 1,
         },
         caption: {
-            fontFamily: 'Manrope-semibold'
+            fontFamily: 'Manrope-semibold',
+            color: 'rgb(118, 118, 130)'
         },
         subtitle1: {
-            fontSize: "0.9rem",
+            fontSize: "0.9em",
             fontFamily: "Manrope-semibold",
             color: '#363A3F'
         },
         body2: {
-            fontSize: "0.9rem",
+            fontSize: "1em",
             fontFamily: "Manrope-semibold",
             color: '#363A3F!important'
         }

@@ -1,3 +1,4 @@
+import React from 'react';
 import { MinimaToken } from '@minima-global/mds-api';
 import { Box, Card, CardMedia, CardContent, Typography, CardActions, Stack, Button, Radio } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../../minima/redux/hooks';
@@ -14,11 +15,15 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { toggleNotification } from '../../../minima/redux/slices/notificationSlice';
 import { useNavigate } from 'react-router-dom';
+import { callTokenValidate } from '../../../minima/rpc-commands';
+
+import VerifiedIcon from '@mui/icons-material/Verified';
 
 const NFTCard = ({ NFT }: any) => {
     // console.log('NFT', NFT);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+    const [isTokenValidated, setIsTokenValidated] = React.useState(false);
 
     const listOfFavourites = useAppSelector<MinimaToken[] | undefined>(selectFavouriteNFTs);
 
@@ -45,6 +50,23 @@ const NFTCard = ({ NFT }: any) => {
     } catch (err) {
         console.error('Token does not contain an image: ' + NFT);
     }
+    React.useEffect(() => {
+        if (NFT && NFT.tokenid) {
+            callTokenValidate(NFT.tokenid)
+                .then((res: any) => {
+                    // console.log(`callTokenValidate`, res);
+                    if (res.status) {
+                        if (res.response.web.valid) {
+                            // is valid token
+                            setIsTokenValidated(true);
+                        }
+                    }
+                })
+                .catch((err) => {
+                    console.error(`callTokenValidate with ${NFT.tokenid}`, err);
+                });
+        }
+    }, [NFT]);
 
     return (
         <Card variant="outlined" className={styles['nft-card']}>
@@ -55,8 +77,17 @@ const NFTCard = ({ NFT }: any) => {
                 <ModalStackedRow
                     children={
                         <>
-                            <Typography variant="body1">{NFT.token.name}</Typography>
-                            <Typography variant="subtitle1">{NFT.total}</Typography>
+                            <Stack direction="row" spacing={0.5} alignItems="center">
+                                <Typography variant="h6" className={styles['nft-title']}>
+                                    {NFT.token.name}
+                                </Typography>
+                                {!isTokenValidated ? <VerifiedIcon fontSize="inherit" color="primary" /> : null}
+                            </Stack>
+                            <Typography className={styles['nft-owner']} variant="caption">
+                                {NFT.token.owner && NFT.token.owner.length
+                                    ? 'Created by ' + NFT.token.owner
+                                    : 'Created by anonymous'}
+                            </Typography>
                         </>
                     }
                 />

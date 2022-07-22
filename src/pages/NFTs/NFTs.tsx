@@ -98,7 +98,7 @@ const NFTs: FC = () => {
         <GridLayout
             children={
                 <>
-                    <Card variant="outlined">
+                    <Card variant="outlined" className={styles['nft-page-card']}>
                         <CardHeader
                             title={
                                 <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={1}>
@@ -134,27 +134,29 @@ const NFTs: FC = () => {
                                     onChange={handleInputChange}
                                     placeholder="Search by name"
                                 />
-
-                                <NFTGrid
-                                    children={
-                                        <>
-                                            {displayedOptions && typeof displayedOptions !== 'undefined' ? (
-                                                displayedOptions.map((n) => {
-                                                    return <NFTCard key={n.tokenid} NFT={n} />;
-                                                })
-                                            ) : (
-                                                <Typography variant="caption">No NFTs collected yet.</Typography>
-                                            )}
-                                        </>
-                                    }
-                                />
-
-                                {allNFTs &&
-                                typeof allNFTs !== 'undefined' &&
-                                tabsValue === 'two' &&
-                                allNFTs.length === 0 ? (
-                                    <Typography variant="caption">No favourites yet.</Typography>
-                                ) : null}
+                                <Grid alignItems="center" justifyContent="center" container spacing={1}>
+                                    {displayedOptions &&
+                                    typeof displayedOptions !== 'undefined' &&
+                                    displayedOptions.length > 0 ? (
+                                        displayedOptions.map((n) => {
+                                            return (
+                                                <Grid item xs={12} sm={5}>
+                                                    <NFTCard key={n.tokenid} NFT={n} />
+                                                </Grid>
+                                            );
+                                        })
+                                    ) : tabsValue === 'one' ? (
+                                        <Typography variant="caption" className={styles['no-results-text-display']}>
+                                            No NFTs collected yet.
+                                        </Typography>
+                                    ) : null}
+                                    {allNFTs &&
+                                    typeof allNFTs !== 'undefined' &&
+                                    tabsValue === 'two' &&
+                                    allNFTs.length === 0 ? (
+                                        <Typography variant="caption">No favourites yet.</Typography>
+                                    ) : null}
+                                </Grid>
                             </Stack>
                         </CardContent>
                         {filterText.length === 0 && allNFTs && allNFTs.length ? (

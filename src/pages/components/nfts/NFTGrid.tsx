@@ -1,9 +1,9 @@
-import { Stack } from '@mui/material';
+import { Grid, Stack } from '@mui/material';
 const NFTGrid = ({ children }: any) => {
     return (
-        <Stack direction="column" spacing={2}>
+        <Grid item xs={12} sm={6}>
             {children}
-        </Stack>
+        </Grid>
     );
 };
 

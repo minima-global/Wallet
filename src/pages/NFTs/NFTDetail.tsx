@@ -49,7 +49,7 @@ const NFTDetail = () => {
     }
 
     React.useEffect(() => {
-        console.log(`run useFffect`);
+        // console.log(`run useFffect`);
         if (NFT && NFT.tokenid) {
             callTokenValidate(NFT.tokenid)
                 .then((res: any) => {
@@ -80,7 +80,7 @@ const NFTDetail = () => {
                                     <Typography variant="h6" className={styles['nft-title']}>
                                         {NFT.token.name}
                                     </Typography>
-                                    {isTokenValidated ? <VerifiedIcon color="primary" /> : null}
+                                    {isTokenValidated ? <VerifiedIcon fontSize="inherit" color="primary" /> : null}
                                 </Stack>
                                 <Typography className={styles['nft-owner']} variant="caption">
                                     {NFT.token.owner && NFT.token.owner.length

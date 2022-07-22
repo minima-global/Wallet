@@ -35,6 +35,9 @@
   text-transform: none!important;
   font-family: Manrope-semibold!important;
 }
+.nft-page-card {
+  min-height: 70vh;
+}
 
 /** *****NFTCARD***** */
 .nft-card {
@@ -172,10 +175,12 @@
 /** Reusable Components */
 .nft-title {
   font-family: Manrope-semibold!important;
+  font-size: 1em!important;
 }
 .nft-owner {
   opacity: 0.8!important;
   font-family: Manrope-semibold!important;
+  font-size: 0.8em!important;
 }
 .custom-list-item {
   display: flex;
@@ -204,6 +209,7 @@
 /** CSS Animate */
 
 .heart:hover {
+  cursor: pointer;
   animation: 1.5s ease 0s infinite beat;
 }
 

@@ -10,19 +10,13 @@ import {
     Grid,
     CardMedia,
     Fade,
-    Tooltip,
-    styled,
-    TooltipProps,
-    tooltipClasses,
     Stack,
     Divider,
-    Chip,
 } from '@mui/material';
 
 import MinimaIcon from '../../assets/images/minimaLogoSquare.png';
 import { ReactComponent as MinimaSquareIcon } from '../../assets/images/minimaLogoSquare.svg';
 
-import { copy as copyText } from '../../shared/functions';
 import GridLayout from './GridLayout';
 
 import { useAppSelector } from '../../minima/redux/hooks';

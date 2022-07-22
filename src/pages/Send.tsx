@@ -11,6 +11,7 @@ import {
     ListSubheader,
     MenuItem,
     Skeleton,
+    Stack,
 } from '@mui/material';
 import { FC, useContext, useState, useMemo } from 'react';
 import { callSend } from '../minima/rpc-commands';
@@ -255,10 +256,9 @@ const Send: FC = () => {
                             <CardContent>
                                 <form onSubmit={formik.handleSubmit}>
                                     {balances && balances.length > 0 ? (
-                                        <>
+                                        <Stack spacing={2}>
                                             <Select
                                                 fullWidth
-                                                sx={{ mb: 2 }}
                                                 disabled={formik.isSubmitting}
                                                 id="send-select-mode"
                                                 name="mode"
@@ -271,7 +271,7 @@ const Send: FC = () => {
                                             <Select
                                                 disabled={formik.isSubmitting}
                                                 MenuProps={{ autoFocus: false }}
-                                                sx={{ marginBottom: 2, textAlign: 'left' }}
+                                                sx={{ textAlign: 'left' }}
                                                 id="tokenid"
                                                 name="tokenid"
                                                 value={formik.values.tokenid ? formik.values.tokenid : ''}
@@ -385,9 +385,34 @@ const Send: FC = () => {
                                                     />
                                                 </>
                                             ) : null}
-                                        </>
+                                            <Button
+                                                disabled={
+                                                    formik.values.mode === 1
+                                                        ? !(formik.isValid && formik.dirty && !formik.isSubmitting)
+                                                        : formik.isSubmitting
+                                                }
+                                                disableElevation
+                                                color="primary"
+                                                variant="contained"
+                                                fullWidth
+                                                onClick={() => {
+                                                    console.log('next');
+                                                    setModalEmployee('burn');
+                                                }}
+                                            >
+                                                {formik.isSubmitting ? 'Please wait...' : 'Next'}
+                                            </Button>
+                                            {mode === 2 ? (
+                                                <>
+                                                    <Typography variant="caption">
+                                                        Coin split will divide an unspent coin into two, providing you
+                                                        with additional coins to use as inputs to new transactions
+                                                    </Typography>
+                                                </>
+                                            ) : null}
+                                        </Stack>
                                     ) : (
-                                        <>
+                                        <Stack spacing={2}>
                                             <Skeleton
                                                 sx={{ borderRadius: '8px', mb: 2 }}
                                                 variant="rectangular"
@@ -406,34 +431,8 @@ const Send: FC = () => {
                                                 width="100%"
                                                 height={60}
                                             />
-                                        </>
+                                        </Stack>
                                     )}
-                                    <Button
-                                        disabled={
-                                            formik.values.mode === 1
-                                                ? !(formik.isValid && formik.dirty && !formik.isSubmitting)
-                                                : formik.isSubmitting
-                                        }
-                                        disableElevation
-                                        color="primary"
-                                        variant="contained"
-                                        fullWidth
-                                        onClick={() => {
-                                            console.log('next');
-                                            setModalEmployee('burn');
-                                        }}
-                                    >
-                                        {formik.isSubmitting ? 'Please wait...' : 'Next'}
-                                    </Button>
-
-                                    {mode === 2 ? (
-                                        <>
-                                            <Typography variant="caption">
-                                                Coin split will divide an unspent coin into two, providing you with
-                                                additional coins to use as inputs to new transactions
-                                            </Typography>
-                                        </>
-                                    ) : null}
                                 </form>
                             </CardContent>
                         </Card>
