@@ -17,11 +17,12 @@ import ModalManager from '../components/managers/ModalManager';
 import NFTConfirmation from '../components/forms/common/NFTConfirmation';
 
 const validation = Yup.object().shape({
-    name: Yup.string().required('This field is required.'),
+    name: Yup.string().required('This field is required.').max(255),
     image: Yup.mixed().required('This field is required.'),
     amount: Yup.string()
         .required('Field Required')
         .matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters.'),
+    description: Yup.string().max(255),
 });
 
 function isBlob(blob: null | Blob): blob is Blob {
@@ -54,6 +55,13 @@ const CreateNFTForm = () => {
     const handleProceed = () => {
         setModalEmployee('confirmation');
     };
+
+    React.useEffect(() => {
+        return () => {
+            // console.log('calling cleanup');
+            URL.revokeObjectURL(previewImage ? previewImage : 'undefined');
+        };
+    }, []);
 
     const formik = useFormik({
         initialValues: {
@@ -200,7 +208,11 @@ const CreateNFTForm = () => {
                             <ClearIcon
                                 color="inherit"
                                 className={styles['clear-icon']}
-                                onClick={() => formik.setFieldValue('image', '')}
+                                onClick={() => {
+                                    formik.setFieldValue('image', '');
+                                    URL.revokeObjectURL(previewImage);
+                                    setPreviewImage(undefined);
+                                }}
                             />
                             <Box className={styles['info-label-image-upload']}>
                                 <Typography variant="caption">{previewImage ? previewImage['name'] : null}</Typography>
@@ -279,8 +291,12 @@ const CreateNFTForm = () => {
                     value={formik.values.description}
                     onChange={formik.handleChange}
                     error={formik.touched.description && Boolean(formik.errors.description)}
-                    helperText={formik.touched.description && formik.errors.description}
-                    // FormHelperTextProps={styles['form-helper-text']}
+                    helperText={
+                        formik.values.description.length === 255 ? formik.values.description.length + '/255' : null
+                    }
+                    FormHelperTextProps={{
+                        style: { display: 'flex', justifyContent: 'flex-end' },
+                    }}
                     InputProps={{
                         style:
                             formik.touched.description && Boolean(formik.errors.description)
@@ -290,7 +306,13 @@ const CreateNFTForm = () => {
                     maxRows={4}
                     rows={4}
                     multiline
-                />
+                    inputProps={{ maxLength: 255 }}
+                >
+                    <Box
+                        component="div"
+                        sx={{ position: 'absolute', right: '0', bottom: '0', color: '#fff' }}
+                    >{`'${formik.values.description.length} / 255'`}</Box>
+                </TextField>
                 <Typography className={styles['form-help-caption']} variant="caption">
                     An address or name can be added as a parameter of ownership.
                 </Typography>
@@ -335,7 +357,7 @@ const CreateNFTForm = () => {
                     }}
                 />
                 <Button
-                    disabled={formik.isSubmitting}
+                    disabled={formik.isSubmitting || !formik.isValid}
                     onClick={() => setModalEmployee('burn')}
                     variant="contained"
                     fullWidth

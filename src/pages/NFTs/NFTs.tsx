@@ -1,45 +1,13 @@
 import { FC, useState, useMemo } from 'react';
-import {
-    Box,
-    Grid,
-    Card,
-    CardContent,
-    TextField,
-    Button,
-    Stack,
-    CardMedia,
-    Typography,
-    CardActions,
-    Portal,
-    Snackbar,
-    Alert,
-    InputAdornment,
-    CardHeader,
-    Chip,
-    Tabs,
-    Tab,
-} from '@mui/material';
-import MiniModal from '../../shared/components/MiniModal';
-
-import { callCreateNFT } from '../../minima/rpc-commands';
-
-/** form imports */
-import { useFormik } from 'formik';
-// import { BalanceUpdates } from '../App'; // balance context
+import { Grid, Card, CardContent, TextField, Button, Stack, Typography, CardHeader, Tabs, Tab } from '@mui/material';
 
 import { MinimaToken } from '../../types/minima';
-import AppPagination from '../components/AppPagination';
-
-import * as Yup from 'yup';
-import { INSUFFICIENT } from '../../minima/constants';
 
 import { useNavigate } from 'react-router-dom';
 import { containsText, isPropertyString, strToHex } from '../../shared/functions';
-import { hexToString } from '../../shared/functions';
 
-import GridLayout from '../components/GridLayout';
-import NFTGrid from '../components/nfts/NFTGrid';
 import NFTCard from '../components/nfts/NFTCard';
+import GridLayout from '../components/GridLayout';
 import { useAppSelector } from '../../minima/redux/hooks';
 import { selectFavouriteNFTs, selectNFTs } from '../../minima/redux/slices/balanceSlice';
 
@@ -89,11 +57,6 @@ const NFTs: FC = () => {
         // when the component re-renders the updated filter text will create a new filteredBalance variable
     }
 
-    // const currentPage = (page: number) => {
-    //     // console.log(`Setting current page number to: ${page}`);
-    //     setPage(page);
-    // };
-
     return (
         <GridLayout
             children={
@@ -140,7 +103,7 @@ const NFTs: FC = () => {
                                     displayedOptions.length > 0 ? (
                                         displayedOptions.map((n) => {
                                             return (
-                                                <Grid item xs={12} sm={5}>
+                                                <Grid key={n.tokenid} item xs={12} sm={5}>
                                                     <NFTCard key={n.tokenid} NFT={n} />
                                                 </Grid>
                                             );

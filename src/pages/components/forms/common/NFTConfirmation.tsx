@@ -1,9 +1,16 @@
+import React from 'react';
 import { Card, CardMedia, CardContent, Stack, Typography, Link } from '@mui/material';
 
 import styles from '../../../../theme/cssmodule/Components.module.css';
 import { ModalStackedCol } from '../../../../shared/components/modals/ModalWrappers';
 
 const NFTConfirmation = ({ formik }: any) => {
+    React.useEffect(() => {
+        return () => {
+            // console.log('cleanup');
+            URL.revokeObjectURL(formik.values.image ? formik.values.image : 'undefined');
+        };
+    }, []);
     return (
         <>
             <Stack alignItems="center">

@@ -83,7 +83,7 @@ const AppNavigation = () => {
         getPageTitle();
         setOnDetail(false);
         if (location.pathname.substring(0, 9) === '/balance/') {
-            console.log('Token Detail page');
+            // console.log('Token Detail page');
             setOnDetail(true);
             setPageTitle('Token Details');
         }
@@ -97,6 +97,7 @@ const AppNavigation = () => {
             // console.log('Token Detail page');
             setOnDetail(true);
         }
+        return () => {};
     }, [location]);
 
     const getPageTitle = () => {

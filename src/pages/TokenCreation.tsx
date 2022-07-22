@@ -1,5 +1,5 @@
 import { FC, useState, useEffect } from 'react';
-import { Card, CardContent, TextField, Button, InputAdornment, Skeleton } from '@mui/material';
+import { Card, CardContent, TextField, Button, InputAdornment, Skeleton, Stack } from '@mui/material';
 import MiniModal from '../shared/components/MiniModal';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -139,34 +139,34 @@ const TokenCreation: FC = () => {
                         <CardContent>
                             <form onSubmit={formik.handleSubmit}>
                                 {balances.length === 0 ? (
-                                    <>
+                                    <Stack spacing={2}>
                                         <Skeleton
-                                            sx={{ borderRadius: '8px', mb: 2 }}
+                                            sx={{ borderRadius: '8px' }}
                                             variant="rectangular"
                                             width="100%"
                                             height={60}
                                         />
                                         <Skeleton
-                                            sx={{ borderRadius: '8px', mb: 2 }}
+                                            sx={{ borderRadius: '8px' }}
                                             variant="rectangular"
                                             width="100%"
                                             height={60}
                                         />
                                         <Skeleton
-                                            sx={{ borderRadius: '8px', mb: 2 }}
+                                            sx={{ borderRadius: '8px' }}
                                             variant="rectangular"
                                             width="100%"
                                             height={60}
                                         />
                                         <Skeleton
-                                            sx={{ borderRadius: '8px', mb: 2 }}
+                                            sx={{ borderRadius: '8px' }}
                                             variant="rectangular"
                                             width="100%"
                                             height={170}
                                         />
-                                    </>
+                                    </Stack>
                                 ) : (
-                                    <>
+                                    <Stack spacing={2}>
                                         <TextField
                                             disabled={formik.isSubmitting}
                                             fullWidth
@@ -230,17 +230,17 @@ const TokenCreation: FC = () => {
                                             value={formik.values.description}
                                             onChange={formik.handleChange}
                                             error={formik.touched.description && Boolean(formik.errors.description)}
-                                            helperText={formik.touched.description && formik.errors.description}
+                                            helperText={
+                                                formik.values.description.length === 255
+                                                    ? formik.values.description.length + '/255'
+                                                    : null
+                                            }
+                                            FormHelperTextProps={{
+                                                style: { display: 'flex', justifyContent: 'flex-end' },
+                                            }}
                                             multiline
                                             rows={4}
-                                            sx={{ mb: 2 }}
-                                            InputProps={{
-                                                endAdornment: (
-                                                    <InputAdornment position="start">
-                                                        {formik.values.description.length + '/255'}
-                                                    </InputAdornment>
-                                                ),
-                                            }}
+                                            inputProps={{ maxLength: 255 }}
                                         ></TextField>
                                         <TextField
                                             disabled={formik.isSubmitting}
@@ -252,20 +252,19 @@ const TokenCreation: FC = () => {
                                             onChange={formik.handleChange}
                                             error={formik.touched.webvalidate && Boolean(formik.errors.webvalidate)}
                                             helperText={formik.touched.webvalidate && formik.errors.webvalidate}
-                                            sx={{ mb: 2 }}
                                         ></TextField>
-                                    </>
+                                        <Button
+                                            disabled={!(formik.isValid && formik.dirty && !formik.isSubmitting)}
+                                            disableElevation
+                                            color="primary"
+                                            variant="contained"
+                                            fullWidth
+                                            onClick={() => setModalEmployee('burn')}
+                                        >
+                                            {formik.isSubmitting ? 'Please wait...' : 'Next'}
+                                        </Button>
+                                    </Stack>
                                 )}
-                                <Button
-                                    disabled={!(formik.isValid && formik.dirty && !formik.isSubmitting)}
-                                    disableElevation
-                                    color="primary"
-                                    variant="contained"
-                                    fullWidth
-                                    onClick={() => setModalEmployee('burn')}
-                                >
-                                    {formik.isSubmitting ? 'Please wait...' : 'Next'}
-                                </Button>
                             </form>
                         </CardContent>
                     </Card>

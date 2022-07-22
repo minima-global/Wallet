@@ -99,8 +99,7 @@ theme = createTheme(theme, {
         MuiFormHelperText: {
             styleOverrides: {
                 root: {
-                    backgroundColor: '#FDBEBE',
-                    color: '#363A3F',
+                    
                     fontWeight: 400,
                     padding: 5,
                     margin: 0,
