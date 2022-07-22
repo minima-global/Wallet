@@ -8,40 +8,26 @@ import {
     Avatar,
     Typography,
     Grid,
-    List,
-    ListItem,
-    ListItemText,
     CardMedia,
     Fade,
     Tooltip,
     styled,
     TooltipProps,
     tooltipClasses,
-    IconButton,
+    Stack,
+    Divider,
+    Chip,
 } from '@mui/material';
 
 import MinimaIcon from '../../assets/images/minimaLogoSquare.png';
 import { ReactComponent as MinimaSquareIcon } from '../../assets/images/minimaLogoSquare.svg';
-
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import FileCopyIcon from '@mui/icons-material/FileCopy';
 
 import { copy as copyText } from '../../shared/functions';
 import GridLayout from './GridLayout';
 
 import { useAppSelector } from '../../minima/redux/hooks';
 import { selectTokenWithID } from '../../minima/redux/slices/balanceSlice';
-
-const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
-    <Tooltip {...props} arrow classes={{ popper: className }} />
-))(({ theme }) => ({
-    [`& .${tooltipClasses.arrow}`]: {
-        color: theme.palette.common.black,
-    },
-    [`& .${tooltipClasses.tooltip}`]: {
-        backgroundColor: theme.palette.common.black,
-    },
-}));
+import CustomListItem from '../../shared/components/CustomListItem';
 
 const TokenDetail = () => {
     const { tokenid } = useParams();
@@ -59,12 +45,6 @@ const TokenDetail = () => {
     }
     const loading = typeof token === 'undefined';
 
-    const handleCopyBtn = (text: string) => {
-        copyText(text);
-        setCopy(true);
-        setTimeout(() => setCopy(false), 1000);
-    };
-
     return (
         <>
             <GridLayout
@@ -72,12 +52,11 @@ const TokenDetail = () => {
                 loading={loading}
                 children={
                     typeof token !== 'undefined' ? (
-                        <Grid container spacing="8px">
+                        <Grid container>
                             <Grid item xs={12}>
                                 <Fade in={true}>
-                                    <Card variant="outlined" className="MiniCardToken">
+                                    <Card variant="outlined">
                                         <CardHeader
-                                            className="MiniCardTokenHeader"
                                             avatar={
                                                 token.tokenid === '0x00' ? (
                                                     <MinimaSquareIcon className="minima-icon" />
@@ -135,144 +114,37 @@ const TokenDetail = () => {
                                             </div>
                                         ) : null}
                                         <CardContent>
-                                            <List sx={{ borderBottom: '0.5px solid #EDEDED' }}>
-                                                <ListItem>
-                                                    <Typography variant="body1">Name</Typography>
-                                                    <ListItemText
-                                                        disableTypography
-                                                        secondary={
-                                                            <Typography variant="subtitle1" sx={valueStyle}>
-                                                                {token?.token.name ? token?.token.name : token?.token}
-                                                            </Typography>
-                                                        }
-                                                    ></ListItemText>
-                                                </ListItem>
-                                                <ListItem>
-                                                    <Typography variant="body1">Total Minted</Typography>
-                                                    <ListItemText
-                                                        sx={{ width: '100%' }}
-                                                        disableTypography
-                                                        secondary={
-                                                            <Typography variant="subtitle1" sx={valueStyle}>
-                                                                {token?.total ? token?.total : '0'}
-                                                            </Typography>
-                                                        }
-                                                    ></ListItemText>
-                                                </ListItem>
-                                                <ListItem>
-                                                    <Typography variant="body1">Token ID</Typography>
-                                                    <Box sx={[copyRow, { width: '100%' }]}>
-                                                        <ListItemText
-                                                            sx={{
-                                                                display: 'flex',
-                                                                flex: '0 0 100%',
-                                                                flexDirection: 'row-reverse',
-                                                                width: '100%',
-                                                            }}
-                                                            disableTypography
-                                                            secondary={
-                                                                <Typography
-                                                                    variant="subtitle1"
-                                                                    sx={[
-                                                                        valueStyle,
-                                                                        {
-                                                                            borderTopRightRadius: 0,
-                                                                            borderBottomRightRadius: 0,
-                                                                        },
-                                                                    ]}
-                                                                >
-                                                                    {token?.tokenid ? token?.tokenid : '0x00'}
-                                                                </Typography>
-                                                            }
-                                                        >
-                                                            <BootstrapTooltip
-                                                                placement="top-end"
-                                                                title={!copy ? 'Copy TokenID' : 'Copied!'}
-                                                            >
-                                                                <IconButton
-                                                                    onClick={() => {
-                                                                        handleCopyBtn(
-                                                                            token?.tokenid ? token?.tokenid : ''
-                                                                        );
-                                                                    }}
-                                                                    sx={[{ backgroundColor: copy ? '#00B74A' : null }]}
-                                                                >
-                                                                    {!copy ? (
-                                                                        <ContentCopyIcon sx={{ color: '#fff' }} />
-                                                                    ) : (
-                                                                        <FileCopyIcon sx={{ color: '#fff' }} />
-                                                                    )}
-                                                                </IconButton>
-                                                            </BootstrapTooltip>
-                                                        </ListItemText>
-                                                    </Box>
-                                                </ListItem>
+                                            <Stack spacing={2}>
+                                                <CustomListItem
+                                                    title="Name"
+                                                    value={token?.token.name ? token?.token.name : token?.token}
+                                                />
+                                                <CustomListItem
+                                                    title="Total Minted"
+                                                    value={token?.total ? token?.total : '0'}
+                                                />
+                                                <CustomListItem
+                                                    title="Token ID"
+                                                    value={token?.tokenid ? token?.tokenid : '0x00'}
+                                                />
+                                                <CustomListItem title="Coins" value={token.coins} />
+                                            </Stack>
 
-                                                <ListItem>
-                                                    <Typography variant="body1">Coins</Typography>
-                                                    <Box sx={[copyRow, { width: '100%' }]}>
-                                                        <ListItemText
-                                                            sx={{
-                                                                display: 'flex',
-                                                                flex: '0 0 100%',
-                                                                flexDirection: 'row-reverse',
-                                                                width: '100%',
-                                                            }}
-                                                            disableTypography
-                                                            secondary={
-                                                                <Typography
-                                                                    variant="subtitle1"
-                                                                    sx={[
-                                                                        valueStyle,
-                                                                        {
-                                                                            borderTopRightRadius: 0,
-                                                                            borderBottomRightRadius: 0,
-                                                                        },
-                                                                    ]}
-                                                                >
-                                                                    {token.coins}
-                                                                </Typography>
-                                                            }
-                                                        ></ListItemText>
-                                                    </Box>
-                                                </ListItem>
-                                            </List>
-
-                                            <List>
-                                                <ListItem>
-                                                    <Typography variant="body1">Confirmed</Typography>
-                                                    <ListItemText
-                                                        disableTypography
-                                                        secondary={
-                                                            <Typography variant="subtitle1" sx={valueStyle}>
-                                                                {token?.confirmed ? token?.confirmed : 0}
-                                                            </Typography>
-                                                        }
-                                                    ></ListItemText>
-                                                </ListItem>
-                                                <ListItem>
-                                                    <Typography variant="body1">Unconfirmed</Typography>
-                                                    <ListItemText
-                                                        disableTypography
-                                                        secondary={
-                                                            <Typography variant="subtitle1" sx={valueStyle}>
-                                                                {token?.unconfirmed ? token?.unconfirmed : '0'}
-                                                            </Typography>
-                                                        }
-                                                    ></ListItemText>
-                                                </ListItem>
-                                                <ListItem>
-                                                    <Typography variant="body1">Sendable</Typography>
-                                                    <ListItemText
-                                                        disableTypography
-                                                        secondary={
-                                                            <Typography variant="subtitle1" sx={valueStyle}>
-                                                                {token?.sendable ? token?.sendable : '0'}
-                                                            </Typography>
-                                                        }
-                                                    ></ListItemText>
-                                                </ListItem>
-                                            </List>
+                                            <Divider sx={{ mt: 2 }}></Divider>
+                                            <Stack mt={2} spacing={2}>
+                                                <CustomListItem
+                                                    title="Sendable"
+                                                    value={token?.sendable ? token?.sendable : 0}
+                                                />
+                                                <CustomListItem
+                                                    title="Confirmed"
+                                                    value={token?.confirmed ? token?.confirmed : 0}
+                                                />
+                                                <CustomListItem
+                                                    title="Unconfirmed"
+                                                    value={token?.unconfirmed ? token?.unconfirmed : '0'}
+                                                />
+                                            </Stack>
                                         </CardContent>
                                     </Card>
                                 </Fade>
@@ -294,36 +166,7 @@ const TokenDetail = () => {
                     )
                 }
             />
-
-            {/* <MiniModal
-                open={open}
-                handleClose={handleCloseSplitModal}
-                customFnc={() => {
-                    //return token ? handleSplit(token) : null;
-                    // handleSplit(token);
-                }}
-                executeName="Split"
-                status="Coin Split"
-                header="You are about to split your coin/UTXO in half."
-                subtitle="Splitting your coin means you do not have to wait for an unconfirmed coin to execute another transaction at the same time."
-            /> */}
         </>
     );
 };
 export default TokenDetail;
-
-const copyRow = {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    padding: 0,
-};
-
-const valueStyle = {
-    backgroundColor: '#fff',
-    padding: 2,
-    borderRadius: 1,
-    overflowX: 'hidden',
-    textOverflow: 'ellipsis',
-    width: '100%',
-};
