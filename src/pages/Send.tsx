@@ -27,7 +27,6 @@ import GridLayout from './components/GridLayout';
 import { containsText, insufficientFundsError, isPropertyString } from '../shared/functions';
 
 import TokenListItem from './components/tokens/TokenListItem';
-import ConfirmationModal from './components/forms/ConfirmationModal';
 import { splitCoin } from '../minima/utils';
 import { useAppDispatch, useAppSelector } from '../minima/redux/hooks';
 import { selectBalance, selectBalanceFilter } from '../minima/redux/slices/balanceSlice';
@@ -84,16 +83,12 @@ const Send: FC = () => {
 
     // Handle Modal
     const [open, setOpen] = useState(false);
-    // Handle Confirmation Modal
-    const [openConfirmationModal, setOpenConfirmationModal] = useState(false);
     const [modalStatus, setModalStatus] = useState('Failed');
     const handleOpen = () => setOpen(true);
     const handleClose = () => {
         setOpen(false);
         setModalStatus('Failed');
     };
-
-    const handleCloseConfirmationModal = () => setOpenConfirmationModal(false);
 
     function handleInputChange(event: any) {
         const value = event.target.value;
@@ -442,13 +437,6 @@ const Send: FC = () => {
                                 </form>
                             </CardContent>
                         </Card>
-
-                        <ConfirmationModal
-                            handleClose={handleCloseConfirmationModal}
-                            open={openConfirmationModal}
-                            mode={formik.values.mode}
-                            formik={formik}
-                        />
 
                         <ModalManager
                             formik={formik}

@@ -7,11 +7,12 @@ import { callStatus, callToken } from '../minima/rpc-commands';
 import { insufficientFundsError, strToHex } from '../shared/functions';
 
 import GridLayout from './components/GridLayout';
-import TokenConfirmationModal from './components/forms/TokenConfirmationModal';
 
 import { useAppDispatch, useAppSelector } from '../minima/redux/hooks';
 import { toggleNotification } from '../minima/redux/slices/notificationSlice';
 import { selectBalance } from '../minima/redux/slices/balanceSlice';
+import TokenConfirmation from './components/forms/common/TokenConfirmation';
+import ModalManager from './components/managers/ModalManager';
 
 const CreateTokenSchema = Yup.object().shape({
     name: Yup.string()
@@ -30,9 +31,13 @@ const CreateTokenSchema = Yup.object().shape({
 
 const TokenCreation: FC = () => {
     const dispatch = useAppDispatch();
-    // Handle Confirmation Modal
-    const [openConfirmationModal, setOpenConfirmationModal] = useState(false);
-    const handleCloseConfirmationModal = () => setOpenConfirmationModal(false);
+    const [modalEmployee, setModalEmployee] = useState('');
+    const handleCloseModalEmployee = () => {
+        setModalEmployee('');
+    };
+    const handleProceed = () => {
+        setModalEmployee('confirmation');
+    };
 
     // Handle Modal
     const [open, setOpen] = useState(false);
@@ -69,6 +74,8 @@ const TokenCreation: FC = () => {
         },
         validationSchema: CreateTokenSchema,
         onSubmit: (formData) => {
+            setModalEmployee('');
+
             const customToken = {
                 name: {
                     name: formData.name,
@@ -255,7 +262,7 @@ const TokenCreation: FC = () => {
                                     color="primary"
                                     variant="contained"
                                     fullWidth
-                                    onClick={() => setOpenConfirmationModal(true)}
+                                    onClick={() => setModalEmployee('burn')}
                                 >
                                     {formik.isSubmitting ? 'Please wait...' : 'Next'}
                                 </Button>
@@ -263,10 +270,13 @@ const TokenCreation: FC = () => {
                         </CardContent>
                     </Card>
 
-                    <TokenConfirmationModal
-                        handleClose={handleCloseConfirmationModal}
-                        open={openConfirmationModal}
+                    <ModalManager
+                        proceedFn={handleProceed} // move onto confirmation
+                        children={<TokenConfirmation formik={formik}></TokenConfirmation>}
+                        modal={modalEmployee}
+                        title="Confirmation"
                         formik={formik}
+                        closeFn={handleCloseModalEmployee}
                     />
 
                     <MiniModal
