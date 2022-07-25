@@ -1,11 +1,10 @@
-import { callCreateNFTWithBlob } from './../rpc-commands';
 // /**
 //  * 
 //  * Handle NFT Image Compression + Building
 //  * 
 //  */
 
-import { callCreateNFT } from './../rpc-commands';
+import { callCreateNFTWithBlob } from './../rpc-commands';
 import { Token } from "../types/minima"
 
 export const buildUserNFT = (imageDataUrl: string, compressionFactor: number, data: any): Promise<string | Token> => {

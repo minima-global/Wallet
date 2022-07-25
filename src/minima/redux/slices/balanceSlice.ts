@@ -90,6 +90,10 @@ export const balanceSlice = createSlice({
                     b.token.name = hexToString(b.token.name);
                 }
 
+                if (typeof b.token === 'object' && b.token['ticker'] && b.token.ticker.length > 0) {
+                    b.token.ticker = hexToString(b.token.ticker);
+                }
+
                 if (typeof b.token === 'object' && !b.token.hasOwnProperty("nft") && b.token.hasOwnProperty("url")) {
                     b.token.url = hexToString(b.token.url);
                     b.token.description = hexToString(b.token.description);

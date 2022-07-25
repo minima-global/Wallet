@@ -95,9 +95,9 @@ const NFTs: FC = () => {
                                     id="search"
                                     value={filterText}
                                     onChange={handleInputChange}
-                                    placeholder="Search by name"
+                                    placeholder="Search by name, creator name or tokenid"
                                 />
-                                <Grid alignItems="center" justifyContent="center" container spacing={{ sm: 1, xs: 0 }}>
+                                <Grid justifyContent="space-around" container spacing={{ sm: 1, xs: 0 }}>
                                     {displayedOptions &&
                                     typeof displayedOptions !== 'undefined' &&
                                     displayedOptions.length > 0 ? (

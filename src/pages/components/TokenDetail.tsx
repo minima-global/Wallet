@@ -13,6 +13,7 @@ import {
     Stack,
     Divider,
     Skeleton,
+    Chip,
 } from '@mui/material';
 
 import MinimaIcon from '../../assets/images/minimaLogoSquare.png';
@@ -23,6 +24,7 @@ import GridLayout from './GridLayout';
 import { useAppSelector } from '../../minima/redux/hooks';
 import { selectTokenWithID } from '../../minima/redux/slices/balanceSlice';
 import CustomListItem from '../../shared/components/CustomListItem';
+import Ticker from './tokens/Ticker';
 
 const TokenDetail = () => {
     const { tokenid } = useParams();
@@ -95,13 +97,38 @@ const TokenDetail = () => {
                                                     />
                                                 )
                                             }
-                                            title={token?.token.name ? token.token.name : token.token}
+                                            title={
+                                                <Stack>
+                                                    <Typography variant="body2">
+                                                        {token?.token.name ? token.token.name : token.token}
+                                                    </Typography>
+                                                    {typeof token.token === 'object' &&
+                                                    token.token.hasOwnProperty('ticker') &&
+                                                    token.token.ticker ? (
+                                                        <Ticker symbol={token.token.ticker} />
+                                                    ) : token.tokenid === '0x00' ? (
+                                                        <Ticker symbol={'MINIMA'} />
+                                                    ) : null}
+                                                </Stack>
+                                            }
                                             subheader={
-                                                token?.token.description
-                                                    ? token.token.description
-                                                    : token.tokenid === '0x00'
-                                                    ? 'Official Minima Token'
-                                                    : null
+                                                <Stack
+                                                    direction="row"
+                                                    spacing={1}
+                                                    alignItems="center"
+                                                    justifyContent="flex-start"
+                                                >
+                                                    <Typography variant="body1" sx={{ fontSize: '0.8rem' }}>
+                                                        {token?.token.description
+                                                            ? token.token.description
+                                                            : token.tokenid === '0x00'
+                                                            ? 'Official Minima Coin'
+                                                            : null}
+                                                    </Typography>
+                                                    {token.tokenid === '0x00' ? (
+                                                        <Chip label="Testnet" size="small" color="secondary" />
+                                                    ) : null}
+                                                </Stack>
                                             }
                                         />
                                         {token.tokenid !== '0x00' ? (

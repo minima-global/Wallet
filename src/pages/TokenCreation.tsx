@@ -22,6 +22,7 @@ const CreateTokenSchema = Yup.object().shape({
         .required('Field Required')
         .matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters.'),
     description: Yup.string().min(0).max(255, 'Maximum 255 characters allowed.'),
+    ticker: Yup.string().min(0).max(5, 'Maximum 5 characters allowed.'),
     // .matches(/^[^\\;'"]+$/, 'Invalid characters.'),
     url: Yup.string(),
     // .matches(/^[^\\;'"]+$/, 'Invalid characters.'),
@@ -71,6 +72,7 @@ const TokenCreation: FC = () => {
             description: '',
             burn: '',
             webvalidate: '',
+            ticker: '',
         },
         validationSchema: CreateTokenSchema,
         onSubmit: (formData) => {
@@ -82,6 +84,7 @@ const TokenCreation: FC = () => {
                     description: strToHex(formData.description),
                     url: strToHex(formData.url),
                     webvalidate: formData.webvalidate,
+                    ticker: strToHex(formData.ticker),
                 },
                 amount: formData.amount && formData.amount.length ? formData.amount : 0,
                 burn: formData.burn && formData.burn.length ? formData.burn : 0,
@@ -238,6 +241,26 @@ const TokenCreation: FC = () => {
                                             multiline
                                             rows={4}
                                             inputProps={{ maxLength: 255 }}
+                                        ></TextField>
+                                        <TextField
+                                            disabled={formik.isSubmitting}
+                                            fullWidth
+                                            id="ticker"
+                                            name="ticker"
+                                            placeholder="ticker"
+                                            value={formik.values.ticker}
+                                            onChange={formik.handleChange}
+                                            error={formik.touched.ticker && Boolean(formik.errors.ticker)}
+                                            FormHelperTextProps={{
+                                                style: { display: 'flex', justifyContent: 'flex-end' },
+                                            }}
+                                            inputProps={{
+                                                maxLength: 5,
+                                                style: {
+                                                    textTransform:
+                                                        formik.values.ticker.length > 0 ? 'uppercase' : 'lowercase',
+                                                },
+                                            }}
                                         ></TextField>
                                         <TextField
                                             disabled={formik.isSubmitting}

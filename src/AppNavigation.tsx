@@ -165,7 +165,7 @@ const AppNavigation = () => {
                     <Route path="nfts/:tokenid" element={<NFTDetail />} />
                     <Route path="/createnft" element={<CreateNFT />} />
                     <Route path="/offline" element={<Offline />} />
-                    {/* <Route path="*" element={<Navigate replace to="/balance" />} /> */}
+                    <Route path="*" element={<Navigate replace to="/balance" />} />
                 </Routes>
             </Box>
             <Box component="nav" sx={nav} aria-label="mailbox folders">

@@ -24,7 +24,7 @@ const NFTAuthenticity = ({ NFT }: any) => {
         if (NFT && NFT.token.webvalidate.length) {
             callTokenValidate(NFT.tokenid)
                 .then((res: any) => {
-                    console.log(`callTokenValidate`, res);
+                    // console.log(`callTokenValidate`, res);
                     if (res.status) {
                         if (res.response.web.valid) {
                             // is valid token
