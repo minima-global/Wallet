@@ -10,7 +10,7 @@ import { toggleNotification } from '../../../../minima/redux/slices/notification
 
 const ValueTransferConfirmation = ({ formik }: any) => {
     const dispatch = useAppDispatch();
-    console.log(formik.values);
+    // console.log(formik.values);
     return (
         <>
             <Stack direction="column" mt={2} spacing={2}>

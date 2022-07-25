@@ -14,6 +14,8 @@ import { selectBalance } from '../minima/redux/slices/balanceSlice';
 import TokenConfirmation from './components/forms/common/TokenConfirmation';
 import ModalManager from './components/managers/ModalManager';
 
+import styles from '../theme/cssmodule/Components.module.css';
+
 const CreateTokenSchema = Yup.object().shape({
     name: Yup.string()
         .required('Field Required')
@@ -180,9 +182,7 @@ const TokenCreation: FC = () => {
                                             onChange={formik.handleChange}
                                             error={formik.touched.name && Boolean(formik.errors.name)}
                                             helperText={formik.touched.name && formik.errors.name}
-                                            FormHelperTextProps={{
-                                                style: styles.helperText,
-                                            }}
+                                            FormHelperTextProps={{ className: styles['form-helper-text'] }}
                                             InputProps={{
                                                 style:
                                                     formik.touched.name && Boolean(formik.errors.name)
@@ -200,9 +200,7 @@ const TokenCreation: FC = () => {
                                             onChange={formik.handleChange}
                                             error={formik.touched.amount && Boolean(formik.errors.amount)}
                                             helperText={formik.touched.amount && formik.errors.amount}
-                                            FormHelperTextProps={{
-                                                style: styles.helperText,
-                                            }}
+                                            FormHelperTextProps={{ className: styles['form-helper-text'] }}
                                             InputProps={{
                                                 style:
                                                     formik.touched.amount && Boolean(formik.errors.amount)
@@ -313,13 +311,3 @@ const TokenCreation: FC = () => {
 };
 
 export default TokenCreation;
-
-const styles = {
-    helperText: {
-        borderBottomRightRadius: 8,
-        borderBottomLeftRadius: 8,
-        color: '#D63110',
-        fontWeight: '700',
-        paddingLeft: 8,
-    },
-};

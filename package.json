@@ -1,6 +1,6 @@
 {
     "name": "wallet",
-    "version": "1.7.7",
+    "version": "1.8",
     "private": true,
     "scripts": {
         "start": "react-scripts start",

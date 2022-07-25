@@ -8,7 +8,6 @@ import styles from '../../theme/cssmodule/Components.module.css';
 import ClearIcon from '@mui/icons-material/Clear';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
-import Burn from '../components/forms/Burn';
 import { buildUserNFT } from '../../minima/libs/nft';
 import { insufficientFundsError, strToHex } from '../../shared/functions';
 import { useAppDispatch } from '../../minima/redux/hooks';
@@ -235,7 +234,7 @@ const CreateNFTForm = () => {
                     onChange={formik.handleChange}
                     error={formik.touched.name && Boolean(formik.errors.name)}
                     helperText={formik.touched.name && formik.errors.name}
-                    // FormHelperTextProps={styles['form-helper-text']}
+                    FormHelperTextProps={{ className: styles['form-helper-text'] }}
                     InputProps={{
                         style:
                             formik.touched.name && Boolean(formik.errors.name)
@@ -253,7 +252,7 @@ const CreateNFTForm = () => {
                     onChange={formik.handleChange}
                     error={formik.touched.amount && Boolean(formik.errors.amount)}
                     helperText={formik.touched.amount && formik.errors.amount}
-                    // FormHelperTextProps={styles['form-helper-text']}
+                    FormHelperTextProps={{ className: styles['form-helper-text'] }}
                     InputProps={{
                         style:
                             formik.touched.amount && Boolean(formik.errors.amount)
@@ -274,7 +273,7 @@ const CreateNFTForm = () => {
                     onChange={formik.handleChange}
                     error={formik.touched.external_url && Boolean(formik.errors.external_url)}
                     helperText={formik.touched.external_url && formik.errors.external_url}
-                    // FormHelperTextProps={styles['form-helper-text']}
+                    FormHelperTextProps={{ className: styles['form-helper-text'] }}
                     InputProps={{
                         style:
                             formik.touched.external_url && Boolean(formik.errors.external_url)
@@ -303,7 +302,6 @@ const CreateNFTForm = () => {
                                 ? { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }
                                 : { borderBottomLeftRadius: 8, borderBottomRightRadius: 8 },
                     }}
-                    maxRows={4}
                     rows={4}
                     multiline
                     inputProps={{ maxLength: 255 }}
@@ -326,7 +324,7 @@ const CreateNFTForm = () => {
                     onChange={formik.handleChange}
                     error={formik.touched.owner && Boolean(formik.errors.owner)}
                     helperText={formik.touched.owner && formik.errors.owner}
-                    // FormHelperTextProps={styles['form-helper-text']}
+                    FormHelperTextProps={{ className: styles['form-helper-text'] }}
                     InputProps={{
                         style:
                             formik.touched.owner && Boolean(formik.errors.owner)
@@ -348,7 +346,7 @@ const CreateNFTForm = () => {
                     onChange={formik.handleChange}
                     error={formik.touched.webvalidate && Boolean(formik.errors.webvalidate)}
                     helperText={formik.touched.webvalidate && formik.errors.webvalidate}
-                    // FormHelperTextProps={styles['form-helper-text']}
+                    FormHelperTextProps={{ className: styles['form-helper-text'] }}
                     InputProps={{
                         style:
                             formik.touched.webvalidate && Boolean(formik.errors.webvalidate)

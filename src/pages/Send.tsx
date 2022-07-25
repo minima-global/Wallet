@@ -38,6 +38,8 @@ import ModalManager from './components/managers/ModalManager';
 import ValueTransferConfirmation from './components/forms/common/ValueTransferConfirmation';
 import CoinSplitConfirmation from './components/forms/common/CoinSplitConfirmation';
 
+import styles from '../theme/cssmodule/Components.module.css';
+
 const TransferTokenSchema = Yup.object().shape({
     tokenid: Yup.string().required('Field Required'),
     address: Yup.string()
@@ -58,15 +60,15 @@ const CoinSplitterSchema = Yup.object().shape({
 
 const validationSchema = [null, TransferTokenSchema, CoinSplitterSchema];
 
-const styles = {
-    helperText: {
-        borderBottomRightRadius: 8,
-        borderBottomLeftRadius: 8,
-        color: '#D63110',
-        fontWeight: '700',
-        paddingLeft: 8,
-    },
-};
+// const styles = {
+//     helperText: {
+//         borderBottomRightRadius: 8,
+//         borderBottomLeftRadius: 8,
+//         color: '#D63110',
+//         fontWeight: '700',
+//         paddingLeft: 8,
+//     },
+// };
 
 const Send: FC = () => {
     const dispatch = useAppDispatch();
@@ -328,7 +330,7 @@ const Send: FC = () => {
                                             </Select>
 
                                             {formik.values.mode === 1 ? (
-                                                <>
+                                                <Stack spacing={2}>
                                                     <TextField
                                                         disabled={formik.isSubmitting}
                                                         fullWidth
@@ -339,10 +341,7 @@ const Send: FC = () => {
                                                         onChange={formik.handleChange}
                                                         error={formik.touched.address && Boolean(formik.errors.address)}
                                                         helperText={formik.touched.address && formik.errors.address}
-                                                        sx={{ marginBottom: 2 }}
-                                                        FormHelperTextProps={{
-                                                            style: styles.helperText,
-                                                        }}
+                                                        FormHelperTextProps={{ className: styles['form-helper-text'] }}
                                                         InputProps={{
                                                             style:
                                                                 formik.touched.address && Boolean(formik.errors.address)
@@ -366,9 +365,8 @@ const Send: FC = () => {
                                                         onChange={formik.handleChange}
                                                         error={formik.touched.amount && Boolean(formik.errors.amount)}
                                                         helperText={formik.touched.amount && formik.errors.amount}
-                                                        sx={{ marginBottom: 2 }}
                                                         FormHelperTextProps={{
-                                                            style: styles.helperText,
+                                                            className: styles['form-helper-text'],
                                                         }}
                                                         InputProps={{
                                                             style:
@@ -383,7 +381,7 @@ const Send: FC = () => {
                                                                       },
                                                         }}
                                                     />
-                                                </>
+                                                </Stack>
                                             ) : null}
                                             <Button
                                                 disabled={
@@ -396,7 +394,7 @@ const Send: FC = () => {
                                                 variant="contained"
                                                 fullWidth
                                                 onClick={() => {
-                                                    console.log('next');
+                                                    //console.log('next');
                                                     setModalEmployee('burn');
                                                 }}
                                             >
