@@ -333,8 +333,8 @@ const CreateNFTForm = () => {
                     }}
                 />
                 <Typography variant="caption" className={styles['form-help-caption']}>
-                    Add a text file to your website which holds a copy of the tokenid (obtained after creation) and it
-                    can be used as validation.
+                    Add a text file to your website (https) which holds a copy of the tokenid (obtained after creation)
+                    and it can be used as validation.
                 </Typography>
                 <TextField
                     disabled={formik.isSubmitting}

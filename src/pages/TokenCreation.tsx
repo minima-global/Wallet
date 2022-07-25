@@ -1,5 +1,5 @@
 import { FC, useState, useEffect } from 'react';
-import { Card, CardContent, TextField, Button, InputAdornment, Skeleton, Stack } from '@mui/material';
+import { Card, CardContent, TextField, Button, InputAdornment, Skeleton, Stack, Typography } from '@mui/material';
 import MiniModal from '../shared/components/MiniModal';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -260,6 +260,10 @@ const TokenCreation: FC = () => {
                                                 },
                                             }}
                                         ></TextField>
+                                        <Typography variant="caption" className={styles['form-help-caption']}>
+                                            Add a text file to your website (https) which holds a copy of the tokenid
+                                            (obtained after creation) and it can be used as validation.
+                                        </Typography>
                                         <TextField
                                             disabled={formik.isSubmitting}
                                             fullWidth
