@@ -8,9 +8,6 @@ import {
     TooltipProps,
     tooltipClasses,
     ListItemIcon,
-    List,
-    ListItem,
-    ListItemText,
     Skeleton,
     Stack,
 } from '@mui/material';

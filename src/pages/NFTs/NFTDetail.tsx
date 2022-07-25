@@ -1,17 +1,6 @@
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import {
-    Card,
-    CardHeader,
-    Link,
-    CardMedia,
-    Typography,
-    CardContent,
-    Stack,
-    List,
-    ListItem,
-    Button,
-} from '@mui/material';
+import { Card, Link, CardMedia, Typography, CardContent, Stack, Button } from '@mui/material';
 import GridLayout from '../components/GridLayout';
 import { useAppSelector } from '../../minima/redux/hooks';
 import { selectNFTs } from '../../minima/redux/slices/balanceSlice';
@@ -21,16 +10,13 @@ import CustomListItem from '../../shared/components/CustomListItem';
 import VerifiedIcon from '@mui/icons-material/Verified';
 
 import styles from '../../theme/cssmodule/Components.module.css';
-import { callTokenValidate } from '../../minima/rpc-commands';
+import NFTAuthenticity from '../components/tokens/NFTAuthenticity';
 
 const NFTDetail = () => {
-    const [isTokenValidated, setIsTokenValidated] = React.useState(false);
     const { tokenid } = useParams();
     const navigate = useNavigate();
     const NFTs = useAppSelector(selectNFTs);
-    // console.log(tokenid);
     const NFT: any = NFTs ? NFTs.find((n: MinimaToken) => n.tokenid === tokenid) : undefined;
-    // console.log(`NFT`, NFT);
 
     let imageUrl = null; // populate with image if we have one, or keep null if we don't
     try {
@@ -48,25 +34,6 @@ const NFTDetail = () => {
         console.error('Token does not contain an image: ' + NFT);
     }
 
-    React.useEffect(() => {
-        // console.log(`run useFffect`);
-        if (NFT && NFT.tokenid) {
-            callTokenValidate(NFT.tokenid)
-                .then((res: any) => {
-                    // console.log(`callTokenValidate`, res);
-                    if (res.status) {
-                        if (res.response.web.valid) {
-                            // is valid token
-                            setIsTokenValidated(true);
-                        }
-                    }
-                })
-                .catch((err) => {
-                    console.error(`callTokenValidate with ${NFT.tokenid}`, err);
-                });
-        }
-    }, [NFT]);
-
     return (
         <GridLayout
             children={
@@ -80,7 +47,7 @@ const NFTDetail = () => {
                                     <Typography variant="h6" className={styles['nft-title']}>
                                         {NFT.token.name}
                                     </Typography>
-                                    {isTokenValidated ? <VerifiedIcon fontSize="inherit" color="primary" /> : null}
+                                    <NFTAuthenticity NFT={NFT} />
                                 </Stack>
                                 <Typography className={styles['nft-owner']} variant="caption">
                                     {NFT.token.owner && NFT.token.owner.length

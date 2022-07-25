@@ -131,6 +131,7 @@ theme = createTheme(theme, {
                     letterSpacing: 2,
                     lineHeight: '21px',
                     minHeight: 44,
+                    fontSize: '0.875rem',
                     
                     '&:disabled': {
                         backgroundColor: '#EDEDED',

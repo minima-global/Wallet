@@ -30,9 +30,37 @@ export function resizeImage(imageDataUrl: string, compressionFactor: number): Pr
               // execute drawImage statements here
               // ctx.drawImage(imageNode, 0, 0, imageNode.width, imageNode.height)
 
-              canvas.width = 300
-              canvas.height = 150
-              ctx.drawImage(imageNode, 0, 0, imageNode.width, imageNode.height, 0, 0, canvas.width, canvas.height)
+              // var ctxWidth    = ctx.canvas.width;
+              // var ctxHeight   = ctx.canvas.height;
+              // var imgWidth    = imageNode.width;
+              // var imgHeight   = imageNode.height;
+              // var ratioWidth  = imgWidth  / ctxWidth;
+              // var ratioHeight = imgHeight / ctxHeight;
+              // var ratioAspect = ratioWidth > 1 ? ratioWidth : ratioHeight > 1 ? ratioHeight : 1;
+              // var newWidth    = imgWidth / ratioAspect;
+              // var newHeight   = imgHeight / ratioAspect;
+              // var offsetX     = (ctxWidth  / 2) - (newWidth  / 2);
+              // var offsetY     = (ctxHeight / 2) - (newHeight / 2);
+              // console.log('CTXWIDTH', ctxWidth);
+              // console.log('CTXHEIGHT', ctxHeight);
+              // console.log('imgWIDTH', imgWidth);
+              // console.log('imgHEIGHT', imgHeight);
+              // console.log('ratioWidth', ratioWidth);
+              // console.log('ratioHeight', ratioHeight);
+              // console.log('newWidth', newWidth);
+              // console.log('newHeight', newHeight);
+              let ratioAspect = 300/imageNode.width;
+              canvas.width = 300;
+              canvas.height = imageNode.height * ratioAspect;
+
+
+              // canvas.width = 300
+              // canvas.height = 150
+              // ctx.drawImage(imageNode, 0, 0, imageNode.width, imageNode.height, 0, 0, canvas.width, canvas.height)
+
+              // ctx.clearRect(0, 0, ctxWidth, ctxHeight);
+              ctx.drawImage(imageNode, 0, 0, canvas.width, canvas.height);
+              
 
               let url = ''
               url = canvas.toDataURL('image/jpeg', compressionFactor) // get the data from canvas as 70% JPG (can be also PNG, etc.)

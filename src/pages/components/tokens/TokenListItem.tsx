@@ -33,7 +33,7 @@ const TokenListItem = ({ item, nav, mode }: any) => {
                     alt={item.token.name ? item.token.name : item.token}
                 >
                     {item.token.nft && imageUrl ? (
-                        <CardMedia component="img" image={imageUrl} height={194} />
+                        <Avatar variant="rounded" src={imageUrl} />
                     ) : (
                         <img
                             className="MiniTokenListItem-img"

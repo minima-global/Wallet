@@ -177,7 +177,6 @@ const TokenCreation: FC = () => {
                                             onChange={formik.handleChange}
                                             error={formik.touched.name && Boolean(formik.errors.name)}
                                             helperText={formik.touched.name && formik.errors.name}
-                                            sx={{ mb: 2 }}
                                             FormHelperTextProps={{
                                                 style: styles.helperText,
                                             }}
@@ -198,7 +197,6 @@ const TokenCreation: FC = () => {
                                             onChange={formik.handleChange}
                                             error={formik.touched.amount && Boolean(formik.errors.amount)}
                                             helperText={formik.touched.amount && formik.errors.amount}
-                                            sx={{ mb: 2 }}
                                             FormHelperTextProps={{
                                                 style: styles.helperText,
                                             }}
@@ -219,7 +217,6 @@ const TokenCreation: FC = () => {
                                             onChange={formik.handleChange}
                                             error={formik.touched.url && Boolean(formik.errors.url)}
                                             helperText={formik.touched.url && formik.errors.url}
-                                            sx={{ mb: 2 }}
                                         ></TextField>
                                         <TextField
                                             disabled={formik.isSubmitting}

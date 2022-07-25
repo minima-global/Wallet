@@ -57,7 +57,8 @@ const Burn = ({ open, closeFn, formik, proceedFn }: any) => {
                         <ModalStackedCol
                             children={
                                 <Typography variant="caption" sx={{ opacity: 0.8 }}>
-                                    Prioritize your transaction by adding a burn.
+                                    Prioritize your transaction by adding a burn. Burn amounts are denominated in Minima
+                                    only.
                                 </Typography>
                             }
                         />

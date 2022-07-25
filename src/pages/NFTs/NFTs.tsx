@@ -97,13 +97,13 @@ const NFTs: FC = () => {
                                     onChange={handleInputChange}
                                     placeholder="Search by name"
                                 />
-                                <Grid alignItems="center" justifyContent="center" container spacing={1}>
+                                <Grid alignItems="center" justifyContent="center" container spacing={{ sm: 1, xs: 0 }}>
                                     {displayedOptions &&
                                     typeof displayedOptions !== 'undefined' &&
                                     displayedOptions.length > 0 ? (
                                         displayedOptions.map((n) => {
                                             return (
-                                                <Grid key={n.tokenid} item xs={12} sm={5}>
+                                                <Grid key={n.tokenid} item xs={12} sm={5} mb={1}>
                                                     <NFTCard key={n.tokenid} NFT={n} />
                                                 </Grid>
                                             );

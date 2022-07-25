@@ -99,7 +99,7 @@ const CreateNFTForm = () => {
                 getDataUrlFromBlob(oNFT.image)
                     .then((dataUrl) => {
                         // time to compress & send to the blockchain
-                        buildUserNFT(dataUrl, COMPRESSION_FACTOR_HIGH, oNFT)
+                        buildUserNFT(dataUrl, COMPRESSION_FACTOR_MEDIUM, oNFT)
                             .then((result: any) => {
                                 if (result.status) {
                                     // success, reset form, set previewImage to undefined again
