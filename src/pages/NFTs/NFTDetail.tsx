@@ -65,6 +65,15 @@ const NFTDetail = () => {
                                 <Stack mt={2} mb={3} spacing={1}>
                                     <CustomListItem title="Total Minted" value={NFT.total} />
                                     <CustomListItem title="Token ID" value={NFT.tokenid} />
+
+                                    <CustomListItem
+                                        title="Web Validation"
+                                        value={
+                                            NFT.token.webvalidate.length
+                                                ? NFT.token.webvalidate
+                                                : 'No web validation available.'
+                                        }
+                                    />
                                     <CustomListItem
                                         title="External URL"
                                         value={

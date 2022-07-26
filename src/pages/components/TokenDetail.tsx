@@ -186,6 +186,18 @@ const TokenDetail = () => {
                                                     value={token?.tokenid ? token?.tokenid : '0x00'}
                                                 />
                                                 <CustomListItem title="Coins" value={token.coins} />
+
+                                                {typeof token.token === 'object' &&
+                                                token.token.hasOwnProperty('webvalidate') ? (
+                                                    <CustomListItem
+                                                        title="Web Validation"
+                                                        value={
+                                                            token.token.webvalidate.length
+                                                                ? token.token.webvalidate
+                                                                : 'No web validation available.'
+                                                        }
+                                                    />
+                                                ) : null}
                                             </Stack>
 
                                             <Divider sx={{ mt: 2 }}></Divider>
