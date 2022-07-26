@@ -99,6 +99,7 @@
 .create-nft-btn:hover {
   cursor: pointer;
 }
+
 /** NFT FORM */
 .required {
   color: red;
@@ -350,4 +351,17 @@
   margin: 16px 0px;
   max-height: auto;
   max-width: 180px;
+}
+
+
+/**
+
+~~~Tokens
+
+**/
+
+.noWrap {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }

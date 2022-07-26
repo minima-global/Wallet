@@ -272,8 +272,10 @@ const Send: FC = () => {
                                             </Select>
                                             <Select
                                                 disabled={formik.isSubmitting}
-                                                MenuProps={{ autoFocus: false }}
-                                                sx={{ textAlign: 'left' }}
+                                                MenuProps={{
+                                                    autoFocus: false,
+                                                    sx: { maxWidth: '200px' },
+                                                }}
                                                 id="tokenid"
                                                 name="tokenid"
                                                 value={formik.values.tokenid ? formik.values.tokenid : ''}
@@ -281,7 +283,6 @@ const Send: FC = () => {
                                                 error={formik.touched.tokenid && Boolean(formik.errors.tokenid)}
                                                 onClose={() => setFilterText('')}
                                                 fullWidth
-                                                className="MiniSelect-tokens"
                                             >
                                                 <ListSubheader>
                                                     <TextField
@@ -308,7 +309,11 @@ const Send: FC = () => {
                                                 {getFilteredBalanceList.length ? (
                                                     getFilteredBalanceList.map((token: MinimaToken) => (
                                                         <MenuItem
-                                                            sx={{ '&:hover': { background: 'transparent' } }}
+                                                            sx={{
+                                                                '&:hover': {
+                                                                    background: 'transparent',
+                                                                },
+                                                            }}
                                                             value={token.tokenid}
                                                             key={token.tokenid}
                                                             disabled={token.sendable === '0'}

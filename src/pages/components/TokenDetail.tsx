@@ -25,6 +25,7 @@ import { useAppSelector } from '../../minima/redux/hooks';
 import { selectTokenWithID } from '../../minima/redux/slices/balanceSlice';
 import CustomListItem from '../../shared/components/CustomListItem';
 import Ticker from './tokens/Ticker';
+import TokenAuthenticity from './tokens/NFTAuthenticity';
 
 const TokenDetail = () => {
     const { tokenid } = useParams();
@@ -37,9 +38,9 @@ const TokenDetail = () => {
     // const token = balances.find((b: MinimaToken) => b.tokenid === tokenid);
     const token = useAppSelector(selectTokenWithID(typeof tokenid !== 'undefined' ? tokenid : ''));
 
-    if (typeof token === 'undefined') {
-        console.error('can not find token ' + tokenid);
-    }
+    // if (typeof token === undefined) {
+    //     console.error('can not find token ' + tokenid);
+    // }
     const loading = typeof token === 'undefined';
 
     let imageUrl = null; // populate with image if we have one, or keep null if we don't
@@ -99,9 +100,13 @@ const TokenDetail = () => {
                                             }
                                             title={
                                                 <Stack>
-                                                    <Typography variant="body2">
-                                                        {token?.token.name ? token.token.name : token.token}
-                                                    </Typography>
+                                                    <Stack direction="row" alignItems="center" spacing={0.5}>
+                                                        <Typography variant="body2">
+                                                            {token?.token.name ? token.token.name : token.token}
+                                                        </Typography>
+                                                        <TokenAuthenticity NFT={token} />
+                                                    </Stack>
+
                                                     {typeof token.token === 'object' &&
                                                     token.token.hasOwnProperty('ticker') &&
                                                     token.token.ticker ? (

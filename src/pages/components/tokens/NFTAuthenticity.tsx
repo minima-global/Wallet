@@ -17,11 +17,16 @@ const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
 
 const NFTAuthenticity = ({ NFT }: any) => {
     const [isTokenValidated, setIsTokenValidated] = React.useState(false);
-
+    // console.log('NFT', NFT);
     React.useEffect(() => {
         // console.log(`run useFffect`);
         // IS NFT defined && does it have anything in webvalidate?
-        if (NFT && NFT.token.webvalidate.length) {
+        if (
+            NFT &&
+            typeof NFT.token === 'object' &&
+            NFT.token.hasOwnProperty('webvalidate') &&
+            NFT.token.webvalidate.length
+        ) {
             callTokenValidate(NFT.tokenid)
                 .then((res: any) => {
                     // console.log(`callTokenValidate`, res);
@@ -39,7 +44,10 @@ const NFTAuthenticity = ({ NFT }: any) => {
     }, [NFT]);
     return (
         <>
-            {isTokenValidated && NFT.token.webvalidate.length ? (
+            {isTokenValidated &&
+            typeof NFT.token === 'object' &&
+            NFT.token.hasOwnProperty('webvalidate') &&
+            NFT.token.webvalidate.length ? (
                 <BootstrapTooltip placement="top-end" title={'NFT has been validated, ' + NFT.token.webvalidate}>
                     <VerifiedIcon fontSize="inherit" color="primary" />
                 </BootstrapTooltip>

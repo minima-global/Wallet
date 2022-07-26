@@ -2,8 +2,9 @@ import { ListItemButton, ListItemAvatar, Avatar, ListItemText, CardMedia, Stack,
 import { useNavigate } from 'react-router-dom';
 
 import MinimaIcon from '../../../assets/images/minimaLogoSquare.png';
-import CustomListItem from '../../../shared/components/CustomListItem';
+import TokenAuthenticity from '../tokens/NFTAuthenticity';
 import Ticker from './Ticker';
+import styles from '../../../theme/cssmodule/Components.module.css';
 
 const TokenListItem = ({ item, nav, mode }: any) => {
     let navigate = useNavigate();
@@ -28,9 +29,9 @@ const TokenListItem = ({ item, nav, mode }: any) => {
 
     return (
         <ListItemButton
+            className={styles['noWrap']}
             key={item.tokenid}
             onClick={() => (nav ? navigate(`${item.tokenid}`) : null)}
-            sx={{ position: 'relative' }}
         >
             <ListItemAvatar>
                 <Avatar
@@ -54,10 +55,13 @@ const TokenListItem = ({ item, nav, mode }: any) => {
                     )}
                 </Avatar>
             </ListItemAvatar>
-            <Stack sx={{ overflow: 'hidden' }}>
-                <Typography noWrap={true} variant="body2">
-                    {item.token.name ? item.token.name : item.token}
-                </Typography>
+            <Stack className={styles['noWrap']}>
+                <Stack className={styles['noWrap']} direction="row" alignItems="center" spacing={0.5}>
+                    <Typography noWrap={true} variant="body2">
+                        {item.token.name ? item.token.name : item.token}
+                    </Typography>
+                    <TokenAuthenticity NFT={item} />
+                </Stack>
                 {typeof item.token === 'object' && item.token.hasOwnProperty('ticker') && item.token.ticker ? (
                     <Ticker symbol={item.token.ticker} />
                 ) : item.tokenid === '0x00' ? (
@@ -71,18 +75,6 @@ const TokenListItem = ({ item, nav, mode }: any) => {
                         : null}
                 </Typography>
             </Stack>
-
-            {/* <ListItemText
-                className="MiniListItem-typography"
-                primary={item.token.name ? item.token.name : item.token}
-                secondary={
-                    mode === 1 || mode === undefined
-                        ? item.sendable
-                        : mode === 2
-                        ? item.coins + ` ${item.coins > 1 ? 'coins' : 'coin'} available`
-                        : null
-                }
-            /> */}
         </ListItemButton>
     );
 };

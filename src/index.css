@@ -71,10 +71,13 @@ body {
     max-height: 65vh;
     overflow-y: scroll;
     overflow-y: visible;
+    margin:0;
+    
 }
 .MuiMenu-list .MuiListSubheader-root {
-    background-color: #fff;
+    background-color: rgba(255, 255, 255, 0.5);
 }
+
 
 
 
