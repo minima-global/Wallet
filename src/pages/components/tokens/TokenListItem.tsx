@@ -11,7 +11,7 @@ const TokenListItem = ({ item, nav, mode }: any) => {
     // console.log(item);
     let imageUrl = null; // populate with image if we have one, or keep null if we don't
     try {
-        if (item.token.nft && item.token.image) {
+        if (item.token.hasOwnProperty('nft') && item.token.nft === 'true' && item.token.image) {
             var parser = new DOMParser();
             const doc = parser.parseFromString(item.token.image, 'application/xml');
             const errorNode2 = doc.querySelector('parsererror');

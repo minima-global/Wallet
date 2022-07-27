@@ -29,7 +29,7 @@ const NFTCard = ({ NFT }: any) => {
             ? listOfFavourites.findIndex((t: MinimaToken) => t.tokenid === NFT.tokenid)
             : -1;
 
-    let imageUrl = null; // populate with image if we have one, or keep null if we don't
+    let imageUrl = undefined; // populate with image if we have one, or keep null if we don't
     try {
         var parser = new DOMParser();
         const doc = parser.parseFromString(NFT.token.image, 'application/xml');
@@ -50,7 +50,14 @@ const NFTCard = ({ NFT }: any) => {
             {/* <CardMedia src={hexToString(NFT.token.image)} component="img" /> */}
             {imageUrl ? (
                 <CardMedia className={styles['fix-aspect-ratio']} image={imageUrl} component="img" height="181px" />
-            ) : null}
+            ) : typeof imageUrl === 'undefined' &&
+              typeof NFT.token === 'object' &&
+              NFT.token.hasOwnProperty('url') &&
+              NFT.token.url.length > 0 ? (
+                <CardMedia component="img" aria-label="NFT-url-image" src={NFT.token.url} />
+            ) : (
+                <CardMedia component="img" aria-label="NFT-url-image" src={`https://robohash.org/${NFT.tokenid}`} />
+            )}
 
             <CardContent>
                 <ModalStackedRow

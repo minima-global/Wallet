@@ -16,12 +16,22 @@ import ModalManager from '../components/managers/ModalManager';
 import NFTConfirmation from '../components/forms/common/NFTConfirmation';
 
 const validation = Yup.object().shape({
-    name: Yup.string().required('This field is required.').max(255),
+    name: Yup.string()
+        .required('This field is required.')
+        .matches(/^[^\\;]+$/, 'Invalid characters.'),
     image: Yup.mixed().required('This field is required.'),
     amount: Yup.string()
-        .required('Field Required')
+        .required('This field is required')
         .matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters.'),
-    description: Yup.string().max(255),
+    description: Yup.string()
+        .min(0)
+        .max(255, 'Maximum 255 characters allowed.')
+        .matches(/^[^\\;]+$/, 'Invalid characters.'),
+    burn: Yup.string().matches(/^[^a-zA-Z\\;"]+$/, 'Invalid characters.'),
+    ticker: Yup.string()
+        .min(0)
+        .max(5, 'Maximum 5 characters allowed.')
+        .matches(/^[^\\;]+$/, 'Invalid characters.'),
 });
 
 function isBlob(blob: null | Blob): blob is Blob {
@@ -83,13 +93,13 @@ const CreateNFTForm = () => {
             const oNFT = {
                 image: new File([data.image], 'imageData'),
                 amount: data.amount,
-                name: strToHex(data.name),
-                description: strToHex(data.description),
-                external_url: strToHex(data.external_url),
-                owner: strToHex(data.owner),
+                name: data.name.replaceAll(`"`, `'`),
+                description: data.description.replaceAll(`"`, `'`),
+                external_url: data.external_url.replaceAll(`"`, `'`),
+                owner: data.owner.replaceAll(`"`, `'`),
                 creation_date: data.creation_date,
-                webvalidate: data.webvalidate,
-                burn: '',
+                burn: data.burn,
+                webvalidate: data.webvalidate.replaceAll(`"`, `'`),
             };
 
             // check if is blob
@@ -100,6 +110,7 @@ const CreateNFTForm = () => {
                         // time to compress & send to the blockchain
                         buildUserNFT(dataUrl, COMPRESSION_FACTOR_MEDIUM, oNFT)
                             .then((result: any) => {
+                                console.log(`createNFTForm`, result);
                                 if (result.status) {
                                     // success, reset form, set previewImage to undefined again
                                     formik.resetForm();

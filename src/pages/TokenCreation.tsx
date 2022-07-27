@@ -1,10 +1,10 @@
 import { FC, useState, useEffect } from 'react';
-import { Card, CardContent, TextField, Button, InputAdornment, Skeleton, Stack, Typography } from '@mui/material';
+import { Card, CardContent, TextField, Button, Skeleton, Stack, Typography } from '@mui/material';
 import MiniModal from '../shared/components/MiniModal';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { callStatus, callToken } from '../minima/rpc-commands';
-import { insufficientFundsError, strToHex } from '../shared/functions';
+import { insufficientFundsError } from '../shared/functions';
 
 import GridLayout from './components/GridLayout';
 
@@ -18,17 +18,21 @@ import styles from '../theme/cssmodule/Components.module.css';
 
 const CreateTokenSchema = Yup.object().shape({
     name: Yup.string()
-        .required('Field Required')
-        .matches(/^[^\\;'"]+$/, 'Invalid characters.'),
+        .required('This field is required')
+        .matches(/^[^\\;]+$/, 'Invalid characters.'),
     amount: Yup.string()
-        .required('Field Required')
+        .required('This field is required')
         .matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters.'),
-    description: Yup.string().min(0).max(255, 'Maximum 255 characters allowed.'),
-    ticker: Yup.string().min(0).max(5, 'Maximum 5 characters allowed.'),
-    // .matches(/^[^\\;'"]+$/, 'Invalid characters.'),
+    description: Yup.string()
+        .min(0)
+        .max(255, 'Maximum 255 characters allowed.')
+        .matches(/^[^\\;]+$/, 'Invalid characters.'),
+    ticker: Yup.string()
+        .min(0)
+        .max(5, 'Maximum 5 characters allowed.')
+        .matches(/^[^\\;]+$/, 'Invalid characters.'),
+    burn: Yup.string().matches(/^[^a-zA-Z\\;"]+$/, 'Invalid characters.'),
     url: Yup.string(),
-    // .matches(/^[^\\;'"]+$/, 'Invalid characters.'),
-    burn: Yup.string().matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters.'),
     webvalidate: Yup.string(),
 });
 
@@ -79,21 +83,21 @@ const TokenCreation: FC = () => {
         validationSchema: CreateTokenSchema,
         onSubmit: (formData) => {
             setModalEmployee('');
-
+            // console.log(`CreateToken formData`, formData);
             const customToken = {
                 name: {
-                    name: formData.name,
-                    description: strToHex(formData.description),
-                    url: strToHex(formData.url),
+                    name: formData.name.replaceAll(`"`, `'`),
+                    description: formData.description.replaceAll(`"`, `'`),
+                    url: formData.url,
                     webvalidate: formData.webvalidate,
-                    ticker: strToHex(formData.ticker),
+                    ticker: formData.ticker.replaceAll(`"`, `'`),
                 },
                 amount: formData.amount && formData.amount.length ? formData.amount : 0,
                 burn: formData.burn && formData.burn.length ? formData.burn : 0,
-                webvalidate: '',
             };
             callToken(customToken)
                 .then((res: any) => {
+                    console.log(res);
                     if (!res.status) {
                         throw new Error(res.error ? res.error : res.message); // TODO.. consistent key value
                     }
@@ -101,8 +105,7 @@ const TokenCreation: FC = () => {
                     formik.resetForm();
                     // Set Modal
                     setModalStatus('Success');
-                    // Close Modals
-                    // setOpenConfirmationModal(false);
+
                     // Open Modal
                     setOpen(true);
                 })
@@ -119,9 +122,10 @@ const TokenCreation: FC = () => {
 
                     if (insufficientFundsError(err.message)) {
                         formik.setFieldError('amount', err.message);
+                        dispatch(toggleNotification(err.message, 'error', 'error'));
                     }
 
-                    if (err.message !== undefined) {
+                    if (typeof err.message !== 'undefined') {
                         console.error(err.message);
                         dispatch(toggleNotification(err.message, 'error', 'error'));
                     }

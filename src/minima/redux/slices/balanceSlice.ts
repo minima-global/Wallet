@@ -82,23 +82,34 @@ export const balanceSlice = createSlice({
         updateBalance: (state, action: PayloadAction<any>) => {
             // console.log(action);
             let balance = action.payload;
-            balance.forEach((b: MinimaToken) => {
-                if (typeof b.token === 'object' && b.token['nft']) {
-                    b.token.description = hexToString(b.token.description);
-                    b.token.owner =  hexToString(b.token.owner);
-                    b.token.external_url =  hexToString(b.token.external_url);
-                    b.token.name = hexToString(b.token.name);
-                }
+            // balance.forEach((b: MinimaToken) => {
+            //     if (typeof b.token === 'object' && b.token.hasOwnProperty('nft') && b.token.nft === 'true') {
+            //         if (b.token.hasOwnProperty('description') && typeof b.token.description === 'string') {
+            //             b.token.description = hexToString(b.token.description);
+            //         }
+            //         if (b.token.hasOwnProperty('owner') && typeof b.token.owner === 'string') {
+            //             b.token.owner =  hexToString(b.token.owner);
+            //         }
+            //         if(b.token.hasOwnProperty('external_url') && typeof b.token.external_url === 'string') {
+            //             b.token.external_url =  hexToString(b.token.external_url);
+            //         }
+            //         if(b.token.hasOwnProperty('name') && typeof b.token.name === 'string') {
+            //             b.token.name = hexToString(b.token.name);
+            //         }
+            //     }
 
-                if (typeof b.token === 'object' && b.token['ticker'] && b.token.ticker.length > 0) {
-                    b.token.ticker = hexToString(b.token.ticker);
-                }
+            //     if (typeof b.token === 'object' && b.token.hasOwnProperty('ticker') && b.token.ticker.length > 0) {
+            //         b.token.ticker = hexToString(b.token.ticker);
+            //     }
 
-                if (typeof b.token === 'object' && !b.token.hasOwnProperty("nft") && b.token.hasOwnProperty("url")) {
-                    b.token.url = hexToString(b.token.url);
-                    b.token.description = hexToString(b.token.description);
-                }
-            })
+            //     if (typeof b.token === 'object' && !b.token.hasOwnProperty("nft") && b.token.hasOwnProperty("url") && b.token.url.length > 0) {
+            //         b.token.url = hexToString(b.token.url);
+            //     }
+                
+            //     if (typeof b.token === 'object' && !b.token.hasOwnProperty("nft") && b.token.hasOwnProperty("description") && b.token.description.length > 0) {
+            //         b.token.description = hexToString(b.token.description);
+            //     }
+            // })
             state.funds = balance;
         },
         initFavoritesTable: (state, action: PayloadAction<any>) => {
@@ -122,7 +133,7 @@ export const selectTokenWithID = (id: string) => (state: RootState): MinimaToken
 };
 // Return NFTs
 export const selectNFTs= (state: RootState): MinimaToken[] | undefined => {
-  return state.balance.funds.filter((b: MinimaToken) => b.token && b.token.hasOwnProperty("nft") && b.token.nft);
+  return state.balance.funds.filter((b: MinimaToken) => b.token && b.token.hasOwnProperty("nft") && b.token.nft === 'true');
 };
 // Return Filter NFTs
 export const selectFilterNFTs = (id: string) => (state: RootState): MinimaToken | undefined => {

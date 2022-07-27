@@ -17,8 +17,8 @@ const NFTDetail = () => {
     const navigate = useNavigate();
     const NFTs = useAppSelector(selectNFTs);
     const NFT: any = NFTs ? NFTs.find((n: MinimaToken) => n.tokenid === tokenid) : undefined;
-
-    let imageUrl = null; // populate with image if we have one, or keep null if we don't
+    // console.log(NFT);
+    let imageUrl = undefined; // populate with image if we have one, or keep null if we don't
     try {
         var parser = new DOMParser();
         const doc = parser.parseFromString(NFT.token.image, 'application/xml');
@@ -40,23 +40,41 @@ const NFTDetail = () => {
                 <>
                     {tokenid && NFT ? (
                         <Card>
-                            {imageUrl ? <CardMedia image={imageUrl} component="img" height="auto" /> : null}
+                            {imageUrl ? (
+                                <CardMedia image={imageUrl} component="img" height="auto" />
+                            ) : typeof imageUrl === 'undefined' &&
+                              typeof NFT.token === 'object' &&
+                              NFT.token.hasOwnProperty('url') &&
+                              NFT.token.url.length > 0 ? (
+                                <CardMedia component="img" aria-label="NFT-url-image" src={NFT.token.url} />
+                            ) : (
+                                <CardMedia
+                                    component="img"
+                                    aria-label="NFT-url-image"
+                                    src={`https://robohash.org/${NFT.tokenid}`}
+                                />
+                            )}
 
                             <CardContent>
                                 <Stack>
                                     <Stack direction="row" spacing={0.5} alignItems="center">
                                         <Typography variant="h6" className={styles['nft-title']}>
-                                            {NFT.token.name}
+                                            {NFT.token.hasOwnProperty('name') ? NFT.token.name : 'Undefined'}
                                         </Typography>
                                         <NFTAuthenticity NFT={NFT} />
                                     </Stack>
                                     <Typography className={styles['nft-owner']} variant="caption">
-                                        {NFT.token.owner && NFT.token.owner.length
+                                        {NFT.token.hasOwnProperty('owner') &&
+                                        NFT.token.owner.length > 0 &&
+                                        NFT.token.owner.length
                                             ? 'Created by ' + NFT.token.owner
                                             : 'Created by anonymous'}
                                     </Typography>
                                     <Typography mt={3} variant="body2" className={styles['nft-description']}>
-                                        {NFT.token.description && NFT.token.description.length
+                                        {NFT.token.hasOwnProperty('owner') &&
+                                        NFT.token.owner.lenght > 0 &&
+                                        NFT.token.description &&
+                                        NFT.token.description.length
                                             ? NFT.token.description
                                             : 'No description available.'}
                                     </Typography>
@@ -69,6 +87,8 @@ const NFTDetail = () => {
                                     <CustomListItem
                                         title="Web Validation"
                                         value={
+                                            NFT.token.hasOwnProperty('webvalidate') &&
+                                            NFT.token.webvalidate.length > 0 &&
                                             NFT.token.webvalidate.length
                                                 ? NFT.token.webvalidate
                                                 : 'No web validation available.'
@@ -77,7 +97,10 @@ const NFTDetail = () => {
                                     <CustomListItem
                                         title="External URL"
                                         value={
-                                            NFT.token.external_url && NFT.token.external_url.length ? (
+                                            NFT.token.hasOwnProperty('external_url') &&
+                                            NFT.token.external_url.length > 0 &&
+                                            NFT.token.external_url &&
+                                            NFT.token.external_url.length ? (
                                                 <Link
                                                     aria-label={NFT.token.name}
                                                     href={NFT.token.external_url}

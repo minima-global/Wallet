@@ -44,7 +44,7 @@ const TokenDetail = () => {
     const loading = typeof token === 'undefined';
 
     let imageUrl = null; // populate with image if we have one, or keep null if we don't
-    if (token && token.token.nft) {
+    if (token && token.token.nft === 'true') {
         try {
             var parser = new DOMParser();
             const doc = parser.parseFromString(token.token.image, 'application/xml');
@@ -76,7 +76,9 @@ const TokenDetail = () => {
                                             avatar={
                                                 token.tokenid === '0x00' ? (
                                                     <MinimaSquareIcon className="minima-icon" />
-                                                ) : token.token.nft && imageUrl ? (
+                                                ) : token.token.hasOwnProperty('nft') &&
+                                                  token.token.nft === 'true' &&
+                                                  imageUrl ? (
                                                     <Avatar
                                                         variant="rounded"
                                                         src={imageUrl}
@@ -151,14 +153,16 @@ const TokenDetail = () => {
                                                     src={
                                                         token?.tokenid === '0x00' ? (
                                                             MinimaIcon
-                                                        ) : (!token?.token.url && !token.token.nft) ||
+                                                        ) : (!token?.token.url && !token.token.hasOwnProperty('nft')) ||
                                                           (token.token.url &&
                                                               token?.token.url.length === 0 &&
-                                                              !token.token.nft) ? (
+                                                              !token.token.hasOwnProperty('nft')) ? (
                                                             `https://robohash.org/${token?.tokenid}`
                                                         ) : token?.token.url && token?.token.url.length > 0 ? (
                                                             token.token.url
-                                                        ) : token.token.nft && imageUrl ? (
+                                                        ) : token.token.hasOwnProperty('nft') &&
+                                                          token.token.nft === 'true' &&
+                                                          imageUrl ? (
                                                             imageUrl
                                                         ) : (
                                                             <Skeleton variant="rectangular" />
