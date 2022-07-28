@@ -110,7 +110,7 @@ const CreateNFTForm = () => {
                         // time to compress & send to the blockchain
                         buildUserNFT(dataUrl, COMPRESSION_FACTOR_MEDIUM, oNFT)
                             .then((result: any) => {
-                                console.log(`createNFTForm`, result);
+                                //console.log(`createNFTForm`, result);
                                 if (result.status) {
                                     // success, reset form, set previewImage to undefined again
                                     formik.resetForm();

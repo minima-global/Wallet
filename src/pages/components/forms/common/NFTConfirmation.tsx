@@ -22,10 +22,12 @@ const NFTConfirmation = ({ formik }: any) => {
                     )}
                     <CardContent>
                         <Stack>
-                            <Typography variant="h6" noWrap>
+                            <Typography sx={{ fontSize: '1.0rem' }} variant="h6" noWrap>
                                 {formik.values.name}
                             </Typography>
-                            <Typography variant="body2">{formik.values.description}</Typography>
+                            <Typography sx={{ fontSize: '0.875rem' }} variant="body2">
+                                {formik.values.description}
+                            </Typography>
                         </Stack>
                     </CardContent>
                 </Card>
