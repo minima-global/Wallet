@@ -5,15 +5,12 @@ import {
     CardContent,
     Select,
     Typography,
-    Portal,
-    Snackbar,
-    Alert,
     ListSubheader,
     MenuItem,
     Skeleton,
     Stack,
 } from '@mui/material';
-import { FC, useContext, useState, useMemo } from 'react';
+import { FC, useState, useMemo } from 'react';
 import { callSend } from '../minima/rpc-commands';
 
 import { useFormik } from 'formik';
@@ -25,7 +22,7 @@ import MiniModal from '../shared/components/MiniModal';
 // import { BalanceUpdates } from '../App';
 import GridLayout from './components/GridLayout';
 
-import { containsText, insufficientFundsError, isPropertyString } from '../shared/functions';
+import { insufficientFundsError } from '../shared/functions';
 
 import TokenListItem from './components/tokens/TokenListItem';
 import { splitCoin } from '../minima/utils';
@@ -39,6 +36,8 @@ import ValueTransferConfirmation from './components/forms/common/ValueTransferCo
 import CoinSplitConfirmation from './components/forms/common/CoinSplitConfirmation';
 
 import styles from '../theme/cssmodule/Components.module.css';
+import { Box } from '@mui/system';
+import Pending from './components/forms/Pending';
 
 const TransferTokenSchema = Yup.object().shape({
     tokenid: Yup.string().required('Field Required'),
@@ -59,16 +58,6 @@ const CoinSplitterSchema = Yup.object().shape({
 });
 
 const validationSchema = [null, TransferTokenSchema, CoinSplitterSchema];
-
-// const styles = {
-//     helperText: {
-//         borderBottomRightRadius: 8,
-//         borderBottomLeftRadius: 8,
-//         color: '#D63110',
-//         fontWeight: '700',
-//         paddingLeft: 8,
-//     },
-// };
 
 const Send: FC = () => {
     const dispatch = useAppDispatch();
@@ -135,19 +124,25 @@ const Send: FC = () => {
                 // do normal value transfer
                 callSend(modifyData)
                     .then((res: any) => {
-                        // console.log(res);
-                        if (!res.status) {
+                        console.log(res);
+                        if (!res.status && !res.pending) {
                             throw new Error(res.error ? res.error : res.message); // TODO.. consistent key value
+                        }
+
+                        // Non-write minidapp
+                        if (!res.status && res.pending) {
+                            setModalStatus('Pending');
+                            setOpen(true);
+                        }
+                        // write Minidapp
+                        if (res.status && !res.pending) {
+                            // Set Modal
+                            setModalStatus('Success');
+                            // Open Modal
+                            setOpen(true);
                         }
                         // SENT
                         formik.resetForm();
-                        // Close Modals
-                        // setOpenConfirmationModal(false);
-
-                        // Set Modal
-                        setModalStatus('Success');
-                        // Open Modal
-                        setOpen(true);
                     })
                     .catch((err) => {
                         if (err === undefined || err.message === undefined) {
@@ -188,18 +183,23 @@ const Send: FC = () => {
                     splitCoin(tkn.tokenid, tkn.sendable, tkn.coins, modifyData.burn)
                         .then((res: any) => {
                             // console.log(res);
-                            if (!res.status) {
+                            if (!res.status && !res.pending) {
                                 throw new Error(res.error ? res.error : res.message); // TODO.. consistent key value
                             }
                             // SENT
+                            // Non-write minidapp
+                            if (!res.status && res.pending) {
+                                setModalStatus('Pending');
+                                setOpen(true);
+                            }
+                            // write Minidapp
+                            if (res.status && !res.pending) {
+                                // Set Modal
+                                setModalStatus('Success');
+                                // Open Modal
+                                setOpen(true);
+                            }
                             formik.resetForm();
-                            // Close Modals
-                            // setOpenConfirmationModal(false);
-
-                            // Set Modal
-                            setModalStatus('Success');
-                            // Open Modal
-                            setOpen(true);
                         })
                         .catch((err) => {
                             if (err === undefined || err.message === undefined) {
@@ -458,12 +458,22 @@ const Send: FC = () => {
                             open={open}
                             handleClose={handleClose}
                             handleOpen={handleOpen}
-                            header={modalStatus === 'Success' ? 'Success!' : 'Failed!'}
+                            header={
+                                modalStatus === 'Success'
+                                    ? 'Success!'
+                                    : modalStatus === 'Pending'
+                                    ? 'Pending'
+                                    : 'Failed!'
+                            }
                             status="Transaction Status"
                             subtitle={
-                                modalStatus === 'Success'
-                                    ? 'Your transaction will be received shortly'
-                                    : 'Please try again later.'
+                                modalStatus === 'Success' ? (
+                                    'Your transaction will be received shortly'
+                                ) : modalStatus === 'Pending' ? (
+                                    <Pending />
+                                ) : (
+                                    'Please try again later.'
+                                )
                             }
                         />
                     </>

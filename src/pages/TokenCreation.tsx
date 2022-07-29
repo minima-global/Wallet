@@ -15,6 +15,7 @@ import TokenConfirmation from './components/forms/common/TokenConfirmation';
 import ModalManager from './components/managers/ModalManager';
 
 import styles from '../theme/cssmodule/Components.module.css';
+import Pending from './components/forms/Pending';
 
 const CreateTokenSchema = Yup.object().shape({
     name: Yup.string()
@@ -98,16 +99,23 @@ const TokenCreation: FC = () => {
             callToken(customToken)
                 .then((res: any) => {
                     //console.log(res);
-                    if (!res.status) {
+                    if (!res.status && !res.pending) {
                         throw new Error(res.error ? res.error : res.message); // TODO.. consistent key value
+                    }
+                    // Non-write minidapp
+                    if (!res.status && res.pending) {
+                        setModalStatus('Pending');
+                        setOpen(true);
+                    }
+                    // write Minidapp
+                    if (res.status && !res.pending) {
+                        // Set Modal
+                        setModalStatus('Success');
+                        // Open Modal
+                        setOpen(true);
                     }
                     // SENT
                     formik.resetForm();
-                    // Set Modal
-                    setModalStatus('Success');
-
-                    // Open Modal
-                    setOpen(true);
                 })
                 .catch((err: any) => {
                     if (err === undefined || err.message === undefined) {
@@ -308,9 +316,19 @@ const TokenCreation: FC = () => {
                         open={open}
                         handleClose={handleClose}
                         handleOpen={handleOpen}
-                        header={modalStatus === 'Success' ? 'Success!' : 'Failed!'}
+                        header={
+                            modalStatus === 'Success' ? 'Success!' : modalStatus === 'Pending' ? 'Pending' : 'Failed!'
+                        }
                         status="Transaction Status"
-                        subtitle={modalStatus === 'Success' ? 'Token created' : 'Please try again later.'}
+                        subtitle={
+                            modalStatus === 'Success' ? (
+                                'Your transaction will be received shortly'
+                            ) : modalStatus === 'Pending' ? (
+                                <Pending />
+                            ) : (
+                                'Please try again later.'
+                            )
+                        }
                     />
                 </>
             }

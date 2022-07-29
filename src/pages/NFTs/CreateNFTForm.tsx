@@ -14,6 +14,8 @@ import { useAppDispatch } from '../../minima/redux/hooks';
 import { toggleNotification } from '../../minima/redux/slices/notificationSlice';
 import ModalManager from '../components/managers/ModalManager';
 import NFTConfirmation from '../components/forms/common/NFTConfirmation';
+import MiniModal from '../../shared/components/MiniModal';
+import Pending from '../components/forms/Pending';
 
 const validation = Yup.object().shape({
     name: Yup.string()
@@ -53,10 +55,19 @@ const getDataUrlFromBlob = (blob: Blob): Promise<string> => {
 };
 
 const CreateNFTForm = () => {
+    // Handle Modal
+    const [open, setOpen] = React.useState(false);
+    const [modalStatus, setModalStatus] = React.useState('Failed');
     const inp = React.useRef<any>(undefined);
     const dispatch = useAppDispatch();
     const [modalEmployee, setModalEmployee] = React.useState('');
     const [previewImage, setPreviewImage] = React.useState(undefined);
+
+    const handleTransactionStatusModalOpen = () => setOpen(true);
+    const handleTransactionStatusModalClose = () => {
+        setOpen(false);
+        setModalStatus('Failed');
+    };
 
     const handleClose = () => {
         setModalEmployee('');
@@ -111,15 +122,23 @@ const CreateNFTForm = () => {
                         buildUserNFT(dataUrl, COMPRESSION_FACTOR_MEDIUM, oNFT)
                             .then((result: any) => {
                                 //console.log(`createNFTForm`, result);
-                                if (result.status) {
-                                    // success, reset form, set previewImage to undefined again
-                                    formik.resetForm();
-                                    setPreviewImage(undefined);
-                                }
-
-                                if (!result.status) {
+                                if (!result.status && !result.pending) {
                                     throw new Error(result.error ? result.error : result.message);
                                 }
+
+                                // Non-write minidapp
+                                if (!result.status && result.pending) {
+                                    setModalStatus('Pending');
+                                    setOpen(true);
+                                }
+                                // write Minidapp
+                                if (result.status && !result.pending) {
+                                    setModalStatus('Success');
+                                    setOpen(true);
+                                }
+                                // SENT
+                                formik.resetForm();
+                                setPreviewImage(undefined);
                             })
                             .catch((err) => {
                                 console.error('buildUserNFT', err);
@@ -383,6 +402,23 @@ const CreateNFTForm = () => {
                 title="Confirmation"
                 formik={formik}
                 closeFn={handleClose}
+            />
+
+            <MiniModal
+                open={open}
+                handleClose={handleTransactionStatusModalClose}
+                handleOpen={handleTransactionStatusModalOpen}
+                header={modalStatus === 'Success' ? 'Success!' : modalStatus === 'Pending' ? 'Pending' : 'Failed!'}
+                status="Transaction Status"
+                subtitle={
+                    modalStatus === 'Success' ? (
+                        'Your transaction will be received shortly'
+                    ) : modalStatus === 'Pending' ? (
+                        <Pending />
+                    ) : (
+                        'Please try again later.'
+                    )
+                }
             />
         </form>
     );

@@ -17,7 +17,7 @@ interface SplitParams {
  * Split a coin by 2
  */
 const splitCoin = async (tokenid: string, sendable: string, coins: string, burn: string | number) => {
-  console.log(coins);
+  // console.log(coins);
   const fetchAddr: any = await callGetAddress();
   const mAddr = fetchAddr.response.miniaddress;
 

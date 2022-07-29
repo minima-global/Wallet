@@ -322,7 +322,7 @@ interface Help {
 export interface MiniModalProp {
   readonly status: string;
   readonly header: string;
-  readonly subtitle: string;
+  readonly subtitle: any;
   handleClose: () => void;
   open: boolean;
   handleOpen?: () => void;

@@ -366,3 +366,9 @@
   overflow: hidden;
   white-space: nowrap;
 }
+
+.code-edit {
+  background: #16181C;
+  color: #fff;
+  padding: 0px 8px;
+}
