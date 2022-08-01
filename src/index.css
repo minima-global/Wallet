@@ -50,14 +50,6 @@ body {
 
 
 /** Minima Specific Component Styling */
-.MiniModal .MuiListItemText-primary,
-.MiniListItem-typography .MuiListItemText-primary,
-.MiniListItem-typography .MuiListItemText-secondary {
-    text-overflow: ellipsis;
-    overflow-x: hidden;
-    white-space: nowrap;
-    max-width: 40vw;
-}
 .MiniListItem-typography .MuiListItemText-primary {
     font-weight: 600;
 }

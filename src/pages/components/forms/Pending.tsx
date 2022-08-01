@@ -1,28 +1,72 @@
-import { Typography, Box, Stack } from '@mui/material';
-
+import React from 'react';
+import { Box, Card, CardContent, Link, Stack, Typography, Tabs, Tab } from '@mui/material';
 import styles from '../../../theme/cssmodule/Components.module.css';
 
-import { BrowserView, MobileView } from 'react-device-detect';
+// import { BrowserView, MobileView } from 'react-device-detect';
 
 const Pending = () => {
     // console.log('Navigator User Agent', navigator.userAgent);
+    const [pendingHelp, setPendingHelp] = React.useState(false);
+    const toggleHelp = () => setPendingHelp(pendingHelp ? false : true);
+
     return (
         <>
-            <MobileView>Your transaction must be confirmed.</MobileView>
-            <BrowserView>
-                <Typography variant="caption">Your transaction must be confirmed in your Minima terminal.</Typography>
-                <Stack spacing={1} mt={1}>
-                    <Box component="div">
-                        1. Run <code className={styles['code-edit']}>mds action:pending</code> to view your pending
-                        transactions.
-                    </Box>
-                    <Box component="div">
-                        2. Then <code className={styles['code-edit']}>mds action:accept/deny uid:minidapp_uid</code>
-                    </Box>
+            {!pendingHelp ? (
+                <Stack>
+                    <Typography variant="body1">This action is pending.</Typography>
+                    <Typography variant="body1">
+                        Learn more{' '}
+                        <Link onClick={toggleHelp} className={styles['learn-more-link']}>
+                            <b>here.</b>
+                        </Link>
+                    </Typography>
                 </Stack>
-            </BrowserView>
+            ) : (
+                <PendingHelp />
+            )}
         </>
     );
 };
 
 export default Pending;
+
+const PendingHelp = () => {
+    const [value, setValue] = React.useState(0);
+    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+        setValue(newValue);
+    };
+    return (
+        <Stack>
+            <Tabs
+                value={value}
+                onChange={handleChange}
+                textColor="inherit"
+                indicatorColor="primary"
+                aria-label="pending tabs instructions"
+            >
+                <Tab label="Mobile" className={styles['nft-tabs-tab']} />
+                <Tab label="Desktop" className={styles['nft-tabs-tab']} />
+            </Tabs>
+
+            {value == 0 ? (
+                <Stack mt={1}>
+                    <Typography variant="body1">
+                        You can accept/deny pending actions in the pending actions page in the apk.
+                    </Typography>
+                </Stack>
+            ) : (
+                <>
+                    <Stack spacing={1} mt={1}>
+                        <Box component="div">
+                            1. Run <code className={styles['code-edit']}>mds action:pending</code> to view your pending
+                            transactions.
+                        </Box>
+                        <Box component="div">
+                            2. Then <code className={styles['code-edit']}>mds action:accept/deny uid:minidapp_uid</code>
+                        </Box>
+                    </Stack>
+                </>
+            )}
+        </Stack>
+    );
+};

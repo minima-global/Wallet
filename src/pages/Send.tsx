@@ -124,7 +124,7 @@ const Send: FC = () => {
                 // do normal value transfer
                 callSend(modifyData)
                     .then((res: any) => {
-                        console.log(res);
+                        //console.log(res);
                         if (!res.status && !res.pending) {
                             throw new Error(res.error ? res.error : res.message); // TODO.. consistent key value
                         }
