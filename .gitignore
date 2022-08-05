@@ -16,8 +16,7 @@ build
 /build
 /dist
 
-# build files
-*.zip
+
 
 # .npmrc
 .npmrc

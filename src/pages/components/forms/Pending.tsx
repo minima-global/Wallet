@@ -1,6 +1,8 @@
 import React from 'react';
-import { Box, Card, CardContent, Link, Stack, Typography, Tabs, Tab } from '@mui/material';
+import { Box, Card, CardContent, Link, Stack, Typography, Tabs, Tab, Avatar } from '@mui/material';
 import styles from '../../../theme/cssmodule/Components.module.css';
+
+import UpdateIcon from '@mui/icons-material/Update';
 
 // import { BrowserView, MobileView } from 'react-device-detect';
 
@@ -51,18 +53,21 @@ const PendingHelp = () => {
             {value == 0 ? (
                 <Stack mt={1}>
                     <Typography variant="body1">
-                        You can accept/deny pending actions in the pending actions page in the apk.
+                        You can accept/deny pending transactions from the
+                        <UpdateIcon className={styles['pending-icon']} />
+                        icon on the Home Page in the app.
                     </Typography>
                 </Stack>
             ) : (
                 <>
                     <Stack spacing={1} mt={1}>
                         <Box component="div">
-                            1. Run <code className={styles['code-edit']}>mds action:pending</code> to view your pending
+                            1. Open the Terminal MiniDapp and run{' '}
+                            <code className={styles['code-edit']}>mds action:pending</code> to view your pending
                             transactions.
                         </Box>
                         <Box component="div">
-                            2. Then <code className={styles['code-edit']}>mds action:accept/deny uid:minidapp_uid</code>
+                            2. Then <code className={styles['code-edit']}>mds action:accept/deny uid:$uid</code>.
                         </Box>
                     </Stack>
                 </>
