@@ -1,7 +1,6 @@
 import { toggleNotification } from './notificationSlice';
 import { isPropertyString, containsText, hexToString } from './../../../shared/functions';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { MinimaToken } from './../../../types/minima/index';
 import { AppThunk, RootState } from '../store';
 
 import { callBalance } from '../../rpc-commands';
