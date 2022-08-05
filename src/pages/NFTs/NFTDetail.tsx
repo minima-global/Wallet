@@ -4,7 +4,6 @@ import { Card, Link, CardMedia, Typography, CardContent, Stack, Button, Grid } f
 import GridLayout from '../components/GridLayout';
 import { useAppSelector } from '../../minima/redux/hooks';
 import { selectNFTs } from '../../minima/redux/slices/balanceSlice';
-import { MinimaToken } from '@minima-global/mds-api';
 import CustomListItem from '../../shared/components/CustomListItem';
 
 import VerifiedIcon from '@mui/icons-material/Verified';

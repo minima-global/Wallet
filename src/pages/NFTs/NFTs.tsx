@@ -1,7 +1,6 @@
 import { FC, useState, useMemo } from 'react';
 import { Grid, Card, CardContent, TextField, Button, Stack, Typography, CardHeader, Tabs, Tab } from '@mui/material';
 
-import { MinimaToken } from '../../types/minima';
 
 import { useNavigate } from 'react-router-dom';
 import { containsText, isPropertyString, strToHex } from '../../shared/functions';

@@ -4,7 +4,6 @@ import CssBaseline from '@mui/material/CssBaseline';
 import theme from './theme/theme';
 import { SnackbarProvider } from 'notistack';
 import AppNavigation from './AppNavigation';
-import { MinimaToken } from './types/minima';
 import Notifications from './layout/Notifications';
 
 import { useAppDispatch } from './minima/redux/hooks';

@@ -1,8 +1,5 @@
 import { useState, useMemo } from 'react';
 import { List, Typography, TextField, Card, CardContent, CardActions, CardHeader, Skeleton } from '@mui/material';
-
-import { useNavigate } from 'react-router-dom';
-import { MinimaToken } from '../types/minima';
 import AppPagination from './components/AppPagination';
 import GridLayout from './components/GridLayout';
 

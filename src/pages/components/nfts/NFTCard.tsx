@@ -1,5 +1,4 @@
 import React from 'react';
-import { MinimaToken } from '@minima-global/mds-api';
 import { Box, Card, CardMedia, CardContent, Typography, CardActions, Stack, Button } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../../minima/redux/hooks';
 import {

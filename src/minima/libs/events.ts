@@ -1,5 +1,5 @@
 
-import { Txpow } from "../types/minima";
+import { Txpow } from '../types/minima2';
 
 
 ////////////// response interfaces //////////

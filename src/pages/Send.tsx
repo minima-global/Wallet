@@ -15,8 +15,6 @@ import { callSend } from '../minima/rpc-commands';
 
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-
-import { MinimaToken } from '../types/minima';
 import MiniModal from '../shared/components/MiniModal';
 
 // import { BalanceUpdates } from '../App';
