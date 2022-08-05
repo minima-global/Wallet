@@ -7,7 +7,7 @@
         "build": "react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject",
-        "build-zip": "npm run build && rm minidapp/wallet_* && date=$(date +%Y_%m_%d_%H%M) && cd build && zip -r wallet_${date}.mds.zip . && mv minidapp/wallet_${date}.mds.zip ../"
+        "build-zip": "npm run build && rm minidapp/wallet_* && date=$(date +%Y_%m_%d_%H%M) && cd build && zip -r wallet_${date}.mds.zip . && mv wallet_${date}.mds.zip ../minidapp/"
     },
     "homepage": ".",
     "proxy": "http://localhost:9002",
