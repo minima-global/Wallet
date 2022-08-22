@@ -2,7 +2,7 @@ declare namespace MDS {
   let rpchost: string;
   let pollhost: string;
   let logging: boolean;
-  let DEBUG_HOST: string;
+  let DEBUG_HOST: string | null;
   let DEBUG_PORT: number | null;
   let DEBUG_MINIDAPPID: string;
   function init(callback: (event: any) => void);

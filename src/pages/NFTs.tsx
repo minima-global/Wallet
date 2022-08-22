@@ -1,32 +1,23 @@
 import { FC, useState, useMemo } from 'react';
 import { Grid, Card, CardContent, TextField, Button, Stack, Typography, CardHeader, Tabs, Tab } from '@mui/material';
 
-
 import { useNavigate } from 'react-router-dom';
-import { containsText, isPropertyString, strToHex } from '../../shared/functions';
+import { containsText, isPropertyString, strToHex } from '../shared/functions';
 
-import NFTCard from '../components/nfts/NFTCard';
-import GridLayout from '../components/GridLayout';
-import { useAppSelector } from '../../minima/redux/hooks';
-import { selectFavouriteNFTs, selectNFTs } from '../../minima/redux/slices/balanceSlice';
+import NFTCard from './components/nfts/NFTCard';
+import GridLayout from '../layout/GridLayout';
+import { useAppSelector } from '../minima/redux/hooks';
+import { selectFavouriteNFTs, selectNFTs } from '../minima/redux/slices/balanceSlice';
 
-import styles from '../../theme/cssmodule/Components.module.css';
+import styles from '../theme/cssmodule/Components.module.css';
+import { MinimaToken } from '../minima/types/minima2';
 
 const NFTs: FC = () => {
     const navigate = useNavigate();
     const [tabsValue, setTabsValue] = useState('one');
     const [filterText, setFilterText] = useState('');
-
-    // Pagination
-    // const [page, setPage] = useState(1);
-    // const COUNT_PER_PAGE = 5;
-    // const currentPage = (page: number) => {
-    //     setPage(page);
-    // };
     let allNFTs = useAppSelector(selectNFTs);
-
     const favourited = useAppSelector(selectFavouriteNFTs);
-    // console.log('My NFTs', allNFTs);
 
     if (tabsValue === 'two') {
         allNFTs = allNFTs?.filter((t: MinimaToken) => favourited?.includes(t));

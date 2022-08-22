@@ -37,7 +37,13 @@ const TokenListItem = ({ item, nav, mode }: any) => {
                 <Avatar
                     variant="rounded"
                     src={item.tokenid === '0x00' ? MinimaIcon : null}
-                    alt={item.token.name ? item.token.name : item.token}
+                    alt={
+                        item.token && typeof item.token === 'object' && item.token.hasOwnProperty('name')
+                            ? item.token.name
+                            : item.token && typeof item.token === 'string'
+                            ? item.token
+                            : 'Invalid name'
+                    }
                 >
                     {item.token.nft && imageUrl ? (
                         <Avatar variant="rounded" src={imageUrl} />
@@ -58,7 +64,11 @@ const TokenListItem = ({ item, nav, mode }: any) => {
             <Stack className={styles['noWrap']}>
                 <Stack className={styles['noWrap']} direction="row" alignItems="center" spacing={0.5}>
                     <Typography noWrap={true} variant="body2">
-                        {item.token.name ? item.token.name : item.token}
+                        {item.token && typeof item.token === 'object' && item.token.hasOwnProperty('name')
+                            ? item.token.name
+                            : item.token && typeof item.token === 'string'
+                            ? item.token
+                            : 'Invalid name'}
                     </Typography>
                     <TokenAuthenticity NFT={item} />
                 </Stack>

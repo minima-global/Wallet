@@ -1,4 +1,3 @@
-import { hexToString } from './../shared/functions';
 export const callSend = (data: any) => {
     return req(`send amount:${data.amount} address:${data.address} tokenid:${data.tokenid} burn:${data.burn}`);
 }
@@ -9,7 +8,6 @@ export const callStatus = () => {
     return req(`status`);
 }
 export const callToken = (data: any) => {
-    // console.log('sending data..', data)
     return req(`tokencreate name:{"name":"${data.name.name}", "description":"${data.name.description}", "url":"${data.name.url}", "ticker":"${data.name.ticker}"} amount:${data.amount} burn:${data.burn} webvalidate:${data.name.webvalidate}`);
 }
 export const callCreateNFT = (data: any) => {

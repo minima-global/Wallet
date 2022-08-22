@@ -18,7 +18,7 @@ import * as Yup from 'yup';
 import MiniModal from '../shared/components/MiniModal';
 
 // import { BalanceUpdates } from '../App';
-import GridLayout from './components/GridLayout';
+import GridLayout from '../layout/GridLayout';
 
 import { insufficientFundsError } from '../shared/functions';
 
@@ -36,6 +36,7 @@ import CoinSplitConfirmation from './components/forms/common/CoinSplitConfirmati
 import styles from '../theme/cssmodule/Components.module.css';
 import { Box } from '@mui/system';
 import Pending from './components/forms/Pending';
+import { MinimaToken } from '../minima/types/minima2';
 
 const TransferTokenSchema = Yup.object().shape({
     tokenid: Yup.string().required('Field Required'),

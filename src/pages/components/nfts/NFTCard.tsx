@@ -16,6 +16,7 @@ import { useNavigate } from 'react-router-dom';
 
 import VerifiedIcon from '@mui/icons-material/Verified';
 import NFTAuthenticity from '../tokens/NFTAuthenticity';
+import { MinimaToken } from '../../../minima/types/minima2';
 
 const NFTCard = ({ NFT }: any) => {
     const dispatch = useAppDispatch();
@@ -30,18 +31,32 @@ const NFTCard = ({ NFT }: any) => {
 
     let imageUrl = undefined; // populate with image if we have one, or keep null if we don't
     try {
-        var parser = new DOMParser();
-        const doc = parser.parseFromString(NFT.token.image, 'application/xml');
-        const errorNode2 = doc.querySelector('parsererror');
-        if (errorNode2) {
-            console.error('Token does not contain an image: ' + NFT);
-        } else {
-            // console.log('parsing succeeded');
-            var imageString = doc.getElementsByTagName('artimage')[0].innerHTML;
-            imageUrl = `data:image/jpeg;base64,${imageString}`;
+        if (NFT && isNFT(NFT.token)) {
+            var parser = new DOMParser();
+            const doc = parser.parseFromString(NFT.token.image, 'application/xml');
+            const errorNode2 = doc.querySelector('parsererror');
+            if (errorNode2) {
+                console.error('Token does not contain an image: ' + NFT);
+            } else {
+                // console.log('parsing succeeded');
+                var imageString = doc.getElementsByTagName('artimage')[0].innerHTML;
+                imageUrl = `data:image/jpeg;base64,${imageString}`;
+            }
         }
     } catch (err) {
         console.error('Token does not contain an image: ' + NFT);
+    }
+
+    function isNFT(obj: any): obj is NFT {
+        return (
+            'name' in obj &&
+            'description' in obj &&
+            'external_url' in obj &&
+            'image' in obj &&
+            'owner' in obj &&
+            'nft' in obj &&
+            'webvalidate' in obj
+        );
     }
 
     return (

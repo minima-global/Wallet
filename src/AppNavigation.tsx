@@ -10,16 +10,16 @@ import Send from './pages/Send';
 import Status from './pages/Status';
 import Receive from './pages/Receive';
 import TokenCreation from './pages/TokenCreation';
-import TokenDetail from './pages/components/TokenDetail';
+import TokenDetail from './pages/TokenDetail';
 import { DRAWERWIDTH } from './shared/constants';
 import SideMenu from './layout/SideMenu';
 import Offline from './pages/Offline';
-import NFTs from './pages/NFTs/NFTs';
+import NFTs from './pages/NFTs';
 import MiningCog from './pages/components/mining/MiningCog';
 import { useAppSelector } from './minima/redux/hooks';
 import { selectMiningState } from './minima/redux/slices/miningSlice';
-import CreateNFT from './pages/NFTs/CreateNFT';
-import NFTDetail from './pages/NFTs/NFTDetail';
+import CreateNFT from './pages/components/nfts/CreateNFT';
+import NFTDetail from './pages/NFTDetail';
 
 export interface RouteType {
     path: string;

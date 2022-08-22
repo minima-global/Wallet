@@ -5,6 +5,7 @@ import { AppThunk, RootState } from '../store';
 
 import { callBalance } from '../../rpc-commands';
 import { addTokenToFavoritesTable, removeTokenFromFavoritesTable, selectFavorites } from '../../libs/nft';
+import { MinimaToken } from '../../types/minima2';
 
 export interface BalanceState {
     funds: MinimaToken[];

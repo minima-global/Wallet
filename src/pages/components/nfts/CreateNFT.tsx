@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, Typography } from '@mui/material';
-import GridLayout from '../components/GridLayout';
+import GridLayout from '../../../layout/GridLayout';
 import CreateNFTForm from './CreateNFTForm';
 
 const CreateNFT = () => {

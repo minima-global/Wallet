@@ -16,35 +16,31 @@ import {
     Chip,
 } from '@mui/material';
 
-import MinimaIcon from '../../assets/images/minimaLogoSquare.png';
-import { ReactComponent as MinimaSquareIcon } from '../../assets/images/minimaLogoSquare.svg';
+import MinimaIcon from '../assets/images/minimaLogoSquare.png';
+import { ReactComponent as MinimaSquareIcon } from '../assets/images/minimaLogoSquare.svg';
 
-import GridLayout from './GridLayout';
+import GridLayout from '../layout/GridLayout';
 
-import { useAppSelector } from '../../minima/redux/hooks';
-import { selectTokenWithID } from '../../minima/redux/slices/balanceSlice';
-import CustomListItem from '../../shared/components/CustomListItem';
-import Ticker from './tokens/Ticker';
-import TokenAuthenticity from './tokens/NFTAuthenticity';
+import { useAppSelector } from '../minima/redux/hooks';
+import { selectTokenWithID } from '../minima/redux/slices/balanceSlice';
+import CustomListItem from '../shared/components/CustomListItem';
+import Ticker from './components/tokens/Ticker';
+import TokenAuthenticity from './components/tokens/NFTAuthenticity';
+import { CustomTokenJson } from '../minima/types/minima2';
 
+// a token can be a Minima token, a customTokenJson or NFT
 const TokenDetail = () => {
     const { tokenid } = useParams();
-
     const [enlargenCover, setEnlargenCover] = useState(false);
 
-    // Copy Feature
-    const [copy, setCopy] = useState<boolean>(false);
-
-    // const token = balances.find((b: MinimaToken) => b.tokenid === tokenid);
+    // Fetch the right token w tokenid
     const token = useAppSelector(selectTokenWithID(typeof tokenid !== 'undefined' ? tokenid : ''));
-
-    // if (typeof token === undefined) {
-    //     console.error('can not find token ' + tokenid);
-    // }
+    // set loading to true if undefined..
     const loading = typeof token === 'undefined';
 
-    let imageUrl = null; // populate with image if we have one, or keep null if we don't
-    if (token && token.token.nft === 'true') {
+    // Is this a NFT?
+    let imageUrl = undefined; // populate with image if we have one, or keep null if we don't
+    if (token && token.tokenid !== '0x00' && isNFT(token.token)) {
         try {
             var parser = new DOMParser();
             const doc = parser.parseFromString(token.token.image, 'application/xml');
@@ -61,13 +57,31 @@ const TokenDetail = () => {
         }
     }
 
+    function isToken(obj: any): obj is CustomTokenJson {
+        return 'name' in obj && 'url' in obj && 'description' in obj;
+    }
+
+    function isNFT(obj: any): obj is NFT {
+        return (
+            'name' in obj &&
+            'description' in obj &&
+            'external_url' in obj &&
+            'image' in obj &&
+            'owner' in obj &&
+            'nft' in obj &&
+            'webvalidate' in obj
+        );
+    }
+
     return (
         <>
             <GridLayout
                 spacing={2}
                 loading={loading}
                 children={
-                    typeof token !== 'undefined' ? (
+                    (token && token.tokenid !== '0x00' && isToken(token.token)) ||
+                    (token && token.tokenid !== '0x00' && isNFT(token.token)) ||
+                    (token && token.tokenid === '0x00') ? (
                         <Grid container>
                             <Grid item xs={12}>
                                 <Fade in={true}>
@@ -76,40 +90,38 @@ const TokenDetail = () => {
                                             avatar={
                                                 token.tokenid === '0x00' ? (
                                                     <MinimaSquareIcon className="minima-icon" />
-                                                ) : token.token.hasOwnProperty('nft') &&
-                                                  token.token.nft === 'true' &&
-                                                  imageUrl ? (
-                                                    <Avatar
-                                                        variant="rounded"
-                                                        src={imageUrl}
-                                                        alt={token?.token.name ? token?.token.name : token?.token}
-                                                    />
-                                                ) : (
+                                                ) : token.tokenid !== '0x00' &&
+                                                  isNFT(token.token) &&
+                                                  typeof imageUrl !== 'undefined' ? (
+                                                    <Avatar variant="rounded" src={imageUrl} alt={token.token.name} />
+                                                ) : token.tokenid !== '0x00' && isToken(token.token) ? (
                                                     <Avatar
                                                         variant="rounded"
                                                         src={
-                                                            token?.tokenid === '0x00'
-                                                                ? MinimaIcon
-                                                                : !token?.token.url || token?.token.url.length === 0
+                                                            !token?.token.url || token?.token.url.length === 0
                                                                 ? `https://robohash.org/${token?.tokenid}`
                                                                 : token?.token.url && token?.token.url.length > 0
                                                                 ? token.token.url
                                                                 : ''
                                                         }
-                                                        alt={token?.token.name ? token?.token.name : token?.token}
+                                                        alt={token?.token.name}
                                                     />
-                                                )
+                                                ) : null
                                             }
                                             title={
                                                 <Stack>
                                                     <Stack direction="row" alignItems="center" spacing={0.5}>
                                                         <Typography variant="body2">
-                                                            {token?.token.name ? token.token.name : token.token}
+                                                            {(token.tokenid !== '0x00' && isNFT(token.token)) ||
+                                                            (token.tokenid !== '0x00' && isToken(token.token))
+                                                                ? token?.token.name
+                                                                : token?.token}
                                                         </Typography>
                                                         <TokenAuthenticity NFT={token} />
                                                     </Stack>
 
-                                                    {typeof token.token === 'object' &&
+                                                    {token.tokenid !== '0x00' &&
+                                                    isToken(token.token) &&
                                                     token.token.hasOwnProperty('ticker') &&
                                                     token.token.ticker ? (
                                                         <Ticker symbol={token.token.ticker} />
@@ -162,7 +174,8 @@ const TokenDetail = () => {
                                                             token.token.url
                                                         ) : token.token.hasOwnProperty('nft') &&
                                                           token.token.nft === 'true' &&
-                                                          imageUrl ? (
+                                                          imageUrl &&
+                                                          typeof imageUrl !== 'undefined' ? (
                                                             imageUrl
                                                         ) : (
                                                             <Skeleton variant="rectangular" />
@@ -191,8 +204,10 @@ const TokenDetail = () => {
                                                 />
                                                 <CustomListItem title="Coins" value={token.coins} />
 
-                                                {typeof token.token === 'object' &&
-                                                token.token.hasOwnProperty('webvalidate') ? (
+                                                {(token.tokenid !== '0x00' && isToken(token.token)) ||
+                                                (token.tokenid !== '0x00' &&
+                                                    isNFT(token.token) &&
+                                                    token.token.hasOwnProperty('webvalidate')) ? (
                                                     <CustomListItem
                                                         title="Web Validation"
                                                         value={
@@ -235,7 +250,7 @@ const TokenDetail = () => {
                                 flexDirection: 'column',
                             }}
                         >
-                            <Typography variant="subtitle2">Token not found</Typography>
+                            <Typography variant="subtitle2">Token type is not supported.</Typography>
                         </Grid>
                     )
                 }

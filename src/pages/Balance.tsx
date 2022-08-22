@@ -1,13 +1,14 @@
 import { useState, useMemo } from 'react';
 import { List, Typography, TextField, Card, CardContent, CardActions, CardHeader, Skeleton } from '@mui/material';
-import AppPagination from './components/AppPagination';
-import GridLayout from './components/GridLayout';
+import AppPagination from '../layout/AppPagination';
+import GridLayout from '../layout/GridLayout';
 
 import { isPropertyString, containsText } from '../shared/functions';
 
 import TokenListItem from './components/tokens/TokenListItem';
 import { useAppSelector } from '../minima/redux/hooks';
 import { selectBalance } from '../minima/redux/slices/balanceSlice';
+import { MinimaToken } from '../minima/types/minima2';
 
 const Balance = () => {
     const [filterText, setFilterText] = useState('');

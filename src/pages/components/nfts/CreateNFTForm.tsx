@@ -3,19 +3,19 @@ import { Box, Button, Stack, TextField, Typography } from '@mui/material';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
-import styles from '../../theme/cssmodule/Components.module.css';
+import styles from '../../../theme/cssmodule/Components.module.css';
 
 import ClearIcon from '@mui/icons-material/Clear';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
-import { buildUserNFT } from '../../minima/libs/nft';
-import { insufficientFundsError, strToHex } from '../../shared/functions';
-import { useAppDispatch } from '../../minima/redux/hooks';
-import { toggleNotification } from '../../minima/redux/slices/notificationSlice';
-import ModalManager from '../components/managers/ModalManager';
-import NFTConfirmation from '../components/forms/common/NFTConfirmation';
-import MiniModal from '../../shared/components/MiniModal';
-import Pending from '../components/forms/Pending';
+import { buildUserNFT } from '../../../minima/libs/nft';
+import { insufficientFundsError, strToHex } from '../../../shared/functions';
+import { useAppDispatch } from '../../../minima/redux/hooks';
+import { toggleNotification } from '../../../minima/redux/slices/notificationSlice';
+import ModalManager from '../managers/ModalManager';
+import NFTConfirmation from '../forms/common/NFTConfirmation';
+import MiniModal from '../../../shared/components/MiniModal';
+import Pending from '../forms/Pending';
 
 const validation = Yup.object().shape({
     name: Yup.string()
@@ -101,14 +101,13 @@ const CreateNFTForm = () => {
             const COMPRESSION_FACTOR_HIGH = 0.9;
             setModalEmployee('');
 
-            const oNFT = {
+            const oNFT: any = {
                 image: new File([data.image], 'imageData'),
                 amount: data.amount,
                 name: data.name.replaceAll(`"`, `'`),
                 description: data.description.replaceAll(`"`, `'`),
                 external_url: data.external_url.replaceAll(`"`, `'`),
                 owner: data.owner.replaceAll(`"`, `'`),
-                creation_date: data.creation_date,
                 burn: data.burn,
                 webvalidate: data.webvalidate.replaceAll(`"`, `'`),
             };

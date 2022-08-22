@@ -6,7 +6,7 @@ import * as Yup from 'yup';
 import { callStatus, callToken } from '../minima/rpc-commands';
 import { insufficientFundsError } from '../shared/functions';
 
-import GridLayout from './components/GridLayout';
+import GridLayout from '../layout/GridLayout';
 
 import { useAppDispatch, useAppSelector } from '../minima/redux/hooks';
 import { toggleNotification } from '../minima/redux/slices/notificationSlice';

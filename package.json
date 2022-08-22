@@ -1,13 +1,13 @@
 {
     "name": "wallet",
-    "version": "1.9.2",
+    "version": "1.10",
     "private": true,
     "scripts": {
         "start": "react-scripts start",
         "build": "react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject",
-        "build-zip": "npm run build && rm minidapp/wallet_* && date=$(date +%Y_%m_%d_%H%M) && cd build && zip -r wallet_${date}.mds.zip . && mv wallet_${date}.mds.zip ../minidapp/"
+        "build-zip": "npm run build && rm minidapp/wallet_* && cd build && zip -r wallet_$npm_package_version.mds.zip . && mv wallet_$npm_package_version.mds.zip ../minidapp/"
     },
     "homepage": ".",
     "proxy": "http://localhost:9002",
