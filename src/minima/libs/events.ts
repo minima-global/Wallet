@@ -20,6 +20,13 @@ interface NewBlockResponse {
   event: 'NEWBLOCK';
   data: NewBlockData;
 }
+
+
+interface MDSTimerResponse {
+  event: 'MDS_TIMER_10SECONDS';
+  data: Object;
+}
+
 interface NewBlockData {
   txpow: Txpow;
 }
@@ -79,12 +86,14 @@ let whenMinimaLog = (d: MinimaLogData) => {
 ///////////////////////////
 
 const initializeMinima = () => {
+  if (process.env.NODE_ENV == 'development') {
+    console.log(process.env.REACTAPP_MINIDAPPID)
+    MDS.DEBUG_HOST = "127.0.0.1";
+    MDS.DEBUG_PORT = 9003;
+    MDS.DEBUG_MINIDAPPID = process.env.REACT_APP_MINIDAPPID;
+  }
 
-  //  MDS.DEBUG_HOST = "127.0.0.1";
-  //  MDS.DEBUG_PORT = 9003;
-  //  MDS.DEBUG_MINIDAPPID = '0x48BEB93E352D320C5051F9B008E7C26675949EDBA3EB25507ABE023B2702775D'
-
-  MDS.init((nodeEvent: InitResponse | MiningResponse | NewBlockResponse | MinimaLogResponse | NewBalanceResponse | MaximaResponse) => {
+  MDS.init((nodeEvent: InitResponse | MiningResponse | NewBlockResponse | MinimaLogResponse | NewBalanceResponse | MaximaResponse | MDSTimerResponse) => {
 
       switch (nodeEvent.event) {
           case 'inited':
@@ -111,6 +120,8 @@ const initializeMinima = () => {
               const minimaLogeData = nodeEvent.data
               whenMinimaLog(minimaLogeData);
               break;
+          case 'MDS_TIMER_10SECONDS':
+            break;
           default:
               console.error("Unknown event type: ", nodeEvent);
       }

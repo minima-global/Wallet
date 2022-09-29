@@ -1,10 +1,12 @@
 {
     "name": "wallet",
-    "version": "1.10",
+    "version": "1.100",
     "private": true,
     "scripts": {
-        "start": "react-scripts start",
+        "start": "env-cmd -f .env.development react-scripts start",
+        "start:prod": "env-cmd -f .env.prod react-scripts start",
         "build": "react-scripts build",
+        "build:dev": "env-cmd -f .env.development react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject",
         "build-zip": "npm run build && rm minidapp/wallet_* && cd build && zip -r wallet_$npm_package_version.mds.zip . && mv wallet_$npm_package_version.mds.zip ../minidapp/"
@@ -31,6 +33,7 @@
         "@types/node": "^16.11.21",
         "@types/react": "^17.0.38",
         "@types/react-dom": "^17.0.11",
+        "env-cmd": "^10.1.0",
         "formik": "^2.2.9",
         "html5-qrcode": "^2.1.6",
         "http-proxy-middleware": "^2.0.2",

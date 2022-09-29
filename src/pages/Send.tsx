@@ -34,7 +34,6 @@ import ValueTransferConfirmation from './components/forms/common/ValueTransferCo
 import CoinSplitConfirmation from './components/forms/common/CoinSplitConfirmation';
 
 import styles from '../theme/cssmodule/Components.module.css';
-import { Box } from '@mui/system';
 import Pending from './components/forms/Pending';
 import { MinimaToken } from '../minima/types/minima2';
 
@@ -123,7 +122,6 @@ const Send: FC = () => {
                 // do normal value transfer
                 callSend(modifyData)
                     .then((res: any) => {
-                        //console.log(res);
                         if (!res.status && !res.pending) {
                             throw new Error(res.error ? res.error : res.message); // TODO.. consistent key value
                         }

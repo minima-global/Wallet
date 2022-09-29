@@ -4,10 +4,11 @@ declare namespace MDS {
   let logging: boolean;
   let DEBUG_HOST: string | null;
   let DEBUG_PORT: number | null;
-  let DEBUG_MINIDAPPID: string;
+  let DEBUG_MINIDAPPID: string | undefined;
   function init(callback: (event: any) => void);
   function log(output: string);
   function cmd(command: string, callback: (data: any) => void);
   function sql(query: string, callback: (data: any) => void);
   interface form {getParams: (param: string) => void}
+  let net: any;
 }
