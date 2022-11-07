@@ -100,7 +100,7 @@ interface CustomTokenJson {
 }
 
 interface MinimaToken {
-    token: string & CustomTokenJson & NFT;
+    token: any;
     coins: string;
     tokenid: string;
     confirmed: string;

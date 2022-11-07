@@ -21,7 +21,7 @@ export default function App() {
     const dispatch = useAppDispatch();
     useEffect(() => {
         events.onInit(() => {
-            dispatch(callAndStoreBalance(0));
+            dispatch(callAndStoreBalance());
 
             // init sql tables
             createFavoritesTable();
@@ -37,11 +37,7 @@ export default function App() {
             dispatch(
                 toggleNotification(balanceNotification.message, balanceNotification.severity, balanceNotification.type)
             );
-            dispatch(callAndStoreBalance(0));
-            dispatch(callAndStoreBalance(2 * 60 * 1000)); // 2 mins
-            dispatch(callAndStoreBalance(3 * 60 * 1000)); // 3 mins
-            dispatch(callAndStoreBalance(5 * 60 * 1000)); // 5 mins
-            dispatch(callAndStoreBalance(10 * 60 * 1000)); // 10 mins
+            dispatch(callAndStoreBalance());
         });
 
         events.onMining((data) => {

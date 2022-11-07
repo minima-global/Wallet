@@ -112,18 +112,7 @@ const NFTs: FC = () => {
                                 </Grid>
                             </Stack>
                         </CardContent>
-                        {/* {filterText.length === 0 && allNFTs && allNFTs.length ? (
-                            <CardActions
-                                className="MiniBalanceActions"
-                                sx={{ justifyContent: 'center', display: 'flex' }}
-                            >
-                                <AppPagination
-                                    currentPage={currentPage}
-                                    totalNFTs={allNFTs.length}
-                                    countPerPage={COUNT_PER_PAGE}
-                                />
-                            </CardActions>
-                        ) : null} */}
+                        
                     </Card>
                 </>
             }

@@ -16,6 +16,7 @@ import ModalManager from '../managers/ModalManager';
 import NFTConfirmation from '../forms/common/NFTConfirmation';
 import MiniModal from '../../../shared/components/MiniModal';
 import Pending from '../forms/Pending';
+import AddImage from '../forms/AddImage';
 
 const validation = Yup.object().shape({
     name: Yup.string()
@@ -62,6 +63,22 @@ const CreateNFTForm = () => {
     const dispatch = useAppDispatch();
     const [modalEmployee, setModalEmployee] = React.useState('');
     const [previewImage, setPreviewImage] = React.useState(undefined);
+    const [file, setFile] = React.useState<File | null>(null);
+    const [imageDataUrl, setImageDataUrl] = React.useState('');
+
+    /**
+     * Handles the file input for when the user wants to select an image
+     * @param {string} imageDataUrl
+     * @param {File} file
+     * creds to dynamitesushi & neil shah
+     */
+    const onImageChange = (imageDataUrl: string, file: File) => {
+        console.log('changing image');
+        setImageDataUrl(imageDataUrl);
+        setFile(file);
+    };
+
+    console.log('file', file);
 
     const handleTransactionStatusModalOpen = () => setOpen(true);
     const handleTransactionStatusModalClose = () => {
@@ -208,50 +225,12 @@ const CreateNFTForm = () => {
                     }}
                     className={styles['form-image-preview-box']}
                 >
-                    {previewImage ? (
-                        <img src={URL.createObjectURL(previewImage)} className={styles['form-image-preview-box-img']} />
-                    ) : null}
-                    <input
-                        ref={inp}
-                        id="image"
-                        name="image"
-                        type="file"
-                        hidden
-                        accept="image/*"
-                        onChange={(e: any) => {
-                            if (previewImage) {
-                                // console.log('revoking url object..');
-                                URL.revokeObjectURL(previewImage);
-                            }
-                            if (e.target.files[0]) {
-                                //console.log('setting FIle to subscribers');
-                                setPreviewImage(e.target.files[0]);
-                                formik.setFieldValue('image', e.target.files[0]);
-                            }
-                        }}
+                    <AddImage
+                        formik={formik}
+                        textContent="Choose media"
+                        onImageChange={onImageChange}
+                        id="add-media-file-uploader"
                     />
-
-                    {previewImage ? (
-                        <>
-                            <ClearIcon
-                                color="inherit"
-                                className={styles['clear-icon']}
-                                onClick={() => {
-                                    formik.setFieldValue('image', '');
-                                    URL.revokeObjectURL(previewImage);
-                                    setPreviewImage(undefined);
-                                }}
-                            />
-                            <Box className={styles['info-label-image-upload']}>
-                                <Typography variant="caption">{previewImage ? previewImage['name'] : null}</Typography>
-                            </Box>
-                        </>
-                    ) : (
-                        <Stack className={styles['info-upload-overlay']} justifyContent="center" alignItems="center">
-                            <CloudUploadIcon fontSize="large" color="inherit" />
-                            <Typography variant="caption">Click here to upload</Typography>
-                        </Stack>
-                    )}
                 </Box>
                 <TextField
                     disabled={formik.isSubmitting}

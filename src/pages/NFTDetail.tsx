@@ -76,7 +76,7 @@ const NFTDetail = () => {
                                                 : 'Created by anonymous'}
                                         </Typography>
                                         <Typography mt={3} variant="body2" className={styles['nft-description']}>
-                                            {NFT.token.owner.length > 0 && NFT.token.description.length > 0
+                                            {NFT.token.owner.length > 0 && NFT.token.description && NFT.token.description.length > 0
                                                 ? NFT.token.description
                                                 : 'No description available.'}
                                         </Typography>
