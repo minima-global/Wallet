@@ -15,28 +15,24 @@ function isBlob(blob: undefined | Blob): boolean {
 
 interface IProps {
     image?: string;
-    textContent: string;
     onImageChange?: any;
     children?: ReactNode;
     id?: string;
     formik: any;
 }
 
-const AddImage = ({ textContent, onImageChange = () => {}, children, id, formik }: IProps) => {
+const AddImage = ({ onImageChange = () => {}, formik }: IProps) => {
     const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
-    const [myImageSrc, setMyImageSrc] = React.useState<string | null>(null);
 
     const handleCapture = ({ target }: any) => {
         setSelectedFile(target.files[0]);
         getDataUrlFromBlob(target.files[0]).then((imageDataUrl) => {
-            setMyImageSrc(imageDataUrl);
             onImageChange(imageDataUrl, target.files[0]);
-            formik.setFieldValue('image', target.files[0]);
+            formik.setFieldValue('image', imageDataUrl);
         }, console.error);
     };
 
     const getDataUrlFromBlob = (blob: Blob): Promise<string> => {
-        console.log(blob);
         const _isBlob = isBlob(blob);
         if (!_isBlob) {
             return Promise.reject('Image is not a Blob');
@@ -54,18 +50,16 @@ const AddImage = ({ textContent, onImageChange = () => {}, children, id, formik 
             };
         });
     };
-
     return (
         <>
-            {myImageSrc && selectedFile ? (
+            {formik.values.image && selectedFile ? (
                 <>
-                    <img src={myImageSrc} className={styles['form-image-preview-box-img']} />
+                    <img src={formik.values.image} className={styles['form-image-preview-box-img']} />
                     <ClearIcon
                         color="inherit"
                         className={styles['clear-icon']}
                         onClick={() => {
                             formik.setFieldValue('image', '');
-                            setMyImageSrc(null);
                         }}
                     />
                     <Box className={styles['info-label-image-upload']}>

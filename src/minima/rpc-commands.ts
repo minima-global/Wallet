@@ -9,14 +9,12 @@ export const callGetAddress = () => {
 export const callStatus = () => {
     return req(`status`);
 }
-export const callToken = (data: any) => {
-    return req(`tokencreate name:{"name":"${data.name.name}", "description":"${data.name.description}", "url":"${data.name.url}", "ticker":"${data.name.ticker}"} amount:${data.amount} burn:${data.burn} webvalidate:${data.name.webvalidate}`);
+export const callToken = (data: any, imageData?: string) => {
+    return req(`tokencreate name:{"name":"${data.name.name}", "image":"${imageData}", "description":"${data.name.description}", "url":"${data.name.url}", "ticker":"${data.name.ticker}"} amount:${data.amount} burn:${data.burn} webvalidate:${data.name.webvalidate}`);
 }
-export const callCreateNFT = (data: any) => {
-    return req(`tokencreate name:{"name":"${data.name}", "description":"${data.description}", "external_url":"${data.external_url}", "image":"${data.image}", "owner":"${data.owner}", "nft":"true"} amount:${data.amount} decimals:0 webvalidate:${data.webvalidate}`);
-}
-export const callCreateNFTWithBlob = (data: any, image: string) => {
-    return req(`tokencreate name:{"name":"${data.name}", "description":"${data.description}", "external_url":"${data.external_url}", "image":"${image}", "owner":"${data.owner}", "nft":"true"} amount:${data.amount} decimals:0 webvalidate:${data.webvalidate}`);
+
+export const callCreateNFT= (data: any, imageData?: string) => {
+    return req(`tokencreate name:{"name":"${data.name}", "description":"${data.description}", "url": "${data.name.url}", "external_url":"${data.external_url}", "image":"${imageData}", "owner":"${data.owner}", "nft":"true"} amount:${data.amount} decimals:0 webvalidate:${data.webvalidate}`);
 }
 /** Get Balance */
 

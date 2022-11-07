@@ -73,7 +73,7 @@ const CreateNFTForm = () => {
      * creds to dynamitesushi & neil shah
      */
     const onImageChange = (imageDataUrl: string, file: File) => {
-        console.log('changing image');
+        //console.log('changing image');
         setImageDataUrl(imageDataUrl);
         setFile(file);
     };
@@ -103,6 +103,7 @@ const CreateNFTForm = () => {
     const formik = useFormik({
         initialValues: {
             image: undefined,
+            url: '',
             amount: '',
             name: '',
             description: '',
@@ -113,14 +114,12 @@ const CreateNFTForm = () => {
             burn: '',
         },
         onSubmit: (data: any) => {
-            const COMPRESSION_FACTOR_LOW = 0.1;
-            const COMPRESSION_FACTOR_MEDIUM = 0.5;
-            const COMPRESSION_FACTOR_HIGH = 0.9;
             setModalEmployee('');
 
             const oNFT: any = {
-                image: new File([data.image], 'imageData'),
+                image: data.image,
                 amount: data.amount,
+                url: data.url,
                 name: data.name.replaceAll(`"`, `'`),
                 description: data.description.replaceAll(`"`, `'`),
                 external_url: data.external_url.replaceAll(`"`, `'`),
@@ -129,58 +128,41 @@ const CreateNFTForm = () => {
                 webvalidate: data.webvalidate.replaceAll(`"`, `'`),
             };
 
-            // check if is blob
-            const _isBlob = isBlob(oNFT.image);
-            if (_isBlob) {
-                getDataUrlFromBlob(oNFT.image)
-                    .then((dataUrl) => {
-                        // time to compress & send to the blockchain
-                        buildUserNFT(dataUrl, COMPRESSION_FACTOR_MEDIUM, oNFT)
-                            .then((result: any) => {
-                                //console.log(`createNFTForm`, result);
-                                if (!result.status && !result.pending) {
-                                    throw new Error(result.error ? result.error : result.message);
-                                }
+            buildUserNFT(oNFT)
+                .then((result: any) => {
+                    //console.log(`createNFTForm`, result);
+                    if (!result.status && !result.pending) {
+                        throw new Error(result.error ? result.error : result.message);
+                    }
 
-                                // Non-write minidapp
-                                if (!result.status && result.pending) {
-                                    setModalStatus('Pending');
-                                    setOpen(true);
-                                }
-                                // write Minidapp
-                                if (result.status && !result.pending) {
-                                    setModalStatus('Success');
-                                    setOpen(true);
-                                }
-                                // SENT
-                                formik.resetForm();
-                                setPreviewImage(undefined);
-                            })
-                            .catch((err) => {
-                                console.error('buildUserNFT', err);
-                                formik.setSubmitting(false);
-                                dispatch(toggleNotification(`${err}`, 'error', 'error'));
+                    // Non-write minidapp
+                    if (!result.status && result.pending) {
+                        setModalStatus('Pending');
+                        setOpen(true);
+                    }
+                    // write Minidapp
+                    if (result.status && !result.pending) {
+                        setModalStatus('Success');
+                        setOpen(true);
+                    }
+                    // SENT
+                    formik.resetForm();
+                    setPreviewImage(undefined);
+                })
+                .catch((err) => {
+                    console.error('buildUserNFT', err);
+                    formik.setSubmitting(false);
+                    dispatch(toggleNotification(`${err}`, 'error', 'error'));
 
-                                if (insufficientFundsError(err.message)) {
-                                    formik.setFieldError('amount', err.message);
-                                    dispatch(toggleNotification(`${err.message}`, 'error', 'error'));
-                                }
+                    if (insufficientFundsError(err.message)) {
+                        formik.setFieldError('amount', err.message);
+                        dispatch(toggleNotification(`${err.message}`, 'error', 'error'));
+                    }
 
-                                if (err.message) {
-                                    dispatch(toggleNotification(`${err.message}`, 'error', 'error'));
-                                }
-                            });
-                    })
-                    .catch((err) => {
-                        console.error('getDataUrlFromBlob', err);
-                        dispatch(toggleNotification(`${err}`, 'error', 'error'));
-                        formik.setSubmitting(false);
-                    });
-            } else {
-                console.error('Selected image is not of type Blob');
-                dispatch(toggleNotification('Image is not of type Blob, please report bug to admin', 'error', 'error'));
-                formik.setSubmitting(false);
-            }
+                    if (err.message) {
+                        dispatch(toggleNotification(`${err.message}`, 'error', 'error'));
+                    }
+                });
         },
         validationSchema: validation,
     });
@@ -225,12 +207,7 @@ const CreateNFTForm = () => {
                     }}
                     className={styles['form-image-preview-box']}
                 >
-                    <AddImage
-                        formik={formik}
-                        textContent="Choose media"
-                        onImageChange={onImageChange}
-                        id="add-media-file-uploader"
-                    />
+                    <AddImage formik={formik} onImageChange={onImageChange} id="add-media-file-uploader" />
                 </Box>
                 <TextField
                     disabled={formik.isSubmitting}

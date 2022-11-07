@@ -4,10 +4,11 @@
 import imageSize from "../getImageSize";
 
 async function createImage(file: any, resize = 1, quality = 0.8) {
+    console.log("creating image...")
     const image = await imageSize(file);
     const imageWidth = image.width;
     const imageHeight = image.height;
-
+    
     const img = new Image();
     img.src = file;
     const canvas = document.createElement("canvas");
@@ -16,6 +17,7 @@ async function createImage(file: any, resize = 1, quality = 0.8) {
     canvas.height = imageHeight * resize;
     ctx.drawImage(img, 0, 0, imageWidth * resize, imageHeight * resize);
 
+    console.log("canvas to dataurl", canvas.toDataURL("image/jpeg", quality));
     return canvas.toDataURL("image/jpeg", quality);
 }
 

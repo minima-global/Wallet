@@ -3,9 +3,8 @@
 //  * Handle NFT Image Compression + Building
 //  * 
 //  */
-
-import { callCreateNFTWithBlob } from './../rpc-commands';
-import { Token } from '../types/minima2';
+import getSuitableImage from '../../shared/utils/imagehandler/getSuitableImage';
+import { callToken, callCreateNFT } from './../rpc-commands';
 
 // expected interface
 
@@ -26,16 +25,31 @@ export const isToken = (candidate: any) => {
 
 }
 
-export const buildUserNFT = (imageDataUrl: string, compressionFactor: number, data: any): Promise<string | Token> => {
-  return resizeImage(imageDataUrl, compressionFactor).then((resizedImageDataUrl) => {
-      //console.log('resizedImageDataUrl', resizedImageDataUrl)
-      const onlyString = resizedImageDataUrl.slice(resizedImageDataUrl.indexOf(',') + 1)
-      return createNFTWithImage(onlyString, data)
-  })
+export const buildUserNFT = async (data: any) => {
+  // are they using an upload image or normal url
+  if (data.name.image !== undefined) {
+    const compressedImage = await getSuitableImage(data.name.image);
+    const pureCompressedImage = compressedImage.slice(compressedImage.indexOf(",") + 1);
+
+    console.log("purecompressedImage", pureCompressedImage);
+    if (data.hasOwnProperty("nft")) {
+      return createNFTWithImage(pureCompressedImage, data);
+    }
+
+    return createTokenWithImage(pureCompressedImage, data);
+  }
+  // they're creating a token/nft with an url as image
+  if (data.name.url.length > 0) {
+    if (data.hasOwnProperty("nft")) {
+      return callCreateNFT(data);
+    }
+
+    return callToken(data);
+  }
 }
 
 export function resizeImage(imageDataUrl: string, compressionFactor: number): Promise<any> {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
       let imageNode = document.createElement('img')
       imageNode.src = imageDataUrl
       let canvas: any = document.createElement('canvas')
@@ -45,38 +59,11 @@ export function resizeImage(imageDataUrl: string, compressionFactor: number): Pr
       imageNode.addEventListener(
           'load',
           function () {
-              // execute drawImage statements here
-              // ctx.drawImage(imageNode, 0, 0, imageNode.width, imageNode.height)
-
-              // var ctxWidth    = ctx.canvas.width;
-              // var ctxHeight   = ctx.canvas.height;
-              // var imgWidth    = imageNode.width;
-              // var imgHeight   = imageNode.height;
-              // var ratioWidth  = imgWidth  / ctxWidth;
-              // var ratioHeight = imgHeight / ctxHeight;
-              // var ratioAspect = ratioWidth > 1 ? ratioWidth : ratioHeight > 1 ? ratioHeight : 1;
-              // var newWidth    = imgWidth / ratioAspect;
-              // var newHeight   = imgHeight / ratioAspect;
-              // var offsetX     = (ctxWidth  / 2) - (newWidth  / 2);
-              // var offsetY     = (ctxHeight / 2) - (newHeight / 2);
-              // console.log('CTXWIDTH', ctxWidth);
-              // console.log('CTXHEIGHT', ctxHeight);
-              // console.log('imgWIDTH', imgWidth);
-              // console.log('imgHEIGHT', imgHeight);
-              // console.log('ratioWidth', ratioWidth);
-              // console.log('ratioHeight', ratioHeight);
-              // console.log('newWidth', newWidth);
-              // console.log('newHeight', newHeight);
+             
               let ratioAspect = 300/imageNode.width;
               canvas.width = 300;
               canvas.height = imageNode.height * ratioAspect;
 
-
-              // canvas.width = 300
-              // canvas.height = 150
-              // ctx.drawImage(imageNode, 0, 0, imageNode.width, imageNode.height, 0, 0, canvas.width, canvas.height)
-
-              // ctx.clearRect(0, 0, ctxWidth, ctxHeight);
               ctx.drawImage(imageNode, 0, 0, canvas.width, canvas.height);
               
 
@@ -102,12 +89,30 @@ function createNFTWithImage(encodedImage: string, data: any): Promise<any> {
       var serializer = new XMLSerializer()
       var imageXmlString = serializer.serializeToString(xmlDoc)
 
-      callCreateNFTWithBlob(data, imageXmlString).then((res: any) => {
+      callCreateNFT(data, imageXmlString).then((res: any) => {
         resolve(res)
-      }).catch((err) => {
+      }).catch((err: string) => {
         console.error(`callCreateNFT error`, err);
         reject(err);
       })
+  })
+}
+
+const createTokenWithImage = (encodedImage: string, data: any): Promise<any> => {
+  return new Promise((resolve, reject) => {
+          // handle image compression part..
+          var xmlString = '<artimage></artimage>'
+          var parser = new DOMParser()
+          var xmlDoc: any = parser.parseFromString(xmlString, 'text/xml')
+          xmlDoc.firstElementChild.innerHTML = encodedImage
+          var serializer = new XMLSerializer()
+          var imageXmlString = serializer.serializeToString(xmlDoc)
+
+          callToken(data, imageXmlString).then((res: any) => {
+            resolve(res);
+          }).catch((err: string) => {
+            reject(err);
+          })
   })
 }
 

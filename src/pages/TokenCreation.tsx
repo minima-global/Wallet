@@ -1,5 +1,5 @@
 import { FC, useState, useEffect } from 'react';
-import { Card, CardContent, TextField, Button, Skeleton, Stack, Typography } from '@mui/material';
+import { Card, CardContent, TextField, Button, Skeleton, Stack, Typography, Tooltip } from '@mui/material';
 import MiniModal from '../shared/components/MiniModal';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -16,6 +16,9 @@ import ModalManager from './components/managers/ModalManager';
 
 import styles from '../theme/cssmodule/Components.module.css';
 import Pending from './components/forms/Pending';
+import FormFieldWrapper from '../shared/components/FormFieldWrapper';
+import FormImageUrlSelect from '../shared/components/forms/FormImageUrlSelect';
+import { buildUserNFT } from '../minima/libs/nft';
 
 const CreateTokenSchema = Yup.object().shape({
     name: Yup.string()
@@ -73,6 +76,7 @@ const TokenCreation: FC = () => {
     // Formik
     const formik = useFormik({
         initialValues: {
+            image: undefined,
             name: '',
             amount: '',
             url: '',
@@ -90,13 +94,14 @@ const TokenCreation: FC = () => {
                     name: formData.name.replaceAll(`"`, `'`),
                     description: formData.description.replaceAll(`"`, `'`),
                     url: formData.url,
+                    image: formData.image,
                     webvalidate: formData.webvalidate,
                     ticker: formData.ticker.replaceAll(`"`, `'`),
                 },
                 amount: formData.amount && formData.amount.length ? formData.amount : 0,
                 burn: formData.burn && formData.burn.length ? formData.burn : 0,
             };
-            callToken(customToken)
+            buildUserNFT(customToken)
                 .then((res: any) => {
                     //console.log(res);
                     if (!res.status && !res.pending) {
@@ -184,43 +189,67 @@ const TokenCreation: FC = () => {
                                     </Stack>
                                 ) : (
                                     <Stack spacing={2}>
-                                        <TextField
-                                            disabled={formik.isSubmitting}
-                                            fullWidth
-                                            id="name"
-                                            name="name"
-                                            placeholder="name"
-                                            value={formik.values.name}
-                                            onChange={formik.handleChange}
-                                            error={formik.touched.name && Boolean(formik.errors.name)}
-                                            helperText={formik.touched.name && formik.errors.name}
-                                            FormHelperTextProps={{ className: styles['form-helper-text'] }}
-                                            InputProps={{
-                                                style:
-                                                    formik.touched.name && Boolean(formik.errors.name)
-                                                        ? { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }
-                                                        : { borderBottomLeftRadius: 8, borderBottomRightRadius: 8 },
-                                            }}
-                                        ></TextField>
-                                        <TextField
-                                            disabled={formik.isSubmitting}
-                                            fullWidth
-                                            id="amount"
-                                            name="amount"
-                                            placeholder="0.0"
-                                            value={formik.values.amount}
-                                            onChange={formik.handleChange}
-                                            error={formik.touched.amount && Boolean(formik.errors.amount)}
-                                            helperText={formik.touched.amount && formik.errors.amount}
-                                            FormHelperTextProps={{ className: styles['form-helper-text'] }}
-                                            InputProps={{
-                                                style:
-                                                    formik.touched.amount && Boolean(formik.errors.amount)
-                                                        ? { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }
-                                                        : { borderBottomLeftRadius: 8, borderBottomRightRadius: 8 },
-                                            }}
-                                        ></TextField>
-                                        <TextField
+                                        <FormImageUrlSelect formik={formik} />
+                                        <FormFieldWrapper
+                                            help="Enter a name for your custom token"
+                                            children={
+                                                <TextField
+                                                    disabled={formik.isSubmitting}
+                                                    fullWidth
+                                                    id="name"
+                                                    name="name"
+                                                    placeholder="name"
+                                                    value={formik.values.name}
+                                                    onChange={formik.handleChange}
+                                                    error={formik.touched.name && Boolean(formik.errors.name)}
+                                                    helperText={formik.touched.name && formik.errors.name}
+                                                    FormHelperTextProps={{ className: styles['form-helper-text'] }}
+                                                    InputProps={{
+                                                        style:
+                                                            formik.touched.name && Boolean(formik.errors.name)
+                                                                ? {
+                                                                      borderBottomLeftRadius: 0,
+                                                                      borderBottomRightRadius: 0,
+                                                                  }
+                                                                : {
+                                                                      borderBottomLeftRadius: 8,
+                                                                      borderBottomRightRadius: 8,
+                                                                  },
+                                                    }}
+                                                />
+                                            }
+                                        />
+                                        <FormFieldWrapper
+                                            help={`Token amount to create,  1 Token is equivalent to 1e-36 Minima`}
+                                            children={
+                                                <TextField
+                                                    disabled={formik.isSubmitting}
+                                                    fullWidth
+                                                    id="amount"
+                                                    name="amount"
+                                                    placeholder="amount"
+                                                    value={formik.values.amount}
+                                                    onChange={formik.handleChange}
+                                                    error={formik.touched.amount && Boolean(formik.errors.amount)}
+                                                    helperText={formik.touched.amount && formik.errors.amount}
+                                                    FormHelperTextProps={{ className: styles['form-helper-text'] }}
+                                                    InputProps={{
+                                                        style:
+                                                            formik.touched.amount && Boolean(formik.errors.amount)
+                                                                ? {
+                                                                      borderBottomLeftRadius: 0,
+                                                                      borderBottomRightRadius: 0,
+                                                                  }
+                                                                : {
+                                                                      borderBottomLeftRadius: 8,
+                                                                      borderBottomRightRadius: 8,
+                                                                  },
+                                                    }}
+                                                />
+                                            }
+                                        />
+
+                                        {/* <TextField
                                             disabled={formik.isSubmitting}
                                             fullWidth
                                             id="url"
@@ -230,7 +259,7 @@ const TokenCreation: FC = () => {
                                             onChange={formik.handleChange}
                                             error={formik.touched.url && Boolean(formik.errors.url)}
                                             helperText={formik.touched.url && formik.errors.url}
-                                        ></TextField>
+                                        ></TextField> */}
                                         <TextField
                                             disabled={formik.isSubmitting}
                                             fullWidth

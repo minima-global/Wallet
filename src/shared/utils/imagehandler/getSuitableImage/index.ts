@@ -1,14 +1,15 @@
-import config from "../config";
 /**
  * creds to dynamitesushi & neil shah
  */
+import config from "../config";
 import createImage from "../createImage";
 import getDataUrlFileSize from "../getDataUrlFileSize";
 
 async function getSuitableImage(file: any) {
-    let image = null;
+    let image = "";
 
     for (const imageConfig of config) {
+        
         const compressedImage = await createImage(file, imageConfig.resize, imageConfig.quality);
         const size = getDataUrlFileSize(compressedImage);
 
@@ -17,7 +18,6 @@ async function getSuitableImage(file: any) {
             break;
         }
     }
-
     return image;
 }
 
