@@ -3,8 +3,8 @@ import { Card, CardContent, TextField, Button, Skeleton, Stack, Typography, Tool
 import MiniModal from '../shared/components/MiniModal';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { callStatus, callToken } from '../minima/rpc-commands';
-import { insufficientFundsError } from '../shared/functions';
+import { callStatus } from '../minima/rpc-commands';
+import { insufficientFundsError, isValidUrl } from '../shared/functions';
 
 import GridLayout from '../layout/GridLayout';
 
@@ -18,7 +18,8 @@ import styles from '../theme/cssmodule/Components.module.css';
 import Pending from './components/forms/Pending';
 import FormFieldWrapper from '../shared/components/FormFieldWrapper';
 import FormImageUrlSelect from '../shared/components/forms/FormImageUrlSelect';
-import { buildUserNFT } from '../minima/libs/nft';
+import { buildCustomTokenCreation } from '../minima/libs/nft';
+import { MiCustomToken } from '../minima/types/nft';
 
 const CreateTokenSchema = Yup.object().shape({
     name: Yup.string()
@@ -36,7 +37,28 @@ const CreateTokenSchema = Yup.object().shape({
         .max(5, 'Maximum 5 characters allowed.')
         .matches(/^[^\\;]+$/, 'Invalid characters.'),
     burn: Yup.string().matches(/^[^a-zA-Z\\;"]+$/, 'Invalid characters.'),
-    url: Yup.string(),
+    url: Yup.string()
+        .trim()
+        .required('This field is required.')
+        .test('check-my-url', 'Invalid Url.', function (val) {
+            const { path, createError, parent } = this;
+
+            if (val == undefined) {
+                return false;
+            }
+
+            if (parent.url.substring(0, 'data:image'.length) === 'data:image') {
+                return true;
+            }
+
+            if (!isValidUrl(parent.url)) {
+                return createError({
+                    path,
+                    message: `Invalid URL`,
+                });
+            }
+            return true;
+        }),
     webvalidate: Yup.string(),
 });
 
@@ -76,7 +98,6 @@ const TokenCreation: FC = () => {
     // Formik
     const formik = useFormik({
         initialValues: {
-            image: undefined,
             name: '',
             amount: '',
             url: '',
@@ -88,20 +109,18 @@ const TokenCreation: FC = () => {
         validationSchema: CreateTokenSchema,
         onSubmit: (formData) => {
             setModalEmployee('');
-            // console.log(`CreateToken formData`, formData);
-            const customToken = {
-                name: {
-                    name: formData.name.replaceAll(`"`, `'`),
-                    description: formData.description.replaceAll(`"`, `'`),
-                    url: formData.url,
-                    image: formData.image,
-                    webvalidate: formData.webvalidate,
-                    ticker: formData.ticker.replaceAll(`"`, `'`),
-                },
-                amount: formData.amount && formData.amount.length ? formData.amount : 0,
-                burn: formData.burn && formData.burn.length ? formData.burn : 0,
+
+            const cToken: MiCustomToken = {
+                name: formData.name.replaceAll(`"`, `'`),
+                amount: formData.amount.toString(),
+                url: formData.url, // upload image or normal url
+                description: formData.description.replaceAll(`"`, `'`),
+                burn: formData.burn.toString(),
+                ticker: formData.ticker.replaceAll(`"`, `'`),
+                type: 'STANDARDTOKEN',
+                webvalidate: formData.webvalidate,
             };
-            buildUserNFT(customToken)
+            buildCustomTokenCreation(cToken)
                 .then((res: any) => {
                     //console.log(res);
                     if (!res.status && !res.pending) {

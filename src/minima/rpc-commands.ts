@@ -1,24 +1,24 @@
 import { MinimaToken } from "./types/minima2";
 
-export const callSend = (data: any) => {
+export {callSend, callGetAddress, callStatus, createCustomToken, getWalletBalance, callTokenValidate};
+
+const callSend = (data: any) => {
     return req(`send amount:${data.amount} address:${data.address} tokenid:${data.tokenid} burn:${data.burn}`);
 }
-export const callGetAddress = () => {
+ const callGetAddress = () => {
     return req(`getaddress`);
 }
-export const callStatus = () => {
+ const callStatus = () => {
     return req(`status`);
 }
-export const callToken = (data: any, imageData?: string) => {
-    return req(`tokencreate name:{"name":"${data.name.name}", "image":"${imageData}", "description":"${data.name.description}", "url":"${data.name.url}", "ticker":"${data.name.ticker}"} amount:${data.amount} burn:${data.burn} webvalidate:${data.name.webvalidate}`);
+
+const createCustomToken = (name: string, amount: string, decimals?: string, webvalidate?: string) => {
+    return rpc(`tokencreate name:${name} amount:${amount} ${decimals || 'decimals:' + decimals} ${webvalidate || 'webvalidate:' + webvalidate}`);
 }
 
-export const callCreateNFT= (data: any, imageData?: string) => {
-    return req(`tokencreate name:{"name":"${data.name}", "description":"${data.description}", "url": "${data.name.url}", "external_url":"${data.external_url}", "image":"${imageData}", "owner":"${data.owner}", "nft":"true"} amount:${data.amount} decimals:0 webvalidate:${data.webvalidate}`);
-}
 /** Get Balance */
 
-export const getWalletBalance = (): Promise<MinimaToken[]> => {
+const getWalletBalance = (): Promise<MinimaToken[]> => {
 
     return new Promise((resolve, reject) => {
         rpc(`balance`).then((wallet) => {
@@ -33,7 +33,7 @@ export const getWalletBalance = (): Promise<MinimaToken[]> => {
     });
 
 }
-export const callTokenValidate = (tokenid: string) => {
+const callTokenValidate = (tokenid: string) => {
     return req(`tokenvalidate tokenid:${tokenid}`);
 }
 

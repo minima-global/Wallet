@@ -28,7 +28,7 @@ const AddImage = ({ onImageChange = () => {}, formik }: IProps) => {
         setSelectedFile(target.files[0]);
         getDataUrlFromBlob(target.files[0]).then((imageDataUrl) => {
             onImageChange(imageDataUrl, target.files[0]);
-            formik.setFieldValue('image', imageDataUrl);
+            formik.setFieldValue('url', imageDataUrl);
         }, console.error);
     };
 
@@ -52,14 +52,14 @@ const AddImage = ({ onImageChange = () => {}, formik }: IProps) => {
     };
     return (
         <>
-            {formik.values.image && selectedFile ? (
+            {formik.values.url && selectedFile ? (
                 <>
-                    <img src={formik.values.image} className={styles['form-image-preview-box-img']} />
+                    <img src={formik.values.url} className={styles['form-image-preview-box-img']} />
                     <ClearIcon
                         color="inherit"
                         className={styles['clear-icon']}
                         onClick={() => {
-                            formik.setFieldValue('image', '');
+                            formik.setFieldValue('url', '');
                         }}
                     />
                     <Box className={styles['info-label-image-upload']}>
@@ -72,7 +72,7 @@ const AddImage = ({ onImageChange = () => {}, formik }: IProps) => {
                     <Typography variant="caption">Click here to upload</Typography>
                 </Stack>
             )}
-            <input id="image" name="image" type="file" hidden accept="image/*" onChange={handleCapture} />
+            <input id="url" name="url" type="file" hidden accept="image/*" onChange={handleCapture} />
         </>
     );
 };

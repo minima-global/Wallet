@@ -27,6 +27,7 @@ import CustomListItem from '../shared/components/CustomListItem';
 import Ticker from './components/tokens/Ticker';
 import TokenAuthenticity from './components/tokens/NFTAuthenticity';
 import { CustomTokenJson } from '../minima/types/minima2';
+import { MiNFT } from '../minima/types/nft';
 
 // a token can be a Minima token, a customTokenJson or NFT
 const TokenDetail = () => {
@@ -43,7 +44,7 @@ const TokenDetail = () => {
     if (token && token.tokenid !== '0x00' && isNFT(token.token)) {
         try {
             var parser = new DOMParser();
-            const doc = parser.parseFromString(token.token.image, 'application/xml');
+            const doc = parser.parseFromString(token.token.url, 'application/xml');
             const errorNode2 = doc.querySelector('parsererror');
             if (errorNode2) {
                 console.error('Token does not contain an image: ' + token);
@@ -61,7 +62,7 @@ const TokenDetail = () => {
         return 'name' in obj && 'url' in obj && 'description' in obj;
     }
 
-    function isNFT(obj: any): obj is NFT {
+    function isNFT(obj: any): obj is MiNFT {
         return (
             'name' in obj &&
             'description' in obj &&
@@ -211,7 +212,7 @@ const TokenDetail = () => {
                                                     <CustomListItem
                                                         title="Web Validation"
                                                         value={
-                                                            token.token.webvalidate.length
+                                                            token.token.webvalidate && token.token.webvalidate.length
                                                                 ? token.token.webvalidate
                                                                 : 'No web validation available.'
                                                         }

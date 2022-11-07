@@ -5,24 +5,42 @@ import * as Yup from 'yup';
 
 import styles from '../../../theme/cssmodule/Components.module.css';
 
-import ClearIcon from '@mui/icons-material/Clear';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-
-import { buildUserNFT } from '../../../minima/libs/nft';
-import { insufficientFundsError, strToHex } from '../../../shared/functions';
+import { buildCustomTokenCreation } from '../../../minima/libs/nft';
+import { insufficientFundsError, isValidUrl, strToHex } from '../../../shared/functions';
 import { useAppDispatch } from '../../../minima/redux/hooks';
 import { toggleNotification } from '../../../minima/redux/slices/notificationSlice';
 import ModalManager from '../managers/ModalManager';
 import NFTConfirmation from '../forms/common/NFTConfirmation';
 import MiniModal from '../../../shared/components/MiniModal';
 import Pending from '../forms/Pending';
-import AddImage from '../forms/AddImage';
+import FormImageUrlSelect from '../../../shared/components/forms/FormImageUrlSelect';
+import { MiNFT } from '../../../minima/types/nft';
 
 const validation = Yup.object().shape({
     name: Yup.string()
         .required('This field is required.')
         .matches(/^[^\\;]+$/, 'Invalid characters.'),
-    image: Yup.mixed().required('This field is required.'),
+    url: Yup.string()
+        .trim()
+        .required('This field is required.')
+        .test('check-my-url', 'Invalid Url.', function (val) {
+            const { path, createError, parent } = this;
+            if (val == undefined) {
+                return false;
+            }
+
+            if (parent.url.substring(0, 'data:image'.length) === 'data:image') {
+                return true;
+            }
+
+            if (!isValidUrl(parent.url)) {
+                return createError({
+                    path,
+                    message: `Invalid URL`,
+                });
+            }
+            return true;
+        }),
     amount: Yup.string()
         .required('This field is required')
         .matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters.'),
@@ -37,48 +55,12 @@ const validation = Yup.object().shape({
         .matches(/^[^\\;]+$/, 'Invalid characters.'),
 });
 
-function isBlob(blob: null | Blob): blob is Blob {
-    return (blob as Blob) !== null && (blob as Blob).type !== undefined;
-}
-const getDataUrlFromBlob = (blob: Blob): Promise<string> => {
-    const copy = blob;
-    return new Promise((resolve, reject) => {
-        var reader = new FileReader();
-        reader.readAsDataURL(copy);
-        reader.onload = function () {
-            if (typeof reader.result === 'string') {
-                resolve(reader.result);
-            } else {
-                reject('Error: could not get data url from image');
-            }
-        };
-    });
-};
-
 const CreateNFTForm = () => {
     // Handle Modal
     const [open, setOpen] = React.useState(false);
     const [modalStatus, setModalStatus] = React.useState('Failed');
-    const inp = React.useRef<any>(undefined);
     const dispatch = useAppDispatch();
     const [modalEmployee, setModalEmployee] = React.useState('');
-    const [previewImage, setPreviewImage] = React.useState(undefined);
-    const [file, setFile] = React.useState<File | null>(null);
-    const [imageDataUrl, setImageDataUrl] = React.useState('');
-
-    /**
-     * Handles the file input for when the user wants to select an image
-     * @param {string} imageDataUrl
-     * @param {File} file
-     * creds to dynamitesushi & neil shah
-     */
-    const onImageChange = (imageDataUrl: string, file: File) => {
-        //console.log('changing image');
-        setImageDataUrl(imageDataUrl);
-        setFile(file);
-    };
-
-    console.log('file', file);
 
     const handleTransactionStatusModalOpen = () => setOpen(true);
     const handleTransactionStatusModalClose = () => {
@@ -93,16 +75,8 @@ const CreateNFTForm = () => {
         setModalEmployee('confirmation');
     };
 
-    React.useEffect(() => {
-        return () => {
-            // console.log('calling cleanup');
-            URL.revokeObjectURL(previewImage ? previewImage : 'undefined');
-        };
-    }, []);
-
     const formik = useFormik({
         initialValues: {
-            image: undefined,
             url: '',
             amount: '',
             name: '',
@@ -116,19 +90,19 @@ const CreateNFTForm = () => {
         onSubmit: (data: any) => {
             setModalEmployee('');
 
-            const oNFT: any = {
-                image: data.image,
+            const cNFT: MiNFT = {
+                name: data.name.replaceAll(`"`, `'`),
                 amount: data.amount,
                 url: data.url,
-                name: data.name.replaceAll(`"`, `'`),
                 description: data.description.replaceAll(`"`, `'`),
-                external_url: data.external_url.replaceAll(`"`, `'`),
-                owner: data.owner.replaceAll(`"`, `'`),
                 burn: data.burn,
                 webvalidate: data.webvalidate.replaceAll(`"`, `'`),
+                owner: data.owner.replaceAll(`"`, `'`),
+                external_url: data.external_url.replaceAll(`"`, `'`),
+                type: 'NFT',
             };
 
-            buildUserNFT(oNFT)
+            buildCustomTokenCreation(cNFT)
                 .then((result: any) => {
                     //console.log(`createNFTForm`, result);
                     if (!result.status && !result.pending) {
@@ -147,7 +121,6 @@ const CreateNFTForm = () => {
                     }
                     // SENT
                     formik.resetForm();
-                    setPreviewImage(undefined);
                 })
                 .catch((err) => {
                     console.error('buildUserNFT', err);
@@ -174,41 +147,9 @@ const CreateNFTForm = () => {
                     <Required /> required fields
                 </Typography>
                 <Typography variant="h6" className={styles['form-image-title']}>
-                    Image, Gif <Required />
+                    Image <Required />
                 </Typography>
-                <Typography className={styles['form-help-caption']} variant="caption">
-                    File types supported: BMP, JPEG, PNG, SVG+XML, GIF.
-                </Typography>
-                <Box
-                    component="label"
-                    sx={{
-                        borderColor:
-                            formik.touched.image && Boolean(formik.errors.image) ? '#FCBEBD!important' : 'none',
-                        padding: formik.touched.image && Boolean(formik.errors.image) ? '0!important' : '8px',
-                        marginBottom: formik.touched.image && Boolean(formik.errors.image) ? '30px!important' : '8px',
-
-                        '::after': {
-                            display: formik.touched.image && Boolean(formik.errors.image) ? 'flex' : 'none',
-                            content:
-                                formik.touched.image && Boolean(formik.errors.image)
-                                    ? `"${formik.errors.image}"`
-                                    : '" "',
-                            color: 'rgb(211, 47, 47)',
-                            backgroundColor: '#FCBEBD',
-                            width: '100%',
-                            textAlign: 'center',
-                            fontSize: '0.8rem',
-                            fontFamily: 'Manrope-semibold',
-                            padding: '5px',
-                            borderBottomLeftRadius: '8px',
-                            borderBottomRightRadius: '8px',
-                            marginTop: '0.5px',
-                        },
-                    }}
-                    className={styles['form-image-preview-box']}
-                >
-                    <AddImage formik={formik} onImageChange={onImageChange} id="add-media-file-uploader" />
-                </Box>
+                <FormImageUrlSelect formik={formik} />
                 <TextField
                     disabled={formik.isSubmitting}
                     fullWidth
@@ -216,6 +157,7 @@ const CreateNFTForm = () => {
                     name="name"
                     placeholder="name *"
                     value={formik.values.name}
+                    onBlur={formik.handleBlur}
                     onChange={formik.handleChange}
                     error={formik.touched.name && Boolean(formik.errors.name)}
                     helperText={formik.touched.name && formik.errors.name}
@@ -233,6 +175,7 @@ const CreateNFTForm = () => {
                     id="amount"
                     name="amount"
                     placeholder="amount *"
+                    onBlur={formik.handleBlur}
                     value={formik.values.amount}
                     onChange={formik.handleChange}
                     error={formik.touched.amount && Boolean(formik.errors.amount)}
@@ -254,6 +197,7 @@ const CreateNFTForm = () => {
                     id="external_url"
                     name="external_url"
                     placeholder="external url"
+                    onBlur={formik.handleBlur}
                     value={formik.values.external_url}
                     onChange={formik.handleChange}
                     error={formik.touched.external_url && Boolean(formik.errors.external_url)}
@@ -272,6 +216,7 @@ const CreateNFTForm = () => {
                     id="description"
                     name="description"
                     placeholder="description"
+                    onBlur={formik.handleBlur}
                     value={formik.values.description}
                     onChange={formik.handleChange}
                     error={formik.touched.description && Boolean(formik.errors.description)}
@@ -306,6 +251,7 @@ const CreateNFTForm = () => {
                     name="owner"
                     placeholder="creator id/name"
                     value={formik.values.owner}
+                    onBlur={formik.handleBlur}
                     onChange={formik.handleChange}
                     error={formik.touched.owner && Boolean(formik.errors.owner)}
                     helperText={formik.touched.owner && formik.errors.owner}
@@ -328,6 +274,7 @@ const CreateNFTForm = () => {
                     name="webvalidate"
                     placeholder="web validation url"
                     value={formik.values.webvalidate}
+                    onBlur={formik.handleBlur}
                     onChange={formik.handleChange}
                     error={formik.touched.webvalidate && Boolean(formik.errors.webvalidate)}
                     helperText={formik.touched.webvalidate && formik.errors.webvalidate}
@@ -340,7 +287,7 @@ const CreateNFTForm = () => {
                     }}
                 />
                 <Button
-                    disabled={formik.isSubmitting || !formik.isValid}
+                    disabled={!formik.isValid}
                     onClick={() => setModalEmployee('burn')}
                     variant="contained"
                     fullWidth

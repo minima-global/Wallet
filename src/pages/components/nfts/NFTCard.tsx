@@ -17,6 +17,7 @@ import { useNavigate } from 'react-router-dom';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import NFTAuthenticity from '../tokens/NFTAuthenticity';
 import { MinimaToken } from '../../../minima/types/minima2';
+import { MiNFT } from '../../../minima/types/nft';
 
 const NFTCard = ({ NFT }: any) => {
     const dispatch = useAppDispatch();
@@ -47,7 +48,7 @@ const NFTCard = ({ NFT }: any) => {
         console.error('Token does not contain an image: ' + NFT);
     }
 
-    function isNFT(obj: any): obj is NFT {
+    function isNFT(obj: any): obj is MiNFT {
         return (
             'name' in obj &&
             'description' in obj &&

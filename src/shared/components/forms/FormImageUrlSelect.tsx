@@ -18,6 +18,7 @@ const FormImageUrlSelect = ({ formik }: IProps) => {
 
     const handleChange = (e: SelectChangeEvent) => {
         setMyImageSelection(e.target.value);
+        formik.setFieldValue('url', '');
     };
 
     const [file, setFile] = React.useState<File | null>(null);
@@ -54,16 +55,16 @@ const FormImageUrlSelect = ({ formik }: IProps) => {
                             component="label"
                             sx={{
                                 borderColor:
-                                    formik.touched.image && Boolean(formik.errors.image) ? '#FCBEBD!important' : 'none',
-                                padding: formik.touched.image && Boolean(formik.errors.image) ? '0!important' : '8px',
+                                    formik.touched.url && Boolean(formik.errors.url) ? '#FCBEBD!important' : 'none',
+                                padding: formik.touched.url && Boolean(formik.errors.url) ? '0!important' : '8px',
                                 marginBottom:
-                                    formik.touched.image && Boolean(formik.errors.image) ? '30px!important' : '8px',
+                                    formik.touched.url && Boolean(formik.errors.url) ? '30px!important' : '8px',
 
                                 '::after': {
-                                    display: formik.touched.image && Boolean(formik.errors.image) ? 'flex' : 'none',
+                                    display: formik.touched.url && Boolean(formik.errors.url) ? 'flex' : 'none',
                                     content:
-                                        formik.touched.image && Boolean(formik.errors.image)
-                                            ? `"${formik.errors.image}"`
+                                        formik.touched.url && Boolean(formik.errors.url)
+                                            ? `"${formik.errors.url}"`
                                             : '" "',
                                     color: 'rgb(211, 47, 47)',
                                     backgroundColor: '#FCBEBD',
@@ -92,8 +93,9 @@ const FormImageUrlSelect = ({ formik }: IProps) => {
                             fullWidth
                             id="url"
                             name="url"
-                            placeholder="url"
+                            placeholder="url *"
                             value={formik.values.url}
+                            onBlur={formik.handleBlur}
                             onChange={formik.handleChange}
                             error={formik.touched.url && Boolean(formik.errors.url)}
                             helperText={formik.touched.url && formik.errors.url}
