@@ -4,7 +4,7 @@ import MiniModal from '../shared/components/MiniModal';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { callStatus } from '../minima/rpc-commands';
-import { insufficientFundsError, isValidUrl } from '../shared/functions';
+import { insufficientFundsError, isValidURLAll, isValidURLSecureOnly } from '../shared/functions';
 
 import GridLayout from '../layout/GridLayout';
 
@@ -20,6 +20,7 @@ import FormFieldWrapper from '../shared/components/FormFieldWrapper';
 import FormImageUrlSelect from '../shared/components/forms/FormImageUrlSelect';
 import { buildCustomTokenCreation } from '../minima/libs/nft';
 import { MiCustomToken } from '../minima/types/nft';
+import Required, { MiRequiredAsterisk } from '../shared/components/forms/Required';
 
 const CreateTokenSchema = Yup.object().shape({
     name: Yup.string()
@@ -51,7 +52,7 @@ const CreateTokenSchema = Yup.object().shape({
                 return true;
             }
 
-            if (!isValidUrl(parent.url)) {
+            if (!isValidURLAll(parent.url)) {
                 return createError({
                     path,
                     message: `Invalid URL`,
@@ -59,7 +60,20 @@ const CreateTokenSchema = Yup.object().shape({
             }
             return true;
         }),
-    webvalidate: Yup.string(),
+    webvalidate: Yup.string().test('check-my-webvalidator', 'Invalid Url, must be https', function (val) {
+        const { path, createError, parent } = this;
+        if (val == undefined) {
+            return false;
+        }
+
+        if (!isValidURLSecureOnly(parent.webvalidate)) {
+            return createError({
+                path,
+                message: `Invalid URL, must be https`,
+            });
+        }
+        return true;
+    }),
 });
 
 const TokenCreation: FC = () => {
@@ -208,8 +222,16 @@ const TokenCreation: FC = () => {
                                     </Stack>
                                 ) : (
                                     <Stack spacing={2}>
-                                        <FormImageUrlSelect formik={formik} />
+                                        {/* Required form information */}
+                                        <Required />
                                         <FormFieldWrapper
+                                            required={true}
+                                            help="Select an image URL or upload your own content using the content upload option below"
+                                            children={<FormImageUrlSelect formik={formik} />} // selector for url or upload
+                                        />
+
+                                        <FormFieldWrapper
+                                            required={true}
                                             help="Enter a name for your custom token"
                                             children={
                                                 <TextField
@@ -220,6 +242,7 @@ const TokenCreation: FC = () => {
                                                     placeholder="name"
                                                     value={formik.values.name}
                                                     onChange={formik.handleChange}
+                                                    onBlur={formik.handleBlur}
                                                     error={formik.touched.name && Boolean(formik.errors.name)}
                                                     helperText={formik.touched.name && formik.errors.name}
                                                     FormHelperTextProps={{ className: styles['form-helper-text'] }}
@@ -239,7 +262,8 @@ const TokenCreation: FC = () => {
                                             }
                                         />
                                         <FormFieldWrapper
-                                            help={`Token amount to create,  1 Token is equivalent to 1e-36 Minima`}
+                                            required={true}
+                                            help="Enter an amount you would like to create, by default 1 token is equivalent to 1e-36 Minima"
                                             children={
                                                 <TextField
                                                     disabled={formik.isSubmitting}
@@ -249,6 +273,7 @@ const TokenCreation: FC = () => {
                                                     placeholder="amount"
                                                     value={formik.values.amount}
                                                     onChange={formik.handleChange}
+                                                    onBlur={formik.handleBlur}
                                                     error={formik.touched.amount && Boolean(formik.errors.amount)}
                                                     helperText={formik.touched.amount && formik.errors.amount}
                                                     FormHelperTextProps={{ className: styles['form-helper-text'] }}
@@ -268,73 +293,85 @@ const TokenCreation: FC = () => {
                                             }
                                         />
 
-                                        {/* <TextField
-                                            disabled={formik.isSubmitting}
-                                            fullWidth
-                                            id="url"
-                                            name="url"
-                                            placeholder="url"
-                                            value={formik.values.url}
-                                            onChange={formik.handleChange}
-                                            error={formik.touched.url && Boolean(formik.errors.url)}
-                                            helperText={formik.touched.url && formik.errors.url}
-                                        ></TextField> */}
-                                        <TextField
-                                            disabled={formik.isSubmitting}
-                                            fullWidth
-                                            id="description"
-                                            name="description"
-                                            placeholder="description"
-                                            value={formik.values.description}
-                                            onChange={formik.handleChange}
-                                            error={formik.touched.description && Boolean(formik.errors.description)}
-                                            helperText={
-                                                formik.values.description.length === 255
-                                                    ? formik.values.description.length + '/255'
-                                                    : null
+                                        <FormFieldWrapper
+                                            help="Enter a description about your token"
+                                            children={
+                                                <TextField
+                                                    disabled={formik.isSubmitting}
+                                                    fullWidth
+                                                    id="description"
+                                                    name="description"
+                                                    placeholder="description"
+                                                    value={formik.values.description}
+                                                    onChange={formik.handleChange}
+                                                    onBlur={formik.handleBlur}
+                                                    error={
+                                                        formik.touched.description && Boolean(formik.errors.description)
+                                                    }
+                                                    helperText={
+                                                        formik.values.description.length === 255
+                                                            ? formik.values.description.length + '/255'
+                                                            : null
+                                                    }
+                                                    FormHelperTextProps={{
+                                                        style: { display: 'flex', justifyContent: 'flex-end' },
+                                                    }}
+                                                    multiline
+                                                    rows={4}
+                                                    inputProps={{ maxLength: 255 }}
+                                                />
                                             }
-                                            FormHelperTextProps={{
-                                                style: { display: 'flex', justifyContent: 'flex-end' },
-                                            }}
-                                            multiline
-                                            rows={4}
-                                            inputProps={{ maxLength: 255 }}
-                                        ></TextField>
-                                        <TextField
-                                            disabled={formik.isSubmitting}
-                                            fullWidth
-                                            id="ticker"
-                                            name="ticker"
-                                            placeholder="ticker"
-                                            value={formik.values.ticker}
-                                            onChange={formik.handleChange}
-                                            error={formik.touched.ticker && Boolean(formik.errors.ticker)}
-                                            FormHelperTextProps={{
-                                                style: { display: 'flex', justifyContent: 'flex-end' },
-                                            }}
-                                            inputProps={{
-                                                maxLength: 5,
-                                                style: {
-                                                    textTransform:
-                                                        formik.values.ticker.length > 0 ? 'uppercase' : 'lowercase',
-                                                },
-                                            }}
-                                        ></TextField>
-                                        <Typography variant="caption" className={styles['form-help-caption']}>
-                                            Add a text file to your website (https) which holds a copy of the tokenid
-                                            (obtained after creation) and it can be used as validation.
-                                        </Typography>
-                                        <TextField
-                                            disabled={formik.isSubmitting}
-                                            fullWidth
-                                            id="webvalidate"
-                                            name="webvalidate"
-                                            placeholder="web validate url"
-                                            value={formik.values.webvalidate}
-                                            onChange={formik.handleChange}
-                                            error={formik.touched.webvalidate && Boolean(formik.errors.webvalidate)}
-                                            helperText={formik.touched.webvalidate && formik.errors.webvalidate}
-                                        ></TextField>
+                                        />
+
+                                        <FormFieldWrapper
+                                            help="Enter a ticker symbol, (eg. MINIMA, BTC, ETH)"
+                                            children={
+                                                <TextField
+                                                    disabled={formik.isSubmitting}
+                                                    fullWidth
+                                                    id="ticker"
+                                                    name="ticker"
+                                                    placeholder="ticker"
+                                                    value={formik.values.ticker}
+                                                    onChange={formik.handleChange}
+                                                    onBlur={formik.handleBlur}
+                                                    error={formik.touched.ticker && Boolean(formik.errors.ticker)}
+                                                    FormHelperTextProps={{
+                                                        style: { display: 'flex', justifyContent: 'flex-end' },
+                                                    }}
+                                                    inputProps={{
+                                                        maxLength: 5,
+                                                        style: {
+                                                            textTransform:
+                                                                formik.values.ticker.length > 0
+                                                                    ? 'uppercase'
+                                                                    : 'lowercase',
+                                                        },
+                                                    }}
+                                                />
+                                            }
+                                        />
+
+                                        <FormFieldWrapper
+                                            help="Validate your token by hosting a TXT record on your own server or website, you can pre-save the link to that TXT file now and add the tokenid after creating the token"
+                                            children={
+                                                <TextField
+                                                    disabled={formik.isSubmitting}
+                                                    fullWidth
+                                                    id="webvalidate"
+                                                    name="webvalidate"
+                                                    placeholder="web validation url"
+                                                    value={formik.values.webvalidate}
+                                                    onChange={formik.handleChange}
+                                                    onBlur={formik.handleBlur}
+                                                    error={
+                                                        formik.touched.webvalidate && Boolean(formik.errors.webvalidate)
+                                                    }
+                                                    helperText={formik.touched.webvalidate && formik.errors.webvalidate}
+                                                />
+                                            }
+                                        />
+
                                         <Button
                                             disabled={!(formik.isValid && formik.dirty && !formik.isSubmitting)}
                                             disableElevation

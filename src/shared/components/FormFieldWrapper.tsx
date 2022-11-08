@@ -1,7 +1,8 @@
 import styled from '@emotion/styled';
-import { Tooltip, Stack } from '@mui/material';
+import { Tooltip, Stack, Typography } from '@mui/material';
 import { ReactElement } from 'react';
 import HelpIcon from '@mui/icons-material/Help';
+import { MiRequiredAsterisk } from './forms/Required';
 
 const FieldWrapper = styled('div')`
     width: 100%;
@@ -19,17 +20,16 @@ const FieldWrapper = styled('div')`
 interface IProps {
     children: ReactElement;
     help: string;
+    required?: boolean;
 }
 
-const FormFieldWrapper = ({ children, help }: IProps) => {
+const FormFieldWrapper = ({ children, help, required = false }: IProps) => {
     return (
         <FieldWrapper>
-            <Stack alignItems="flex-end" justifyContent="center">
-                <Tooltip
-                    enterTouchDelay={0}
-                    title={help}
-                    children={<HelpIcon color="inherit" sx={{ height: 24, width: 24 }} />}
-                />
+            <Stack alignItems="flex-start" justifyContent="center">
+                <Typography variant="caption">
+                    {help} {required && <MiRequiredAsterisk>*</MiRequiredAsterisk>}
+                </Typography>
             </Stack>
             {children}
         </FieldWrapper>

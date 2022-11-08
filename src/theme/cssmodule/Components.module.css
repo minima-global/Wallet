@@ -100,10 +100,10 @@
   cursor: pointer;
 }
 
-/** NFT FORM */
-.required {
-  color: red;
+.required-form-helper {
+  margin-bottom: 16px;
 }
+/** NFT FORM */
 .form-image-title {
   font-family: Manrope-semibold;
 }

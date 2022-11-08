@@ -72,7 +72,15 @@ const AddImage = ({ onImageChange = () => {}, formik }: IProps) => {
                     <Typography variant="caption">Click here to upload</Typography>
                 </Stack>
             )}
-            <input id="url" name="url" type="file" hidden accept="image/*" onChange={handleCapture} />
+            <input
+                id="url"
+                name="url"
+                type="file"
+                hidden
+                accept="image/*"
+                onChange={handleCapture}
+                onBlur={formik.handleBlur}
+            />
         </>
     );
 };

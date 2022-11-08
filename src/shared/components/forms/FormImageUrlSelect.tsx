@@ -1,7 +1,7 @@
 /**
  * Select either an url or to upload an image for all token creation forms
  */
-import { Box, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
+import { Box, MenuItem, Select, SelectChangeEvent, TextField, Typography } from '@mui/material';
 import React from 'react';
 import AddImage from '../../../pages/components/forms/AddImage';
 import FormFieldWrapper from '../FormFieldWrapper';

@@ -3,7 +3,7 @@
 //  * Handle NFT Image Compression + Building
 //  * 
 //  */
-import { isValidUrl } from '../../shared/functions';
+import { isValidURLAll } from '../../shared/functions';
 import getSuitableImage from '../../shared/utils/imagehandler/getSuitableImage';
 import { createCustomToken } from '../rpc-commands';
 import { MiCustomToken, MiNFT } from '../types/nft';
@@ -13,7 +13,7 @@ export {buildCustomTokenCreation, createFavoritesTable, selectFavorites, addToke
 const buildCustomTokenCreation = async (tokenData: MiNFT | MiCustomToken) => {
   
   // this is an url img
-  if (isValidUrl(tokenData.url)) {
+  if (isValidURLAll(tokenData.url)) {
     return createCustomToken(JSON.stringify(tokenData), tokenData.type === 'NFT' ? '1' : tokenData.amount, tokenData.type === 'NFT' ? '0' : undefined, tokenData.webvalidate || '')
   } 
 
