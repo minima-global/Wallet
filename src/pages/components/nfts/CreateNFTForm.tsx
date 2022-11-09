@@ -183,17 +183,15 @@ const CreateNFTForm = () => {
 
             const cNFT: MiNFT = {
                 name: data.name.replaceAll(`"`, `'`),
-                amount: data.amount,
                 url: data.url,
                 description: data.description.replaceAll(`"`, `'`) || '',
-                burn: data.burn || '',
                 webvalidate: data.webvalidate.replaceAll(`"`, `'`) || '',
                 owner: data.owner.replaceAll(`"`, `'`) || '',
                 external_url: data.external_url.replaceAll(`"`, `'`) || '',
                 type: 'NFT',
             };
 
-            buildCustomTokenCreation(cNFT)
+            buildCustomTokenCreation(cNFT, data.amount, data.burn)
                 .then((r) => {
                     console.log(r);
 
@@ -396,7 +394,6 @@ const CreateNFTForm = () => {
                     {formik.isSubmitting ? 'Please wait...' : 'Mint'}
                 </Button>
             </Stack>
-            {/* closeFn, modal, title, children, formik  */}
             <ModalManager
                 proceedFn={handleProceed} // move onto confirmation
                 children={<NFTConfirmation formik={formik}></NFTConfirmation>}

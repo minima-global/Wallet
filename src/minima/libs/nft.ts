@@ -9,7 +9,7 @@ import { MiCustomToken, MiNFT } from '../types/nft';
 
 
 export {buildCustomTokenCreation, createFavoritesTable, selectFavorites, addTokenToFavoritesTable, removeTokenFromFavoritesTable}
-const buildCustomTokenCreation = async (tokenData: MiNFT | MiCustomToken) => {
+const buildCustomTokenCreation = async (tokenData: MiNFT | MiCustomToken, amount: string, burn?: string) => {
   // if this is a data uri then compress it..
   if (tokenData.url.startsWith('data:image/', 0)) {
     console.log('it does start with data:image/');
@@ -22,9 +22,11 @@ const buildCustomTokenCreation = async (tokenData: MiNFT | MiCustomToken) => {
     var serializer = new XMLSerializer()
     tokenData.url = serializer.serializeToString(xmlDoc)
   }
+
+
   
   
-  return createCustomToken(JSON.stringify(tokenData), tokenData.amount, tokenData.type === 'NFT' ? '0' : undefined, tokenData.webvalidate);
+  return createCustomToken(JSON.stringify(tokenData), amount, tokenData.type === 'NFT' ? '0' : undefined, tokenData.webvalidate);
 }
 
 

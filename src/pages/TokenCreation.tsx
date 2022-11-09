@@ -160,15 +160,13 @@ const TokenCreation: FC = () => {
 
             const cToken: MiCustomToken = {
                 name: formData.name.replaceAll(`"`, `'`),
-                amount: formData.amount.toString(),
                 url: formData.url, // upload image or normal url
                 description: formData.description.replaceAll(`"`, `'`) || '',
-                burn: formData.burn.toString() || '',
                 ticker: formData.ticker.replaceAll(`"`, `'`) || '',
                 type: 'STANDARDTOKEN',
                 webvalidate: formData.webvalidate || '',
             };
-            buildCustomTokenCreation(cToken)
+            buildCustomTokenCreation(cToken, formData.amount, formData.burn)
                 .then((res: any) => {
                     console.log(res);
 

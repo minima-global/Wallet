@@ -11,10 +11,8 @@ type TokenType = 'NFT' | 'STANDARDTOKEN';
 
 interface MiCustomToken {
   name: string;
-  amount: string;
   url: string;
   description: string;
-  burn: string;
   type: TokenType;
   ticker?: string;
   webvalidate?: string;
