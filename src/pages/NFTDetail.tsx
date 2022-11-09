@@ -19,7 +19,7 @@ const NFTDetail = () => {
     let imageUrl = undefined; // populate with image if we have one, or keep null if we don't
     try {
         var parser = new DOMParser();
-        if (NFT && isNFT(NFT.token)) {
+        if (NFT && NFT.token.url.startsWith('<artimage>', 0)) {
             const doc = parser.parseFromString(NFT.token.url, 'application/xml');
             const errorNode2 = doc.querySelector('parsererror');
             if (errorNode2) {

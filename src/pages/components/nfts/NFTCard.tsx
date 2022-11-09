@@ -32,9 +32,9 @@ const NFTCard = ({ NFT }: any) => {
 
     let imageUrl = undefined; // populate with image if we have one, or keep null if we don't
     try {
-        if (NFT && isNFT(NFT.token)) {
+        if (NFT && NFT.token.url.startsWith('<artimage>', 0)) {
             var parser = new DOMParser();
-            const doc = parser.parseFromString(NFT.token.image, 'application/xml');
+            const doc = parser.parseFromString(NFT.token.url, 'application/xml');
             const errorNode2 = doc.querySelector('parsererror');
             if (errorNode2) {
                 console.error('Token does not contain an image: ' + NFT);
