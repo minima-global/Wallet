@@ -13,7 +13,7 @@ const callSend = (data: any) => {
 }
 
 const createCustomToken = (name: string, amount: string, decimals?: string, webvalidate?: string) => {
-    return rpc(`tokencreate name:${name} amount:${amount} ${decimals || 'decimals:' + decimals} ${webvalidate || 'webvalidate:' + webvalidate}`);
+    return rpc(`tokencreate name:${name} amount:${amount} ${decimals && 'decimals:' + decimals} ${webvalidate && 'webvalidate:' + webvalidate || ''}`);
 }
 
 /** Get Balance */

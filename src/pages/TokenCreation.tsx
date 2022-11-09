@@ -35,13 +35,13 @@ Decimal.set({ toExpNeg: -36 });
 
 const CreateTokenSchema = Yup.object().shape({
     funds: Yup.object().test('check-my-funds', 'Insufficient funds.', function (val: any) {
-        const { path, createError, parent } = this;
+        const { createError } = this;
 
         if (val == undefined) {
             return false;
         }
 
-        if (new Decimal(val.sendable).equals(new Decimal(0))) {
+        if (val.sendable !== undefined && new Decimal(val.sendable).equals(new Decimal(0))) {
             return createError({
                 path: 'amount',
                 message: `Insufficient funds, you require more Minima to create this token.`,

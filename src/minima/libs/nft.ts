@@ -3,7 +3,6 @@
 //  * Handle NFT Image Compression + Building
 //  * 
 //  */
-import { isValidURLAll } from '../../shared/functions';
 import getSuitableImage from '../../shared/utils/imagehandler/getSuitableImage';
 import { createCustomToken } from '../rpc-commands';
 import { MiCustomToken, MiNFT } from '../types/nft';
@@ -11,26 +10,21 @@ import { MiCustomToken, MiNFT } from '../types/nft';
 
 export {buildCustomTokenCreation, createFavoritesTable, selectFavorites, addTokenToFavoritesTable, removeTokenFromFavoritesTable}
 const buildCustomTokenCreation = async (tokenData: MiNFT | MiCustomToken) => {
+  // if this is a data uri then compress it..
+  if (tokenData.url.startsWith('data:image/', 0)) {
+    console.log('it does start with data:image/');
+    const compressedImage = await getSuitableImage(tokenData.url);
+    const pureCompressedImage = compressedImage.slice(compressedImage.indexOf(",") + 1);
+    var xmlString = '<artimage></artimage>'
+    var parser = new DOMParser()
+    var xmlDoc: any = parser.parseFromString(xmlString, 'text/xml')
+    xmlDoc.firstElementChild.innerHTML = pureCompressedImage
+    var serializer = new XMLSerializer()
+    tokenData.url = serializer.serializeToString(xmlDoc)
+  }
   
-  // this is an url img
-  if (isValidURLAll(tokenData.url)) {
-    console.log("Creating a token/nft with a url from the internet");
-    return createCustomToken(JSON.stringify(tokenData), tokenData.type === 'NFT' ? '1' : tokenData.amount, tokenData.type === 'NFT' ? '0' : undefined, tokenData.webvalidate || '')
-  } 
-  console.log("Creating a token/nft with an uploaded image from files");
-
-
-  const compressedImage = await getSuitableImage(tokenData.url);
-  const pureCompressedImage = compressedImage.slice(compressedImage.indexOf(",") + 1);
-  var xmlString = '<artimage></artimage>'
-  var parser = new DOMParser()
-  var xmlDoc: any = parser.parseFromString(xmlString, 'text/xml')
-  xmlDoc.firstElementChild.innerHTML = pureCompressedImage
-  var serializer = new XMLSerializer()
-  var imageXmlString = serializer.serializeToString(xmlDoc)
-
-  tokenData.url = imageXmlString;
-  return createCustomToken(JSON.stringify(tokenData), tokenData.type === 'NFT' ? '1' : tokenData.amount, tokenData.type === 'NFT' ? '0' : undefined, tokenData.webvalidate || '' )
+  
+  return createCustomToken(JSON.stringify(tokenData), tokenData.amount, tokenData.type === 'NFT' ? '0' : undefined, tokenData.webvalidate);
 }
 
 

@@ -17,7 +17,7 @@ async function createImage(file: any, resize = 1, quality = 0.8) {
     canvas.height = imageHeight * resize;
     ctx.drawImage(img, 0, 0, imageWidth * resize, imageHeight * resize);
 
-    console.log("canvas to dataurl", canvas.toDataURL("image/jpeg", quality));
+    
     return canvas.toDataURL("image/jpeg", quality);
 }
 

@@ -32,13 +32,13 @@ Decimal.set({ toExpNeg: -36 });
 
 const validation = Yup.object().shape({
     funds: Yup.object().test('check-my-funds', 'Insufficient funds.', function (val: any) {
-        const { path, createError, parent } = this;
+        const { createError, parent } = this;
 
-        if (val === undefined) {
+        if (val === undefined || parent.amount === undefined) {
             return false;
         }
-        console.log(path);
-        if (new Decimal(parent.amount).greaterThan(new Decimal(val.sendable))) {
+
+        if (parent.amount !== undefined && new Decimal(parent.amount).greaterThan(new Decimal(val.sendable))) {
             return createError({
                 path: 'amount',
                 message: `Insufficient funds, you do not have enough Minima.`,
@@ -80,7 +80,26 @@ const validation = Yup.object().shape({
         }),
     amount: Yup.string()
         .required('This field is required')
-        .matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters.'),
+        .matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters.')
+        .test('check-my-amount', 'Invalid amount, NFTs cannot be divisible', function (val) {
+            const { path, createError, parent } = this;
+            if (val == undefined) {
+                return false;
+            }
+            if (new Decimal(val).equals(new Decimal(0))) {
+                return createError({
+                    path,
+                    message: `Invalid amount, amount must be greater than 0`,
+                });
+            }
+            if (new Decimal(val).mod(1).greaterThan(0)) {
+                return createError({
+                    path,
+                    message: `Invalid amount, NFTs cannot have decimals`,
+                });
+            }
+            return true;
+        }),
     description: Yup.string()
         .min(0)
         .max(255, 'Maximum 255 characters allowed.')
@@ -108,7 +127,7 @@ const validation = Yup.object().shape({
         const { path, createError, parent } = this;
 
         if (val == undefined) {
-            return false;
+            return true;
         }
 
         if (!isValidURLAll(parent.external_url)) {
@@ -175,38 +194,14 @@ const CreateNFTForm = () => {
             };
 
             buildCustomTokenCreation(cNFT)
-                .then((result: any) => {
-                    //console.log(`createNFTForm`, result);
-                    if (!result.status && !result.pending) {
-                        throw new Error(result.error ? result.error : result.message);
-                    }
+                .then((r) => {
+                    console.log(r);
 
-                    // Non-write minidapp
-                    if (!result.status && result.pending) {
-                        setModalStatus('Pending');
-                        setOpen(true);
-                    }
-                    // write Minidapp
-                    if (result.status && !result.pending) {
-                        setModalStatus('Success');
-                        setOpen(true);
-                    }
-                    // SENT
                     formik.resetForm();
                 })
                 .catch((err) => {
                     console.error('buildUserNFT', err);
-                    formik.setSubmitting(false);
                     dispatch(toggleNotification(`${err}`, 'error', 'error'));
-
-                    if (insufficientFundsError(err.message)) {
-                        formik.setFieldError('amount', err.message);
-                        dispatch(toggleNotification(`${err.message}`, 'error', 'error'));
-                    }
-
-                    if (err.message) {
-                        dispatch(toggleNotification(`${err.message}`, 'error', 'error'));
-                    }
                 });
         },
         validationSchema: validation,
@@ -256,7 +251,7 @@ const CreateNFTForm = () => {
 
                 <FormFieldWrapper
                     required={true}
-                    help="Enter the total supply to create, By default NFTs are 1 to 1 with a Minima token"
+                    help="Enter the total supply to create, By default NFTs are 1 to 1 with a Minima token and must not be fractions of a number but whole"
                     children={
                         <TextField
                             disabled={formik.isSubmitting}

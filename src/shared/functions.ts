@@ -77,6 +77,7 @@ export const isValidURLAll = (urlString: string) => {
         new URL(urlString);
         return true;
     } catch (err) {
+        console.error(err)
         return false;
     }
 };
