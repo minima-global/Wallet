@@ -8,6 +8,8 @@ const FieldWrapper = styled('div')`
     width: 100%;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
     > svg {
         float: right !important;

@@ -15,7 +15,7 @@ import MiniModal from '../../../shared/components/MiniModal';
 import Pending from '../forms/Pending';
 import FormImageUrlSelect from '../../../shared/components/forms/FormImageUrlSelect';
 import { MiNFT } from '../../../minima/types/nft';
-import Required from '../../../shared/components/forms/Required';
+import Required, { MiRequiredAsterisk } from '../../../shared/components/forms/Required';
 import FormFieldWrapper from '../../../shared/components/FormFieldWrapper';
 import { selectBalance } from '../../../minima/redux/slices/balanceSlice';
 
@@ -213,7 +213,7 @@ const CreateNFTForm = () => {
                 <Required />
 
                 <Typography variant="h6" className={styles['form-image-title']}>
-                    Image <Required />
+                    Image <MiRequiredAsterisk>*</MiRequiredAsterisk>
                 </Typography>
                 <FormFieldWrapper
                     required={true}
