@@ -76,11 +76,9 @@ const Balance = () => {
                         >
                             <List className="MiniList-balance">
                                 {balances && balances.length > 0 ? (
-                                    displayedOptions
-                                        ?.slice((page - 1) * COUNT_PER_PAGE, page * COUNT_PER_PAGE)
-                                        .map((item: MinimaToken, i) => (
-                                            <TokenListItem key={item.tokenid} item={item} nav={true}></TokenListItem>
-                                        ))
+                                    displayedOptions.map((item: MinimaToken, i) => (
+                                        <TokenListItem key={item.tokenid} item={item} nav={true}></TokenListItem>
+                                    ))
                                 ) : (
                                     <>
                                         <Skeleton
@@ -120,18 +118,6 @@ const Balance = () => {
                                 <Typography variant="caption">Token not found</Typography>
                             ) : null}
                         </CardContent>
-                        {filterText.length === 0 && balances.length ? (
-                            <CardActions
-                                className="MiniBalanceActions"
-                                sx={{ justifyContent: 'center', display: 'flex' }}
-                            >
-                                <AppPagination
-                                    currentPage={currentPage}
-                                    totalNFTs={balances.length}
-                                    countPerPage={COUNT_PER_PAGE}
-                                />
-                            </CardActions>
-                        ) : null}
                     </Card>
                 }
             />
