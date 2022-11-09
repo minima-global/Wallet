@@ -56,7 +56,7 @@ const CreateTokenSchema = Yup.object().shape({
     amount: Yup.string()
         .required('This field is required')
         .matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters.')
-        .test('check-my-amount', 'Invalid amount, NFTs cannot be divisible', function (val) {
+        .test('check-my-amount', 'Invalid amount', function (val) {
             const { path, createError, parent } = this;
             if (val == undefined) {
                 return false;

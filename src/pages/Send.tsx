@@ -37,6 +37,16 @@ import styles from '../theme/cssmodule/Components.module.css';
 import Pending from './components/forms/Pending';
 import { MinimaToken } from '../minima/types/minima2';
 
+import Decimal from 'decimal.js';
+
+/**
+ * Minima scales up to 64 decimal places
+ * tokens are scaled to 36 decimal places
+ * 1 Minima === 1-e36
+ */
+Decimal.set({ precision: 64 });
+Decimal.set({ toExpNeg: -36 });
+
 const TransferTokenSchema = Yup.object().shape({
     tokenid: Yup.string().required('Field Required'),
     address: Yup.string()
@@ -46,7 +56,22 @@ const TransferTokenSchema = Yup.object().shape({
         .required('Field Required'),
     amount: Yup.string()
         .required('Field Required')
-        .matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters.'),
+        .matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters.')
+        .test('check-my-amount', 'Invalid amount, NFTs cannot be divisible', function (val) {
+            const { path, createError, parent } = this;
+            if (val == undefined) {
+                return false;
+            }
+
+            if (new Decimal(val).equals(new Decimal(0))) {
+                return createError({
+                    path,
+                    message: `Invalid amount`,
+                });
+            }
+
+            return true;
+        }),
     burn: Yup.string().matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters.'),
 });
 
@@ -341,6 +366,7 @@ const Send: FC = () => {
                                                         placeholder="Address"
                                                         value={formik.values.address}
                                                         onChange={formik.handleChange}
+                                                        onBlur={formik.handleBlur}
                                                         error={formik.touched.address && Boolean(formik.errors.address)}
                                                         helperText={formik.touched.address && formik.errors.address}
                                                         FormHelperTextProps={{ className: styles['form-helper-text'] }}
@@ -362,9 +388,10 @@ const Send: FC = () => {
                                                         fullWidth
                                                         id="amount"
                                                         name="amount"
-                                                        placeholder="0.0"
+                                                        placeholder="amount"
                                                         value={formik.values.amount}
                                                         onChange={formik.handleChange}
+                                                        onBlur={formik.handleBlur}
                                                         error={formik.touched.amount && Boolean(formik.errors.amount)}
                                                         helperText={formik.touched.amount && formik.errors.amount}
                                                         FormHelperTextProps={{
