@@ -112,7 +112,6 @@ const NFTs: FC = () => {
                                 </Grid>
                             </Stack>
                         </CardContent>
-                        
                     </Card>
                 </>
             }

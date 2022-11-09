@@ -1,4 +1,3 @@
-import React from 'react';
 import { Box, Card, CardMedia, CardContent, Typography, CardActions, Stack, Button } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../../minima/redux/hooks';
 import {
@@ -14,10 +13,8 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import { toggleNotification } from '../../../minima/redux/slices/notificationSlice';
 import { useNavigate } from 'react-router-dom';
 
-import VerifiedIcon from '@mui/icons-material/Verified';
 import NFTAuthenticity from '../tokens/NFTAuthenticity';
 import { MinimaToken } from '../../../minima/types/minima2';
-import { MiNFT } from '../../../minima/types/nft';
 
 const NFTCard = ({ NFT }: any) => {
     const dispatch = useAppDispatch();
@@ -48,27 +45,11 @@ const NFTCard = ({ NFT }: any) => {
         console.error('Token does not contain an image: ' + NFT);
     }
 
-    function isNFT(obj: any): obj is MiNFT {
-        return (
-            'name' in obj &&
-            'description' in obj &&
-            'external_url' in obj &&
-            'image' in obj &&
-            'owner' in obj &&
-            'nft' in obj &&
-            'webvalidate' in obj
-        );
-    }
-
     return (
         <Card variant="outlined" className={styles['nft-card']}>
-            {/* <CardMedia src={hexToString(NFT.token.image)} component="img" /> */}
             {imageUrl ? (
                 <CardMedia className={styles['fix-aspect-ratio']} image={imageUrl} component="img" height="181px" />
-            ) : typeof imageUrl === 'undefined' &&
-              typeof NFT.token === 'object' &&
-              NFT.token.hasOwnProperty('url') &&
-              NFT.token.url.length > 0 ? (
+            ) : !imageUrl && typeof NFT.token === 'object' && NFT.token.url && NFT.token.url.length > 0 ? (
                 <CardMedia component="img" aria-label="NFT-url-image" src={NFT.token.url} />
             ) : (
                 <CardMedia component="img" aria-label="NFT-url-image" src={`https://robohash.org/${NFT.tokenid}`} />

@@ -7,7 +7,7 @@ import CustomListItem from '../shared/components/CustomListItem';
 
 import styles from '../theme/cssmodule/Components.module.css';
 import NFTAuthenticity from './components/tokens/NFTAuthenticity';
-import { CustomTokenJson, MinimaToken } from '../minima/types/minima2';
+import { MinimaToken } from '../minima/types/minima2';
 import { MiNFT } from '../minima/types/nft';
 
 const NFTDetail = () => {
@@ -15,7 +15,7 @@ const NFTDetail = () => {
     const navigate = useNavigate();
     const NFTs = useAppSelector(selectNFTs);
     const NFT = NFTs ? NFTs.find((n: MinimaToken) => n.tokenid === tokenid) : undefined;
-    // console.log(NFT);
+
     let imageUrl = undefined; // populate with image if we have one, or keep null if we don't
     try {
         var parser = new DOMParser();
@@ -41,7 +41,7 @@ const NFTDetail = () => {
             'external_url' in obj &&
             'url' in obj &&
             'owner' in obj &&
-            'nft' in obj &&
+            'type' in obj &&
             'webvalidate' in obj
         );
     }
@@ -121,6 +121,7 @@ const NFTDetail = () => {
                                         variant="contained"
                                         onClick={() => navigate(`/send/${NFT.tokenid}`, { replace: true })}
                                         fullWidth
+                                        sx={{ fontSize: '0.9rem' }}
                                     >
                                         Transfer
                                     </Button>

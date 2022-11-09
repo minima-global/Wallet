@@ -63,7 +63,11 @@
 
 .nft-card:hover .nft-card-actions-buttons {
   display:flex!important;
+
   width:100%;
+}
+.nft-card-actions-buttons-btn, .nft-card-actions-buttons-btn-trade {
+  font-size: 0.775rem!important;
 }
 .nft-card-actions-buttons-btn:hover {
   cursor:pointer;

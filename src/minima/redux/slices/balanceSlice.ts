@@ -26,7 +26,7 @@ export const callAndStoreBalance =
         // console.log(`Calling for new balance at ${ms}`)
         getWalletBalance()
             .then((wallet: MinimaToken[]) => {
-            console.log(wallet);    
+             
             const hasUnconfirmedBalance = !!wallet.find((i) => i.unconfirmed !== "0");
             if (hasUnconfirmedBalance) {
 
@@ -127,7 +127,7 @@ export const selectTokenWithID = (id: string) => (state: RootState): MinimaToken
 };
 // Return NFTs
 export const selectNFTs= (state: RootState): MinimaToken[] | undefined => {
-  return state.balance.funds.filter((b: MinimaToken) => b.token && b.token.hasOwnProperty("nft") && b.token.nft === 'true');
+  return state.balance.funds.filter((b: MinimaToken) => b.token && b.token.type && b.token.type === 'NFT');
 };
 // Return Filter NFTs
 export const selectFilterNFTs = (id: string) => (state: RootState): MinimaToken | undefined => {
