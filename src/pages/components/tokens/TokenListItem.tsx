@@ -1,4 +1,4 @@
-import { ListItemButton, ListItemAvatar, Avatar, ListItemText, CardMedia, Stack, Typography } from '@mui/material';
+import { ListItemButton, ListItemAvatar, Avatar, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 import MinimaIcon from '../../../assets/images/minimaLogoSquare.png';
@@ -8,7 +8,6 @@ import styles from '../../../theme/cssmodule/Components.module.css';
 
 const TokenListItem = ({ item, nav, mode }: any) => {
     let navigate = useNavigate();
-    // console.log(item);
     let imageUrl = null; // populate with image if we have one, or keep null if we don't
     try {
         if (item.token.hasOwnProperty('nft') && item.token.nft === 'true' && item.token.image) {

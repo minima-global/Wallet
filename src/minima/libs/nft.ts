@@ -14,8 +14,10 @@ const buildCustomTokenCreation = async (tokenData: MiNFT | MiCustomToken) => {
   
   // this is an url img
   if (isValidURLAll(tokenData.url)) {
+    console.log("Creating a token/nft with a url from the internet");
     return createCustomToken(JSON.stringify(tokenData), tokenData.type === 'NFT' ? '1' : tokenData.amount, tokenData.type === 'NFT' ? '0' : undefined, tokenData.webvalidate || '')
   } 
+  console.log("Creating a token/nft with an uploaded image from files");
 
 
   const compressedImage = await getSuitableImage(tokenData.url);

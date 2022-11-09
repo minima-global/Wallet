@@ -58,7 +58,7 @@ const validation = Yup.object().shape({
     webvalidate: Yup.string().test('check-my-webvalidator', 'Invalid Url, must be https', function (val) {
         const { path, createError, parent } = this;
         if (val == undefined) {
-            return false;
+            return true;
         }
 
         if (!isValidURLSecureOnly(parent.webvalidate)) {
@@ -182,7 +182,7 @@ const CreateNFTForm = () => {
                 </Typography>
                 <FormFieldWrapper
                     required={true}
-                    help="Select an image URL or upload your own content using the content upload option below"
+                    help="Use a public image URL ending in .png .jpg or .jpeg or upload your own content"
                     children={<FormImageUrlSelect formik={formik} />}
                 />
 
@@ -214,7 +214,7 @@ const CreateNFTForm = () => {
 
                 <FormFieldWrapper
                     required={true}
-                    help="Enter an amount you would like to create, NFTs are 1 to 1 with Minima"
+                    help="Enter the total supply to create, By default NFTs are 1 to 1 with a Minima token"
                     children={
                         <TextField
                             disabled={formik.isSubmitting}
@@ -325,7 +325,7 @@ const CreateNFTForm = () => {
                 />
 
                 <FormFieldWrapper
-                    help="Validate your token by hosting a TXT record on your own server or website, you can pre-save the link to that TXT file now and add the tokenid after creating the token"
+                    help="Validate your token by hosting a public .txt file containing the tokenid on your own server or website. Create the link to the .txt file in advance and add the tokenid after creating the token."
                     children={
                         <TextField
                             disabled={formik.isSubmitting}
