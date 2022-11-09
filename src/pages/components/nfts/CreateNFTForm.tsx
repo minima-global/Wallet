@@ -6,7 +6,7 @@ import * as Yup from 'yup';
 import styles from '../../../theme/cssmodule/Components.module.css';
 
 import { buildCustomTokenCreation } from '../../../minima/libs/nft';
-import { insufficientFundsError, isValidURLAll, isValidURLSecureOnly } from '../../../shared/functions';
+import { isValidURLAll, isValidURLSecureOnly } from '../../../shared/functions';
 import { useAppDispatch, useAppSelector } from '../../../minima/redux/hooks';
 import { toggleNotification } from '../../../minima/redux/slices/notificationSlice';
 import ModalManager from '../managers/ModalManager';
@@ -86,10 +86,10 @@ const validation = Yup.object().shape({
             if (val == undefined) {
                 return false;
             }
-            if (new Decimal(val).equals(new Decimal(0))) {
+            if (new Decimal(val).lessThan(new Decimal(1))) {
                 return createError({
                     path,
-                    message: `Invalid amount, amount must be greater than 0`,
+                    message: `Invalid amount, must be 1 or greater`,
                 });
             }
             if (new Decimal(val).mod(1).greaterThan(0)) {
@@ -185,11 +185,11 @@ const CreateNFTForm = () => {
                 name: data.name.replaceAll(`"`, `'`),
                 amount: data.amount,
                 url: data.url,
-                description: data.description.replaceAll(`"`, `'`),
-                burn: data.burn,
-                webvalidate: data.webvalidate.replaceAll(`"`, `'`),
-                owner: data.owner.replaceAll(`"`, `'`),
-                external_url: data.external_url.replaceAll(`"`, `'`),
+                description: data.description.replaceAll(`"`, `'`) || '',
+                burn: data.burn || '',
+                webvalidate: data.webvalidate.replaceAll(`"`, `'`) || '',
+                owner: data.owner.replaceAll(`"`, `'`) || '',
+                external_url: data.external_url.replaceAll(`"`, `'`) || '',
                 type: 'NFT',
             };
 

@@ -5,18 +5,12 @@ import styles from '../../../../theme/cssmodule/Components.module.css';
 import { ModalStackedCol } from '../../../../shared/components/modals/ModalWrappers';
 
 const NFTConfirmation = ({ formik }: any) => {
-    React.useEffect(() => {
-        return () => {
-            // console.log('cleanup');
-            URL.revokeObjectURL(formik.values.image ? formik.values.image : 'undefined');
-        };
-    }, []);
     return (
         <>
             <Stack alignItems="center">
                 <Card variant="outlined" className={styles['nft-confirmation-card']}>
-                    {formik.values.image ? (
-                        <CardMedia component="img" src={URL.createObjectURL(formik.values.image)} />
+                    {formik.values.url ? (
+                        <CardMedia component="img" src={formik.values.url} />
                     ) : (
                         <CardMedia component="img" src="https://robohash.org/0x00?gravatar=hashed" />
                     )}

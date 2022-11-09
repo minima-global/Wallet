@@ -3,11 +3,11 @@
  * Confirmation screen for all transaction forms
  *
  */
-import { Modal, Box, Chip, Typography, Stack, TextField, Button, Toolbar } from '@mui/material';
-import { ModalStackedCol, ModalStackedRow, ModalButtonWrapper } from '../../../shared/components/modals/ModalWrappers';
+import { Modal, Box, Typography, Stack, Button, Toolbar } from '@mui/material';
+import { ModalButtonWrapper } from '../../../shared/components/modals/ModalWrappers';
 import styles from '../../../theme/cssmodule/Components.module.css';
 
-const Confirmation = ({ title, children, closeFn, open, formik, modalTitle }: any) => {
+const Confirmation = ({ children, closeFn, open, formik, modalTitle }: any) => {
     return (
         <Modal
             open={open}

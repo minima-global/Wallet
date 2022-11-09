@@ -55,7 +55,22 @@ const CreateTokenSchema = Yup.object().shape({
         .matches(/^[^\\;]+$/, 'Invalid characters.'),
     amount: Yup.string()
         .required('This field is required')
-        .matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters.'),
+        .matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters.')
+        .test('check-my-amount', 'Invalid amount, NFTs cannot be divisible', function (val) {
+            const { path, createError, parent } = this;
+            if (val == undefined) {
+                return false;
+            }
+
+            if (new Decimal(val).lessThan(new Decimal(1))) {
+                return createError({
+                    path,
+                    message: `Invalid amount, must be 1 or greater`,
+                });
+            }
+
+            return true;
+        }),
     description: Yup.string()
         .min(0)
         .max(255, 'Maximum 255 characters allowed.')
@@ -147,11 +162,11 @@ const TokenCreation: FC = () => {
                 name: formData.name.replaceAll(`"`, `'`),
                 amount: formData.amount.toString(),
                 url: formData.url, // upload image or normal url
-                description: formData.description.replaceAll(`"`, `'`),
-                burn: formData.burn.toString(),
-                ticker: formData.ticker.replaceAll(`"`, `'`),
+                description: formData.description.replaceAll(`"`, `'`) || '',
+                burn: formData.burn.toString() || '',
+                ticker: formData.ticker.replaceAll(`"`, `'`) || '',
                 type: 'STANDARDTOKEN',
-                webvalidate: formData.webvalidate,
+                webvalidate: formData.webvalidate || '',
             };
             buildCustomTokenCreation(cToken)
                 .then((res: any) => {
