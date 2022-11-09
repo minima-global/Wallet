@@ -2,7 +2,7 @@ import MinimaIcon from '../../../assets/images/minimaLogoSquare.png';
 
 import styled from '@emotion/styled';
 import { MinimaToken } from '../../../minima/types/minima2';
-import { Avatar, Stack } from '@mui/material';
+import { Avatar, CircularProgress, Stack } from '@mui/material';
 
 const MiFundsWrapper = styled('div')`
     background: #fff;
@@ -28,30 +28,42 @@ const MiFundsWrapper = styled('div')`
     }
 `;
 
+const MiInputError = styled('div')`
+    padding-left: 8px;
+    color: rgb(211, 47, 47);
+    background-color: #fcbebd;
+    font-size: 0.8rem;
+    font-family: Manrope-semibold;
+    margin-top: 8px;
+`;
+
 interface IProps {
     funds: MinimaToken;
     formik: any;
 }
 const MiFunds = ({ funds, formik }: IProps) => {
+    console.log(formik.errors);
     return (
-        <Stack alignItems="flex-start" justifyContent="center">
-            <MiFundsWrapper>
-                <Avatar variant="rounded" src={MinimaIcon} />
-                <input
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    hidden
-                    id="funds"
-                    name="funds"
-                    value={funds.sendable}
-                />
-                <div>
-                    <p>{funds.token}</p>
-                    <p>{funds.sendable}</p>
-                </div>
-                {formik.errors.funds && <div>{formik.errors.funds}</div>}
-            </MiFundsWrapper>
-        </Stack>
+        (funds && (
+            <Stack alignItems="flex-start" justifyContent="center">
+                <MiFundsWrapper>
+                    <Avatar variant="rounded" src={MinimaIcon} />
+                    <input
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        hidden
+                        id="funds"
+                        name="funds"
+                        value={funds.sendable}
+                    />
+                    <div>
+                        <p>{funds.token}</p>
+                        <p>{funds.sendable}</p>
+                    </div>
+                </MiFundsWrapper>
+                {/* {formik.errors.funds && <MiInputError>{formik.errors.funds}</MiInputError>} */}
+            </Stack>
+        )) || <CircularProgress size={24} />
     );
 };
 

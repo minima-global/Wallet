@@ -110,11 +110,13 @@
 .form-helper-text {
   border-bottom-right-radius: 8px;
   border-bottom-left-radius: 8px;
-  color: #D63110;
-  font-weight: 700;
+  color: rgb(211, 47, 47);
   padding: 0px 8px;
   text-overflow: ellipsis;
   overflow: hidden;
+  background-color: #FCBEBD;
+  font-size: 0.8rem;
+  font-family: Manrope-semibold;
 }
 
 .form-help-caption {

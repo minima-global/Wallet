@@ -23,6 +23,7 @@ import { MiCustomToken } from '../minima/types/nft';
 import Required from '../shared/components/forms/Required';
 import Decimal from 'decimal.js';
 import MiFunds from './components/forms/MiFunds';
+import React from 'react';
 
 /**
  * Minima scales up to 64 decimal places
@@ -30,22 +31,20 @@ import MiFunds from './components/forms/MiFunds';
  * 1 Minima === 1-e36
  */
 Decimal.set({ precision: 64 });
+Decimal.set({ toExpNeg: -36 });
 
 const CreateTokenSchema = Yup.object().shape({
     funds: Yup.object().test('check-my-funds', 'Insufficient funds.', function (val: any) {
         const { path, createError, parent } = this;
-        console.log(val);
+
         if (val == undefined) {
             return false;
         }
 
-        const totalSupplyAmountDesired = parent.amount;
-        if (new Decimal(totalSupplyAmountDesired).greaterThan(new Decimal(val.sendable))) {
-            const requiredAmount = new Decimal(totalSupplyAmountDesired).minus(new Decimal(val.sendable));
-
+        if (new Decimal(val.sendable).equals(new Decimal(0))) {
             return createError({
-                path,
-                message: `Insufficient funds, you need another ${requiredAmount.toFixed()} Minima`,
+                path: 'amount',
+                message: `Insufficient funds, you require more Minima to create this token.`,
             });
         }
 
@@ -125,6 +124,10 @@ const TokenCreation: FC = () => {
         setModalStatus('Failed');
     };
 
+    React.useEffect(() => {
+        formik.setFieldValue('funds', wallet[0]);
+    }, [wallet]);
+
     const formik = useFormik({
         initialValues: {
             funds: wallet[0],
@@ -177,11 +180,11 @@ const TokenCreation: FC = () => {
                         <CardContent>
                             <form onSubmit={formik.handleSubmit}>
                                 <Stack spacing={2}>
-                                    {/* Required form information */}
                                     <FormFieldWrapper
                                         help=""
                                         children={<MiFunds formik={formik} funds={formik.values.funds} />}
                                     />
+                                    {/* Asterisk required  */}
                                     <Required />
                                     <FormFieldWrapper
                                         required={true}

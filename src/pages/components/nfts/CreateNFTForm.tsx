@@ -7,7 +7,7 @@ import styles from '../../../theme/cssmodule/Components.module.css';
 
 import { buildCustomTokenCreation } from '../../../minima/libs/nft';
 import { insufficientFundsError, isValidURLAll, isValidURLSecureOnly } from '../../../shared/functions';
-import { useAppDispatch } from '../../../minima/redux/hooks';
+import { useAppDispatch, useAppSelector } from '../../../minima/redux/hooks';
 import { toggleNotification } from '../../../minima/redux/slices/notificationSlice';
 import ModalManager from '../managers/ModalManager';
 import NFTConfirmation from '../forms/common/NFTConfirmation';
@@ -17,8 +17,43 @@ import FormImageUrlSelect from '../../../shared/components/forms/FormImageUrlSel
 import { MiNFT } from '../../../minima/types/nft';
 import Required from '../../../shared/components/forms/Required';
 import FormFieldWrapper from '../../../shared/components/FormFieldWrapper';
+import { selectBalance } from '../../../minima/redux/slices/balanceSlice';
+
+import Decimal from 'decimal.js';
+import MiFunds from '../forms/MiFunds';
+
+/**
+ * Minima scales up to 64 decimal places
+ * tokens are scaled to 36 decimal places
+ * 1 Minima === 1-e36
+ */
+Decimal.set({ precision: 64 });
+Decimal.set({ toExpNeg: -36 });
 
 const validation = Yup.object().shape({
+    funds: Yup.object().test('check-my-funds', 'Insufficient funds.', function (val: any) {
+        const { path, createError, parent } = this;
+
+        if (val === undefined) {
+            return false;
+        }
+        console.log(path);
+        if (new Decimal(parent.amount).greaterThan(new Decimal(val.sendable))) {
+            return createError({
+                path: 'amount',
+                message: `Insufficient funds, you do not have enough Minima.`,
+            });
+        }
+
+        if (new Decimal(val.sendable).equals(new Decimal(0))) {
+            return createError({
+                path: 'amount',
+                message: `Insufficient funds, you require more Minima to create this token.`,
+            });
+        }
+
+        return true;
+    }),
     name: Yup.string()
         .required('This field is required.')
         .matches(/^[^\\;]+$/, 'Invalid characters.'),
@@ -87,6 +122,7 @@ const validation = Yup.object().shape({
 });
 
 const CreateNFTForm = () => {
+    const wallet = useAppSelector(selectBalance);
     // Handle Modal
     const [open, setOpen] = React.useState(false);
     const [modalStatus, setModalStatus] = React.useState('Failed');
@@ -106,8 +142,13 @@ const CreateNFTForm = () => {
         setModalEmployee('confirmation');
     };
 
+    React.useEffect(() => {
+        formik.setFieldValue('funds', wallet[0]);
+    }, [wallet]);
+
     const formik = useFormik({
         initialValues: {
+            funds: wallet[0],
             url: '',
             amount: '',
             name: '',
@@ -174,6 +215,7 @@ const CreateNFTForm = () => {
     return (
         <form onSubmit={formik.handleSubmit}>
             <Stack spacing={2}>
+                <FormFieldWrapper help="" children={<MiFunds formik={formik} funds={formik.values.funds} />} />
                 {/* Required field helper */}
                 <Required />
 
