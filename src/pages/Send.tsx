@@ -121,6 +121,13 @@ const Send: FC = () => {
                     return false;
                 }
 
+                if (val.token.type && val.token.type === 'NFT') {
+                    return createError({
+                        path,
+                        message: `You cannot split a non-fungible token`,
+                    });
+                }
+
                 if (new Decimal(val.sendable).equals(new Decimal(0))) {
                     return createError({
                         path,
