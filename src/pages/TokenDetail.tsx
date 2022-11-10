@@ -54,25 +54,6 @@ const TokenDetail = () => {
     // set loading to true if undefined..
     const loading = typeof token === 'undefined';
 
-    // Is this a NFT?
-    let imageUrl = undefined; // populate with image if we have one, or keep null if we don't
-    if (token && token.tokenid !== '0x00' && (isNFT(token.token) || isToken(token.token))) {
-        try {
-            var parser = new DOMParser();
-            const doc = parser.parseFromString(token.token.url, 'application/xml');
-            const errorNode2 = doc.querySelector('parsererror');
-            if (errorNode2) {
-                console.error('Token does not contain an image: ' + token);
-            } else {
-                // console.log('parsing succeeded');
-                var imageString = doc.getElementsByTagName('artimage')[0].innerHTML;
-                imageUrl = `data:image/jpeg;base64,${imageString}`;
-            }
-        } catch (err) {
-            console.error('Token does not contain an image: ' + token);
-        }
-    }
-
     return (
         <>
             <GridLayout
