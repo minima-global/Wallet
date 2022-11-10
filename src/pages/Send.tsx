@@ -1,5 +1,5 @@
 import { Button, TextField, Card, CardContent, Typography, Skeleton, Stack, Select, MenuItem } from '@mui/material';
-import { FC, useState, useMemo } from 'react';
+import { FC, useState, useMemo, useEffect } from 'react';
 import { callSend } from '../minima/rpc-commands';
 
 import { useFormik } from 'formik';
@@ -7,24 +7,21 @@ import * as Yup from 'yup';
 import MiniModal from '../shared/components/MiniModal';
 import GridLayout from '../layout/GridLayout';
 
-import { insufficientFundsError } from '../shared/functions';
-
-import TokenListItem from './components/tokens/TokenListItem';
 import { splitCoin } from '../minima/utils';
+import { insufficientFundsError } from '../shared/functions';
 import { useAppDispatch, useAppSelector } from '../minima/redux/hooks';
 import { selectBalance, selectBalanceFilter } from '../minima/redux/slices/balanceSlice';
 import { toggleNotification } from '../minima/redux/slices/notificationSlice';
-import { useParams } from 'react-router-dom';
 import ModalManager from './components/managers/ModalManager';
-
 import ValueTransferConfirmation from './components/forms/common/ValueTransferConfirmation';
 import CoinSplitConfirmation from './components/forms/common/CoinSplitConfirmation';
-
-import styles from '../theme/cssmodule/Components.module.css';
+import MiSelect from '../shared/components/layout/MiSelect';
 import Pending from './components/forms/Pending';
 
+import styles from '../theme/cssmodule/Components.module.css';
+
 import Decimal from 'decimal.js';
-import MiSelect from '../shared/components/layout/MiSelect';
+import { MINIMA__TOKEN_ID } from '../shared/constants';
 
 /**
  * Minima scales up to 64 decimal places
@@ -34,49 +31,107 @@ import MiSelect from '../shared/components/layout/MiSelect';
 Decimal.set({ precision: 64 });
 Decimal.set({ toExpNeg: -36 });
 
-const TransferTokenSchema = Yup.object().shape({
-    tokenid: Yup.string().required('Field Required'),
-    address: Yup.string()
-        .matches(/0|M[xX][0-9a-zA-Z]+/, 'Invalid Address.')
-        .min(59, 'Invalid Address, too short.')
-        .max(66, 'Invalid Address, too long.')
-        .required('Field Required'),
-    amount: Yup.string()
-        .required('Field Required')
-        .matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters.')
-        .test('check-my-amount', 'Invalid amount, NFTs cannot be divisible', function (val) {
-            const { path, createError, parent } = this;
-            if (val == undefined) {
-                return false;
-            }
-
-            if (new Decimal(val).equals(new Decimal(0))) {
-                return createError({
-                    path,
-                    message: `Invalid amount`,
-                });
-            }
-
-            return true;
-        }),
-    burn: Yup.string().matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters.'),
-});
-
-const CoinSplitterSchema = Yup.object().shape({
-    tokenid: Yup.string().required('Field Required'),
-    burn: Yup.string().matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters.'),
-});
-
-const validationSchema = [null, TransferTokenSchema, CoinSplitterSchema];
-
 type SendFormUtility = 'VALUETRANSFER' | 'COINSPLIT';
 const Send: FC = () => {
+    const TransferTokenSchema = Yup.object().shape({
+        token: Yup.object().required('Field Required'),
+        address: Yup.string()
+            .matches(/0|M[xX][0-9a-zA-Z]+/, 'Invalid Address.')
+            .min(59, 'Invalid Address, too short.')
+            .max(66, 'Invalid Address, too long.')
+            .required('Field Required'),
+        amount: Yup.string()
+            .required('Field Required')
+            .matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters.')
+            .test('check-my-amount', 'Invalid amount', function (val) {
+                const { path, createError, parent } = this;
+                if (val === undefined) {
+                    return false;
+                }
+                console.log(parent);
+                if (new Decimal(val).greaterThan(new Decimal(parent.token.sendable))) {
+                    const desiredAmountToSend = new Decimal(val);
+                    const available = new Decimal(parent.token.sendable);
+                    const requiredAnother = desiredAmountToSend.minus(available);
+
+                    return createError({
+                        path,
+                        message: `Oops, insufficient funds, you require another ${requiredAnother.toNumber()} ${
+                            parent.tokenid === MINIMA__TOKEN_ID
+                                ? parent.token
+                                : parent.token.token.name
+                                ? parent.token.token.name
+                                : 'Unavailable'
+                        }`,
+                    });
+                }
+
+                if (new Decimal(val).lessThanOrEqualTo(new Decimal(0))) {
+                    return createError({
+                        path,
+                        message: `Oops, you haven't entered a valid amount to send`,
+                    });
+                }
+
+                return true;
+            }),
+        burn: Yup.string()
+            .matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters.')
+            .test('check-my-burnamount', 'Invalid burn amount', function (val) {
+                const { path, createError, parent } = this;
+                if (val === undefined) {
+                    return true;
+                }
+                const burn = new Decimal(val);
+
+                if (burn.greaterThan(wallet[0].sendable)) {
+                    return createError({
+                        path,
+                        message: `Oops, not enough funds available to burn.  You require another ${burn
+                            .minus(wallet[0].sendable)
+                            .toNumber()} Minima`,
+                    });
+                }
+
+                return true;
+            }),
+    });
+    const CoinSplitterSchema = Yup.object().shape({
+        tokenid: Yup.string().required('Field Required'),
+        burn: Yup.string()
+            .matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters.')
+            .test('check-my-burnamount', 'Invalid burn amount', function (val) {
+                const { path, createError, parent } = this;
+                if (val === undefined) {
+                    return true;
+                }
+                const burn = new Decimal(val);
+
+                if (burn.greaterThan(wallet[0].sendable)) {
+                    return createError({
+                        path,
+                        message: `Oops, not enough funds available to burn.  You require another ${burn
+                            .minus(wallet[0].sendable)
+                            .toNumber()} Minima`,
+                    });
+                }
+
+                return true;
+            }),
+    });
+    const validationSchema = [null, TransferTokenSchema, CoinSplitterSchema];
+
     const dispatch = useAppDispatch();
     const [formUtility, setFormUtility] = useState<SendFormUtility>('VALUETRANSFER');
     const [mode, setMode] = useState(1);
     const [modalEmployee, setModalEmployee] = useState('');
     const wallet = useAppSelector(selectBalance);
 
+    useEffect(() => {
+        if (!formik.values.token) {
+            formik.setFieldValue('token', wallet[0]);
+        }
+    }, [wallet]);
     const handleCloseModalManager = () => {
         setModalEmployee('');
     };
@@ -114,32 +169,19 @@ const Send: FC = () => {
         validationSchema: dynamicValidation,
         onSubmit: (data) => {
             setModalEmployee(''); // close modals
-            const modifyData = {
-                ...data,
-                burn: data.burn && data.burn.length ? data.burn : 0,
-                amount: data.amount && data.amount.length ? data.amount : 0,
+            const sendPayload = {
+                token: data.token,
+                address: data.address,
+                amount: data.amount || '',
+                burn: data.burn || '',
             };
 
             if (formUtility === 'VALUETRANSFER') {
                 // do normal value transfer
-                callSend(modifyData)
-                    .then((res: any) => {
-                        if (!res.status && !res.pending) {
-                            throw new Error(res.error ? res.error : res.message); // TODO.. consistent key value
-                        }
-
-                        // Non-write minidapp
-                        if (!res.status && res.pending) {
-                            setModalStatus('Pending');
-                            setOpen(true);
-                        }
-                        // write Minidapp
-                        if (res.status && !res.pending) {
-                            // Set Modal
-                            setModalStatus('Success');
-                            // Open Modal
-                            setOpen(true);
-                        }
+                callSend({ ...sendPayload })
+                    .then(() => {
+                        setOpen(true);
+                        setModalStatus('Success');
                         // SENT
                         formik.resetForm();
                     })
@@ -164,11 +206,8 @@ const Send: FC = () => {
                             console.error(err.message);
                             dispatch(toggleNotification(err.message, 'error', 'error'));
                         }
-
-                        // setOpenConfirmationModal(false);
                     })
                     .finally(() => {
-                        // handleCloseConfirmationModal();
                         // NO MATTER WHAT
                         formik.setSubmitting(false);
                     });
@@ -235,6 +274,7 @@ const Send: FC = () => {
             }
         },
         validateOnChange: true,
+        enableReinitialize: false,
     });
 
     return (
@@ -281,7 +321,7 @@ const Send: FC = () => {
                                                         fullWidth
                                                         id="address"
                                                         name="address"
-                                                        placeholder="Address"
+                                                        placeholder="minima address"
                                                         value={formik.values.address}
                                                         onChange={formik.handleChange}
                                                         onBlur={formik.handleBlur}

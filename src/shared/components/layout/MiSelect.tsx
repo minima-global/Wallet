@@ -264,7 +264,7 @@ const MiSelect = (props: any) => {
                                                                 <MiSkeleton />
                                                             )}
                                                         </MiTokenNameTicker>
-                                                        <MiTokenAmount>{numberWithCommas(t.sendable)}</MiTokenAmount>
+                                                        <MiTokenAmount>{t.sendable}</MiTokenAmount>
                                                     </Stack>
                                                 </MiTokenListItem>
                                             ))}
@@ -330,7 +330,7 @@ const MiSelect = (props: any) => {
                                                                 <MiSkeleton />
                                                             )}
                                                         </MiTokenNameTicker>
-                                                        <MiTokenAmount>{numberWithCommas(t.sendable)}</MiTokenAmount>
+                                                        <MiTokenAmount>{t.sendable}</MiTokenAmount>
                                                     </Stack>
                                                 </MiTokenListItem>
                                             ))}

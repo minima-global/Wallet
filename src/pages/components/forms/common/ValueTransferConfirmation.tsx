@@ -1,16 +1,9 @@
-import { Stack, ListItemButton, ListItemIcon, Avatar, ListItemText, Typography } from '@mui/material';
-
+import { Stack, ListItemButton, ListItemIcon, Avatar, Typography } from '@mui/material';
 import { AlternateEmailOutlined } from '@mui/icons-material';
 import CustomListItem from '../../../../shared/components/CustomListItem';
-
 import styles from '../../../../theme/cssmodule/Components.module.css';
-import { copy } from '../../../../shared/functions';
-import { useAppDispatch } from '../../../../minima/redux/hooks';
-import { toggleNotification } from '../../../../minima/redux/slices/notificationSlice';
 
 const ValueTransferConfirmation = ({ formik }: any) => {
-    const dispatch = useAppDispatch();
-    // console.log(formik.values);
     return (
         <>
             <Stack direction="column" mt={2} spacing={2}>

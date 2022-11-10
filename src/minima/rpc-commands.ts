@@ -2,8 +2,14 @@ import { MinimaToken } from "./types/minima2";
 
 export {callSend, callGetAddress, callStatus, createCustomToken, getWalletBalance, callTokenValidate};
 
-const callSend = (data: any) => {
-    return req(`send amount:${data.amount} address:${data.address} tokenid:${data.tokenid} burn:${data.burn}`);
+interface ISendPayload {
+    token: MinimaToken;
+    amount: string;
+    address: string;
+    burn?: string;
+}
+const callSend = (data: ISendPayload) => {
+    return rpc(`send amount:${data.amount} address:${data.address} tokenid:${data.token.tokenid} burn:${data.burn}`);
 }
  const callGetAddress = () => {
     return req(`getaddress`);
