@@ -161,12 +161,29 @@
   width: 100%;
   border-radius: 8px;
 }
+.form-image-preview-box-img-disabled {
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
+  border-radius: 8px;
+  opacity: 0.5;
+}
+.form-image-preview-box-img-disabled:hover {
+  cursor: not-allowed;
+}
 
 .clear-icon {
   display: none !important;
   position: absolute;
   right: 0;
   top: 0;
+}
+.clear-icon-disabled {
+  display: none !important;
+  position: absolute;
+  right: 0;
+  top: 0;
+  cursor: not-allowed;
 }
 .clear-icon:hover {
   opacity: 1;

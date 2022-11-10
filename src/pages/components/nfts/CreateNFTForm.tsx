@@ -195,10 +195,13 @@ const CreateNFTForm = () => {
                 .then((r) => {
                     console.log(r);
 
+                    setModalStatus('Success');
+                    setOpen(true); // Show success modal
                     formik.resetForm();
                 })
                 .catch((err) => {
                     console.error('buildUserNFT', err);
+
                     dispatch(toggleNotification(`${err}`, 'error', 'error'));
                 });
         },

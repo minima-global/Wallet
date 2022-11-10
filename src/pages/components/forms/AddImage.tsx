@@ -52,7 +52,7 @@ const AddImage = ({ onImageChange = () => {}, formik }: IProps) => {
     };
     return (
         <>
-            {formik.values.url && selectedFile ? (
+            {formik.values.url && selectedFile && !formik.isSubmitting ? (
                 <>
                     <img src={formik.values.url} className={styles['form-image-preview-box-img']} />
                     <ClearIcon
@@ -66,6 +66,14 @@ const AddImage = ({ onImageChange = () => {}, formik }: IProps) => {
                         <Typography variant="caption">{selectedFile.name}</Typography>
                     </Box>
                 </>
+            ) : formik.values.url && selectedFile && formik.isSubmitting ? (
+                <>
+                    <img src={formik.values.url} className={styles['form-image-preview-box-img-disabled']} />
+                    <ClearIcon color="inherit" className={styles['clear-icon-disabled']} />
+                    <Box className={styles['info-label-image-upload']}>
+                        <Typography variant="caption">{selectedFile.name}</Typography>
+                    </Box>
+                </>
             ) : (
                 <Stack className={styles['info-upload-overlay']} justifyContent="center" alignItems="center">
                     <CloudUploadIcon fontSize="large" color="inherit" />
@@ -73,6 +81,7 @@ const AddImage = ({ onImageChange = () => {}, formik }: IProps) => {
                 </Stack>
             )}
             <input
+                disabled={formik.isSubmitting}
                 id="url"
                 name="url"
                 type="file"
