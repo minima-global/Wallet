@@ -29,10 +29,13 @@ const NFTCard = ({ NFT }: any) => {
 
     return (
         <Card variant="outlined" className={styles['nft-card']}>
-            {imageUrl ? (
-                <CardMedia className={styles['fix-aspect-ratio']} image={imageUrl} component="img" height="181px" />
-            ) : !imageUrl && typeof NFT.token === 'object' && NFT.token.url && NFT.token.url.length > 0 ? (
-                <CardMedia component="img" aria-label="NFT-url-image" src={NFT.token.url} />
+            {NFT.token.url && NFT.token.url.length ? (
+                <CardMedia
+                    className={styles['fix-aspect-ratio']}
+                    image={NFT.token.url}
+                    component="img"
+                    height="181px"
+                />
             ) : (
                 <CardMedia component="img" aria-label="NFT-url-image" src={`https://robohash.org/${NFT.tokenid}`} />
             )}

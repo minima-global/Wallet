@@ -73,8 +73,8 @@ const TokenDetail = () => {
                                                     <MinimaSquareIcon className="minima-icon" />
                                                 ) : token.tokenid !== '0x00' &&
                                                   (isNFT(token.token) || isToken(token.token)) &&
-                                                  imageUrl ? (
-                                                    <Avatar variant="rounded" src={imageUrl} />
+                                                  token.token.url ? (
+                                                    <Avatar variant="rounded" src={token.token.url} />
                                                 ) : token.tokenid !== '0x00' &&
                                                   (isToken(token.token) || isNFT(token.token)) ? (
                                                     <Avatar
@@ -151,9 +151,7 @@ const TokenDetail = () => {
                                                     src={
                                                         token.tokenid === '0x00'
                                                             ? MinimaIcon
-                                                            : imageUrl
-                                                            ? imageUrl
-                                                            : token.token.url
+                                                            : token.token.url && token.token.url.length > 0
                                                             ? token.token.url
                                                             : `https://robohash.org/${token?.tokenid}`
                                                     }
