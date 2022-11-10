@@ -45,7 +45,7 @@ const TokenListItem = ({ item, nav, mode }: any) => {
         <ListItemButton
             className={styles['noWrap']}
             key={item.tokenid}
-            data-testid={isDisabled ? `${dataTestIds.token}__${tokenName}--disabled` : `${dataTestIds.token}__${tokenName}`}
+            data-testid={`${dataTestIds.token}__${tokenName}`}
             onClick={() => (nav ? navigate(`${item.tokenid}`) : null)}
         >
             <ListItemAvatar>
@@ -89,6 +89,7 @@ const TokenListItem = ({ item, nav, mode }: any) => {
                         ? item.coins + ` ${item.coins > 1 ? 'coins' : 'coin'} available`
                         : null}
                 </Typography>
+                {isDisabled && <span data-testid={`${dataTestIds.token}__${tokenName}--disabled`} />}
             </Stack>
         </ListItemButton>
     );

@@ -361,6 +361,7 @@ const TokenCreation: FC = () => {
                                         color="primary"
                                         variant="contained"
                                         fullWidth
+                                        data-testid={dataTestIds.create}
                                         onClick={() => setModalEmployee('burn')}
                                     >
                                         {formik.isSubmitting ? 'Please wait...' : 'Next'}

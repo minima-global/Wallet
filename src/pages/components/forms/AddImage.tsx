@@ -21,6 +21,10 @@ interface IProps {
     formik: any;
 }
 
+const dataTestIds = {
+    inputImage: 'input-image',
+};
+
 const AddImage = ({ onImageChange = () => {}, formik }: IProps) => {
     const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
 
@@ -78,6 +82,7 @@ const AddImage = ({ onImageChange = () => {}, formik }: IProps) => {
                 type="file"
                 hidden
                 accept="image/*"
+                data-testid={dataTestIds.inputImage}
                 onChange={handleCapture}
                 onBlur={formik.handleBlur}
             />
