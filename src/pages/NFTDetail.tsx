@@ -16,24 +16,6 @@ const NFTDetail = () => {
     const NFTs = useAppSelector(selectNFTs);
     const NFT = NFTs ? NFTs.find((n: MinimaToken) => n.tokenid === tokenid) : undefined;
 
-    let imageUrl = undefined; // populate with image if we have one, or keep null if we don't
-    try {
-        var parser = new DOMParser();
-        if (NFT && NFT.token.url.startsWith('<artimage>', 0)) {
-            const doc = parser.parseFromString(NFT.token.url, 'application/xml');
-            const errorNode2 = doc.querySelector('parsererror');
-            if (errorNode2) {
-                console.error('Token does not contain an image: ' + NFT);
-            } else {
-                // console.log('parsing succeeded');
-                var imageString = doc.getElementsByTagName('artimage')[0].innerHTML;
-                imageUrl = `data:image/jpeg;base64,${imageString}`;
-            }
-        }
-    } catch (err) {
-        console.error('Token does not contain an image: ' + NFT);
-    }
-
     function isNFT(obj: any): obj is MiNFT {
         return (
             'name' in obj &&
@@ -53,8 +35,8 @@ const NFTDetail = () => {
                     {tokenid && NFT ? (
                         isNFT(NFT.token) ? (
                             <Card>
-                                {imageUrl ? (
-                                    <CardMedia image={imageUrl} component="img" height="auto" />
+                                {NFT.token.url ? (
+                                    <CardMedia image={NFT.token.url} component="img" height="auto" />
                                 ) : (
                                     <CardMedia
                                         component="img"
