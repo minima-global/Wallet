@@ -5,7 +5,7 @@
  * 
  */
 
-import { callGetAddress, req } from './rpc-commands';
+import { callGetAddress, rpc } from './rpc-commands';
 
 /**
  * Split a coin by 2
@@ -18,5 +18,5 @@ export const splitCoin = async (tokenid: string, sendable: string, coins: string
   const splitNumber = parseInt(coins) * 2; // scale by 2
 
   // split coin, send back to self
-  return req(`send address:${mAddr} tokenid:${tokenid} amount:${sendable} split:${splitNumber > 20 ? 20 : splitNumber} burn:${burn}`);
+  return rpc(`send address:${mAddr} tokenid:${tokenid} amount:${sendable} split:${splitNumber > 20 ? 20 : splitNumber} burn:${burn}`);
 }

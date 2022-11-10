@@ -10,7 +10,7 @@ import GridLayout from '../layout/GridLayout';
 import { splitCoin } from '../minima/utils';
 import { insufficientFundsError } from '../shared/functions';
 import { useAppDispatch, useAppSelector } from '../minima/redux/hooks';
-import { selectBalance, selectBalanceFilter } from '../minima/redux/slices/balanceSlice';
+import { selectBalance } from '../minima/redux/slices/balanceSlice';
 import { toggleNotification } from '../minima/redux/slices/notificationSlice';
 import ModalManager from './components/managers/ModalManager';
 import ValueTransferConfirmation from './components/forms/common/ValueTransferConfirmation';
@@ -97,7 +97,23 @@ const Send: FC = () => {
             }),
     });
     const CoinSplitterSchema = Yup.object().shape({
-        tokenid: Yup.string().required('Field Required'),
+        token: Yup.object()
+            .required('Field Required')
+            .test('check-my-tokensendable', 'Invalid token sendable', function (val: any) {
+                const { path, createError } = this;
+                if (val === undefined) {
+                    return false;
+                }
+
+                if (new Decimal(val.sendable).equals(new Decimal(0))) {
+                    return createError({
+                        path,
+                        message: `Oops, not enough funds available to perform a split`,
+                    });
+                }
+
+                return true;
+            }),
         burn: Yup.string()
             .matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters.')
             .test('check-my-burnamount', 'Invalid burn amount', function (val) {
@@ -134,6 +150,7 @@ const Send: FC = () => {
     }, [wallet]);
     const handleCloseModalManager = () => {
         setModalEmployee('');
+        formik.setFieldValue('burn', '');
     };
     const handleProceed = () => {
         setModalEmployee('confirmation');
@@ -186,95 +203,24 @@ const Send: FC = () => {
                         formik.resetForm();
                     })
                     .catch((err) => {
-                        if (err === undefined || err.message === undefined) {
-                            dispatch(
-                                toggleNotification(
-                                    'Something went wrong!  Open a Discord Support ticket for assistance.',
-                                    'error',
-                                    'error'
-                                )
-                            );
-                        }
-
-                        if (insufficientFundsError(err.message)) {
-                            formik.setFieldError('amount', err.message);
-                            console.error(err.message);
-                            dispatch(toggleNotification(err.message, 'error', 'error'));
-                        }
-
-                        if (err.message !== undefined) {
-                            console.error(err.message);
-                            dispatch(toggleNotification(err.message, 'error', 'error'));
-                        }
-                    })
-                    .finally(() => {
-                        // NO MATTER WHAT
-                        formik.setSubmitting(false);
+                        console.error(err.message);
+                        dispatch(toggleNotification(err.message, 'error', 'error'));
                     });
             } else if (formUtility === 'COINSPLIT') {
-                // const tkn = wallet.find((v) => v.tokenid === data.tokenid);
-                // TODO
-                const tkn = undefined;
-                // if (tkn !== undefined) {
-                //     // do coin split
-                //     splitCoin(tkn.tokenid, tkn.sendable, tkn.coins, modifyData.burn)
-                //         .then((res: any) => {
-                //             // console.log(res);
-                //             if (!res.status && !res.pending) {
-                //                 throw new Error(res.error ? res.error : res.message); // TODO.. consistent key value
-                //             }
-                //             // SENT
-                //             // Non-write minidapp
-                //             if (!res.status && res.pending) {
-                //                 setModalStatus('Pending');
-                //                 setOpen(true);
-                //             }
-                //             // write Minidapp
-                //             if (res.status && !res.pending) {
-                //                 // Set Modal
-                //                 setModalStatus('Success');
-                //                 // Open Modal
-                //                 setOpen(true);
-                //             }
-                //             formik.resetForm();
-                //         })
-                //         .catch((err) => {
-                //             if (err === undefined || err.message === undefined) {
-                //                 const balanceNotification = {
-                //                     message: 'New balance update',
-                //                     severity: 'info',
-                //                     type: 'info',
-                //                 };
-                //                 dispatch(
-                //                     toggleNotification(
-                //                         balanceNotification.message,
-                //                         balanceNotification.severity,
-                //                         balanceNotification.type
-                //                     )
-                //                 );
-                //             }
-
-                //             if (insufficientFundsError(err.message)) {
-                //                 formik.setFieldError('amount', err.message);
-                //                 console.error(err.message);
-                //                 dispatch(toggleNotification(`${err.message}`, 'error', 'error'));
-                //             }
-
-                //             if (err.message !== undefined) {
-                //                 console.error(err.message);
-                //                 dispatch(toggleNotification(`${err.message}`, 'error', 'error'));
-                //             }
-                //             // setOpenConfirmationModal(false);
-                //         });
-                // } else {
-                //     dispatch(
-                //         toggleNotification('Token not found!  Please open a Discord support ticket', 'error', 'error')
-                //     );
-                // }
+                // do coin split
+                splitCoin(data.token.tokenid, data.token.sendable, data.token.coins, data.burn)
+                    .then(() => {
+                        setOpen(true);
+                        setModalStatus('Success');
+                        formik.resetForm();
+                    })
+                    .catch((err) => {
+                        console.error(err);
+                        dispatch(toggleNotification(`${err.message}`, 'error', 'error'));
+                    });
             }
         },
         validateOnChange: true,
-        enableReinitialize: false,
     });
 
     return (
@@ -307,7 +253,9 @@ const Send: FC = () => {
                                                 onBlur={formik.handleBlur}
                                                 fullWidth={true}
                                                 error={
-                                                    formik.touched.token && Boolean(formik.errors.token) ? true : false
+                                                    formik.touched.token && Boolean(formik.errors.token)
+                                                        ? formik.errors.token
+                                                        : undefined
                                                 }
                                                 tokens={wallet}
                                                 setFieldValue={formik.setFieldValue}
@@ -371,11 +319,7 @@ const Send: FC = () => {
                                                 </Stack>
                                             ) : null}
                                             <Button
-                                                disabled={
-                                                    formUtility === 'VALUETRANSFER'
-                                                        ? !(formik.isValid && formik.dirty && !formik.isSubmitting)
-                                                        : formik.isSubmitting
-                                                }
+                                                disabled={!(formik.isValid && formik.dirty && !formik.isSubmitting)}
                                                 disableElevation
                                                 color="primary"
                                                 variant="contained"
@@ -387,7 +331,7 @@ const Send: FC = () => {
                                             >
                                                 {formik.isSubmitting ? 'Please wait...' : 'Next'}
                                             </Button>
-                                            {mode === 2 ? (
+                                            {formUtility === 'COINSPLIT' ? (
                                                 <>
                                                     <Typography variant="caption">
                                                         Coin split will divide an unspent coin into two, providing you

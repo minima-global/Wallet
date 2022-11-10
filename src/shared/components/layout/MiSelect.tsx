@@ -208,6 +208,7 @@ const MiSelect = (props: any) => {
                         </>
                     )}
                     {!selectedOption && <p>No token selected.</p>}
+                    {props.error ? props.error : null}
                 </DropDownHeader>
                 {isOpen && mobileView ? (
                     <>

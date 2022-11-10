@@ -59,7 +59,7 @@ export const req = (command: string): Promise<any> => {
 
 /** Rpc cmd v2 */
 
-const rpc = (command: string): Promise<any> => {
+export const rpc = (command: string): Promise<any> => {
     return new Promise((resolve, reject) => {
         MDS.cmd(command, (resp: any) => {
             

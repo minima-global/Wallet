@@ -75,9 +75,7 @@ const Burn = ({ open, closeFn, formik, proceedFn }: any) => {
                                 onClick={() => {
                                     closeFn();
                                     // Only reset burn if its invalid, so it doesn't mess with UX
-                                    if (!formik.isValid) {
-                                        formik.setValues({ ...formik.values, burn: 0 });
-                                    }
+                                    formik.setFieldValue('burn', '');
                                 }}
                             >
                                 Cancel
@@ -86,7 +84,7 @@ const Burn = ({ open, closeFn, formik, proceedFn }: any) => {
                                 disabled={!formik.isValid}
                                 variant="contained"
                                 disableElevation
-                                color={formik.values.burn.length == 0 ? 'success' : 'info'}
+                                color={formik.values.burn.length === 0 ? 'success' : 'info'}
                                 className={styles['burn-skip-btn']}
                                 onClick={() => proceedFn()}
                             >
