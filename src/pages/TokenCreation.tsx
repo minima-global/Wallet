@@ -1,10 +1,10 @@
-import { FC, useState, useEffect } from 'react';
-import { Card, CardContent, TextField, Button, Skeleton, Stack, Typography, Tooltip } from '@mui/material';
+import { FC, useState } from 'react';
+import { Card, CardContent, TextField, Button, Stack, Typography } from '@mui/material';
 import MiniModal from '../shared/components/MiniModal';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { callStatus } from '../minima/rpc-commands';
-import { insufficientFundsError, isValidURLAll, isValidURLSecureOnly } from '../shared/functions';
+
+import { isValidURLAll, isValidURLSecureOnly } from '../shared/functions';
 
 import GridLayout from '../layout/GridLayout';
 
@@ -33,93 +33,111 @@ import React from 'react';
 Decimal.set({ precision: 64 });
 Decimal.set({ toExpNeg: -36 });
 
-const CreateTokenSchema = Yup.object().shape({
-    funds: Yup.object().test('check-my-funds', 'Insufficient funds.', function (val: any) {
-        const { createError } = this;
+const TokenCreation: FC = () => {
+    const CreateTokenSchema = Yup.object().shape({
+        funds: Yup.object().test('check-my-funds', 'Insufficient funds.', function (val: any) {
+            const { createError } = this;
 
-        if (val == undefined) {
-            return false;
-        }
-
-        if (val.sendable !== undefined && new Decimal(val.sendable).equals(new Decimal(0))) {
-            return createError({
-                path: 'amount',
-                message: `Insufficient funds, you require more Minima to create this token.`,
-            });
-        }
-
-        return true;
-    }),
-    name: Yup.string()
-        .required('This field is required')
-        .matches(/^[^\\;]+$/, 'Invalid characters.'),
-    amount: Yup.string()
-        .required('This field is required')
-        .matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters.')
-        .test('check-my-amount', 'Invalid amount', function (val) {
-            const { path, createError, parent } = this;
             if (val == undefined) {
                 return false;
             }
 
-            if (new Decimal(val).lessThan(new Decimal(1))) {
+            if (val.sendable !== undefined && new Decimal(val.sendable).equals(new Decimal(0))) {
                 return createError({
-                    path,
-                    message: `Invalid amount, must be 1 or greater`,
+                    path: 'amount',
+                    message: `Insufficient funds, you require more Minima to create this token.`,
                 });
             }
 
             return true;
         }),
-    description: Yup.string()
-        .min(0)
-        .max(255, 'Maximum 255 characters allowed.')
-        .matches(/^[^\\;]+$/, 'Invalid characters.'),
-    ticker: Yup.string()
-        .min(0)
-        .max(5, 'Maximum 5 characters allowed.')
-        .matches(/^[^\\;]+$/, 'Invalid characters.'),
-    burn: Yup.string().matches(/^[^a-zA-Z\\;"]+$/, 'Invalid characters.'),
-    url: Yup.string()
-        .trim()
-        .required('This field is required.')
-        .test('check-my-url', 'Invalid Url.', function (val) {
+        name: Yup.string()
+            .required('This field is required')
+            .matches(/^[^\\;]+$/, 'Invalid characters.'),
+        amount: Yup.string()
+            .required('This field is required')
+            .matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters.')
+            .test('check-my-amount', 'Invalid amount', function (val) {
+                const { path, createError, parent } = this;
+                if (val == undefined) {
+                    return false;
+                }
+
+                if (new Decimal(val).lessThan(new Decimal(1))) {
+                    return createError({
+                        path,
+                        message: `Invalid amount, must be 1 or greater`,
+                    });
+                }
+
+                return true;
+            }),
+        description: Yup.string()
+            .min(0)
+            .max(255, 'Maximum 255 characters allowed.')
+            .matches(/^[^\\;]+$/, 'Invalid characters.'),
+        ticker: Yup.string()
+            .min(0)
+            .max(5, 'Maximum 5 characters allowed.')
+            .matches(/^[^\\;]+$/, 'Invalid characters.'),
+        burn: Yup.string()
+            .matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters.')
+            .test('check-my-burnamount', 'Invalid burn amount', function (val) {
+                const { path, createError, parent } = this;
+                if (val === undefined) {
+                    return true;
+                }
+                const burn = new Decimal(val);
+
+                if (burn.greaterThan(wallet[0].sendable)) {
+                    return createError({
+                        path,
+                        message: `Oops, not enough funds available to burn.  You require another ${burn
+                            .minus(wallet[0].sendable)
+                            .toNumber()} Minima`,
+                    });
+                }
+
+                return true;
+            }),
+        url: Yup.string()
+            .trim()
+            .required('This field is required.')
+            .test('check-my-url', 'Invalid Url.', function (val) {
+                const { path, createError, parent } = this;
+
+                if (val == undefined) {
+                    return false;
+                }
+
+                if (parent.url.substring(0, 'data:image'.length) === 'data:image') {
+                    return true;
+                }
+
+                if (!isValidURLAll(parent.url)) {
+                    return createError({
+                        path,
+                        message: `Invalid URL`,
+                    });
+                }
+                return true;
+            }),
+        webvalidate: Yup.string().test('check-my-webvalidator', 'Invalid Url, must be https', function (val) {
             const { path, createError, parent } = this;
 
             if (val == undefined) {
-                return false;
-            }
-
-            if (parent.url.substring(0, 'data:image'.length) === 'data:image') {
                 return true;
             }
 
-            if (!isValidURLAll(parent.url)) {
+            if (!isValidURLSecureOnly(parent.webvalidate)) {
                 return createError({
                     path,
-                    message: `Invalid URL`,
+                    message: `Invalid URL, must be https`,
                 });
             }
             return true;
         }),
-    webvalidate: Yup.string().test('check-my-webvalidator', 'Invalid Url, must be https', function (val) {
-        const { path, createError, parent } = this;
-
-        if (val == undefined) {
-            return true;
-        }
-
-        if (!isValidURLSecureOnly(parent.webvalidate)) {
-            return createError({
-                path,
-                message: `Invalid URL, must be https`,
-            });
-        }
-        return true;
-    }),
-});
-
-const TokenCreation: FC = () => {
+    });
     const wallet = useAppSelector(selectBalance);
     const dispatch = useAppDispatch();
     const [modalEmployee, setModalEmployee] = useState('');

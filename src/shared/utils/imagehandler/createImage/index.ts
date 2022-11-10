@@ -4,7 +4,7 @@
 import imageSize from "../getImageSize";
 
 async function createImage(file: any, resize = 1, quality = 0.8) {
-    console.log("creating image...")
+    // console.log("creating image...")
     const image = await imageSize(file);
     const imageWidth = image.width;
     const imageHeight = image.height;
