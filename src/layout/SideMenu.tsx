@@ -27,6 +27,10 @@ interface IProps {
     handleDrawerClose: () => void;
 }
 
+const dataTestIds = {
+    link: 'SideMenu__link',
+};
+
 const SideMenu = ({ handleDrawerClose, handleDrawerOpen }: IProps) => {
     const navigate = useNavigate();
     const routerLocation = useLocation();
@@ -100,6 +104,7 @@ const SideMenu = ({ handleDrawerClose, handleDrawerOpen }: IProps) => {
                     {DrawerItems.map((route: DrawerItem, i) => {
                         return (
                             <ListItemButton
+                                data-testid={`${dataTestIds.link}__${route.name}`}
                                 onClick={() => {
                                     handleDrawerOnNavigation(route.pathname);
                                 }}

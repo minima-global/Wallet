@@ -10,6 +10,11 @@ import { Modal, Box, Chip, Typography, Stack, TextField, Button, Toolbar } from 
 import { ModalStackedCol, ModalStackedRow, ModalButtonWrapper } from '../../../shared/components/modals/ModalWrappers';
 import styles from '../../../theme/cssmodule/Components.module.css';
 
+const dataTestIds = {
+    burn: 'Burn_burn',
+    next: 'Burn_next',
+};
+
 const Burn = ({ open, closeFn, formik, proceedFn }: any) => {
     return (
         <Modal
@@ -35,6 +40,7 @@ const Burn = ({ open, closeFn, formik, proceedFn }: any) => {
                                     <TextField
                                         id="burn"
                                         name="burn"
+                                        data-testid={dataTestIds.burn}
                                         value={formik.values.burn}
                                         onChange={formik.handleChange}
                                         placeholder="0.0"
@@ -82,6 +88,7 @@ const Burn = ({ open, closeFn, formik, proceedFn }: any) => {
                                 Cancel
                             </Button>
                             <Button
+                                data-testid={dataTestIds.next}
                                 variant="contained"
                                 disableElevation
                                 color={formik.values.burn.length == 0 ? 'success' : 'info'}

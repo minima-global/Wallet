@@ -14,13 +14,23 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import { toggleNotification } from '../../../minima/redux/slices/notificationSlice';
 import { useNavigate } from 'react-router-dom';
 
-import VerifiedIcon from '@mui/icons-material/Verified';
 import NFTAuthenticity from '../tokens/NFTAuthenticity';
 import { MinimaToken } from '../../../minima/types/minima2';
+
+const dataTestIds = {
+    card: 'NFTCard__card',
+    favourite: 'NFTCard__favourite',
+    unfavourite: 'NFTCard__unfavourite',
+}
 
 const NFTCard = ({ NFT }: any) => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+    const tokenName = NFT.token && typeof NFT.token === 'object' && NFT.token.hasOwnProperty('name')
+        ? NFT.token.name
+        : NFT.token && typeof NFT.token === 'string'
+            ? NFT.token
+            : 'Invalid name';
 
     const listOfFavourites = useAppSelector<MinimaToken[] | undefined>(selectFavouriteNFTs);
 
@@ -60,7 +70,7 @@ const NFTCard = ({ NFT }: any) => {
     }
 
     return (
-        <Card variant="outlined" className={styles['nft-card']}>
+        <Card data-testid={`${dataTestIds.card}__${tokenName}`} variant="outlined" className={styles['nft-card']}>
             {/* <CardMedia src={hexToString(NFT.token.image)} component="img" /> */}
             {imageUrl ? (
                 <CardMedia className={styles['fix-aspect-ratio']} image={imageUrl} component="img" height="181px" />
@@ -101,6 +111,7 @@ const NFTCard = ({ NFT }: any) => {
                                     className={styles['heart']}
                                     fontSize="large"
                                     color="inherit"
+                                    data-testid={`${dataTestIds.favourite}__${tokenName}`}
                                     onClick={() => {
                                         dispatch(addFavoritesTableAndUpdate(NFT.tokenid));
                                         dispatch(toggleNotification('Added to favorites!', 'success', 'success'));
@@ -111,6 +122,7 @@ const NFTCard = ({ NFT }: any) => {
                                     className={styles['heart']}
                                     fontSize="large"
                                     color="secondary"
+                                    data-testid={`${dataTestIds.unfavourite}__${tokenName}`}
                                     onClick={() => {
                                         dispatch(removeFromFavoritesTableAndUpdate(NFT.tokenid));
                                         dispatch(toggleNotification('Removed from favorites.', 'error', 'error'));

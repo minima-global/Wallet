@@ -38,6 +38,7 @@ const MiniModal: FC<MiniModalProp> = ({ open, handleClose, executeName, customFn
                                 variant="contained"
                                 disableElevation
                                 color="primary"
+                                data-testid="confirm"
                                 className={styles['success-error-ok-btn']}
                                 onClick={customFnc ? customFnc : handleClose}
                             >

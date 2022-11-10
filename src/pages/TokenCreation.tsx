@@ -37,6 +37,16 @@ const CreateTokenSchema = Yup.object().shape({
     webvalidate: Yup.string(),
 });
 
+const dataTestIds = {
+    name: 'TokenCreate_name',
+    amount: 'TokenCreate_amount',
+    url: 'TokenCreate_url',
+    description: 'TokenCreate_description',
+    ticker: 'TokenCreate_ticker',
+    webValidate: 'TokenCreate_webValidate',
+    create: 'TokenCreate_create',
+};
+
 const TokenCreation: FC = () => {
     const dispatch = useAppDispatch();
     const [modalEmployee, setModalEmployee] = useState('');
@@ -190,6 +200,7 @@ const TokenCreation: FC = () => {
                                             id="name"
                                             name="name"
                                             placeholder="name"
+                                            data-testid={dataTestIds.name}
                                             value={formik.values.name}
                                             onChange={formik.handleChange}
                                             error={formik.touched.name && Boolean(formik.errors.name)}
@@ -208,6 +219,7 @@ const TokenCreation: FC = () => {
                                             id="amount"
                                             name="amount"
                                             placeholder="0.0"
+                                            data-testid={dataTestIds.amount}
                                             value={formik.values.amount}
                                             onChange={formik.handleChange}
                                             error={formik.touched.amount && Boolean(formik.errors.amount)}
@@ -226,6 +238,7 @@ const TokenCreation: FC = () => {
                                             id="url"
                                             name="url"
                                             placeholder="url"
+                                            data-testid={dataTestIds.url}
                                             value={formik.values.url}
                                             onChange={formik.handleChange}
                                             error={formik.touched.url && Boolean(formik.errors.url)}
@@ -238,6 +251,7 @@ const TokenCreation: FC = () => {
                                             name="description"
                                             placeholder="description"
                                             value={formik.values.description}
+                                            data-testid={dataTestIds.description}
                                             onChange={formik.handleChange}
                                             error={formik.touched.description && Boolean(formik.errors.description)}
                                             helperText={
@@ -260,6 +274,7 @@ const TokenCreation: FC = () => {
                                             placeholder="ticker"
                                             value={formik.values.ticker}
                                             onChange={formik.handleChange}
+                                            data-testid={dataTestIds.ticker}
                                             error={formik.touched.ticker && Boolean(formik.errors.ticker)}
                                             FormHelperTextProps={{
                                                 style: { display: 'flex', justifyContent: 'flex-end' },
@@ -283,6 +298,7 @@ const TokenCreation: FC = () => {
                                             name="webvalidate"
                                             placeholder="web validate url"
                                             value={formik.values.webvalidate}
+                                            data-testid={dataTestIds.webValidate}
                                             onChange={formik.handleChange}
                                             error={formik.touched.webvalidate && Boolean(formik.errors.webvalidate)}
                                             helperText={formik.touched.webvalidate && formik.errors.webvalidate}
@@ -293,6 +309,7 @@ const TokenCreation: FC = () => {
                                             color="primary"
                                             variant="contained"
                                             fullWidth
+                                            data-testid={dataTestIds.create}
                                             onClick={() => setModalEmployee('burn')}
                                         >
                                             {formik.isSubmitting ? 'Please wait...' : 'Next'}

@@ -54,6 +54,13 @@ const getDataUrlFromBlob = (blob: Blob): Promise<string> => {
     });
 };
 
+export const dataTestIds = {
+    nft: 'CreateNFTForm__nft',
+    name: 'CreateNFTForm__name',
+    amount: 'CreateNFTForm__amount',
+    mint: 'CreateNFTForm__mint',
+};
+
 const CreateNFTForm = () => {
     // Handle Modal
     const [open, setOpen] = React.useState(false);
@@ -218,6 +225,7 @@ const CreateNFTForm = () => {
                         type="file"
                         hidden
                         accept="image/*"
+                        data-testid={dataTestIds.nft}
                         onChange={(e: any) => {
                             if (previewImage) {
                                 // console.log('revoking url object..');
@@ -259,6 +267,7 @@ const CreateNFTForm = () => {
                     id="name"
                     name="name"
                     placeholder="name *"
+                    data-testid={dataTestIds.name}
                     value={formik.values.name}
                     onChange={formik.handleChange}
                     error={formik.touched.name && Boolean(formik.errors.name)}
@@ -277,6 +286,7 @@ const CreateNFTForm = () => {
                     id="amount"
                     name="amount"
                     placeholder="amount *"
+                    data-testid={dataTestIds.amount}
                     value={formik.values.amount}
                     onChange={formik.handleChange}
                     error={formik.touched.amount && Boolean(formik.errors.amount)}
@@ -389,6 +399,7 @@ const CreateNFTForm = () => {
                     variant="contained"
                     fullWidth
                     disableElevation
+                    data-testid={dataTestIds.mint}
                 >
                     {formik.isSubmitting ? 'Please wait...' : 'Mint'}
                 </Button>

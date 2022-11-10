@@ -6,8 +6,21 @@ import TokenAuthenticity from '../tokens/NFTAuthenticity';
 import Ticker from './Ticker';
 import styles from '../../../theme/cssmodule/Components.module.css';
 
+const dataTestIds = {
+    token: 'TokenListItem__token',
+    balance: 'TokenListItem__balance',
+    minimaTicker: 'TokenListItem__minimaTicker',
+};
+
 const TokenListItem = ({ item, nav, mode }: any) => {
     let navigate = useNavigate();
+    const tokenName = item.token && typeof item.token === 'object' && item.token.hasOwnProperty('name')
+        ? item.token.name
+        : item.token && typeof item.token === 'string'
+            ? item.token
+            : 'Invalid name';
+    const isDisabled = item.sendable === '0';
+
     // console.log(item);
     let imageUrl = null; // populate with image if we have one, or keep null if we don't
     try {
@@ -31,6 +44,7 @@ const TokenListItem = ({ item, nav, mode }: any) => {
         <ListItemButton
             className={styles['noWrap']}
             key={item.tokenid}
+            data-testid={isDisabled ? `${dataTestIds.token}__${tokenName}--disabled` : `${dataTestIds.token}__${tokenName}`}
             onClick={() => (nav ? navigate(`${item.tokenid}`) : null)}
         >
             <ListItemAvatar>
@@ -75,9 +89,9 @@ const TokenListItem = ({ item, nav, mode }: any) => {
                 {typeof item.token === 'object' && item.token.hasOwnProperty('ticker') && item.token.ticker ? (
                     <Ticker symbol={item.token.ticker} />
                 ) : item.tokenid === '0x00' ? (
-                    <Ticker symbol={'MINIMA'} />
+                    <Ticker symbol={'MINIMA'} data-testid={dataTestIds.minimaTicker} />
                 ) : null}
-                <Typography noWrap={true} variant="subtitle2">
+                <Typography noWrap={true} variant="subtitle2" data-testid={`${dataTestIds.balance}__${item.tokenid}`}>
                     {mode === 1 || mode === undefined
                         ? item.sendable
                         : mode === 2

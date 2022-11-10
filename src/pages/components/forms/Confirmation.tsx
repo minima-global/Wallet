@@ -7,6 +7,10 @@ import { Modal, Box, Chip, Typography, Stack, TextField, Button, Toolbar } from 
 import { ModalStackedCol, ModalStackedRow, ModalButtonWrapper } from '../../../shared/components/modals/ModalWrappers';
 import styles from '../../../theme/cssmodule/Components.module.css';
 
+const dataTestIds = {
+    next: 'Confirmation_next',
+};
+
 const Confirmation = ({ title, children, closeFn, open, formik, modalTitle }: any) => {
     return (
         <Modal
@@ -47,6 +51,7 @@ const Confirmation = ({ title, children, closeFn, open, formik, modalTitle }: an
                                 Cancel
                             </Button>
                             <Button
+                                data-testid={dataTestIds.next}
                                 disabled={formik.isSubmitting}
                                 variant="contained"
                                 disableElevation

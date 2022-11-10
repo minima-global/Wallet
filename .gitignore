@@ -6,6 +6,9 @@ build
 # .vscode debug
 .vscode
 
+# .webstorm workspace files
+.idea
+
 # dependencies
 /node_modules
 

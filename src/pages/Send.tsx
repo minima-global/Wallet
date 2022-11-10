@@ -57,6 +57,13 @@ const CoinSplitterSchema = Yup.object().shape({
 
 const validationSchema = [null, TransferTokenSchema, CoinSplitterSchema];
 
+const dataTestIds = {
+    method: 'Send__method',
+    amount: 'Send__amount',
+    address: 'Send__address',
+    next: 'Send__next',
+};
+
 const Send: FC = () => {
     const dispatch = useAppDispatch();
     const { tokenid } = useParams();
@@ -263,9 +270,10 @@ const Send: FC = () => {
                                                 name="mode"
                                                 value={formik.values.mode}
                                                 onChange={formik.handleChange}
+                                                data-testid={dataTestIds.method}
                                             >
-                                                <MenuItem value={1}>Value Transfer</MenuItem>
-                                                <MenuItem value={2}>Coin Split</MenuItem>
+                                                <MenuItem value={1} data-testid={`${dataTestIds.method}__1`}>Value Transfer</MenuItem>
+                                                <MenuItem value={2} data-testid={`${dataTestIds.method}__2`}>Coin Split</MenuItem>
                                             </Select>
                                             <Select
                                                 disabled={formik.isSubmitting}
@@ -339,6 +347,7 @@ const Send: FC = () => {
                                                         id="address"
                                                         name="address"
                                                         placeholder="Address"
+                                                        data-testid={dataTestIds.address}
                                                         value={formik.values.address}
                                                         onChange={formik.handleChange}
                                                         error={formik.touched.address && Boolean(formik.errors.address)}
@@ -363,6 +372,7 @@ const Send: FC = () => {
                                                         id="amount"
                                                         name="amount"
                                                         placeholder="0.0"
+                                                        data-testid={dataTestIds.amount}
                                                         value={formik.values.amount}
                                                         onChange={formik.handleChange}
                                                         error={formik.touched.amount && Boolean(formik.errors.amount)}
@@ -399,6 +409,7 @@ const Send: FC = () => {
                                                     //console.log('next');
                                                     setModalEmployee('burn');
                                                 }}
+                                                data-testid={dataTestIds.next}
                                             >
                                                 {formik.isSubmitting ? 'Please wait...' : 'Next'}
                                             </Button>

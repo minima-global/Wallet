@@ -12,6 +12,12 @@ import { selectFavouriteNFTs, selectNFTs } from '../minima/redux/slices/balanceS
 import styles from '../theme/cssmodule/Components.module.css';
 import { MinimaToken } from '../minima/types/minima2';
 
+const dataTestIds = {
+    createNft: 'NFTs__createNft',
+    collectedTab: 'NFTs__collectedTab',
+    favouriteTab: 'NFTs__favouriteTab',
+};
+
 const NFTs: FC = () => {
     const navigate = useNavigate();
     const [tabsValue, setTabsValue] = useState('one');
@@ -62,8 +68,8 @@ const NFTs: FC = () => {
                                         indicatorColor="primary"
                                         aria-label="secondary tabs example"
                                     >
-                                        <Tab value="one" label="Collected" className={styles['nft-tabs-tab']} />
-                                        <Tab value="two" label="Favorited" className={styles['nft-tabs-tab']} />
+                                        <Tab value="one" label="Collected" className={styles['nft-tabs-tab']} data-testid={dataTestIds.collectedTab} />
+                                        <Tab value="two" label="Favorited" className={styles['nft-tabs-tab']} data-testid={dataTestIds.favouriteTab}  />
                                     </Tabs>
                                     <Button
                                         disableElevation
@@ -71,6 +77,7 @@ const NFTs: FC = () => {
                                         className={styles['create-nft-btn']}
                                         color="inherit"
                                         size="small"
+                                        data-testid={dataTestIds.createNft}
                                         onClick={() => navigate('/createnft')}
                                     >
                                         Create
