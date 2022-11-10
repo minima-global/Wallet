@@ -16,10 +16,12 @@ import {
     MiTokenAmount,
     MiSkeleton,
     MiTokenListItem,
+    MiTokenError,
+    MiNoTokenSelected,
     NoResults,
 } from './MiToken';
 
-import { containsText, numberWithCommas } from '../../functions';
+import { containsText } from '../../functions';
 import MiArrow from './svgs/MiArrow';
 import { DRAWERWIDTH, MINIMA__TOKEN_ID } from '../../constants';
 import MinimaIcon from '../../../assets/images/minimaLogoSquare.png';
@@ -207,8 +209,8 @@ const MiSelect = (props: any) => {
                             <MiArrow size={10} color="black" />
                         </>
                     )}
-                    {!selectedOption && <p>No token selected.</p>}
-                    {props.error ? props.error : null}
+                    {!selectedOption && <MiNoTokenSelected>No token selected.</MiNoTokenSelected>}
+                    {props.error ? <MiTokenError>{props.error}</MiTokenError> : null}
                 </DropDownHeader>
                 {isOpen && mobileView ? (
                     <>

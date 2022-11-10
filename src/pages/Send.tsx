@@ -34,7 +34,23 @@ Decimal.set({ toExpNeg: -36 });
 type SendFormUtility = 'VALUETRANSFER' | 'COINSPLIT';
 const Send: FC = () => {
     const TransferTokenSchema = Yup.object().shape({
-        token: Yup.object().required('Field Required'),
+        token: Yup.object()
+            .required('Field Required')
+            .test('check-my-tokensendable', 'Invalid token sendable', function (val: any) {
+                const { path, createError } = this;
+                if (val === undefined) {
+                    return false;
+                }
+
+                if (new Decimal(val.sendable).equals(new Decimal(0))) {
+                    return createError({
+                        path,
+                        message: `Insufficient funds, not enough funds available to send`,
+                    });
+                }
+
+                return true;
+            }),
         address: Yup.string()
             .matches(/0|M[xX][0-9a-zA-Z]+/, 'Invalid Address.')
             .min(59, 'Invalid Address, too short.')
@@ -48,7 +64,7 @@ const Send: FC = () => {
                 if (val === undefined) {
                     return false;
                 }
-                console.log(parent);
+
                 if (new Decimal(val).greaterThan(new Decimal(parent.token.sendable))) {
                     const desiredAmountToSend = new Decimal(val);
                     const available = new Decimal(parent.token.sendable);
@@ -252,11 +268,7 @@ const Send: FC = () => {
                                                 onChange={formik.handleChange}
                                                 onBlur={formik.handleBlur}
                                                 fullWidth={true}
-                                                error={
-                                                    formik.touched.token && Boolean(formik.errors.token)
-                                                        ? formik.errors.token
-                                                        : undefined
-                                                }
+                                                error={Boolean(formik.errors.token) ? formik.errors.token : undefined}
                                                 tokens={wallet}
                                                 setFieldValue={formik.setFieldValue}
                                                 resetForm={formik.resetForm}

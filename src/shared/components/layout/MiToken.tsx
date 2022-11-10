@@ -9,11 +9,32 @@ export {
     MiSkeleton,
     MiTokenListItem,
     MiTokenContainer,
+    MiTokenError,
+    MiNoTokenSelected,
     NoResults,
 };
 
 const MiTokenContainer = styled('div')`
     margin-top: 16px;
+`;
+
+const MiNoTokenSelected = styled('div')`
+    padding: 8px;
+    font-family: Manrope-regular;
+    font-size: 0.875rem;
+    color: #000;
+`;
+
+const MiTokenError = styled('div')`
+    border-bottom-right-radius: 8px;
+    border-bottom-left-radius: 8px;
+    color: rgb(211, 47, 47);
+    padding: 0px 8px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    background-color: #fcbebd;
+    font-size: 0.8rem;
+    font-family: Manrope-semibold;
 `;
 
 const MiTokenListItem = styled('li')`

@@ -44,7 +44,6 @@ const MiFunds = ({ funds, formik }: IProps) => {
     return (
         (funds && (
             <Stack alignItems="flex-start" justifyContent="center">
-                <Typography variant="caption">Current balance</Typography>
                 <MiFundsWrapper>
                     <Avatar variant="rounded" src={MinimaIcon} />
                     <input

@@ -177,11 +177,6 @@ const TokenCreation: FC = () => {
                 .catch((err: any) => {
                     console.log(err);
                     dispatch(toggleNotification(`err`, 'error', 'error'));
-
-                    // if (insufficientFundsError(err.message)) {
-                    //     formik.setFieldError('amount', err.message);
-                    //     dispatch(toggleNotification(err.message, 'error', 'error'));
-                    // }
                 });
         },
     });
@@ -194,7 +189,7 @@ const TokenCreation: FC = () => {
                             <form onSubmit={formik.handleSubmit}>
                                 <Stack spacing={2}>
                                     <FormFieldWrapper
-                                        help=""
+                                        help="Your current Minima balance:"
                                         children={<MiFunds formik={formik} funds={formik.values.funds} />}
                                     />
                                     {/* Asterisk required  */}

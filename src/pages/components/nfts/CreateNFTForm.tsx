@@ -208,7 +208,10 @@ const CreateNFTForm = () => {
     return (
         <form onSubmit={formik.handleSubmit}>
             <Stack spacing={2}>
-                <FormFieldWrapper help="" children={<MiFunds formik={formik} funds={formik.values.funds} />} />
+                <FormFieldWrapper
+                    help="Your current Minima balance:"
+                    children={<MiFunds formik={formik} funds={formik.values.funds} />}
+                />
                 {/* Required field helper */}
                 <Required />
 
