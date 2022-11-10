@@ -13,10 +13,6 @@ import { MinimaToken } from '../minima/types/minima2';
 const Balance = () => {
     const [filterText, setFilterText] = useState('');
 
-    // pagination
-    const [page, setPage] = useState(1);
-    const COUNT_PER_PAGE = 5;
-
     const getFilteredBalanceList = (arr: MinimaToken[], filterText: string) => {
         return arr.filter(
             (opt: MinimaToken) =>
@@ -28,17 +24,13 @@ const Balance = () => {
 
     // const balances = useContext(BalanceUpdates);
     const balances = useAppSelector(selectBalance);
-    const displayedOptions = useMemo(() => getFilteredBalanceList(balances, filterText), [balances, filterText]);
+    const displayedOptions = getFilteredBalanceList(balances, filterText);
 
     function handleInputChange(event: any) {
         const value = event.target.value;
         setFilterText(value);
         // when the component re-renders the updated filter text will create a new filteredBalance variable
     }
-
-    const currentPage = (page: number) => {
-        setPage(page);
-    };
 
     return (
         <>
@@ -76,11 +68,9 @@ const Balance = () => {
                         >
                             <List className="MiniList-balance">
                                 {balances && balances.length > 0 ? (
-                                    displayedOptions
-                                        ?.slice((page - 1) * COUNT_PER_PAGE, page * COUNT_PER_PAGE)
-                                        .map((item: MinimaToken, i) => (
-                                            <TokenListItem key={item.tokenid} item={item} nav={true}></TokenListItem>
-                                        ))
+                                    displayedOptions.map((item: MinimaToken, i) => (
+                                        <TokenListItem key={item.tokenid} item={item} nav={true}></TokenListItem>
+                                    ))
                                 ) : (
                                     <>
                                         <Skeleton
@@ -120,18 +110,6 @@ const Balance = () => {
                                 <Typography variant="caption">Token not found</Typography>
                             ) : null}
                         </CardContent>
-                        {filterText.length === 0 && balances.length ? (
-                            <CardActions
-                                className="MiniBalanceActions"
-                                sx={{ justifyContent: 'center', display: 'flex' }}
-                            >
-                                <AppPagination
-                                    currentPage={currentPage}
-                                    totalNFTs={balances.length}
-                                    countPerPage={COUNT_PER_PAGE}
-                                />
-                            </CardActions>
-                        ) : null}
                     </Card>
                 }
             />

@@ -72,18 +72,24 @@ export const insufficientFundsError = (msg: string) => {
     return false;
 };
 
-// handle parsing for tokens - handles hexToStr conversions or any other edits
-// function parseToken(t: MinimaToken): Promise<MinimaToken | string> {
-//   return new Promise((resolve, reject) => {
+export const isValidURLAll = (urlString: string) => {
+    try {
+        new URL(urlString);
+        return true;
+    } catch (err) {
+        console.error(err)
+        return false;
+    }
+};
 
-//     // Minima token - do nothing
-//     if (t.tokenid === defaultHash) {
-//       resolve(t)
-//     }
+export const isValidURLSecureOnly = (urlString: string) => {
+    try {
+        const url = new URL(urlString)
+        console.log(url)
+        return url.protocol === 'https:';
+    } catch(err) {
+        console.error(err)
+        return false;
+    }
+}
 
-//     if (typeof t.token === 'object' && t.token.hasOwnProperty('nft') && t.token.nft === 'true') {
-
-//     }
-
-//   });
-// }

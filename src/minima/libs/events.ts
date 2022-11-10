@@ -47,6 +47,11 @@ interface NewBalanceData {
   // TODO
 }
 
+interface MaximaHosts {
+  event: "MAXIMAHOSTS";
+  data: any;
+}
+
 interface MaximaResponse {
   event: 'MAXIMA';
   data: MaximaData;
@@ -89,11 +94,11 @@ const initializeMinima = () => {
   if (process.env.NODE_ENV == 'development') {
     console.log(process.env.REACTAPP_MINIDAPPID)
     MDS.DEBUG_HOST = "127.0.0.1";
-    MDS.DEBUG_PORT = 9003;
+    MDS.DEBUG_PORT = 11003;
     MDS.DEBUG_MINIDAPPID = process.env.REACT_APP_MINIDAPPID;
   }
 
-  MDS.init((nodeEvent: InitResponse | MiningResponse | NewBlockResponse | MinimaLogResponse | NewBalanceResponse | MaximaResponse | MDSTimerResponse) => {
+  MDS.init((nodeEvent: InitResponse | MiningResponse | NewBlockResponse | MinimaLogResponse | NewBalanceResponse | MaximaResponse | MDSTimerResponse | MaximaHosts) => {
 
       switch (nodeEvent.event) {
           case 'inited':
@@ -121,6 +126,8 @@ const initializeMinima = () => {
               whenMinimaLog(minimaLogeData);
               break;
           case 'MDS_TIMER_10SECONDS':
+            break;
+          case 'MAXIMAHOSTS': 
             break;
           default:
               console.error("Unknown event type: ", nodeEvent);

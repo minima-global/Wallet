@@ -1,4 +1,4 @@
-import { ListItemButton, ListItemAvatar, Avatar, ListItemText, CardMedia, Stack, Typography } from '@mui/material';
+import { ListItemButton, ListItemAvatar, Avatar, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 import MinimaIcon from '../../../assets/images/minimaLogoSquare.png';
@@ -13,6 +13,7 @@ const dataTestIds = {
 };
 
 const TokenListItem = ({ item, nav, mode }: any) => {
+    console.log('Rendering token', item);
     let navigate = useNavigate();
     const tokenName = item.token && typeof item.token === 'object' && item.token.hasOwnProperty('name')
         ? item.token.name
@@ -24,9 +25,9 @@ const TokenListItem = ({ item, nav, mode }: any) => {
     // console.log(item);
     let imageUrl = null; // populate with image if we have one, or keep null if we don't
     try {
-        if (item.token.hasOwnProperty('nft') && item.token.nft === 'true' && item.token.image) {
+        if (item.tokenid !== '0x00' && item.token.url && item.token.url.startsWith('<artimage>', 0)) {
             var parser = new DOMParser();
-            const doc = parser.parseFromString(item.token.image, 'application/xml');
+            const doc = parser.parseFromString(item.token.url, 'application/xml');
             const errorNode2 = doc.querySelector('parsererror');
             if (errorNode2) {
                 console.error('Token does not contain an image: ' + item);
@@ -48,18 +49,8 @@ const TokenListItem = ({ item, nav, mode }: any) => {
             onClick={() => (nav ? navigate(`${item.tokenid}`) : null)}
         >
             <ListItemAvatar>
-                <Avatar
-                    variant="rounded"
-                    src={item.tokenid === '0x00' ? MinimaIcon : null}
-                    alt={
-                        item.token && typeof item.token === 'object' && item.token.hasOwnProperty('name')
-                            ? item.token.name
-                            : item.token && typeof item.token === 'string'
-                            ? item.token
-                            : 'Invalid name'
-                    }
-                >
-                    {item.token.nft && imageUrl ? (
+                <Avatar variant="rounded" src={item.tokenid === '0x00' ? MinimaIcon : null}>
+                    {item.token.type && imageUrl ? (
                         <Avatar variant="rounded" src={imageUrl} />
                     ) : (
                         <img

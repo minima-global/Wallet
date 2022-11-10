@@ -3,13 +3,19 @@
  * this should help for any written minidapp to interface with the same NFT interface
  */
 
-
-interface NFT {
-  name: string;
-  description?: string;
-  external_url?: string;
-  image: string;
+type TokenType = 'NFT' | 'STANDARDTOKEN';
+ interface MiNFT extends MiCustomToken { 
+  external_url : string;
   owner: string;
-  nft: string;
-  webvalidate: string;
 }
+
+interface MiCustomToken {
+  name: string;
+  url: string;
+  description: string;
+  type: TokenType;
+  ticker?: string;
+  webvalidate?: string;
+}
+
+export {MiNFT, MiCustomToken}

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Box, Card, CardMedia, CardContent, Typography, CardActions, Stack, Button } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../../minima/redux/hooks';
 import {
@@ -41,9 +40,9 @@ const NFTCard = ({ NFT }: any) => {
 
     let imageUrl = undefined; // populate with image if we have one, or keep null if we don't
     try {
-        if (NFT && isNFT(NFT.token)) {
+        if (NFT && NFT.token.url.startsWith('<artimage>', 0)) {
             var parser = new DOMParser();
-            const doc = parser.parseFromString(NFT.token.image, 'application/xml');
+            const doc = parser.parseFromString(NFT.token.url, 'application/xml');
             const errorNode2 = doc.querySelector('parsererror');
             if (errorNode2) {
                 console.error('Token does not contain an image: ' + NFT);
@@ -57,27 +56,11 @@ const NFTCard = ({ NFT }: any) => {
         console.error('Token does not contain an image: ' + NFT);
     }
 
-    function isNFT(obj: any): obj is NFT {
-        return (
-            'name' in obj &&
-            'description' in obj &&
-            'external_url' in obj &&
-            'image' in obj &&
-            'owner' in obj &&
-            'nft' in obj &&
-            'webvalidate' in obj
-        );
-    }
-
     return (
         <Card data-testid={`${dataTestIds.card}__${tokenName}`} variant="outlined" className={styles['nft-card']}>
-            {/* <CardMedia src={hexToString(NFT.token.image)} component="img" /> */}
             {imageUrl ? (
                 <CardMedia className={styles['fix-aspect-ratio']} image={imageUrl} component="img" height="181px" />
-            ) : typeof imageUrl === 'undefined' &&
-              typeof NFT.token === 'object' &&
-              NFT.token.hasOwnProperty('url') &&
-              NFT.token.url.length > 0 ? (
+            ) : !imageUrl && typeof NFT.token === 'object' && NFT.token.url && NFT.token.url.length > 0 ? (
                 <CardMedia component="img" aria-label="NFT-url-image" src={NFT.token.url} />
             ) : (
                 <CardMedia component="img" aria-label="NFT-url-image" src={`https://robohash.org/${NFT.tokenid}`} />

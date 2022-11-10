@@ -63,7 +63,11 @@
 
 .nft-card:hover .nft-card-actions-buttons {
   display:flex!important;
+
   width:100%;
+}
+.nft-card-actions-buttons-btn, .nft-card-actions-buttons-btn-trade {
+  font-size: 0.775rem!important;
 }
 .nft-card-actions-buttons-btn:hover {
   cursor:pointer;
@@ -100,21 +104,23 @@
   cursor: pointer;
 }
 
-/** NFT FORM */
-.required {
-  color: red;
+.required-form-helper {
+  margin-bottom: 16px;
 }
+/** NFT FORM */
 .form-image-title {
   font-family: Manrope-semibold;
 }
 .form-helper-text {
   border-bottom-right-radius: 8px;
   border-bottom-left-radius: 8px;
-  color: #D63110;
-  font-weight: 700;
+  color: rgb(211, 47, 47);
   padding: 0px 8px;
   text-overflow: ellipsis;
   overflow: hidden;
+  background-color: #FCBEBD;
+  font-size: 0.8rem;
+  font-family: Manrope-semibold;
 }
 
 .form-help-caption {

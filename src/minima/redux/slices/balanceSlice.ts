@@ -3,33 +3,48 @@ import { isPropertyString, containsText, hexToString } from './../../../shared/f
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { AppThunk, RootState } from '../store';
 
-import { callBalance } from '../../rpc-commands';
+import {  getWalletBalance } from '../../rpc-commands';
 import { addTokenToFavoritesTable, removeTokenFromFavoritesTable, selectFavorites } from '../../libs/nft';
 import { MinimaToken } from '../../types/minima2';
+
+const NEWBLOCK = 'NEWBLOCK';
 
 export interface BalanceState {
     funds: MinimaToken[];
     favouriteNFT: string[];
+    updateRequired: boolean;
 }
 const initialState: BalanceState = {
     funds: [],
-    favouriteNFT: []
+    favouriteNFT: [],
+    updateRequired: false
 };
 
 export const callAndStoreBalance =
-    (ms: number): AppThunk =>
-    async (dispatch, getState) => {
+    (): AppThunk =>
+    async (dispatch) => {
         // console.log(`Calling for new balance at ${ms}`)
-        setTimeout(() => {
-            callBalance()
-                .then((data: any) => {
-                    // console.log(`New Balance Data`, data)
-                    dispatch(updateBalance(data.response));
-                })
-                .catch((err) => {
-                    console.error(err);
-                });
-        }, ms);
+        getWalletBalance()
+            .then((wallet: MinimaToken[]) => {
+             
+            const hasUnconfirmedBalance = !!wallet.find((i) => i.unconfirmed !== "0");
+            if (hasUnconfirmedBalance) {
+
+                dispatch(needsUpdating(true))
+
+            }
+            
+            if (!hasUnconfirmedBalance) {
+
+                dispatch(needsUpdating(false))
+            
+            }
+
+            dispatch(updateBalance(wallet));
+            })
+            .catch((err) => {
+                console.error(err);
+            });
 };
 export const initFavoritesTableAndUpdate =
     (): AppThunk =>
@@ -82,44 +97,23 @@ export const balanceSlice = createSlice({
         updateBalance: (state, action: PayloadAction<any>) => {
             // console.log(action);
             let balance = action.payload;
-            // balance.forEach((b: MinimaToken) => {
-            //     if (typeof b.token === 'object' && b.token.hasOwnProperty('nft') && b.token.nft === 'true') {
-            //         if (b.token.hasOwnProperty('description') && typeof b.token.description === 'string') {
-            //             b.token.description = hexToString(b.token.description);
-            //         }
-            //         if (b.token.hasOwnProperty('owner') && typeof b.token.owner === 'string') {
-            //             b.token.owner =  hexToString(b.token.owner);
-            //         }
-            //         if(b.token.hasOwnProperty('external_url') && typeof b.token.external_url === 'string') {
-            //             b.token.external_url =  hexToString(b.token.external_url);
-            //         }
-            //         if(b.token.hasOwnProperty('name') && typeof b.token.name === 'string') {
-            //             b.token.name = hexToString(b.token.name);
-            //         }
-            //     }
-
-            //     if (typeof b.token === 'object' && b.token.hasOwnProperty('ticker') && b.token.ticker.length > 0) {
-            //         b.token.ticker = hexToString(b.token.ticker);
-            //     }
-
-            //     if (typeof b.token === 'object' && !b.token.hasOwnProperty("nft") && b.token.hasOwnProperty("url") && b.token.url.length > 0) {
-            //         b.token.url = hexToString(b.token.url);
-            //     }
-                
-            //     if (typeof b.token === 'object' && !b.token.hasOwnProperty("nft") && b.token.hasOwnProperty("description") && b.token.description.length > 0) {
-            //         b.token.description = hexToString(b.token.description);
-            //     }
-            // })
+            
             state.funds = balance;
         },
         initFavoritesTable: (state, action: PayloadAction<any>) => {
             const tokenids = action.payload;
             state.favouriteNFT = tokenids;
         },
+        needsUpdating: (state, action: PayloadAction<any>) => {
+
+            state.updateRequired = action.payload;
+
+
+        }
     },
 });
 
-export const { updateBalance, initFavoritesTable } = balanceSlice.actions;
+export const { updateBalance, initFavoritesTable, needsUpdating } = balanceSlice.actions;
 export default balanceSlice.reducer;
 
 // Return balance
@@ -133,7 +127,7 @@ export const selectTokenWithID = (id: string) => (state: RootState): MinimaToken
 };
 // Return NFTs
 export const selectNFTs= (state: RootState): MinimaToken[] | undefined => {
-  return state.balance.funds.filter((b: MinimaToken) => b.token && b.token.hasOwnProperty("nft") && b.token.nft === 'true');
+  return state.balance.funds.filter((b: MinimaToken) => b.token && b.token.type && b.token.type === 'NFT');
 };
 // Return Filter NFTs
 export const selectFilterNFTs = (id: string) => (state: RootState): MinimaToken | undefined => {
@@ -155,4 +149,24 @@ export const selectBalanceFilter = (filterText: string) => (state: RootState): M
     );
 };
 
+export const selectBalanceNeedsUpdating = (state: RootState): boolean => {
+    return state.balance.updateRequired;
+}
 
+export const balanceMiddleware = (store: any) => (next: any) => (action: any) => {
+
+    
+    if (action.type === NEWBLOCK && selectBalanceNeedsUpdating(store.getState())) {
+    
+        store.dispatch(callAndStoreBalance())
+    }
+
+
+    return next(action)
+}
+
+export function onNewBlock() {
+    return {
+        type: NEWBLOCK,
+    }
+}
