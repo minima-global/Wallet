@@ -186,7 +186,7 @@ const TokenCreation: FC = () => {
             };
             buildCustomTokenCreation(cToken, formData.amount, formData.burn)
                 .then((res: any) => {
-                    console.log(res);
+                    // console.log(res);
 
                     setModalStatus('Success');
                     setOpen(true); // Show success modal

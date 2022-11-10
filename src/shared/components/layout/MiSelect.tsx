@@ -80,10 +80,13 @@ const DropDownListContainerDesktop = styled('div')`
     padding: 16px;
     border-radius: 24px;
     width: 50vw;
+    max-height: 85vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
 `;
 const BackDrop = styled('div')`
     background: rgba(0, 0, 0, 0.6);
-    height: 100vh;
+    height: 100%;
     z-index: 999;
     position: absolute;
     top: 0;
@@ -350,47 +353,3 @@ const MiSelect = (props: any) => {
 };
 
 export default MiSelect;
-
-const whatImageToDisplay = (t: MinimaToken) => {
-    // minima token
-    if (t.tokenid == '0x00') {
-        return <MinimaIcon />;
-    }
-    // custom token
-    if (t.token.hasOwnProperty('url')) {
-        return t.token.url;
-    }
-    // nft
-    if (t.token.hasOwnProperty('image')) {
-        return t.token.image;
-    }
-
-    return;
-};
-
-/**
- 
-<select
-        id={props.id}
-        name={props.name}
-        onChange={props.onChange}
-        className={styles["selectWrapper"]}
-      >
-        {props.tokens.map((t: MinimaToken) => (
-          <option value={t.tokenid}>
-            <Stack>
-              <Avatar variant="rounded">
-                {t.tokenid == "0x00" ? <MinimaIcon /> : null}
-
-                {t.tokenid !== "0x00" && t.token.hasOwnProperty() ? (
-                  <img src={t.token.url} />
-                ) : null}
-
-                {t.tokenid !== "0x00" ? <img src={t.token.url} /> : null}
-              </Avatar>
-              {typeof t.token === "string" ? t.token : t.token.name}
-            </Stack>
-          </option>
-        ))}
-      </select>
- */

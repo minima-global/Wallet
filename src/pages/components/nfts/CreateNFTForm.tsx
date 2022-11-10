@@ -211,7 +211,7 @@ const CreateNFTForm = () => {
 
             buildCustomTokenCreation(cNFT, data.amount, data.burn)
                 .then((r) => {
-                    console.log(r);
+                    // console.log(r);
 
                     setModalStatus('Success');
                     setOpen(true); // Show success modal
