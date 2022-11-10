@@ -74,7 +74,7 @@ const DropDownListContainer = styled('div')`
 
 const DropDownListContainerDesktop = styled('div')`
     position: relative;
-    background: #fff;
+    background: rgba(255, 255, 255, 0.8);
     padding: 16px;
     border-radius: 24px;
     width: 50vw;

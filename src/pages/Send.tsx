@@ -1,23 +1,10 @@
-import {
-    Button,
-    TextField,
-    Card,
-    CardContent,
-    Select,
-    Typography,
-    ListSubheader,
-    MenuItem,
-    Skeleton,
-    Stack,
-} from '@mui/material';
+import { Button, TextField, Card, CardContent, Typography, Skeleton, Stack, Select, MenuItem } from '@mui/material';
 import { FC, useState, useMemo } from 'react';
 import { callSend } from '../minima/rpc-commands';
 
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import MiniModal from '../shared/components/MiniModal';
-
-// import { BalanceUpdates } from '../App';
 import GridLayout from '../layout/GridLayout';
 
 import { insufficientFundsError } from '../shared/functions';
@@ -35,7 +22,6 @@ import CoinSplitConfirmation from './components/forms/common/CoinSplitConfirmati
 
 import styles from '../theme/cssmodule/Components.module.css';
 import Pending from './components/forms/Pending';
-import { MinimaToken } from '../minima/types/minima2';
 
 import Decimal from 'decimal.js';
 import MiSelect from '../shared/components/layout/MiSelect';
@@ -83,20 +69,23 @@ const CoinSplitterSchema = Yup.object().shape({
 
 const validationSchema = [null, TransferTokenSchema, CoinSplitterSchema];
 
+type SendFormUtility = 'VALUETRANSFER' | 'COINSPLIT';
 const Send: FC = () => {
     const dispatch = useAppDispatch();
-    const { tokenid } = useParams();
-
+    const [formUtility, setFormUtility] = useState<SendFormUtility>('VALUETRANSFER');
     const [mode, setMode] = useState(1);
-
     const [modalEmployee, setModalEmployee] = useState('');
+    const wallet = useAppSelector(selectBalance);
+
     const handleCloseModalManager = () => {
         setModalEmployee('');
     };
     const handleProceed = () => {
         setModalEmployee('confirmation');
     };
-
+    const handleUtilityChange = () => {
+        setFormUtility(formUtility === 'VALUETRANSFER' ? 'COINSPLIT' : 'VALUETRANSFER');
+    };
     // Handle Modal
     const [open, setOpen] = useState(false);
     const [modalStatus, setModalStatus] = useState('Failed');
@@ -106,17 +95,17 @@ const Send: FC = () => {
         setModalStatus('Failed');
     };
 
-    // const balances = useContext(BalanceUpdates);
-    const wallet = useAppSelector(selectBalance);
-
     // change validation according to mode set
     const dynamicValidation = useMemo(() => {
         return validationSchema[mode];
     }, [mode]);
+    // change the validation on form depending on what utility we are using
+    useMemo(() => {
+        return setMode(formUtility === 'VALUETRANSFER' ? 1 : 2);
+    }, [formUtility]);
 
     const formik = useFormik({
         initialValues: {
-            mode: 1,
             token: wallet[0],
             amount: '',
             address: '',
@@ -131,7 +120,7 @@ const Send: FC = () => {
                 amount: data.amount && data.amount.length ? data.amount : 0,
             };
 
-            if (mode === 1) {
+            if (formUtility === 'VALUETRANSFER') {
                 // do normal value transfer
                 callSend(modifyData)
                     .then((res: any) => {
@@ -183,7 +172,7 @@ const Send: FC = () => {
                         // NO MATTER WHAT
                         formik.setSubmitting(false);
                     });
-            } else if (mode === 2) {
+            } else if (formUtility === 'COINSPLIT') {
                 // const tkn = wallet.find((v) => v.tokenid === data.tokenid);
                 // TODO
                 const tkn = undefined;
@@ -248,26 +237,28 @@ const Send: FC = () => {
         validateOnChange: true,
     });
 
-    // change mode
-    useMemo(() => {
-        // console.log(`CHANGEMODE`, formik.values.mode);
-        // console.log(`LASTMODE`, mode);
-
-        return setMode(formik.values.mode);
-    }, [formik.values.mode]);
-
     return (
         <>
             <GridLayout
-                // loading={loading}
                 children={
                     <>
-                        {/* TODO - FIX SEND WHEN NO TOKEN SELECTION WITH SEARCH */}
                         <Card variant="outlined">
                             <CardContent>
                                 <form onSubmit={formik.handleSubmit}>
                                     {wallet && wallet.length > 0 ? (
                                         <Stack spacing={2}>
+                                            <Select
+                                                fullWidth
+                                                disabled={formik.isSubmitting}
+                                                id="send-select-mode"
+                                                name="mode"
+                                                value={formUtility}
+                                                onChange={handleUtilityChange}
+                                            >
+                                                <MenuItem value="VALUETRANSFER">Value Transfer</MenuItem>
+                                                <MenuItem value="COINSPLIT">Coin Split</MenuItem>
+                                            </Select>
+
                                             <MiSelect
                                                 id="token"
                                                 name="token"
@@ -283,7 +274,7 @@ const Send: FC = () => {
                                                 resetForm={formik.resetForm}
                                             />
 
-                                            {formik.values.mode === 1 ? (
+                                            {formUtility === 'VALUETRANSFER' ? (
                                                 <Stack spacing={2}>
                                                     <TextField
                                                         disabled={formik.isSubmitting}
@@ -341,7 +332,7 @@ const Send: FC = () => {
                                             ) : null}
                                             <Button
                                                 disabled={
-                                                    formik.values.mode === 1
+                                                    formUtility === 'VALUETRANSFER'
                                                         ? !(formik.isValid && formik.dirty && !formik.isSubmitting)
                                                         : formik.isSubmitting
                                                 }
@@ -397,7 +388,7 @@ const Send: FC = () => {
                             closeFn={handleCloseModalManager}
                             proceedFn={handleProceed}
                             children={
-                                mode === 1 ? (
+                                formUtility === 'VALUETRANSFER' ? (
                                     <ValueTransferConfirmation formik={formik} />
                                 ) : (
                                     <CoinSplitConfirmation formik={formik} />
