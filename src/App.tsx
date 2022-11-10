@@ -7,7 +7,7 @@ import AppNavigation from './AppNavigation';
 import Notifications from './layout/Notifications';
 
 import { useAppDispatch } from './minima/redux/hooks';
-import { callAndStoreBalance, initFavoritesTableAndUpdate } from './minima/redux/slices/balanceSlice';
+import { callAndStoreBalance, initFavoritesTableAndUpdate, onNewBlock } from './minima/redux/slices/balanceSlice';
 import { events } from './minima/libs/events';
 
 import { toggleNotification } from './minima/redux/slices/notificationSlice';
@@ -28,7 +28,12 @@ export default function App() {
             dispatch(initFavoritesTableAndUpdate());
         });
 
+        events.onNewBlock(() => {
+            dispatch(onNewBlock());
+        });
+
         events.onNewBalance(() => {
+            console.log(`new balance update..`);
             const balanceNotification = {
                 message: 'New balance update',
                 severity: 'info',
