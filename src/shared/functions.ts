@@ -1,4 +1,4 @@
-import { INSUFFICIENT, defaultHash } from './../minima/constants';
+import { INSUFFICIENT } from './../minima/constants';
 
 /** Copy to clipboard */
 export async function copyTextToClipboard(text: string) {
@@ -93,3 +93,39 @@ export const isValidURLSecureOnly = (urlString: string) => {
     }
 }
 
+export const numberWithCommas = (x: string) => {
+    try {
+      var parts = x.toString().split(".");
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      return parts.join(".");
+    } catch (err) {
+      console.error(err)
+      return x;
+  
+    }
+}
+/**
+ * 
+ * @param imageData tokens image uri
+ * @param tokenid tokens id for reference
+ */
+export const makeTokenImage = (imageData: string, tokenid: string): string | undefined => {
+    let imageUrl = undefined;
+    try {
+        var parser = new DOMParser();
+        const doc = parser.parseFromString(imageData, 'application/xml');
+        const errorNode = doc.querySelector('parsererror');
+        if (errorNode) {
+            console.error('Token does not contain an image', tokenid);
+        } else {
+            var imageString = doc.getElementsByTagName('artimage')[0].innerHTML;
+            imageUrl = `data:image/jpeg;base64,${imageString}`;
+        }
+        
+        return imageUrl;
+    } catch(err) {
+        console.error(`Failed to create image data ${tokenid}`, err);
+    }
+    
+    return undefined;
+}

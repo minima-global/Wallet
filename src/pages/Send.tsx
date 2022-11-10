@@ -38,6 +38,7 @@ import Pending from './components/forms/Pending';
 import { MinimaToken } from '../minima/types/minima2';
 
 import Decimal from 'decimal.js';
+import MiSelect from '../shared/components/layout/MiSelect';
 
 /**
  * Minima scales up to 64 decimal places
@@ -105,31 +106,18 @@ const Send: FC = () => {
         setModalStatus('Failed');
     };
 
-    function handleInputChange(event: any) {
-        const value = event.target.value;
-        setFilterText(value);
-        // when the component re-renders the updated filter text will create a new filteredBalance variable
-    }
-
-    const [filterText, setFilterText] = useState('');
-    const getFilteredBalanceList = useAppSelector(selectBalanceFilter(filterText));
-
     // const balances = useContext(BalanceUpdates);
-    const balances = useAppSelector(selectBalance);
-
-    // const displayedOptions = useMemo(() => getFilteredBalanceList(balances, filterText), [balances, filterText]);
+    const wallet = useAppSelector(selectBalance);
 
     // change validation according to mode set
     const dynamicValidation = useMemo(() => {
         return validationSchema[mode];
     }, [mode]);
 
-    // console.log('Dynamic Validation', dynamicValidation);
-
     const formik = useFormik({
         initialValues: {
             mode: 1,
-            tokenid: tokenid && tokenid.length ? tokenid : '0x00',
+            token: wallet[0],
             amount: '',
             address: '',
             burn: '',
@@ -196,66 +184,65 @@ const Send: FC = () => {
                         formik.setSubmitting(false);
                     });
             } else if (mode === 2) {
-                // console.log(`COINSPLIT`);
-                // get token to split
-                const tkn = balances.find((v) => v.tokenid === data.tokenid);
+                // const tkn = wallet.find((v) => v.tokenid === data.tokenid);
+                // TODO
+                const tkn = undefined;
+                // if (tkn !== undefined) {
+                //     // do coin split
+                //     splitCoin(tkn.tokenid, tkn.sendable, tkn.coins, modifyData.burn)
+                //         .then((res: any) => {
+                //             // console.log(res);
+                //             if (!res.status && !res.pending) {
+                //                 throw new Error(res.error ? res.error : res.message); // TODO.. consistent key value
+                //             }
+                //             // SENT
+                //             // Non-write minidapp
+                //             if (!res.status && res.pending) {
+                //                 setModalStatus('Pending');
+                //                 setOpen(true);
+                //             }
+                //             // write Minidapp
+                //             if (res.status && !res.pending) {
+                //                 // Set Modal
+                //                 setModalStatus('Success');
+                //                 // Open Modal
+                //                 setOpen(true);
+                //             }
+                //             formik.resetForm();
+                //         })
+                //         .catch((err) => {
+                //             if (err === undefined || err.message === undefined) {
+                //                 const balanceNotification = {
+                //                     message: 'New balance update',
+                //                     severity: 'info',
+                //                     type: 'info',
+                //                 };
+                //                 dispatch(
+                //                     toggleNotification(
+                //                         balanceNotification.message,
+                //                         balanceNotification.severity,
+                //                         balanceNotification.type
+                //                     )
+                //                 );
+                //             }
 
-                if (tkn) {
-                    // do coin split
-                    splitCoin(tkn.tokenid, tkn.sendable, tkn.coins, modifyData.burn)
-                        .then((res: any) => {
-                            // console.log(res);
-                            if (!res.status && !res.pending) {
-                                throw new Error(res.error ? res.error : res.message); // TODO.. consistent key value
-                            }
-                            // SENT
-                            // Non-write minidapp
-                            if (!res.status && res.pending) {
-                                setModalStatus('Pending');
-                                setOpen(true);
-                            }
-                            // write Minidapp
-                            if (res.status && !res.pending) {
-                                // Set Modal
-                                setModalStatus('Success');
-                                // Open Modal
-                                setOpen(true);
-                            }
-                            formik.resetForm();
-                        })
-                        .catch((err) => {
-                            if (err === undefined || err.message === undefined) {
-                                const balanceNotification = {
-                                    message: 'New balance update',
-                                    severity: 'info',
-                                    type: 'info',
-                                };
-                                dispatch(
-                                    toggleNotification(
-                                        balanceNotification.message,
-                                        balanceNotification.severity,
-                                        balanceNotification.type
-                                    )
-                                );
-                            }
+                //             if (insufficientFundsError(err.message)) {
+                //                 formik.setFieldError('amount', err.message);
+                //                 console.error(err.message);
+                //                 dispatch(toggleNotification(`${err.message}`, 'error', 'error'));
+                //             }
 
-                            if (insufficientFundsError(err.message)) {
-                                formik.setFieldError('amount', err.message);
-                                console.error(err.message);
-                                dispatch(toggleNotification(`${err.message}`, 'error', 'error'));
-                            }
-
-                            if (err.message !== undefined) {
-                                console.error(err.message);
-                                dispatch(toggleNotification(`${err.message}`, 'error', 'error'));
-                            }
-                            // setOpenConfirmationModal(false);
-                        });
-                } else {
-                    dispatch(
-                        toggleNotification('Token not found!  Please open a Discord support ticket', 'error', 'error')
-                    );
-                }
+                //             if (err.message !== undefined) {
+                //                 console.error(err.message);
+                //                 dispatch(toggleNotification(`${err.message}`, 'error', 'error'));
+                //             }
+                //             // setOpenConfirmationModal(false);
+                //         });
+                // } else {
+                //     dispatch(
+                //         toggleNotification('Token not found!  Please open a Discord support ticket', 'error', 'error')
+                //     );
+                // }
             }
         },
         validateOnChange: true,
@@ -279,82 +266,22 @@ const Send: FC = () => {
                         <Card variant="outlined">
                             <CardContent>
                                 <form onSubmit={formik.handleSubmit}>
-                                    {balances && balances.length > 0 ? (
+                                    {wallet && wallet.length > 0 ? (
                                         <Stack spacing={2}>
-                                            <Select
-                                                fullWidth
-                                                disabled={formik.isSubmitting}
-                                                id="send-select-mode"
-                                                name="mode"
-                                                value={formik.values.mode}
+                                            <MiSelect
+                                                id="token"
+                                                name="token"
+                                                value={formik.values.token}
                                                 onChange={formik.handleChange}
-                                            >
-                                                <MenuItem value={1}>Value Transfer</MenuItem>
-                                                <MenuItem value={2}>Coin Split</MenuItem>
-                                            </Select>
-                                            <Select
-                                                disabled={formik.isSubmitting}
-                                                MenuProps={{
-                                                    autoFocus: false,
-                                                    sx: { maxWidth: '200px' },
-                                                }}
-                                                id="tokenid"
-                                                name="tokenid"
-                                                value={formik.values.tokenid ? formik.values.tokenid : ''}
-                                                onChange={formik.handleChange}
-                                                error={formik.touched.tokenid && Boolean(formik.errors.tokenid)}
-                                                onClose={() => setFilterText('')}
-                                                fullWidth
-                                            >
-                                                <ListSubheader>
-                                                    <TextField
-                                                        autoFocus
-                                                        fullWidth
-                                                        placeholder="Search by name or tokenid"
-                                                        id="token-search"
-                                                        sx={{
-                                                            position: 'relative',
-                                                            zIndex: 2,
-                                                            padding: '0px 8px',
-                                                            margin: '8px 0px',
-                                                        }}
-                                                        value={filterText}
-                                                        onChange={handleInputChange}
-                                                        onKeyDown={(e) => {
-                                                            if (e.key !== 'Escape') {
-                                                                // Prevents autoselecting item while typing (default Select behaviour)
-                                                                e.stopPropagation();
-                                                            }
-                                                        }}
-                                                    />
-                                                </ListSubheader>
-                                                {getFilteredBalanceList.length ? (
-                                                    getFilteredBalanceList.map((token: MinimaToken) => (
-                                                        <MenuItem
-                                                            sx={{
-                                                                '&:hover': {
-                                                                    background: 'transparent',
-                                                                },
-                                                            }}
-                                                            value={token.tokenid}
-                                                            key={token.tokenid}
-                                                            disabled={token.sendable === '0'}
-                                                        >
-                                                            <TokenListItem
-                                                                value={token.tokenid}
-                                                                key={token.tokenid}
-                                                                item={token}
-                                                                nav={false}
-                                                                mode={formik.values.mode}
-                                                            />
-                                                        </MenuItem>
-                                                    ))
-                                                ) : (
-                                                    <Typography p={3} variant="caption">
-                                                        Token not found
-                                                    </Typography>
-                                                )}
-                                            </Select>
+                                                onBlur={formik.handleBlur}
+                                                fullWidth={true}
+                                                error={
+                                                    formik.touched.token && Boolean(formik.errors.token) ? true : false
+                                                }
+                                                tokens={wallet}
+                                                setFieldValue={formik.setFieldValue}
+                                                resetForm={formik.resetForm}
+                                            />
 
                                             {formik.values.mode === 1 ? (
                                                 <Stack spacing={2}>

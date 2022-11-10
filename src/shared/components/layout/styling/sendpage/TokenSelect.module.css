@@ -1,0 +1,45 @@
+.avatar {
+  width: 56px!important;
+  height: 56px!important;
+  background: #ffffff;
+  padding: 0!important;
+  margin: 0!important;
+}
+.avatar img {
+  width: inherit;
+  height: inherit;
+  padding: 0;
+  margin: 0;
+}
+.dismiss {
+  cursor: pointer;
+}
+.slideIn {
+  animation: 0.5s alternate slidein;
+}
+.slideOut {
+  animation: 0.5s ease-out slideout;
+}
+
+@keyframes slidein {
+  from {
+    height: 0;
+  }
+
+  to {
+    height: 90vh;
+  }
+}
+
+
+.cancelBtn {
+  font-family: Manrope-regular;
+  font-size: 0.875rem;
+  font-weight: 800;
+  line-height: 21px;
+  letter-spacing: 2px;
+  text-align: center;
+}
+.cancelBtn:disabled {
+  background: none;
+}

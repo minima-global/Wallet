@@ -7,26 +7,7 @@ import Ticker from './Ticker';
 import styles from '../../../theme/cssmodule/Components.module.css';
 
 const TokenListItem = ({ item, nav, mode }: any) => {
-    console.log('Rendering token', item);
     let navigate = useNavigate();
-    let imageUrl = null; // populate with image if we have one, or keep null if we don't
-    try {
-        if (item.tokenid !== '0x00' && item.token.url && item.token.url.startsWith('<artimage>', 0)) {
-            var parser = new DOMParser();
-            const doc = parser.parseFromString(item.token.url, 'application/xml');
-            const errorNode2 = doc.querySelector('parsererror');
-            if (errorNode2) {
-                console.error('Token does not contain an image: ' + item);
-            } else {
-                // console.log('parsing succeeded');
-                var imageString = doc.getElementsByTagName('artimage')[0].innerHTML;
-                imageUrl = `data:image/jpeg;base64,${imageString}`;
-            }
-        }
-    } catch (err) {
-        console.error('Token does not contain an image: ' + item);
-    }
-
     return (
         <ListItemButton
             className={styles['noWrap']}
@@ -34,7 +15,7 @@ const TokenListItem = ({ item, nav, mode }: any) => {
             onClick={() => (nav ? navigate(`${item.tokenid}`) : null)}
         >
             <ListItemAvatar>
-                <Avatar variant="rounded" src={item.tokenid === '0x00' ? MinimaIcon : null}>
+                {/* <Avatar variant="rounded" src={item.tokenid === '0x00' ? MinimaIcon : null}>
                     {item.token.type && imageUrl ? (
                         <Avatar variant="rounded" src={imageUrl} />
                     ) : (
@@ -49,7 +30,7 @@ const TokenListItem = ({ item, nav, mode }: any) => {
                             }
                         />
                     )}
-                </Avatar>
+                </Avatar> */}
             </ListItemAvatar>
             <Stack className={styles['noWrap']}>
                 <Stack className={styles['noWrap']} direction="row" alignItems="center" spacing={0.5}>
