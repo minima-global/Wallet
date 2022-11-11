@@ -1,0 +1,6 @@
+{
+  "preinstalled": false,
+  "testOnGenesis": true,
+  "enabledSecondClient": true,
+  "pathToMiniDAppBuildFolder": "/minidapp"
+}

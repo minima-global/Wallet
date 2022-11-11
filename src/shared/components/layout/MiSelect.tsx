@@ -163,6 +163,13 @@ interface IProps {
     ) => void;
     coinSplitMode: boolean;
 }
+
+const dataTestIds = {
+    container: 'MiSelect__container',
+    option: 'MiSelect__option',
+    optionDisabled: 'MiSelect__optionDisabled',
+};
+
 const MiSelect = ({ value, tokens, error, setFieldValue, resetForm, coinSplitMode = false }: IProps) => {
     const theme = useTheme();
     const [isOpen, setOpen] = React.useState(false);
@@ -198,7 +205,7 @@ const MiSelect = ({ value, tokens, error, setFieldValue, resetForm, coinSplitMod
     return (
         <>
             <DropDownContainer>
-                <DropDownHeader onClick={toggling}>
+                <DropDownHeader data-testid={dataTestIds.container} onClick={toggling}>
                     {value && (
                         <>
                             <MiTokenListItem>
@@ -280,7 +287,8 @@ const MiSelect = ({ value, tokens, error, setFieldValue, resetForm, coinSplitMod
                                                 </NoResults>
                                             ) : null}
                                             {filterWallet.map((t: MinimaToken) => (
-                                                <MiTokenListItem key={t.tokenid} onClick={() => onOptionClicked(t)}>
+                                                <MiTokenListItem key={t.tokenid} data-testid={`${dataTestIds.option}__${typeof t.token == 'string' ? t.token : t.token.name}`} onClick={() => onOptionClicked(t)}>
+                                                    {t.sendable === '0' && <span data-testid={`${dataTestIds.optionDisabled}__${typeof t.token == 'string' ? t.token : t.token.name}`} />}
                                                     <Avatar
                                                         className={styles['avatar']}
                                                         variant="rounded"
@@ -353,7 +361,8 @@ const MiSelect = ({ value, tokens, error, setFieldValue, resetForm, coinSplitMod
                                                 </NoResults>
                                             ) : null}
                                             {filterWallet.map((t: MinimaToken) => (
-                                                <MiTokenListItem key={t.tokenid} onClick={() => onOptionClicked(t)}>
+                                                <MiTokenListItem key={t.tokenid} data-testid={`${dataTestIds.option}__${typeof t.token == 'string' ? t.token : t.token.name}`} onClick={() => onOptionClicked(t)}>
+                                                    {t.sendable === '0' && <span data-testid={`${dataTestIds.optionDisabled}__${typeof t.token == 'string' ? t.token : t.token.name}`} />}
                                                     <Avatar
                                                         className={styles['avatar']}
                                                         variant="rounded"

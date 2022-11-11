@@ -3,17 +3,14 @@ import { FC, useState } from 'react';
 
 import GridLayout from '../layout/GridLayout';
 
-import { useAppDispatch } from '../minima/redux/hooks';
-
 import MiCard from '../shared/components/layout/MiCard';
 import ValueTransfer from './components/forms/ValueTransfer';
 import CoinSplit from './components/forms/CoinSplit';
 
 const dataTestIds = {
-    method: 'Send__method',
-    amount: 'Send__amount',
-    address: 'Send__address',
-    next: 'Send__next',
+    select: 'Send__select',
+    valueTransfer: 'Send__valueTransfer',
+    coinSplit: 'Send__coinSplit',
 };
 
 const Send: FC = () => {
@@ -35,10 +32,11 @@ const Send: FC = () => {
                                     id="formUtility"
                                     name="formUtility"
                                     value={formUtility}
+                                    data-testid={dataTestIds.select}
                                     onChange={handleUtilityChange}
                                 >
-                                    <MenuItem value="VALUETRANSFER">Value transfer</MenuItem>
-                                    <MenuItem value="COINSPLIT">Coin split</MenuItem>
+                                    <MenuItem data-testid={dataTestIds.valueTransfer} value="VALUETRANSFER">Value transfer</MenuItem>
+                                    <MenuItem data-testid={dataTestIds.coinSplit} value="COINSPLIT">Coin split</MenuItem>
                                 </Select>
                                 {formUtility === 'VALUETRANSFER' && <ValueTransfer />}
                                 {formUtility === 'COINSPLIT' && <CoinSplit />}

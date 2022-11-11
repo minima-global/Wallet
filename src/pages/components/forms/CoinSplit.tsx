@@ -28,6 +28,11 @@ interface ISendForm {
 interface IProps {}
 type IStatusModal = 'success' | 'error' | 'pending' | '';
 
+const dataTestIds = {
+    burn: 'CoinSplit__burn',
+    next: 'CoinSplit__next',
+};
+
 const CoinSplit = ({}: IProps) => {
     const mySchema = useFormSchema();
     const wallet = useAppSelector(selectBalance);
@@ -105,6 +110,7 @@ const CoinSplit = ({}: IProps) => {
                                 value={formik.values.burn}
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
+                                data-testid={dataTestIds.burn}
                                 error={formik.touched.burn && Boolean(formik.errors.burn)}
                                 helperText={formik.touched.burn && formik.errors.burn}
                                 FormHelperTextProps={{
@@ -131,6 +137,7 @@ const CoinSplit = ({}: IProps) => {
                         variant="contained"
                         fullWidth
                         disableElevation
+                        data-testid={dataTestIds.next}
                         disabled={formik.isSubmitting || !formik.isValid}
                     >
                         {formik.isSubmitting ? 'Please wait...' : 'Split Coin'}

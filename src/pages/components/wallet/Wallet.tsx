@@ -28,6 +28,10 @@ const Scroller = styled('div')`
     flex-grow: 1;
 `;
 
+export const dataTestIds = {
+    token: 'Wallet__token',
+};
+
 const Wallet = () => {
     const navigate = useNavigate();
     const walletTokens = useAppSelector(selectBalance);
@@ -66,35 +70,38 @@ const Wallet = () => {
                     </NoResults>
                 ) : null}
                 <MiTokenContainer>
-                    {filterWallet.map((t: MinimaToken) => (
-                        <MiTokenListItem onClick={() => navigate(t.tokenid)} key={t.tokenid}>
-                            <Avatar
-                                className={styles['avatar']}
-                                variant="rounded"
-                                src={
-                                    t.tokenid === MINIMA__TOKEN_ID
-                                        ? MinimaIcon
-                                        : t.token.url && t.token.url.length
-                                        ? t.token.url
-                                        : `https://robohash.org/${t.tokenid}`
-                                }
-                            />
-                            <Stack spacing={0.3} flexDirection="column" alignItems="flex-start">
-                                <MiTokenName>{typeof t.token == 'string' ? t.token : t.token.name}</MiTokenName>
+                    {filterWallet.map((t: MinimaToken) => {
+                        const tokenName = typeof t.token == 'string' ? t.token : typeof t.token.name == 'string' ? t.token.name : null;
+                        return (
+                            <MiTokenListItem data-testid={`${dataTestIds.token}__${tokenName}`} onClick={() => navigate(t.tokenid)} key={t.tokenid}>
+                                <Avatar
+                                    className={styles['avatar']}
+                                    variant="rounded"
+                                    src={
+                                        t.tokenid === MINIMA__TOKEN_ID
+                                            ? MinimaIcon
+                                            : t.token.url && t.token.url.length
+                                                ? t.token.url
+                                                : `https://robohash.org/${t.tokenid}`
+                                    }
+                                />
+                                <Stack spacing={0.3} flexDirection="column" alignItems="flex-start">
+                                    <MiTokenName>{typeof t.token == 'string' ? t.token : t.token.name}</MiTokenName>
 
-                                <MiTokenNameTicker>
-                                    {t.tokenid == '0x00' ? (
-                                        'MINIMA'
-                                    ) : t.token.hasOwnProperty('ticker') ? (
-                                        t.token.ticker
-                                    ) : (
-                                        <MiSkeleton />
-                                    )}
-                                </MiTokenNameTicker>
-                                <MiTokenAmount>{numberWithCommas(t.sendable)}</MiTokenAmount>
-                            </Stack>
-                        </MiTokenListItem>
-                    ))}
+                                    <MiTokenNameTicker>
+                                        {t.tokenid == '0x00' ? (
+                                            'MINIMA'
+                                        ) : t.token.hasOwnProperty('ticker') ? (
+                                            t.token.ticker
+                                        ) : (
+                                            <MiSkeleton />
+                                        )}
+                                    </MiTokenNameTicker>
+                                    <MiTokenAmount>{numberWithCommas(t.sendable)}</MiTokenAmount>
+                                </Stack>
+                            </MiTokenListItem>
+                        );
+                    })}
                 </MiTokenContainer>
             </Scroller>
         </MiCard>

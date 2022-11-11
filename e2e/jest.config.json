@@ -1,0 +1,10 @@
+{
+    "preset": "jest-puppeteer",
+    "verbose": true,
+    "setupFiles": [
+        "./setupTests.js"
+    ],
+    "moduleNameMapper": {
+        "axios": "axios/dist/node/axios.cjs"
+    }
+}

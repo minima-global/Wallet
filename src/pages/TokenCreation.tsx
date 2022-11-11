@@ -42,6 +42,7 @@ const dataTestIds = {
     description: 'TokenCreate_description',
     ticker: 'TokenCreate_ticker',
     webValidate: 'TokenCreate_webValidate',
+    burn: 'TokenCreate_burn',
     create: 'TokenCreate_create',
 };
 
@@ -287,6 +288,7 @@ const TokenCreation: FC = () => {
                                                 value={formik.values.burn}
                                                 onChange={formik.handleChange}
                                                 onBlur={formik.handleBlur}
+                                                data-testid={dataTestIds.burn}
                                                 error={formik.touched.burn && Boolean(formik.errors.burn)}
                                                 helperText={formik.touched.burn && formik.errors.burn}
                                                 FormHelperTextProps={{
@@ -315,7 +317,7 @@ const TokenCreation: FC = () => {
                                         variant="contained"
                                         fullWidth
                                         data-testid={dataTestIds.create}
-                                        onClick={() => setModalEmployee('burn')}
+                                        onClick={handleProceedButton}
                                     >
                                         {formik.isSubmitting ? 'Please wait...' : 'Next'}
                                     </Button>

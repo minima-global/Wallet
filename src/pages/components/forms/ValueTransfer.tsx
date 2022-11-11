@@ -28,6 +28,15 @@ interface ISendForm {
 }
 interface IProps {}
 type IStatusModal = 'success' | 'error' | 'pending' | '';
+
+const dataTestIds = {
+    method: 'ValueTransfer__method',
+    amount: 'ValueTransfer__amount',
+    address: 'ValueTransfer__address',
+    burn: 'ValueTransfer__burn',
+    next: 'ValueTransfer__next',
+};
+
 const ValueTransfer = ({}: IProps) => {
     const mySchema = useFormSchema();
     const wallet = useAppSelector(selectBalance);
@@ -103,6 +112,7 @@ const ValueTransfer = ({}: IProps) => {
                         name="address"
                         placeholder="minima address"
                         value={formik.values.address}
+                        data-testid={dataTestIds.address}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         error={formik.touched.address && Boolean(formik.errors.address)}
@@ -130,6 +140,7 @@ const ValueTransfer = ({}: IProps) => {
                         placeholder="amount"
                         value={formik.values.amount}
                         onChange={formik.handleChange}
+                        data-testid={dataTestIds.amount}
                         onBlur={formik.handleBlur}
                         error={formik.touched.amount && Boolean(formik.errors.amount)}
                         helperText={formik.touched.amount && formik.errors.amount}
@@ -161,6 +172,7 @@ const ValueTransfer = ({}: IProps) => {
                                 placeholder="burn fee"
                                 value={formik.values.burn}
                                 onChange={formik.handleChange}
+                                data-testid={dataTestIds.burn}
                                 onBlur={formik.handleBlur}
                                 error={formik.touched.burn && Boolean(formik.errors.burn)}
                                 helperText={formik.touched.burn && formik.errors.burn}
