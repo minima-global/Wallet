@@ -309,7 +309,6 @@ const TokenCreation: FC = () => {
                                     />
 
                                     <Button
-                                        onClick={handleProceedButton}
                                         disabled={formik.isSubmitting || !formik.isValid}
                                         disableElevation
                                         color="primary"
