@@ -1,5 +1,5 @@
 import { toggleNotification } from './notificationSlice';
-import { isPropertyString, containsText, hexToString } from './../../../shared/functions';
+import { isPropertyString, containsText, hexToString, makeTokenImage } from './../../../shared/functions';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { AppThunk, RootState } from '../store';
 
@@ -19,6 +19,8 @@ const initialState: BalanceState = {
     favouriteNFT: [],
     updateRequired: false
 };
+
+
 
 export const callAndStoreBalance =
     (): AppThunk =>
@@ -97,6 +99,15 @@ export const balanceSlice = createSlice({
         updateBalance: (state, action: PayloadAction<any>) => {
             // console.log(action);
             let balance = action.payload;
+
+            
+            balance.map((t: MinimaToken) => {
+                if (t.token.url && t.token.url.startsWith("<artimage>", 0)) {
+                    t.token.url = makeTokenImage(t.token.url, t.tokenid)
+
+                }
+                return t;
+            })
             
             state.funds = balance;
         },
@@ -118,7 +129,18 @@ export default balanceSlice.reducer;
 
 // Return balance
 export const selectBalance = (state: RootState): MinimaToken[] => {
-  return state.balance.funds;
+  // make all nfts & tokens if uploaded content into renderable uris
+  return state.balance.funds.map((t) => {
+    if (t.token.url && t.token.url.startsWith('<artimage>', 0)) {
+        console.log(makeTokenImage(t.token.url, t.tokenid))
+        //t.token.url = makeTokenImage(t.token.url, t.tokenid);
+
+
+        return t;
+    }
+
+    return t;
+  })
 };
 
 // Return token

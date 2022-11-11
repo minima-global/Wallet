@@ -56,16 +56,26 @@ const AddImage = ({ onImageChange = () => {}, formik }: IProps) => {
     };
     return (
         <>
-            {formik.values.url && selectedFile ? (
+            {formik.values.url && selectedFile && !formik.isSubmitting ? (
                 <>
                     <img src={formik.values.url} className={styles['form-image-preview-box-img']} />
-                    <ClearIcon
+                    {/* <ClearIcon
                         color="inherit"
                         className={styles['clear-icon']}
                         onClick={() => {
+                            setSelectedFile(null);
                             formik.setFieldValue('url', '');
+                            onImageChange('', null);
                         }}
-                    />
+                    /> */}
+                    <Box className={styles['info-label-image-upload']}>
+                        <Typography variant="caption">{selectedFile.name}</Typography>
+                    </Box>
+                </>
+            ) : formik.values.url && selectedFile && formik.isSubmitting ? (
+                <>
+                    <img src={formik.values.url} className={styles['form-image-preview-box-img-disabled']} />
+                    {/* <ClearIcon color="inherit" className={styles['clear-icon-disabled']} /> */}
                     <Box className={styles['info-label-image-upload']}>
                         <Typography variant="caption">{selectedFile.name}</Typography>
                     </Box>
@@ -77,9 +87,11 @@ const AddImage = ({ onImageChange = () => {}, formik }: IProps) => {
                 </Stack>
             )}
             <input
+                disabled={formik.isSubmitting}
                 id="url"
                 name="url"
                 type="file"
+                key={formik.values.url}
                 hidden
                 accept="image/*"
                 data-testid={dataTestIds.inputImage}

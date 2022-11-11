@@ -2,8 +2,14 @@ import { MinimaToken } from "./types/minima2";
 
 export {callSend, callGetAddress, callStatus, createCustomToken, getWalletBalance, callTokenValidate};
 
-const callSend = (data: any) => {
-    return req(`send amount:${data.amount} address:${data.address} tokenid:${data.tokenid} burn:${data.burn}`);
+interface ISendPayload {
+    token: MinimaToken;
+    amount: string;
+    address: string;
+    burn?: string;
+}
+const callSend = (data: ISendPayload) => {
+    return rpc(`send amount:${data.amount} address:${data.address} tokenid:${data.token.tokenid} burn:${data.burn}`);
 }
  const callGetAddress = () => {
     return req(`getaddress`);
@@ -53,7 +59,7 @@ export const req = (command: string): Promise<any> => {
 
 /** Rpc cmd v2 */
 
-const rpc = (command: string): Promise<any> => {
+export const rpc = (command: string): Promise<any> => {
     return new Promise((resolve, reject) => {
         MDS.cmd(command, (resp: any) => {
             
@@ -86,7 +92,7 @@ const rpc = (command: string): Promise<any> => {
     
             if (!resp.status && resp.pending) {
     
-                reject(resp.error); 
+                reject("pending"); 
     
             }
     

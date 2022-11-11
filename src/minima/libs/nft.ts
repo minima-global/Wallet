@@ -12,7 +12,7 @@ export {buildCustomTokenCreation, createFavoritesTable, selectFavorites, addToke
 const buildCustomTokenCreation = async (tokenData: MiNFT | MiCustomToken, amount: string, burn?: string) => {
   // if this is a data uri then compress it..
   if (tokenData.url.startsWith('data:image/', 0)) {
-    console.log('it does start with data:image/');
+    // console.log('it does start with data:image/');
     const compressedImage = await getSuitableImage(tokenData.url);
     const pureCompressedImage = compressedImage.slice(compressedImage.indexOf(",") + 1);
     var xmlString = '<artimage></artimage>'

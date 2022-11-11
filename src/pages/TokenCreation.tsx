@@ -1,10 +1,10 @@
-import { FC, useState, useEffect } from 'react';
-import { Card, CardContent, TextField, Button, Skeleton, Stack, Typography, Tooltip } from '@mui/material';
+import { FC, useState } from 'react';
+import { Card, CardContent, TextField, Button, Stack, Typography } from '@mui/material';
 import MiniModal from '../shared/components/MiniModal';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { callStatus } from '../minima/rpc-commands';
-import { insufficientFundsError, isValidURLAll, isValidURLSecureOnly } from '../shared/functions';
+
+import { isValidURLAll, isValidURLSecureOnly } from '../shared/functions';
 
 import GridLayout from '../layout/GridLayout';
 
@@ -33,91 +33,7 @@ import React from 'react';
 Decimal.set({ precision: 64 });
 Decimal.set({ toExpNeg: -36 });
 
-const CreateTokenSchema = Yup.object().shape({
-    funds: Yup.object().test('check-my-funds', 'Insufficient funds.', function (val: any) {
-        const { createError } = this;
-
-        if (val == undefined) {
-            return false;
-        }
-
-        if (val.sendable !== undefined && new Decimal(val.sendable).equals(new Decimal(0))) {
-            return createError({
-                path: 'amount',
-                message: `Insufficient funds, you require more Minima to create this token.`,
-            });
-        }
-
-        return true;
-    }),
-    name: Yup.string()
-        .required('This field is required')
-        .matches(/^[^\\;]+$/, 'Invalid characters.'),
-    amount: Yup.string()
-        .required('This field is required')
-        .matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters.')
-        .test('check-my-amount', 'Invalid amount', function (val) {
-            const { path, createError, parent } = this;
-            if (val == undefined) {
-                return false;
-            }
-
-            if (new Decimal(val).lessThan(new Decimal(1))) {
-                return createError({
-                    path,
-                    message: `Invalid amount, must be 1 or greater`,
-                });
-            }
-
-            return true;
-        }),
-    description: Yup.string()
-        .min(0)
-        .max(255, 'Maximum 255 characters allowed.')
-        .matches(/^[^\\;]+$/, 'Invalid characters.'),
-    ticker: Yup.string()
-        .min(0)
-        .max(5, 'Maximum 5 characters allowed.')
-        .matches(/^[^\\;]+$/, 'Invalid characters.'),
-    burn: Yup.string().matches(/^[^a-zA-Z\\;"]+$/, 'Invalid characters.'),
-    url: Yup.string()
-        .trim()
-        .required('This field is required.')
-        .test('check-my-url', 'Invalid Url.', function (val) {
-            const { path, createError, parent } = this;
-
-            if (val == undefined) {
-                return false;
-            }
-
-            if (parent.url.substring(0, 'data:image'.length) === 'data:image') {
-                return true;
-            }
-
-            if (!isValidURLAll(parent.url)) {
-                return createError({
-                    path,
-                    message: `Invalid URL`,
-                });
-            }
-            return true;
-        }),
-    webvalidate: Yup.string().test('check-my-webvalidator', 'Invalid Url, must be https', function (val) {
-        const { path, createError, parent } = this;
-
-        if (val == undefined) {
-            return true;
-        }
-
-        if (!isValidURLSecureOnly(parent.webvalidate)) {
-            return createError({
-                path,
-                message: `Invalid URL, must be https`,
-            });
-        }
-        return true;
-    }),
-});
+type IStatusModal = 'success' | 'error' | 'pending' | '';
 
 const dataTestIds = {
     name: 'TokenCreate_name',
@@ -130,24 +46,32 @@ const dataTestIds = {
 };
 
 const TokenCreation: FC = () => {
+    const mySchema = useMySchema();
     const wallet = useAppSelector(selectBalance);
-    const dispatch = useAppDispatch();
-    const [modalEmployee, setModalEmployee] = useState('');
-    const handleCloseModalEmployee = () => {
+    const [modalEmployee, setModalEmployee] = React.useState('');
+    const [statusModal, setStatusModal] = React.useState<IStatusModal>('');
+    const handleSuccessState = () => {
+        setStatusModal('success');
+        handleCloseModalManager();
+        formik.resetForm();
+    };
+    const handleErrorState = () => {
+        setStatusModal('error');
+        handleCloseModalManager();
+        formik.setSubmitting(false);
+    };
+    const handlePendingState = () => {
+        setStatusModal('pending');
+        handleCloseModalManager();
+        formik.resetForm();
+    };
+    const handleCloseModalManager = () => {
         setModalEmployee('');
     };
-    const handleProceed = () => {
+    const handleProceedButton = () => {
         setModalEmployee('confirmation');
     };
-
-    const [open, setOpen] = useState(false);
-    const [modalStatus, setModalStatus] = useState('Failed');
-
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => {
-        setOpen(false);
-        setModalStatus('Failed');
-    };
+    const handleCloseStatusModal = () => setStatusModal('');
 
     React.useEffect(() => {
         formik.setFieldValue('funds', wallet[0]);
@@ -164,7 +88,7 @@ const TokenCreation: FC = () => {
             webvalidate: '',
             ticker: '',
         },
-        validationSchema: CreateTokenSchema,
+        validationSchema: mySchema,
         onSubmit: (formData) => {
             setModalEmployee('');
 
@@ -178,20 +102,16 @@ const TokenCreation: FC = () => {
             };
             buildCustomTokenCreation(cToken, formData.amount, formData.burn)
                 .then((res: any) => {
-                    console.log(res);
-
-                    setModalStatus('Success');
-                    setOpen(true); // Show success modal
-                    formik.resetForm();
+                    // console.log(res);
+                    handleSuccessState();
                 })
                 .catch((err: any) => {
-                    console.log(err);
-                    dispatch(toggleNotification(`err`, 'error', 'error'));
+                    if (err === 'pending') {
+                        return handlePendingState();
+                    }
 
-                    // if (insufficientFundsError(err.message)) {
-                    //     formik.setFieldError('amount', err.message);
-                    //     dispatch(toggleNotification(err.message, 'error', 'error'));
-                    // }
+                    console.error(err);
+                    handleErrorState();
                 });
         },
     });
@@ -204,7 +124,7 @@ const TokenCreation: FC = () => {
                             <form onSubmit={formik.handleSubmit}>
                                 <Stack spacing={2}>
                                     <FormFieldWrapper
-                                        help=""
+                                        help="Your current Minima balance:"
                                         children={<MiFunds formik={formik} funds={formik.values.funds} />}
                                     />
                                     {/* Asterisk required  */}
@@ -354,9 +274,43 @@ const TokenCreation: FC = () => {
                                             />
                                         }
                                     />
+                                    {/* Choose a burn amount */}
+                                    <FormFieldWrapper
+                                        help="Prioritize your transaction by adding a burn. Burn amounts are denominated in Minima only."
+                                        children={
+                                            <TextField
+                                                disabled={formik.isSubmitting}
+                                                fullWidth
+                                                id="burn"
+                                                name="burn"
+                                                placeholder="burn fee"
+                                                value={formik.values.burn}
+                                                onChange={formik.handleChange}
+                                                onBlur={formik.handleBlur}
+                                                error={formik.touched.burn && Boolean(formik.errors.burn)}
+                                                helperText={formik.touched.burn && formik.errors.burn}
+                                                FormHelperTextProps={{
+                                                    className: styles['form-helper-text'],
+                                                }}
+                                                InputProps={{
+                                                    style:
+                                                        formik.touched.burn && Boolean(formik.errors.burn)
+                                                            ? {
+                                                                  borderBottomLeftRadius: 0,
+                                                                  borderBottomRightRadius: 0,
+                                                              }
+                                                            : {
+                                                                  borderBottomLeftRadius: 8,
+                                                                  borderBottomRightRadius: 8,
+                                                              },
+                                                }}
+                                            />
+                                        }
+                                    />
 
                                     <Button
-                                        disabled={!(formik.isValid && formik.dirty && !formik.isSubmitting)}
+                                        onClick={handleProceedButton}
+                                        disabled={formik.isSubmitting || !formik.isValid}
                                         disableElevation
                                         color="primary"
                                         variant="contained"
@@ -372,26 +326,23 @@ const TokenCreation: FC = () => {
                     </Card>
 
                     <ModalManager
-                        proceedFn={handleProceed} // move onto confirmation
-                        children={<TokenConfirmation formik={formik}></TokenConfirmation>}
-                        modal={modalEmployee}
-                        title="Confirmation"
                         formik={formik}
-                        closeFn={handleCloseModalEmployee}
+                        modal={modalEmployee}
+                        closeFn={handleCloseModalManager}
+                        children={<TokenConfirmation formik={formik} />}
                     />
 
                     <MiniModal
-                        open={open}
-                        handleClose={handleClose}
-                        handleOpen={handleOpen}
+                        open={statusModal.length > 0 ? true : false}
+                        handleClose={handleCloseStatusModal}
                         header={
-                            modalStatus === 'Success' ? 'Success!' : modalStatus === 'Pending' ? 'Pending' : 'Failed!'
+                            statusModal === 'success' ? 'Success!' : statusModal === 'pending' ? 'Pending' : 'Failed!'
                         }
                         status="Transaction Status"
                         subtitle={
-                            modalStatus === 'Success' ? (
+                            statusModal === 'success' ? (
                                 'Your transaction will be received shortly'
-                            ) : modalStatus === 'Pending' ? (
+                            ) : statusModal === 'pending' ? (
                                 <Pending />
                             ) : (
                                 'Please try again later.'
@@ -405,3 +356,111 @@ const TokenCreation: FC = () => {
 };
 
 export default TokenCreation;
+
+const useMySchema = () => {
+    const wallet = useAppSelector(selectBalance);
+    return Yup.object().shape({
+        funds: Yup.object().test('check-my-funds', 'Insufficient funds.', function (val: any) {
+            const { createError } = this;
+
+            if (val == undefined) {
+                return false;
+            }
+
+            if (val.sendable !== undefined && new Decimal(val.sendable).equals(new Decimal(0))) {
+                return createError({
+                    path: 'amount',
+                    message: `Insufficient funds, you require more Minima to create this token.`,
+                });
+            }
+
+            return true;
+        }),
+        name: Yup.string()
+            .required('This field is required')
+            .matches(/^[^\\;]+$/, 'Invalid characters.'),
+        amount: Yup.string()
+            .required('This field is required')
+            .matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters.')
+            .test('check-my-amount', 'Invalid amount', function (val) {
+                const { path, createError, parent } = this;
+                if (val == undefined) {
+                    return false;
+                }
+
+                if (new Decimal(val).lessThan(new Decimal(1))) {
+                    return createError({
+                        path,
+                        message: `Invalid amount, must be 1 or greater`,
+                    });
+                }
+
+                return true;
+            }),
+        description: Yup.string()
+            .min(0)
+            .max(255, 'Maximum 255 characters allowed.')
+            .matches(/^[^\\;]+$/, 'Invalid characters.'),
+        ticker: Yup.string()
+            .min(0)
+            .max(5, 'Maximum 5 characters allowed.')
+            .matches(/^[^\\;]+$/, 'Invalid characters.'),
+        burn: Yup.string()
+            .matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters.')
+            .test('check-my-burnamount', 'Invalid burn amount', function (val) {
+                const { path, createError, parent } = this;
+                if (val === undefined) {
+                    return true;
+                }
+                const burn = new Decimal(val);
+
+                if (burn.greaterThan(wallet[0].sendable)) {
+                    return createError({
+                        path,
+                        message: `Oops, not enough funds available to burn.  You require another ${burn
+                            .minus(wallet[0].sendable)
+                            .toNumber()} Minima`,
+                    });
+                }
+
+                return true;
+            }),
+        url: Yup.string()
+            .trim()
+            .required('This field is required.')
+            .test('check-my-url', 'Invalid Url.', function (val) {
+                const { path, createError, parent } = this;
+
+                if (val == undefined) {
+                    return false;
+                }
+
+                if (parent.url.substring(0, 'data:image'.length) === 'data:image') {
+                    return true;
+                }
+
+                if (!isValidURLAll(parent.url)) {
+                    return createError({
+                        path,
+                        message: `Invalid URL`,
+                    });
+                }
+                return true;
+            }),
+        webvalidate: Yup.string().test('check-my-webvalidator', 'Invalid Url, must be https', function (val) {
+            const { path, createError, parent } = this;
+
+            if (val == undefined) {
+                return true;
+            }
+
+            if (!isValidURLSecureOnly(parent.webvalidate)) {
+                return createError({
+                    path,
+                    message: `Invalid URL, must be https`,
+                });
+            }
+            return true;
+        }),
+    });
+};

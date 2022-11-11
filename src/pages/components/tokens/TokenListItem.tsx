@@ -13,7 +13,6 @@ const dataTestIds = {
 };
 
 const TokenListItem = ({ item, nav, mode }: any) => {
-    console.log('Rendering token', item);
     let navigate = useNavigate();
     const tokenName = item.token && typeof item.token === 'object' && item.token.hasOwnProperty('name')
         ? item.token.name
@@ -49,7 +48,7 @@ const TokenListItem = ({ item, nav, mode }: any) => {
             onClick={() => (nav ? navigate(`${item.tokenid}`) : null)}
         >
             <ListItemAvatar>
-                <Avatar variant="rounded" src={item.tokenid === '0x00' ? MinimaIcon : null}>
+                {/* <Avatar variant="rounded" src={item.tokenid === '0x00' ? MinimaIcon : null}>
                     {item.token.type && imageUrl ? (
                         <Avatar variant="rounded" src={imageUrl} />
                     ) : (
@@ -64,7 +63,7 @@ const TokenListItem = ({ item, nav, mode }: any) => {
                             }
                         />
                     )}
-                </Avatar>
+                </Avatar> */}
             </ListItemAvatar>
             <Stack className={styles['noWrap']}>
                 <Stack className={styles['noWrap']} direction="row" alignItems="center" spacing={0.5}>

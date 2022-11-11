@@ -38,30 +38,15 @@ const NFTCard = ({ NFT }: any) => {
             ? listOfFavourites.findIndex((t: MinimaToken) => t.tokenid === NFT.tokenid)
             : -1;
 
-    let imageUrl = undefined; // populate with image if we have one, or keep null if we don't
-    try {
-        if (NFT && NFT.token.url.startsWith('<artimage>', 0)) {
-            var parser = new DOMParser();
-            const doc = parser.parseFromString(NFT.token.url, 'application/xml');
-            const errorNode2 = doc.querySelector('parsererror');
-            if (errorNode2) {
-                console.error('Token does not contain an image: ' + NFT);
-            } else {
-                // console.log('parsing succeeded');
-                var imageString = doc.getElementsByTagName('artimage')[0].innerHTML;
-                imageUrl = `data:image/jpeg;base64,${imageString}`;
-            }
-        }
-    } catch (err) {
-        console.error('Token does not contain an image: ' + NFT);
-    }
-
     return (
         <Card data-testid={`${dataTestIds.card}__${tokenName}`} variant="outlined" className={styles['nft-card']}>
-            {imageUrl ? (
-                <CardMedia className={styles['fix-aspect-ratio']} image={imageUrl} component="img" height="181px" />
-            ) : !imageUrl && typeof NFT.token === 'object' && NFT.token.url && NFT.token.url.length > 0 ? (
-                <CardMedia component="img" aria-label="NFT-url-image" src={NFT.token.url} />
+            {NFT.token.url && NFT.token.url.length ? (
+                <CardMedia
+                    className={styles['fix-aspect-ratio']}
+                    image={NFT.token.url}
+                    component="img"
+                    height="181px"
+                />
             ) : (
                 <CardMedia component="img" aria-label="NFT-url-image" src={`https://robohash.org/${NFT.tokenid}`} />
             )}

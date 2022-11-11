@@ -11,16 +11,9 @@ const dataTestIds = {
     next: 'Confirmation_next',
 };
 
-const Confirmation = ({ children, closeFn, open, formik, modalTitle }: any) => {
+const Confirmation = ({ title, children, closeFn, open, formik, modalTitle }: any) => {
     return (
-        <Modal
-            open={open}
-            onClose={closeFn}
-            aria-labelledby="burn-modal-title"
-            aria-describedby="burn-modal-description"
-            onBackdropClick={closeFn}
-            className={styles['burn-modal-wrapper']}
-        >
+        <Modal open={open} onClose={closeFn} onBackdropClick={closeFn} className={styles['burn-modal-wrapper']}>
             <Box className={styles['burn-modal']}>
                 <Box component="div">
                     <Toolbar sx={{ pl: '16px!important' }} variant="dense" className={styles['burn-modal-hdr']}>
@@ -36,18 +29,7 @@ const Confirmation = ({ children, closeFn, open, formik, modalTitle }: any) => {
                 <ModalButtonWrapper
                     children={
                         <>
-                            <Button
-                                disabled={formik.isSubmitting}
-                                variant="outlined"
-                                color="inherit"
-                                onClick={() => {
-                                    closeFn();
-                                    // Only reset burn if its invalid, so it doesn't mess with UX
-                                    if (!formik.isValid) {
-                                        formik.setValues({ ...formik.values, burn: '' });
-                                    }
-                                }}
-                            >
+                            <Button disabled={formik.isSubmitting} variant="outlined" color="inherit" onClick={closeFn}>
                                 Cancel
                             </Button>
                             <Button

@@ -8,13 +8,7 @@ import styles from '../../theme/cssmodule/Components.module.css';
 
 const MiniModal: FC<MiniModalProp> = ({ open, handleClose, executeName, customFnc, status, header, subtitle }: any) => {
     return (
-        <Modal
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-            className={styles['success-error-modal-wrapper']}
-        >
+        <Modal open={open} onClose={handleClose} className={styles['success-error-modal-wrapper']}>
             <Stack spacing={2} className={styles['success-error-modal']} justifyContent="space-between">
                 <Box component="div" className={styles['success-error-modal-hdr']}>
                     <Typography sx={statusCss} id="modal-modal-title" variant="h6" component="h2">

@@ -1,0 +1,32 @@
+header {
+  height: 48px;
+  padding: 0px 50.5px;
+  padding-right: 20.5px;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+}
+
+.font {
+  font-family: Manrope-regular;
+  font-size: 18px;
+  font-weight: 700!important;
+  line-height: 27px;
+  letter-spacing: 0.02em;
+  text-align: left;
+}
+
+.content {
+  width: 100%;
+}
+
+.actions div {
+  display: flex;
+  align-items: center;
+  
+  margin-right: 33px;
+}
+.actions span {
+  display: flex;
+  align-items: center;
+}

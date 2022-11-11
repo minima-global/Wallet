@@ -92,7 +92,7 @@ let whenMinimaLog = (d: MinimaLogData) => {
 
 const initializeMinima = () => {
   if (process.env.NODE_ENV == 'development') {
-    console.log(process.env.REACTAPP_MINIDAPPID)
+    // console.log(process.env.REACTAPP_MINIDAPPID)
     MDS.DEBUG_HOST = "127.0.0.1";
     MDS.DEBUG_PORT = 11003;
     MDS.DEBUG_MINIDAPPID = process.env.REACT_APP_MINIDAPPID;

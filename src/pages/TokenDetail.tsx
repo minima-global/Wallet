@@ -54,25 +54,6 @@ const TokenDetail = () => {
     // set loading to true if undefined..
     const loading = typeof token === 'undefined';
 
-    // Is this a NFT?
-    let imageUrl = undefined; // populate with image if we have one, or keep null if we don't
-    if (token && token.tokenid !== '0x00' && (isNFT(token.token) || isToken(token.token))) {
-        try {
-            var parser = new DOMParser();
-            const doc = parser.parseFromString(token.token.url, 'application/xml');
-            const errorNode2 = doc.querySelector('parsererror');
-            if (errorNode2) {
-                console.error('Token does not contain an image: ' + token);
-            } else {
-                // console.log('parsing succeeded');
-                var imageString = doc.getElementsByTagName('artimage')[0].innerHTML;
-                imageUrl = `data:image/jpeg;base64,${imageString}`;
-            }
-        } catch (err) {
-            console.error('Token does not contain an image: ' + token);
-        }
-    }
-
     return (
         <>
             <GridLayout
@@ -92,8 +73,8 @@ const TokenDetail = () => {
                                                     <MinimaSquareIcon className="minima-icon" />
                                                 ) : token.tokenid !== '0x00' &&
                                                   (isNFT(token.token) || isToken(token.token)) &&
-                                                  imageUrl ? (
-                                                    <Avatar variant="rounded" src={imageUrl} />
+                                                  token.token.url ? (
+                                                    <Avatar variant="rounded" src={token.token.url} />
                                                 ) : token.tokenid !== '0x00' &&
                                                   (isToken(token.token) || isNFT(token.token)) ? (
                                                     <Avatar
@@ -170,9 +151,7 @@ const TokenDetail = () => {
                                                     src={
                                                         token.tokenid === '0x00'
                                                             ? MinimaIcon
-                                                            : imageUrl
-                                                            ? imageUrl
-                                                            : token.token.url
+                                                            : token.token.url && token.token.url.length > 0
                                                             ? token.token.url
                                                             : `https://robohash.org/${token?.tokenid}`
                                                     }
