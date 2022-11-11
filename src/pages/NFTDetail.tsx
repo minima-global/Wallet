@@ -7,40 +7,23 @@ import CustomListItem from '../shared/components/CustomListItem';
 
 import styles from '../theme/cssmodule/Components.module.css';
 import NFTAuthenticity from './components/tokens/NFTAuthenticity';
-import { CustomTokenJson, MinimaToken } from '../minima/types/minima2';
+import { MinimaToken } from '../minima/types/minima2';
+import { MiNFT } from '../minima/types/nft';
 
 const NFTDetail = () => {
     const { tokenid } = useParams();
     const navigate = useNavigate();
     const NFTs = useAppSelector(selectNFTs);
     const NFT = NFTs ? NFTs.find((n: MinimaToken) => n.tokenid === tokenid) : undefined;
-    // console.log(NFT);
-    let imageUrl = undefined; // populate with image if we have one, or keep null if we don't
-    try {
-        var parser = new DOMParser();
-        if (NFT && isNFT(NFT.token)) {
-            const doc = parser.parseFromString(NFT.token.image, 'application/xml');
-            const errorNode2 = doc.querySelector('parsererror');
-            if (errorNode2) {
-                console.error('Token does not contain an image: ' + NFT);
-            } else {
-                // console.log('parsing succeeded');
-                var imageString = doc.getElementsByTagName('artimage')[0].innerHTML;
-                imageUrl = `data:image/jpeg;base64,${imageString}`;
-            }
-        }
-    } catch (err) {
-        console.error('Token does not contain an image: ' + NFT);
-    }
 
-    function isNFT(obj: any): obj is NFT {
+    function isNFT(obj: any): obj is MiNFT {
         return (
             'name' in obj &&
             'description' in obj &&
             'external_url' in obj &&
-            'image' in obj &&
+            'url' in obj &&
             'owner' in obj &&
-            'nft' in obj &&
+            'type' in obj &&
             'webvalidate' in obj
         );
     }
@@ -52,8 +35,8 @@ const NFTDetail = () => {
                     {tokenid && NFT ? (
                         isNFT(NFT.token) ? (
                             <Card>
-                                {imageUrl ? (
-                                    <CardMedia image={imageUrl} component="img" height="auto" />
+                                {NFT.token.url ? (
+                                    <CardMedia image={NFT.token.url} component="img" height="auto" />
                                 ) : (
                                     <CardMedia
                                         component="img"
@@ -76,7 +59,9 @@ const NFTDetail = () => {
                                                 : 'Created by anonymous'}
                                         </Typography>
                                         <Typography mt={3} variant="body2" className={styles['nft-description']}>
-                                            {NFT.token.owner.length > 0 && NFT.token.description.length > 0
+                                            {NFT.token.owner.length > 0 &&
+                                            NFT.token.description &&
+                                            NFT.token.description.length > 0
                                                 ? NFT.token.description
                                                 : 'No description available.'}
                                         </Typography>
@@ -89,7 +74,7 @@ const NFTDetail = () => {
                                         <CustomListItem
                                             title="Web Validation"
                                             value={
-                                                NFT.token.webvalidate.length > 0
+                                                NFT.token && NFT.token.webvalidate && NFT.token.webvalidate.length > 0
                                                     ? NFT.token.webvalidate
                                                     : 'No web validation available.'
                                             }
@@ -118,6 +103,7 @@ const NFTDetail = () => {
                                         variant="contained"
                                         onClick={() => navigate(`/send/${NFT.tokenid}`, { replace: true })}
                                         fullWidth
+                                        sx={{ fontSize: '0.9rem' }}
                                     >
                                         Transfer
                                     </Button>

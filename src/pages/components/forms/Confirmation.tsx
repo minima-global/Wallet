@@ -3,20 +3,13 @@
  * Confirmation screen for all transaction forms
  *
  */
-import { Modal, Box, Chip, Typography, Stack, TextField, Button, Toolbar } from '@mui/material';
-import { ModalStackedCol, ModalStackedRow, ModalButtonWrapper } from '../../../shared/components/modals/ModalWrappers';
+import { Modal, Box, Typography, Stack, Button, Toolbar } from '@mui/material';
+import { ModalButtonWrapper } from '../../../shared/components/modals/ModalWrappers';
 import styles from '../../../theme/cssmodule/Components.module.css';
 
 const Confirmation = ({ title, children, closeFn, open, formik, modalTitle }: any) => {
     return (
-        <Modal
-            open={open}
-            onClose={closeFn}
-            aria-labelledby="burn-modal-title"
-            aria-describedby="burn-modal-description"
-            onBackdropClick={closeFn}
-            className={styles['burn-modal-wrapper']}
-        >
+        <Modal open={open} onClose={closeFn} onBackdropClick={closeFn} className={styles['burn-modal-wrapper']}>
             <Box className={styles['burn-modal']}>
                 <Box component="div">
                     <Toolbar sx={{ pl: '16px!important' }} variant="dense" className={styles['burn-modal-hdr']}>
@@ -32,18 +25,7 @@ const Confirmation = ({ title, children, closeFn, open, formik, modalTitle }: an
                 <ModalButtonWrapper
                     children={
                         <>
-                            <Button
-                                disabled={formik.isSubmitting}
-                                variant="outlined"
-                                color="inherit"
-                                onClick={() => {
-                                    closeFn();
-                                    // Only reset burn if its invalid, so it doesn't mess with UX
-                                    if (!formik.isValid) {
-                                        formik.setValues({ ...formik.values, burn: '' });
-                                    }
-                                }}
-                            >
+                            <Button disabled={formik.isSubmitting} variant="outlined" color="inherit" onClick={closeFn}>
                                 Cancel
                             </Button>
                             <Button

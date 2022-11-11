@@ -1,6 +1,6 @@
 {
     "name": "wallet",
-    "version": "1.100",
+    "version": "1.13.5",
     "private": true,
     "scripts": {
         "start": "env-cmd -f .env.development react-scripts start",
@@ -12,7 +12,7 @@
         "build-zip": "npm run build && rm minidapp/wallet_* && cd build && zip -r wallet_$npm_package_version.mds.zip . && mv wallet_$npm_package_version.mds.zip ../minidapp/"
     },
     "homepage": ".",
-    "proxy": "http://localhost:9002",
+    "proxy": "http://localhost:11005",
     "eslintConfig": {
         "extends": [
             "react-app",
@@ -33,11 +33,13 @@
         "@types/node": "^16.11.21",
         "@types/react": "^17.0.38",
         "@types/react-dom": "^17.0.11",
+        "decimal.js": "^10.4.2",
         "env-cmd": "^10.1.0",
         "formik": "^2.2.9",
         "html5-qrcode": "^2.1.6",
         "http-proxy-middleware": "^2.0.2",
         "notistack": "^2.0.3",
+        "prettier": "^2.7.1",
         "react": "^17.0.2",
         "react-device-detect": "^2.2.2",
         "react-dom": "^17.0.2",

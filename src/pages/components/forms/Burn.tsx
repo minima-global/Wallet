@@ -6,8 +6,8 @@
  *
  */
 
-import { Modal, Box, Chip, Typography, Stack, TextField, Button, Toolbar } from '@mui/material';
-import { ModalStackedCol, ModalStackedRow, ModalButtonWrapper } from '../../../shared/components/modals/ModalWrappers';
+import { Modal, Box, Typography, Stack, TextField, Button, Toolbar } from '@mui/material';
+import { ModalStackedCol, ModalButtonWrapper } from '../../../shared/components/modals/ModalWrappers';
 import styles from '../../../theme/cssmodule/Components.module.css';
 
 const Burn = ({ open, closeFn, formik, proceedFn }: any) => {
@@ -37,7 +37,8 @@ const Burn = ({ open, closeFn, formik, proceedFn }: any) => {
                                         name="burn"
                                         value={formik.values.burn}
                                         onChange={formik.handleChange}
-                                        placeholder="0.0"
+                                        onBlur={formik.handleBlur}
+                                        placeholder="burn amount"
                                         error={formik.touched.burn && Boolean(formik.errors.burn)}
                                         helperText={formik.touched.burn && formik.errors.burn}
                                         FormHelperTextProps={{
@@ -57,8 +58,8 @@ const Burn = ({ open, closeFn, formik, proceedFn }: any) => {
                         <ModalStackedCol
                             children={
                                 <Typography variant="caption" sx={{ opacity: 0.8 }}>
-                                    Prioritize your transaction by adding a burn. Burn amounts are denominated in Minima
-                                    only.
+                                    Prioritize your transaction by adding a burn. Burn amounts are denominated in{' '}
+                                    <b>Minima</b> only.
                                 </Typography>
                             }
                         />
@@ -74,17 +75,16 @@ const Burn = ({ open, closeFn, formik, proceedFn }: any) => {
                                 onClick={() => {
                                     closeFn();
                                     // Only reset burn if its invalid, so it doesn't mess with UX
-                                    if (!formik.isValid) {
-                                        formik.setValues({ ...formik.values, burn: 0 });
-                                    }
+                                    formik.setFieldValue('burn', '');
                                 }}
                             >
                                 Cancel
                             </Button>
                             <Button
+                                disabled={!formik.isValid}
                                 variant="contained"
                                 disableElevation
-                                color={formik.values.burn.length == 0 ? 'success' : 'info'}
+                                color={formik.values.burn.length === 0 ? 'success' : 'info'}
                                 className={styles['burn-skip-btn']}
                                 onClick={() => proceedFn()}
                             >

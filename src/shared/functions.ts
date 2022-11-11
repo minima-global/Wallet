@@ -1,4 +1,4 @@
-import { INSUFFICIENT, defaultHash } from './../minima/constants';
+import { INSUFFICIENT } from './../minima/constants';
 
 /** Copy to clipboard */
 export async function copyTextToClipboard(text: string) {
@@ -72,18 +72,60 @@ export const insufficientFundsError = (msg: string) => {
     return false;
 };
 
-// handle parsing for tokens - handles hexToStr conversions or any other edits
-// function parseToken(t: MinimaToken): Promise<MinimaToken | string> {
-//   return new Promise((resolve, reject) => {
+export const isValidURLAll = (urlString: string) => {
+    try {
+        new URL(urlString);
+        return true;
+    } catch (err) {
+        console.error(err)
+        return false;
+    }
+};
 
-//     // Minima token - do nothing
-//     if (t.tokenid === defaultHash) {
-//       resolve(t)
-//     }
+export const isValidURLSecureOnly = (urlString: string) => {
+    try {
+        const url = new URL(urlString)
+        // console.log(url)
+        return url.protocol === 'https:';
+    } catch(err) {
+        console.error(err)
+        return false;
+    }
+}
 
-//     if (typeof t.token === 'object' && t.token.hasOwnProperty('nft') && t.token.nft === 'true') {
-
-//     }
-
-//   });
-// }
+export const numberWithCommas = (x: string) => {
+    try {
+      var parts = x.toString().split(".");
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      return parts.join(".");
+    } catch (err) {
+      console.error(err)
+      return x;
+  
+    }
+}
+/**
+ * 
+ * @param imageData tokens image uri
+ * @param tokenid tokens id for reference
+ */
+export const makeTokenImage = (imageData: string, tokenid: string): string | undefined => {
+    let imageUrl = undefined;
+    try {
+        var parser = new DOMParser();
+        const doc = parser.parseFromString(imageData, 'application/xml');
+        const errorNode = doc.querySelector('parsererror');
+        if (errorNode) {
+            console.error('Token does not contain an image', tokenid);
+        } else {
+            var imageString = doc.getElementsByTagName('artimage')[0].innerHTML;
+            imageUrl = `data:image/jpeg;base64,${imageString}`;
+        }
+        
+        return imageUrl;
+    } catch(err) {
+        console.error(`Failed to create image data ${tokenid}`, err);
+    }
+    
+    return undefined;
+}

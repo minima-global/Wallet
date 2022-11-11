@@ -163,6 +163,7 @@ theme = createTheme(theme, {
                 root: {
                     backgroundColor: 'rgba(255, 255, 255, 0.5)',
                     borderRadius: 8,
+                    
                     input: {
                         paddingLeft: 16,
                         borderRadius: 8,
@@ -227,7 +228,8 @@ theme = createTheme(theme, {
             styleOverrides: {
                 root: {
                     backgroundColor: 'rgba(255, 255, 255, 0.5)',
-                    paddingBottom: 0
+                    paddingBottom: 0,
+                    boxShadow: '0px 4px 10px 4px rgba(0, 0, 0, 0.05)'
                 }
             }
         },
