@@ -124,7 +124,7 @@ var MDS = {
         POST: function (url, data, callback) {
             //Create the sinlg eline version..
             var postline = url + '&' + data;
-            console.log(`postline`, postline);
+            // console.log(`postline`, postline);
 
             //Send via POST
             httpPostAsync(MDS.mainhost + 'netpost?' + 'uid=' + MDS.minidappuid, postline, callback);

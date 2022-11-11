@@ -92,7 +92,7 @@ export const rpc = (command: string): Promise<any> => {
     
             if (!resp.status && resp.pending) {
     
-                reject(resp.error); 
+                reject("pending"); 
     
             }
     

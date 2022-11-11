@@ -25,22 +25,30 @@ import { containsText } from '../../functions';
 import MiArrow from './svgs/MiArrow';
 import { DRAWERWIDTH, MINIMA__TOKEN_ID } from '../../constants';
 import MinimaIcon from '../../../assets/images/minimaLogoSquare.png';
+import { FormikErrors, FormikState } from 'formik';
+import Decimal from 'decimal.js';
 
 const DropDownContainer = styled('div')`
     width: 100%;
     margin: 0 auto;
-    background: #ffede9;
+    background: rgba(255, 255, 255, 0.5);
     border: none;
     border-radius: 8px;
 `;
 const DropDownHeader = styled('div')`
     min-height: 72px;
-    background: #ffede9;
+    background: #fff;
     margin: 0 auto;
 
-    border: none;
+    border: 1px solid #c3c1c0;
     border-radius: 8px;
     position: relative;
+    :hover {
+        border: 1px solid #000;
+    }
+    :focus {
+        border: 1px solid #317aff;
+    }
     * {
         margin: 0 !important;
         border: none !important;
@@ -123,7 +131,39 @@ const DropDownListHeader = styled('h6')`
     margin: 0;
 `;
 
-const MiSelect = (props: any) => {
+interface IProps {
+    value: MinimaToken;
+    tokens: MinimaToken[];
+    error?: FormikErrors<MinimaToken>;
+    setFieldValue: (
+        field: string,
+        value: MinimaToken,
+        shouldValidate?: boolean
+    ) =>
+        | Promise<void>
+        | Promise<
+              FormikErrors<{
+                  token: MinimaToken;
+                  amount: string;
+                  address: string;
+                  burn: string;
+              }>
+          >;
+    resetForm: (
+        nextState?:
+            | Partial<
+                  FormikState<{
+                      token: MinimaToken;
+                      amount: string;
+                      address: string;
+                      burn: string;
+                  }>
+              >
+            | undefined
+    ) => void;
+    coinSplitMode: boolean;
+}
+const MiSelect = ({ value, tokens, error, setFieldValue, resetForm, coinSplitMode = false }: IProps) => {
     const theme = useTheme();
     const [isOpen, setOpen] = React.useState(false);
     const mobileView = useMediaQuery(theme.breakpoints.down('sm'));
@@ -136,24 +176,16 @@ const MiSelect = (props: any) => {
         document.body.style.overflow = 'auto';
     }
 
-    const [selectedOption, setSelectedOption] = React.useState<MinimaToken | null>(null);
     const toggling = () => setOpen(!isOpen);
     const onOptionClicked = (t: MinimaToken) => {
-        props.resetForm();
-        setSelectedOption(t);
-        props.setFieldValue('token', t);
+        resetForm();
+        setFieldValue('token', t);
         setOpen(false);
     };
 
     React.useEffect(() => {
-        if (selectedOption == null) {
-            setSelectedOption(props.tokens[0]);
-        } else {
-            setSelectedOption(props.tokens.find((i: MinimaToken) => i.tokenid == selectedOption.tokenid));
-        }
-
         setFilterWallet(
-            props.tokens.filter(
+            tokens.filter(
                 (m: MinimaToken) =>
                     containsText(
                         typeof m.token == 'string' ? m.token : typeof m.token.name == 'string' ? m.token.name : null,
@@ -161,13 +193,13 @@ const MiSelect = (props: any) => {
                     ) || containsText(m.tokenid, filterText)
             )
         );
-    }, [props.tokens, filterText]);
+    }, [tokens, filterText]);
 
     return (
         <>
             <DropDownContainer>
                 <DropDownHeader onClick={toggling}>
-                    {selectedOption && (
+                    {value && (
                         <>
                             <MiTokenListItem>
                                 <Avatar
@@ -179,11 +211,11 @@ const MiSelect = (props: any) => {
                                     className={styles['avatar']}
                                     variant="rounded"
                                     src={
-                                        selectedOption.tokenid === MINIMA__TOKEN_ID
+                                        value.tokenid === MINIMA__TOKEN_ID
                                             ? MinimaIcon
-                                            : selectedOption.token.url && selectedOption.token.url.length
-                                            ? selectedOption.token.url
-                                            : `https://robohash.org/${selectedOption.tokenid}`
+                                            : value.token.url && value.token.url.length
+                                            ? value.token.url
+                                            : `https://robohash.org/${value.tokenid}`
                                     }
                                 />
                                 <Stack
@@ -193,27 +225,31 @@ const MiSelect = (props: any) => {
                                     sx={{ textOverflow: 'ellipsis' }}
                                 >
                                     <MiTokenName>
-                                        {typeof selectedOption.token == 'string'
-                                            ? selectedOption.token
-                                            : selectedOption.token.name}
+                                        {typeof value.token == 'string' ? value.token : value.token.name}
                                     </MiTokenName>
                                     <MiTokenNameTicker>
-                                        {selectedOption.tokenid === '0x00' ? (
+                                        {value.tokenid === '0x00' ? (
                                             'MINIMA'
-                                        ) : selectedOption.token.ticker ? (
-                                            selectedOption.token.ticker
+                                        ) : value.token.ticker ? (
+                                            value.token.ticker
                                         ) : (
                                             <MiSkeleton />
                                         )}
                                     </MiTokenNameTicker>
-                                    <MiTokenAmount>{selectedOption.sendable}</MiTokenAmount>
+                                    {!coinSplitMode && <MiTokenAmount>{value.sendable}</MiTokenAmount>}
+                                    {coinSplitMode && (
+                                        <MiTokenAmount>{`${value.coins} available coin${
+                                            new Decimal(value.coins).greaterThan(new Decimal(1)) ? 's' : ''
+                                        }`}</MiTokenAmount>
+                                    )}
                                 </Stack>
                             </MiTokenListItem>
                             <MiArrow size={10} color="black" />
                         </>
                     )}
-                    {!selectedOption && <MiNoTokenSelected>No token selected.</MiNoTokenSelected>}
-                    {props.error ? <MiTokenError>{props.error}</MiTokenError> : null}
+                    {!value && <MiNoTokenSelected>No token selected</MiNoTokenSelected>}
+                    <MiArrow size={10} color="black" />
+                    {error ? <MiTokenError>{error}</MiTokenError> : null}
                 </DropDownHeader>
                 {isOpen && mobileView ? (
                     <>
@@ -270,7 +306,14 @@ const MiSelect = (props: any) => {
                                                                 <MiSkeleton />
                                                             )}
                                                         </MiTokenNameTicker>
-                                                        <MiTokenAmount>{t.sendable}</MiTokenAmount>
+                                                        {!coinSplitMode && <MiTokenAmount>{t.sendable}</MiTokenAmount>}
+                                                        {coinSplitMode && (
+                                                            <MiTokenAmount>{`${t.coins} available coin${
+                                                                new Decimal(t.coins).greaterThan(new Decimal(1))
+                                                                    ? 's'
+                                                                    : ''
+                                                            }`}</MiTokenAmount>
+                                                        )}
                                                     </Stack>
                                                 </MiTokenListItem>
                                             ))}
@@ -336,7 +379,14 @@ const MiSelect = (props: any) => {
                                                                 <MiSkeleton />
                                                             )}
                                                         </MiTokenNameTicker>
-                                                        <MiTokenAmount>{t.sendable}</MiTokenAmount>
+                                                        {!coinSplitMode && <MiTokenAmount>{t.sendable}</MiTokenAmount>}
+                                                        {coinSplitMode && (
+                                                            <MiTokenAmount>{`${t.coins} available coin${
+                                                                new Decimal(t.coins).greaterThan(new Decimal(1))
+                                                                    ? 's'
+                                                                    : ''
+                                                            }`}</MiTokenAmount>
+                                                        )}
                                                     </Stack>
                                                 </MiTokenListItem>
                                             ))}

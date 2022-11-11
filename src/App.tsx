@@ -33,7 +33,7 @@ export default function App() {
         });
 
         events.onNewBalance(() => {
-            console.log(`new balance update..`);
+            // console.log(`new balance update..`);
             const balanceNotification = {
                 message: 'New balance update',
                 severity: 'info',

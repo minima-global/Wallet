@@ -19,9 +19,11 @@ const MiTokenContainer = styled('div')`
 `;
 
 const MiNoTokenSelected = styled('div')`
-    padding: 8px;
+    position: absolute;
+    top: 16px;
+    left: 16px;
     font-family: Manrope-regular;
-    font-size: 0.875rem;
+    font-size: 1rem;
     color: #000;
 `;
 

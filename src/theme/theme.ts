@@ -163,6 +163,7 @@ theme = createTheme(theme, {
                 root: {
                     backgroundColor: 'rgba(255, 255, 255, 0.5)',
                     borderRadius: 8,
+                    
                     input: {
                         paddingLeft: 16,
                         borderRadius: 8,

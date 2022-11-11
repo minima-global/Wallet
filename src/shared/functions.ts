@@ -85,7 +85,7 @@ export const isValidURLAll = (urlString: string) => {
 export const isValidURLSecureOnly = (urlString: string) => {
     try {
         const url = new URL(urlString)
-        console.log(url)
+        // console.log(url)
         return url.protocol === 'https:';
     } catch(err) {
         console.error(err)
