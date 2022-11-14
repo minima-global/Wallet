@@ -45,7 +45,7 @@ const CoinSplit = ({}: IProps) => {
             burn: '',
         },
         onSubmit: (formInputs: ISendForm) => {
-            splitCoin(formInputs.token.tokenid, formInputs.token.sendable, formInputs.token.coins)
+            splitCoin(formInputs.token.tokenid, formInputs.token.sendable, formInputs.burn)
                 .then((r: any) => {
                     // console.log(r);
                     handleSuccessState();
