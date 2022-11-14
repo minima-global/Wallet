@@ -155,7 +155,14 @@ const bootstrap = async (rpcPort, splitCoins = false) => {
     // split coins, will make tests run faster
     if (splitCoins) {
         const address = await rpc(rpcPort, 'getaddress');
-        await rpc(rpcPort, `send amount:10 address:${address.response.miniaddress} tokenid:0x00 split:4`);
+        const balance = await rpc(rpcPort, 'balance');
+        const minimaCoin = balance.response.find(t => t.tokenid === '0x00');
+
+        if (minimaCoin.coins === '1') {
+            await rpc(rpcPort, `send amount:10 address:${address.response.miniaddress} tokenid:0x00 split:4`);
+        } else {
+            console.log('Skipping splitting coins');
+        }
     }
 
     const appUid = await getAppUid(rpcPort);
