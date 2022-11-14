@@ -302,6 +302,7 @@ const useFormSchema = () => {
                 if (val === undefined) {
                     return true;
                 }
+
                 const burn = new Decimal(val);
 
                 if (burn.greaterThan(wallet[0].sendable)) {

@@ -13,10 +13,16 @@ import Decimal from 'decimal.js';
  * Split a coin by 2
  */
 export const splitCoin = async (tokenid: string, sendable: string, burn: string) => {
-  // console.log(coins);
   const fetchAddr: any = await callGetAddress();
   const mAddr = fetchAddr.response.miniaddress;
 
-  // split coin, send back to self
-  return rpc(`send address:${mAddr} tokenid:${tokenid} amount:${sendable} split:${2} ${burn.length > 0 ? "burn:"+burn : ""}`);
+  let finalTotalToSend = new Decimal(0);
+  if (burn.length > 0) {
+    // minus the burn, get total to send back after splitting
+    finalTotalToSend = new Decimal(sendable).minus(new Decimal(burn));
+    console.log(finalTotalToSend.toString())
+    return rpc(`send address:${mAddr} tokenid:${tokenid} amount:${finalTotalToSend.toString()} split:${2} burn:${burn}`);
+  }
+
+  return rpc(`send address:${mAddr} tokenid:${tokenid} amount:${sendable} split:${2}`);  
 }
