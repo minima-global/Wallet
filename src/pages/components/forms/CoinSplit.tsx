@@ -195,20 +195,29 @@ const useFormSchema = () => {
                 return true;
             }),
         burn: Yup.string()
-            .matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters.')
+            // .matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters')
             .test('check-my-burnamount', 'Invalid burn amount', function (val) {
-                const { path, createError, parent } = this;
+                const { path, createError } = this;
                 if (val === undefined) {
                     return true;
                 }
-                const burn = new Decimal(val);
+                try {
+                    const burn = new Decimal(val);
 
-                if (burn.greaterThan(wallet[0].sendable)) {
+                    if (burn.greaterThan(wallet[0].sendable)) {
+                        return createError({
+                            path,
+                            message: `Oops, not enough funds available to burn.  You require another ${burn
+                                .minus(wallet[0].sendable)
+                                .toNumber()} Minima`,
+                        });
+                    }
+                } catch (err) {
+                    console.error(err);
+
                     return createError({
                         path,
-                        message: `Oops, not enough funds available to burn.  You require another ${burn
-                            .minus(wallet[0].sendable)
-                            .toNumber()} Minima`,
+                        message: `Invalid characters`,
                     });
                 }
 
