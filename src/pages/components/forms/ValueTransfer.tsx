@@ -290,18 +290,18 @@ const useFormSchema = () => {
                 if (val === undefined) {
                     return true;
                 }
-                const amount = new Decimal(parent.amount);
-                const burn = new Decimal(val);
-                const totalAmount = amount.add(burn);
 
-                if (totalAmount.greaterThan(wallet[0].sendable)) {
+                const burn = new Decimal(val);
+
+                if (burn.greaterThan(wallet[0].sendable)) {
                     return createError({
                         path,
-                        message: `Oops, not enough funds available to burn.  You require another ${totalAmount
+                        message: `Oops, not enough funds available to burn.  You require another ${burn
                             .minus(wallet[0].sendable)
                             .toNumber()} Minima`,
                     });
                 }
+
                 return true;
             }),
     });
