@@ -5,7 +5,7 @@ async function waitForCoinBalance(page, expectedCoinBalance) {
   let maxAttempts = 30;
 
   await page.click(getByTestId('SideMenu__link__Balance'));
-  await page.click(getByTestId('TokenListItem__token__Minima'));
+  await page.click(getByTestId('Wallet__token__Minima'));
 
   return new Promise((resolve, reject) => {
     const interval = setInterval(async () => {

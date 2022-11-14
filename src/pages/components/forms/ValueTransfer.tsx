@@ -30,7 +30,6 @@ interface IProps {}
 type IStatusModal = 'success' | 'error' | 'pending' | '';
 
 const dataTestIds = {
-    method: 'ValueTransfer__method',
     amount: 'ValueTransfer__amount',
     address: 'ValueTransfer__address',
     burn: 'ValueTransfer__burn',
@@ -202,6 +201,7 @@ const ValueTransfer = ({}: IProps) => {
                         variant="contained"
                         fullWidth
                         disableElevation
+                        data-testid={dataTestIds.next}
                         disabled={!(formik.isValid && formik.dirty && !formik.isSubmitting)}
                     >
                         {formik.isSubmitting ? 'Building transaction...' : 'Continue'}

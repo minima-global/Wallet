@@ -31,7 +31,6 @@ describe('Wallet (Transactional) - End to End', () => {
 
     await helpers.waitForSendableCoins(page);
     await helpers.sendCoinsToAddress(page, receiver, amountToSend);
-    await helpers.acceptBurn(page);
     await helpers.acceptConfirmation(page);
     await helpers.acceptSuccess(page);
 
@@ -52,7 +51,6 @@ describe('Wallet (Transactional) - End to End', () => {
     await helpers.waitForSendableCoins(page, tokenName);
     await helpers.setTokenAsSwap(page, tokenName);
     await helpers.sendCoinsToAddress(page, receiver, 1);
-    await helpers.acceptBurn(page);
     await helpers.acceptConfirmation(page);
     await helpers.acceptSuccess(page);
 
@@ -69,8 +67,7 @@ describe('Wallet (Transactional) - End to End', () => {
     await helpers.waitForCreateToken(page, { tokenName });
     await helpers.waitForSendableCoins(page, tokenName);
     await helpers.setTokenAsSwap(page, tokenName);
-    await helpers.sendCoinsToAddress(page, receiver, 1);
-    await helpers.acceptBurn(page, 1);
+    await helpers.sendCoinsToAddress(page, receiver, 1, 1);
     await helpers.acceptConfirmation(page);
     await helpers.acceptSuccess(page);
 
@@ -91,7 +88,6 @@ describe('Wallet (Transactional) - End to End', () => {
     // sent nft to the other user
     await helpers.setTokenAsSwap(page, nftName);
     await helpers.sendCoinsToAddress(page, receiver, 1);
-    await helpers.acceptBurn(page);
     await helpers.acceptConfirmation(page);
     await helpers.acceptSuccess(page);
 
@@ -117,11 +113,15 @@ describe('Wallet (Transactional) - End to End', () => {
     await helpers.pause(1000);
     await helpers.acceptPermissionRequest(session.MINIMA_RPC_URL, session.MINIDAPP_UID);
 
+    await page.waitForSelector(helpers.getByTestId('confirm'));
+    await page.click(helpers.getByTestId('confirm'));
+    await page.waitForSelector(helpers.getByTestId('confirm'), { hidden: true });
+
     // wait for the nft to become sendable
     await helpers.waitForSendableCoins(page, nftName);
+
     await helpers.setTokenAsSwap(page, nftName);
     await helpers.sendCoinsToAddress(page, receiver, 1);
-    await helpers.acceptBurn(page);
     await helpers.acceptConfirmation(page);
     await helpers.acceptSuccess(page);
 

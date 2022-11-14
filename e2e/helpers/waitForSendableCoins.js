@@ -1,5 +1,4 @@
 const getByTestId = require("./getByTestId");
-const pause = require("./pause");
 
 async function waitForSendableCoins(page, tokenName = 'Minima') {
   let tries = 1;

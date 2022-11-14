@@ -287,8 +287,7 @@ const MiSelect = ({ value, tokens, error, setFieldValue, resetForm, coinSplitMod
                                                 </NoResults>
                                             ) : null}
                                             {filterWallet.map((t: MinimaToken) => (
-                                                <MiTokenListItem key={t.tokenid} data-testid={`${dataTestIds.option}__${typeof t.token == 'string' ? t.token : t.token.name}`} onClick={() => onOptionClicked(t)}>
-                                                    {t.sendable === '0' && <span data-testid={`${dataTestIds.optionDisabled}__${typeof t.token == 'string' ? t.token : t.token.name}`} />}
+                                                <MiTokenListItem key={t.tokenid} data-testid={`${t.sendable === '0' ?dataTestIds.optionDisabled : dataTestIds.option}__${typeof t.token == 'string' ? t.token : t.token.name}`} onClick={() => onOptionClicked(t)}>
                                                     <Avatar
                                                         className={styles['avatar']}
                                                         variant="rounded"
