@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Avatar, Stack } from '@mui/material';
+import { Avatar, CircularProgress, Stack } from '@mui/material';
 import React from 'react';
 import { MinimaToken } from '../../../minima/types/minima2';
 import { useAppSelector } from '../../../minima/redux/hooks';
@@ -59,7 +59,7 @@ const Wallet = () => {
                 <MiSearch color="#fff" size={20} />
             </MiSearchBarWithIcon>
             <Scroller>
-                {filterWallet.length == 0 ? (
+                {filterWallet.length === 0 ? (
                     <NoResults>
                         <h6>No results</h6>
                         <p>Please try your search again.</p>
@@ -91,7 +91,7 @@ const Wallet = () => {
                                         <MiSkeleton />
                                     )}
                                 </MiTokenNameTicker>
-                                <MiTokenAmount>{numberWithCommas(t.sendable)}</MiTokenAmount>
+                                <MiTokenAmount>{t.sendable}</MiTokenAmount>
                             </Stack>
                         </MiTokenListItem>
                     ))}
@@ -102,6 +102,3 @@ const Wallet = () => {
 };
 
 export default Wallet;
-function useNavigation() {
-    throw new Error('Function not implemented.');
-}

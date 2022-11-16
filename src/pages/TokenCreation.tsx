@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { Card, CardContent, TextField, Button, Stack, Typography } from '@mui/material';
 import MiniModal from '../shared/components/MiniModal';
 import { useFormik } from 'formik';
@@ -8,8 +8,7 @@ import { isValidURLAll, isValidURLSecureOnly } from '../shared/functions';
 
 import GridLayout from '../layout/GridLayout';
 
-import { useAppDispatch, useAppSelector } from '../minima/redux/hooks';
-import { toggleNotification } from '../minima/redux/slices/notificationSlice';
+import { useAppSelector } from '../minima/redux/hooks';
 import { selectBalance } from '../minima/redux/slices/balanceSlice';
 import TokenConfirmation from './components/forms/common/TokenConfirmation';
 import ModalManager from './components/managers/ModalManager';

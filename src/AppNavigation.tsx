@@ -20,6 +20,8 @@ import { useAppSelector } from './minima/redux/hooks';
 import { selectMiningState } from './minima/redux/slices/miningSlice';
 import CreateNFT from './pages/components/nfts/CreateNFT';
 import NFTDetail from './pages/NFTDetail';
+import { selectBalance } from './minima/redux/slices/balanceSlice';
+import { NoResults } from './shared/components/layout/MiToken';
 
 export interface RouteType {
     path: string;
@@ -31,6 +33,7 @@ const AppNavigation = () => {
     const [open, setOpen] = useState(false);
     const [pageTitle, setPageTitle] = useState('Balance');
     const isMining = useAppSelector(selectMiningState);
+    const wallet = useAppSelector(selectBalance);
 
     // Back Button
     const [onDetail, setOnDetail] = useState(false);
@@ -152,21 +155,30 @@ const AppNavigation = () => {
             </Toolbar>
 
             <Box component="main" sx={[appwidth, contentPadding]}>
-                <Routes>
-                    <Route path="/" element={<Navigate replace to="/balance" />} />
-                    <Route path="/balance" element={<Balance />} />
-                    <Route path="balance/:tokenid" element={<TokenDetail />} />
-                    <Route path="/send" element={<Send />} />
-                    <Route path="send/:tokenid" element={<Send />} />
-                    <Route path="/receive" element={<Receive />} />
-                    <Route path="/status" element={<Status />} />
-                    <Route path="/tokencreate" element={<TokenCreation />} />
-                    <Route path="/nfts" element={<NFTs />}></Route>
-                    <Route path="nfts/:tokenid" element={<NFTDetail />} />
-                    <Route path="/createnft" element={<CreateNFT />} />
-                    <Route path="/offline" element={<Offline />} />
-                    <Route path="*" element={<Navigate replace to="/balance" />} />
-                </Routes>
+                {wallet.length ? (
+                    <Routes>
+                        <Route path="/" element={<Navigate replace to="/balance" />} />
+                        <Route path="/balance" element={<Balance />} />
+                        <Route path="balance/:tokenid" element={<TokenDetail />} />
+                        <Route path="/send" element={<Send />} />
+                        <Route path="send/:tokenid" element={<Send />} />
+                        <Route path="/receive" element={<Receive />} />
+                        <Route path="/status" element={<Status />} />
+                        <Route path="/tokencreate" element={<TokenCreation />} />
+                        <Route path="/nfts" element={<NFTs />}></Route>
+                        <Route path="nfts/:tokenid" element={<NFTDetail />} />
+                        <Route path="/createnft" element={<CreateNFT />} />
+                        <Route path="/offline" element={<Offline />} />
+                        <Route path="*" element={<Navigate replace to="/balance" />} />
+                    </Routes>
+                ) : (
+                    <Stack alignItems="center" justifyContent="center">
+                        <NoResults>
+                            <h6>Oops, your node is offline</h6>
+                            <p>Check your node status or refresh this page</p>
+                        </NoResults>
+                    </Stack>
+                )}
             </Box>
             <Box component="nav" sx={nav} aria-label="mailbox folders">
                 <Drawer
