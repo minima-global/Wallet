@@ -4,7 +4,7 @@
  */
 
 type TokenType = 'NFT' | 'STANDARDTOKEN';
- interface MiNFT extends MiCustomToken { 
+interface MiNFT extends MiCustomToken { 
   external_url : string;
   owner: string;
 }
@@ -14,6 +14,7 @@ interface MiCustomToken {
   url: string;
   description: string;
   type: TokenType;
+  version: string;
   ticker?: string;
   webvalidate?: string;
 }

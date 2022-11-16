@@ -91,14 +91,6 @@ interface NetworkPeer {
     connected: string;
 }
 
-interface CustomTokenJson {
-    name: string;
-    description: string;
-    url: string;
-    webvalidate: string;
-    ticker: string;
-}
-
 interface MinimaToken {
     token: any;
     coins: string;

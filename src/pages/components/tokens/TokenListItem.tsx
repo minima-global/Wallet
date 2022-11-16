@@ -41,7 +41,7 @@ const TokenListItem = ({ item, nav, mode }: any) => {
                             ? item.token
                             : 'Invalid name'}
                     </Typography>
-                    <TokenAuthenticity NFT={item} />
+                    {/* <TokenAuthenticity NFT={item} /> */}
                 </Stack>
                 {typeof item.token === 'object' && item.token.hasOwnProperty('ticker') && item.token.ticker ? (
                     <Ticker symbol={item.token.ticker} />

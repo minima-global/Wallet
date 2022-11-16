@@ -87,6 +87,7 @@ const CreateNFTForm = () => {
                 owner: data.owner.replaceAll(`"`, `'`) || '',
                 external_url: data.external_url.replaceAll(`"`, `'`) || '',
                 type: 'NFT',
+                version: '1.0',
             };
 
             buildCustomTokenCreation(cNFT, data.amount, data.burn)

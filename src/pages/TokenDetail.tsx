@@ -27,6 +27,7 @@ import CustomListItem from '../shared/components/CustomListItem';
 import Ticker from './components/tokens/Ticker';
 import TokenAuthenticity from './components/tokens/NFTAuthenticity';
 import { MiCustomToken, MiNFT } from '../minima/types/nft';
+import { MINIMA__TOKEN_ID } from '../shared/constants';
 
 function isToken(obj: any): obj is MiCustomToken {
     return 'name' in obj && 'url' in obj && 'description' && 'type' in obj;
@@ -99,7 +100,9 @@ const TokenDetail = () => {
                                                                 ? token?.token.name
                                                                 : token?.token}
                                                         </Typography>
-                                                        <TokenAuthenticity NFT={token} />
+                                                        {token.tokenid !== MINIMA__TOKEN_ID ? (
+                                                            <TokenAuthenticity token={token} />
+                                                        ) : null}
                                                     </Stack>
 
                                                     {token.tokenid !== '0x00' &&

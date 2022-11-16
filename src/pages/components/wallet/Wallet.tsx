@@ -23,6 +23,7 @@ import MiSearch from '../../../shared/components/layout/svgs/MiSearch';
 import { MINIMA__TOKEN_ID } from '../../../shared/constants';
 import MinimaIcon from '../../../assets/images/minimaLogoSquare.png';
 import { useNavigate } from 'react-router-dom';
+import NFTAuthenticity from '../tokens/NFTAuthenticity';
 const Scroller = styled('div')`
     overflow: auto;
     flex-grow: 1;
@@ -80,7 +81,10 @@ const Wallet = () => {
                                 }
                             />
                             <Stack spacing={0.3} flexDirection="column" alignItems="flex-start">
-                                <MiTokenName>{typeof t.token == 'string' ? t.token : t.token.name}</MiTokenName>
+                                <MiTokenName>
+                                    {typeof t.token == 'string' ? t.token : t.token.name}{' '}
+                                    {t.tokenid !== MINIMA__TOKEN_ID ? <NFTAuthenticity token={t} /> : null}
+                                </MiTokenName>
 
                                 <MiTokenNameTicker>
                                     {t.tokenid == '0x00' ? (

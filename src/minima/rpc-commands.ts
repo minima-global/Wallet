@@ -1,3 +1,4 @@
+import { resolve } from "path";
 import { MinimaToken } from "./types/minima2";
 
 export {callSend, callGetAddress, callStatus, createCustomToken, getWalletBalance, callTokenValidate};
@@ -39,8 +40,21 @@ const getWalletBalance = (): Promise<MinimaToken[]> => {
     });
 
 }
-const callTokenValidate = (tokenid: string) => {
-    return req(`tokenvalidate tokenid:${tokenid}`);
+/**
+ * 
+ * @param tokenid 
+ * @returns resolves promise if tokenvalidate is valid
+ */
+const callTokenValidate = (tokenid: string): Promise<void> => {
+    return new Promise((resolve, reject) => {
+        rpc(`tokenvalidate tokenid:${tokenid}`).then((r) => {
+            if (r.web.valid) {
+                resolve()
+            }
+
+            reject()
+        })
+    });
 }
 
 
@@ -49,7 +63,7 @@ export const req = (command: string): Promise<any> => {
     return new Promise((resolve) => {
         
         MDS.cmd(command, (resp: any) => {
-            // console.log(resp);
+            
             resolve(resp);
             
         });

@@ -87,6 +87,7 @@ const TokenCreation: FC = () => {
                 ticker: formData.ticker.replaceAll(`"`, `'`) || '',
                 type: 'STANDARDTOKEN',
                 webvalidate: formData.webvalidate || '',
+                version: '1.0',
             };
             buildCustomTokenCreation(cToken, formData.amount, formData.burn)
                 .then((res: any) => {

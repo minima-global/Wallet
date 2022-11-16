@@ -48,7 +48,7 @@ const NFTCard = ({ NFT }: any) => {
                                 <Typography variant="h6" className={styles['nft-title']}>
                                     {NFT.token.name}
                                 </Typography>
-                                <NFTAuthenticity NFT={NFT} />
+                                <NFTAuthenticity token={NFT} />
                             </Stack>
                             <Typography className={styles['nft-owner']} variant="caption">
                                 {NFT.token.owner && NFT.token.owner.length

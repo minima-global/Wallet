@@ -127,8 +127,7 @@ theme = createTheme(theme, {
                     // Some CSS
                     borderRadius: 8,
                     textTransform: 'none',
-                    fontWeight: 800,
-                    letterSpacing: 2,
+                    fontWeight: 800,                     
                     lineHeight: '21px',
                     minHeight: 44,
                     fontSize: '0.875rem',
