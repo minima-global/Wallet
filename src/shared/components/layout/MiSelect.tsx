@@ -67,7 +67,7 @@ const DropDownListContainer = styled('div')`
     left: 0;
     right: 0;
     height: 90vh;
-    background: #fff;
+    background: rgba(255, 255, 255, 0.8);
     border-radius: 24px 24px 0px 0px;
     z-index: 1000;
     overflow: auto;
@@ -116,6 +116,10 @@ const DropDownList = styled('ul')`
     padding: 0;
     margin-top: 24px;
     list-style: none;
+
+    > :last-of-type {
+        margin-bottom: 0;
+    }
 `;
 const Scroller = styled('div')`
     overflow: auto;

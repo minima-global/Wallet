@@ -371,6 +371,13 @@ const useMySchema = () => {
                     return false;
                 }
 
+                if (new Decimal(val).greaterThan(new Decimal(1000000000000))) {
+                    return createError({
+                        path,
+                        message: `Invalid amount, cannot create more than 1 trillion tokens`,
+                    });
+                }
+
                 if (new Decimal(val).lessThan(new Decimal(1))) {
                     return createError({
                         path,

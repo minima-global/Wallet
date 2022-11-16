@@ -29,6 +29,9 @@ const MiTestnet = styled('p')`
 
 const MiTokenContainer = styled('div')`
     margin-top: 16px;
+    > :last-of-type {
+        margin-bottom: 0;
+    }
 `;
 
 const MiNoTokenSelected = styled('div')`
