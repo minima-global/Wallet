@@ -12,22 +12,29 @@ import {
     Fade,
     Stack,
     Divider,
-    Skeleton,
-    Chip,
 } from '@mui/material';
 
+import {
+    MiTokenName,
+    MiTokenNameTicker,
+    MiSkeleton,
+    MiTokenListItem,
+    MiTokenNameWrapper,
+    MiTestnet,
+} from '../shared/components/layout/MiToken';
+
 import MinimaIcon from '../assets/images/minimaLogoSquare.png';
-import { ReactComponent as MinimaSquareIcon } from '../assets/images/minimaLogoSquare.svg';
 
 import GridLayout from '../layout/GridLayout';
 
 import { useAppSelector } from '../minima/redux/hooks';
 import { selectTokenWithID } from '../minima/redux/slices/balanceSlice';
 import CustomListItem from '../shared/components/CustomListItem';
-import Ticker from './components/tokens/Ticker';
-import TokenAuthenticity from './components/tokens/NFTAuthenticity';
+import styles from './tokendetail/TokenDetail.module.css';
+
 import { MiCustomToken, MiNFT } from '../minima/types/nft';
 import { MINIMA__TOKEN_ID } from '../shared/constants';
+import NFTAuthenticity from './components/tokens/NFTAuthenticity';
 
 function isToken(obj: any): obj is MiCustomToken {
     return 'name' in obj && 'url' in obj && 'description' && 'type' in obj;
@@ -69,70 +76,54 @@ const TokenDetail = () => {
                                 <Fade in={true}>
                                     <Card variant="outlined">
                                         <CardHeader
-                                            avatar={
-                                                token.tokenid === '0x00' ? (
-                                                    <MinimaSquareIcon className="minima-icon" />
-                                                ) : token.tokenid !== '0x00' &&
-                                                  (isNFT(token.token) || isToken(token.token)) &&
-                                                  token.token.url ? (
-                                                    <Avatar variant="rounded" src={token.token.url} />
-                                                ) : token.tokenid !== '0x00' &&
-                                                  (isToken(token.token) || isNFT(token.token)) ? (
+                                            title={
+                                                <MiTokenListItem>
                                                     <Avatar
+                                                        sx={{
+                                                            width: '56px',
+                                                            height: '56px',
+                                                            background: '#fff',
+                                                        }}
+                                                        className={styles['avatar']}
                                                         variant="rounded"
                                                         src={
-                                                            !token?.token.url || token?.token.url.length === 0
-                                                                ? `https://robohash.org/${token?.tokenid}`
-                                                                : token?.token.url && token?.token.url.length > 0
+                                                            token.tokenid === MINIMA__TOKEN_ID
+                                                                ? MinimaIcon
+                                                                : token.token.url && token.token.url.length
                                                                 ? token.token.url
-                                                                : ''
+                                                                : `https://robohash.org/${token.tokenid}`
                                                         }
-                                                        alt={token?.token.name}
                                                     />
-                                                ) : null
-                                            }
-                                            title={
-                                                <Stack>
-                                                    <Stack direction="row" alignItems="center" spacing={0.5}>
-                                                        <Typography variant="body2">
-                                                            {(token.tokenid !== '0x00' && isNFT(token.token)) ||
-                                                            (token.tokenid !== '0x00' && isToken(token.token))
-                                                                ? token?.token.name
-                                                                : token?.token}
-                                                        </Typography>
-                                                        {token.tokenid !== MINIMA__TOKEN_ID ? (
-                                                            <TokenAuthenticity token={token} />
-                                                        ) : null}
+                                                    <Stack
+                                                        spacing={0.3}
+                                                        flexDirection="column"
+                                                        alignItems="flex-start"
+                                                        sx={{ textOverflow: 'ellipsis' }}
+                                                    >
+                                                        <MiTokenNameWrapper>
+                                                            <MiTokenName>
+                                                                {typeof token.token == 'string'
+                                                                    ? token.token
+                                                                    : token.token.name}
+                                                            </MiTokenName>
+                                                            {token.tokenid !== MINIMA__TOKEN_ID ? (
+                                                                <NFTAuthenticity token={token} />
+                                                            ) : null}
+                                                            {token.tokenid === MINIMA__TOKEN_ID ? (
+                                                                <MiTestnet>Testnet</MiTestnet>
+                                                            ) : null}
+                                                        </MiTokenNameWrapper>
+                                                        <MiTokenNameTicker>
+                                                            {token.tokenid === '0x00' ? (
+                                                                'MINIMA'
+                                                            ) : token.token.ticker ? (
+                                                                token.token.ticker
+                                                            ) : (
+                                                                <MiSkeleton />
+                                                            )}
+                                                        </MiTokenNameTicker>
                                                     </Stack>
-
-                                                    {token.tokenid !== '0x00' &&
-                                                    isToken(token.token) &&
-                                                    token.token.hasOwnProperty('ticker') &&
-                                                    token.token.ticker ? (
-                                                        <Ticker symbol={token.token.ticker} />
-                                                    ) : token.tokenid === '0x00' ? (
-                                                        <Ticker symbol={'MINIMA'} />
-                                                    ) : null}
-                                                </Stack>
-                                            }
-                                            subheader={
-                                                <Stack
-                                                    direction="row"
-                                                    spacing={1}
-                                                    alignItems="center"
-                                                    justifyContent="flex-start"
-                                                >
-                                                    <Typography variant="body1" sx={{ fontSize: '0.8rem' }}>
-                                                        {token?.token.description
-                                                            ? token.token.description
-                                                            : token.tokenid === '0x00'
-                                                            ? 'Official Minima Coin'
-                                                            : null}
-                                                    </Typography>
-                                                    {token.tokenid === '0x00' ? (
-                                                        <Chip label="Testnet" size="small" color="secondary" />
-                                                    ) : null}
-                                                </Stack>
+                                                </MiTokenListItem>
                                             }
                                         />
                                         {token.tokenid !== '0x00' ? (
@@ -147,10 +138,6 @@ const TokenDetail = () => {
                                                 <CardMedia
                                                     component="img"
                                                     height={enlargenCover ? '100%' : '194'}
-                                                    //  Minima -> MinimaIcon
-                                                    // imageUrl -> imageUrl
-                                                    // url -> url
-                                                    // fallback robohash -> `https://robohash.org/${token?.tokenid}`
                                                     src={
                                                         token.tokenid === '0x00'
                                                             ? MinimaIcon

@@ -11,9 +11,21 @@ export {
     MiTokenContainer,
     MiTokenError,
     MiNoTokenSelected,
-    NoResults,
+    MiTestnet,
     MiTokenNameWrapper,
+    NoResults,
 };
+
+const MiTestnet = styled('p')`
+    margin: 0;
+    font-family: Manrope-semibold;
+    color: #fefefe;
+    padding: 4px;
+    border-radius: 12px;
+    background: #317aff;
+    height: fit-content;
+    font-size: 0.675rem;
+`;
 
 const MiTokenContainer = styled('div')`
     margin-top: 16px;
