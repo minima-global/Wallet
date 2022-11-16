@@ -12,6 +12,7 @@ export {
     MiTokenError,
     MiNoTokenSelected,
     NoResults,
+    MiTokenNameWrapper,
 };
 
 const MiTokenContainer = styled('div')`
@@ -51,13 +52,17 @@ const MiTokenListItem = styled('li')`
     border: 1px solid #fefefe !important;
     overflow: hidden;
 
+    > .MuiAvatar-root {
+        margin-right: 8px !important;
+    }
+
     :hover {
         background: rgba(255, 255, 255, 0.8);
         cursor: pointer;
     }
 
-    * {
-        padding: 0 8px;
+    > p {
+        padding: 0;
         text-overflow: ellipsis;
         display: block;
     }
@@ -87,6 +92,13 @@ const MiSearchBarWithIcon = styled('div')`
     }
 `;
 
+const MiTokenNameWrapper = styled('div')`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 4px;
+`;
 const MiTokenName = styled('p')`
     padding: 0;
     margin: 0;
@@ -100,6 +112,7 @@ const MiTokenName = styled('p')`
     max-width: 35vw;
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
 `;
 const MiTokenNameTicker = styled('p')`
     padding: 0;

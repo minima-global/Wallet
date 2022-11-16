@@ -19,6 +19,7 @@ import {
     MiTokenError,
     MiNoTokenSelected,
     NoResults,
+    MiTokenNameWrapper,
 } from './MiToken';
 
 import { containsText } from '../../functions';
@@ -27,6 +28,7 @@ import { DRAWERWIDTH, MINIMA__TOKEN_ID } from '../../constants';
 import MinimaIcon from '../../../assets/images/minimaLogoSquare.png';
 import { FormikErrors, FormikState } from 'formik';
 import Decimal from 'decimal.js';
+import NFTAuthenticity from '../../../pages/components/tokens/NFTAuthenticity';
 
 const DropDownContainer = styled('div')`
     width: 100%;
@@ -129,6 +131,7 @@ const DropDownListHeader = styled('h6')`
     text-align: center;
     padding: 0;
     margin: 0;
+    margin-bottom: 22px;
 `;
 
 interface IProps {
@@ -224,9 +227,12 @@ const MiSelect = ({ value, tokens, error, setFieldValue, resetForm, coinSplitMod
                                     alignItems="flex-start"
                                     sx={{ textOverflow: 'ellipsis' }}
                                 >
-                                    <MiTokenName>
-                                        {typeof value.token == 'string' ? value.token : value.token.name}
-                                    </MiTokenName>
+                                    <MiTokenNameWrapper>
+                                        <MiTokenName>
+                                            {typeof value.token == 'string' ? value.token : value.token.name}
+                                        </MiTokenName>
+                                        {value.tokenid !== MINIMA__TOKEN_ID ? <NFTAuthenticity token={value} /> : null}
+                                    </MiTokenNameWrapper>
                                     <MiTokenNameTicker>
                                         {value.tokenid === '0x00' ? (
                                             'MINIMA'
@@ -293,9 +299,14 @@ const MiSelect = ({ value, tokens, error, setFieldValue, resetForm, coinSplitMod
                                                         }
                                                     />
                                                     <Stack spacing={0.3} flexDirection="column" alignItems="flex-start">
-                                                        <MiTokenName>
-                                                            {typeof t.token == 'string' ? t.token : t.token.name}
-                                                        </MiTokenName>
+                                                        <MiTokenNameWrapper>
+                                                            <MiTokenName>
+                                                                {typeof t.token == 'string' ? t.token : t.token.name}
+                                                            </MiTokenName>
+                                                            {t.tokenid !== MINIMA__TOKEN_ID ? (
+                                                                <NFTAuthenticity token={t} />
+                                                            ) : null}
+                                                        </MiTokenNameWrapper>
 
                                                         <MiTokenNameTicker>
                                                             {t.tokenid == '0x00' ? (
@@ -366,9 +377,14 @@ const MiSelect = ({ value, tokens, error, setFieldValue, resetForm, coinSplitMod
                                                         }
                                                     />
                                                     <Stack spacing={0.3} flexDirection="column" alignItems="flex-start">
-                                                        <MiTokenName>
-                                                            {typeof t.token == 'string' ? t.token : t.token.name}
-                                                        </MiTokenName>
+                                                        <MiTokenNameWrapper>
+                                                            <MiTokenName>
+                                                                {typeof t.token == 'string' ? t.token : t.token.name}
+                                                            </MiTokenName>
+                                                            {t.tokenid !== MINIMA__TOKEN_ID ? (
+                                                                <NFTAuthenticity token={t} />
+                                                            ) : null}
+                                                        </MiTokenNameWrapper>
 
                                                         <MiTokenNameTicker>
                                                             {t.tokenid == '0x00' ? (

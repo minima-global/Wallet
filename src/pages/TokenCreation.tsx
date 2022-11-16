@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Card, CardContent, TextField, Button, Stack, Typography } from '@mui/material';
+import { Card, CardContent, TextField, Button, Stack } from '@mui/material';
 import MiniModal from '../shared/components/MiniModal';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -301,7 +301,7 @@ const TokenCreation: FC = () => {
                                         variant="contained"
                                         fullWidth
                                     >
-                                        {formik.isSubmitting ? 'Please wait...' : 'Next'}
+                                        {formik.isSubmitting ? 'Please wait...' : 'Create'}
                                     </Button>
                                 </Stack>
                             </form>

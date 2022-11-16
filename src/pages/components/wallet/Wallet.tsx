@@ -17,6 +17,7 @@ import {
     MiTokenListItem,
     MiTokenName,
     MiTokenNameTicker,
+    MiTokenNameWrapper,
     NoResults,
 } from '../../../shared/components/layout/MiToken';
 import MiSearch from '../../../shared/components/layout/svgs/MiSearch';
@@ -81,10 +82,10 @@ const Wallet = () => {
                                 }
                             />
                             <Stack spacing={0.3} flexDirection="column" alignItems="flex-start">
-                                <MiTokenName>
-                                    {typeof t.token == 'string' ? t.token : t.token.name}{' '}
+                                <MiTokenNameWrapper>
+                                    <MiTokenName>{typeof t.token == 'string' ? t.token : t.token.name}</MiTokenName>
                                     {t.tokenid !== MINIMA__TOKEN_ID ? <NFTAuthenticity token={t} /> : null}
-                                </MiTokenName>
+                                </MiTokenNameWrapper>
 
                                 <MiTokenNameTicker>
                                     {t.tokenid == '0x00' ? (

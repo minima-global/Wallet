@@ -9,7 +9,7 @@ interface IProps {
     token: MinimaToken;
 }
 const NFTAuthenticity = ({ token }: IProps) => {
-    const [isTokenValidated, setIsTokenValidated] = React.useState(true);
+    const [isTokenValidated, setIsTokenValidated] = React.useState(false);
 
     React.useEffect(() => {
         callTokenValidate(token.tokenid).then(() => {

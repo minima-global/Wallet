@@ -3,7 +3,7 @@
   height: 56px!important;
   background: #ffffff;
   padding: 0!important;
-  margin: 0!important;
+  margin-right: 8px;
 }
 .avatar img {
   width: inherit;
