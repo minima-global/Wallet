@@ -21,7 +21,7 @@ export const splitCoin = async (tokenid: string, sendable: string, burn: string)
   if (burn.length > 0 && tokenid === MINIMA__TOKEN_ID) {
     // minus the burn, get total to send back after splitting
     finalTotalToSend = new Decimal(sendable).minus(new Decimal(burn));
-    console.log(finalTotalToSend.toString())
+    //console.log(finalTotalToSend.toString())
     return rpc(`send address:${mAddr} tokenid:${tokenid} amount:${finalTotalToSend.toString()} split:${2} burn:${burn}`);
   }
 
