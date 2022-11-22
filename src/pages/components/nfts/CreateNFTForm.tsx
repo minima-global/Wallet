@@ -152,7 +152,7 @@ const CreateNFTForm = () => {
 
                 <FormFieldWrapper
                     required={true}
-                    help="Enter the total supply to create, By default NFTs are 1 to 1 with a Minima token and must not be fractions of a number but whole"
+                    help="Enter the total supply to create, amount cannot have decimals but must be whole"
                     children={
                         <TextField
                             disabled={formik.isSubmitting}
