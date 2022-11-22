@@ -152,7 +152,7 @@ const CreateNFTForm = () => {
 
                 <FormFieldWrapper
                     required={true}
-                    help="Enter the total supply to create, amount cannot have decimals but must be whole"
+                    help="NFT's are non-fungible tokens, and can only be sent or received as whole coins, never fractions"
                     children={
                         <TextField
                             disabled={formik.isSubmitting}
@@ -367,13 +367,6 @@ const useMySchema = () => {
 
             if (val === undefined || parent.amount === undefined) {
                 return false;
-            }
-
-            if (parent.amount !== undefined && new Decimal(parent.amount).greaterThan(new Decimal(val.sendable))) {
-                return createError({
-                    path: 'amount',
-                    message: `Insufficient funds, you do not have enough Minima.`,
-                });
             }
 
             if (new Decimal(val.sendable).equals(new Decimal(0))) {
