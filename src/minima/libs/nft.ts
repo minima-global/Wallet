@@ -32,7 +32,7 @@ const buildCustomTokenCreation = async (tokenData: MiNFT | MiCustomToken, amount
 
 const FAVORITESTABLE = 'FAVORITES';
  function createFavoritesTable() {
-  const Q = `create table if not exists ${FAVORITESTABLE} (id int auto_increment primary key, tokenid varchar(255))`;
+  const Q = `create table if not exists ${FAVORITESTABLE} (id bigint auto_increment, tokenid varchar(255))`;
 
   return new Promise((resolve, reject) => {
     MDS.sql(Q, function(res) {
