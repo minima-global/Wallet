@@ -1,6 +1,6 @@
 {
     "name": "wallet",
-    "version": "2.0.0",
+    "version": "2.0.0-feature",
     "private": true,
     "scripts": {
         "start": "env-cmd -f .env.development react-scripts start",
@@ -12,7 +12,6 @@
         "build-zip": "npm run build && rm minidapp/wallet_* && cd build && zip -r wallet_$npm_package_version.mds.zip . && mv wallet_$npm_package_version.mds.zip ../minidapp/"
     },
     "homepage": ".",
-    "proxy": "http://localhost:11005",
     "eslintConfig": {
         "extends": [
             "react-app",

@@ -3,8 +3,6 @@ import { FC, useState } from 'react';
 
 import GridLayout from '../layout/GridLayout';
 
-import { useAppDispatch } from '../minima/redux/hooks';
-
 import MiCard from '../shared/components/layout/MiCard';
 import ValueTransfer from './components/forms/ValueTransfer';
 import CoinSplit from './components/forms/CoinSplit';

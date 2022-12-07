@@ -99,9 +99,12 @@ const MiSearchBar = styled('input')`
 const MiSearchBarWithIcon = styled('div')`
     width: 100%;
     position: relative;
+    border-bottom: 1px solid #bdbdc4;
+    padding: 0 16px;
+    padding-bottom: 16px;
     & > svg {
         position: absolute;
-        right: 16px;
+        right: 32px;
         top: 15px;
         transition: 0.3s;
     }
@@ -161,6 +164,7 @@ const MiTokenAmount = styled('p')`
 
 const NoResults = styled('div')`
     margin-top: 50px;
+    padding-bottom: 50px;
     > h6 {
         font-weight: 700;
         font-size: 1.5rem;

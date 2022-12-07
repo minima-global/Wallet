@@ -154,7 +154,7 @@ const AppNavigation = () => {
                 </Grid>
             </Toolbar>
 
-            <Box component="main" sx={[appwidth, contentPadding]}>
+            <Box component="main" sx={[appwidth, contentPadding, scroller]}>
                 {wallet.length ? (
                     <Routes>
                         <Route path="/" element={<Navigate replace to="/balance" />} />
@@ -196,6 +196,11 @@ const AppNavigation = () => {
             </Box>
         </>
     );
+};
+const HEADER__HEIGHT = 48;
+const scroller = {
+    height: `calc(100vh - ${HEADER__HEIGHT}px)`,
+    overflowY: 'scroll',
 };
 const nav = {
     width: { sm: DRAWERWIDTH },
