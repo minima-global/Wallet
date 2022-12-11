@@ -1,12 +1,13 @@
-import { Card, CardContent } from "@mui/material";
-import styles from "./styling/Card.module.css";
+import { Stack } from '@mui/material';
+import { Box } from '@mui/system';
+import styles from './styling/Card.module.css';
 
 const MiCard = ({ children }: any) => {
-  return (
-    <Card variant="outlined" className={styles["card"]}>
-      <CardContent className={styles["card"]}>{children}</CardContent>
-    </Card>
-  );
+    return (
+        <Stack className={styles['card']}>
+            <Box>{children}</Box>
+        </Stack>
+    );
 };
 
 export default MiCard;
