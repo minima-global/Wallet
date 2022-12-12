@@ -11,6 +11,7 @@ import { selectFavouriteNFTs, selectNFTs } from '../minima/redux/slices/balanceS
 
 import styles from '../theme/cssmodule/Components.module.css';
 import { MinimaToken } from '../minima/types/minima2';
+import { NoResults } from '../shared/components/layout/MiToken';
 
 const NFTs: FC = () => {
     const navigate = useNavigate();
@@ -99,15 +100,28 @@ const NFTs: FC = () => {
                                             );
                                         })
                                     ) : tabsValue === 'one' ? (
-                                        <Typography variant="caption" className={styles['no-results-text-display']}>
-                                            No NFTs collected yet.
-                                        </Typography>
+                                        <NoResults>
+                                            <h6>No results</h6>
+                                            <p>Please try your search again.</p>
+                                        </NoResults>
                                     ) : null}
                                     {allNFTs &&
                                     typeof allNFTs !== 'undefined' &&
                                     tabsValue === 'two' &&
-                                    allNFTs.length === 0 ? (
-                                        <Typography variant="caption">No favourites yet.</Typography>
+                                    allNFTs.length === 0 &&
+                                    filterText.length === 0 ? (
+                                        <NoResults>
+                                            <h6>No favorites yet</h6>
+                                            <p>
+                                                Tap the heart button on the top right corner of your non-fungible token.
+                                            </p>
+                                        </NoResults>
+                                    ) : null}
+                                    {allNFTs && allNFTs.length === 0 && filterText.length > 0 ? (
+                                        <NoResults>
+                                            <h6>No results</h6>
+                                            <p>Please try your search again.</p>
+                                        </NoResults>
                                     ) : null}
                                 </Grid>
                             </Stack>
