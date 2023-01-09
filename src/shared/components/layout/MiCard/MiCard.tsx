@@ -1,6 +1,6 @@
 import { Stack } from '@mui/material';
 import { Box } from '@mui/system';
-import styles from './styling/Card.module.css';
+import styles from './MiCard.module.css';
 
 const MiCard = ({ children }: any) => {
     return (

@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import styles from './styling/sendpage/TokenSelect.module.css';
 import { MinimaToken } from '../../../minima/types/minima2';
 import React from 'react';
-import MiDismiss from './svgs/MiDismiss';
+import MiDismiss from './svgs/MiDismiss/MiDismiss';
 import { Stack, useMediaQuery, useTheme } from '@mui/material';
 import MiSearch from './svgs/MiSearch';
 import { Avatar } from '@mui/material';

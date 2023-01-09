@@ -17,6 +17,11 @@ import ModalManager from '../managers/ModalManager';
 import MiniModal from '../../../shared/components/MiniModal';
 import Pending from './Pending';
 import FormFieldWrapper from '../../../shared/components/FormFieldWrapper';
+import styled from '@emotion/styled';
+
+import QrScanner from '../../../shared/components/qrscanner/QrScanner';
+import validateMinimaAddress from '../../../minima/commands/validateMinimaAddress/validateMinimaAddress';
+import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
 
 Decimal.set({ precision: MINIMA__DECIMAL_PRECISION });
 
@@ -26,6 +31,9 @@ interface ISendForm {
     address: string;
     burn: string;
 }
+
+const MiCameraButton = styled('img')``;
+
 interface IProps {}
 type IStatusModal = 'success' | 'error' | 'pending' | '';
 const ValueTransfer = ({}: IProps) => {
@@ -33,6 +41,8 @@ const ValueTransfer = ({}: IProps) => {
     const wallet = useAppSelector(selectBalance);
     const [modalEmployee, setModalEmployee] = React.useState('');
     const [statusModal, setStatusModal] = React.useState<IStatusModal>('');
+    const [openQrScanner, setOpenQrScanner] = React.useState(true);
+    const [errorScannedMinimaAddress, setErrorScannedMinimaAddress] = React.useState<false | string>(false);
 
     const formik = useFormik({
         initialValues: {
@@ -59,6 +69,13 @@ const ValueTransfer = ({}: IProps) => {
         validationSchema: mySchema,
     });
 
+    const handleCloseQrScanner = () => {
+        setOpenQrScanner(false);
+    };
+    const handleOpenQrScanner = () => {
+        setOpenQrScanner(true);
+    };
+
     const handleSuccessState = () => {
         setStatusModal('success');
         handleCloseModalManager();
@@ -82,8 +99,29 @@ const ValueTransfer = ({}: IProps) => {
     };
     const handleCloseStatusModal = () => setStatusModal('');
 
+    const setAddressFieldValue = async (scannedMinimaAddress: string) => {
+        setErrorScannedMinimaAddress(false);
+        try {
+            await validateMinimaAddress(scannedMinimaAddress);
+            // it's valid so set input field
+            formik.setFieldValue('address', scannedMinimaAddress);
+            // close Modal
+            setOpenQrScanner(false);
+        } catch (error: any) {
+            console.error(error);
+            // set error
+            setErrorScannedMinimaAddress(error.message);
+        }
+    };
+
     return (
         <>
+            <QrScanner
+                setScannedResult={setAddressFieldValue}
+                closeModal={handleCloseQrScanner}
+                open={openQrScanner}
+                error={errorScannedMinimaAddress}
+            />
             <form onSubmit={formik.handleSubmit}>
                 <Stack spacing={2}>
                     {/* Select a token */}
@@ -96,31 +134,34 @@ const ValueTransfer = ({}: IProps) => {
                         resetForm={formik.resetForm}
                     />
                     {/* Choose an address */}
-                    <TextField
-                        disabled={formik.isSubmitting}
-                        fullWidth
-                        id="address"
-                        name="address"
-                        placeholder="minima address"
-                        value={formik.values.address}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        error={formik.touched.address && Boolean(formik.errors.address)}
-                        helperText={formik.touched.address && formik.errors.address}
-                        FormHelperTextProps={{ className: styles['form-helper-text'] }}
-                        InputProps={{
-                            style:
-                                formik.touched.address && Boolean(formik.errors.address)
-                                    ? {
-                                          borderBottomLeftRadius: 0,
-                                          borderBottomRightRadius: 0,
-                                      }
-                                    : {
-                                          borderBottomLeftRadius: 8,
-                                          borderBottomRightRadius: 8,
-                                      },
-                        }}
-                    />
+                    <Stack alignItems="center" justifyContent="center">
+                        <TextField
+                            disabled={formik.isSubmitting}
+                            fullWidth
+                            id="address"
+                            name="address"
+                            placeholder="minima address"
+                            value={formik.values.address}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            error={formik.touched.address && Boolean(formik.errors.address)}
+                            helperText={formik.touched.address && formik.errors.address}
+                            FormHelperTextProps={{ className: styles['form-helper-text'] }}
+                            InputProps={{
+                                style:
+                                    formik.touched.address && Boolean(formik.errors.address)
+                                        ? {
+                                              borderBottomLeftRadius: 0,
+                                              borderBottomRightRadius: 0,
+                                          }
+                                        : {
+                                              borderBottomLeftRadius: 8,
+                                              borderBottomRightRadius: 8,
+                                          },
+                            }}
+                        />
+                        <MiCameraButton onClick={() => console.log('Open qr scanner')} src="" />
+                    </Stack>
                     {/* Choose an amount */}
                     <TextField
                         disabled={formik.isSubmitting}
@@ -147,6 +188,11 @@ const ValueTransfer = ({}: IProps) => {
                                           borderBottomLeftRadius: 8,
                                           borderBottomRightRadius: 8,
                                       },
+                            endAdornment: (
+                                <>
+                                    <QrCodeScannerIcon color="inherit" onClick={handleOpenQrScanner} />
+                                </>
+                            ),
                         }}
                     />
                     {/* Choose a burn amount */}

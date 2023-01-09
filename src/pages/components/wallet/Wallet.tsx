@@ -5,7 +5,7 @@ import { MinimaToken } from '../../../minima/types/minima2';
 import { useAppSelector } from '../../../minima/redux/hooks';
 import { selectBalance } from '../../../minima/redux/slices/balanceSlice';
 import { containsText, numberWithCommas } from '../../../shared/functions';
-import MiCard from '../../../shared/components/layout/MiCard';
+import MiCard from '../../../shared/components/layout/MiCard/MiCard';
 
 import styles from './Wallet.module.css';
 import {

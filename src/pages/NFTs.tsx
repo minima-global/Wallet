@@ -1,8 +1,8 @@
 import { FC, useState, useMemo } from 'react';
-import { Grid, Card, CardContent, TextField, Button, Stack, Typography, CardHeader, Tabs, Tab } from '@mui/material';
+import { Grid, Card, CardContent, TextField, Button, Stack, CardHeader, Tabs, Tab } from '@mui/material';
 
 import { useNavigate } from 'react-router-dom';
-import { containsText, isPropertyString, strToHex } from '../shared/functions';
+import { containsText, isPropertyString } from '../shared/functions';
 
 import NFTCard from './components/nfts/NFTCard';
 import GridLayout from '../layout/GridLayout';
@@ -17,6 +17,7 @@ const NFTs: FC = () => {
     const navigate = useNavigate();
     const [tabsValue, setTabsValue] = useState('one');
     const [filterText, setFilterText] = useState('');
+
     let allNFTs = useAppSelector(selectNFTs);
     const favourited = useAppSelector(selectFavouriteNFTs);
 

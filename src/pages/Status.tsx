@@ -17,7 +17,7 @@ import { useAppSelector } from '../minima/redux/hooks';
 import { selectBalance } from '../minima/redux/slices/balanceSlice';
 
 import styled from '@emotion/styled';
-import MiCard from '../shared/components/layout/MiCard';
+import MiCard from '../shared/components/layout/MiCard/MiCard';
 
 const MiStatusWrapper = styled('div')`
     display: flex;
