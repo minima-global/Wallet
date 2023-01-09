@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import styles from './styling/sendpage/TokenSelect.module.css';
 import { MinimaToken } from '../../../minima/types/minima2';
 import React from 'react';
-import MiDismiss from './svgs/MiDismiss';
+import MiDismiss from './svgs/MiDismiss/MiDismiss';
 import { Stack, useMediaQuery, useTheme } from '@mui/material';
 import MiSearch from './svgs/MiSearch';
 import { Avatar } from '@mui/material';
@@ -70,13 +70,11 @@ const DropDownListContainer = styled('div')`
     background: rgba(255, 255, 255, 0.8);
     border-radius: 24px 24px 0px 0px;
     z-index: 1000;
-    overflow: auto;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
-
-    padding-top: 32px;
-    padding-left: 16px;
-    padding-right: 16px;
+    padding-bottom: 0;
+    box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.5);
 
     @media (min-width: 600px) {
         width: calc(100% - ${DRAWERWIDTH}px) !important;
@@ -87,12 +85,16 @@ const DropDownListContainer = styled('div')`
 const DropDownListContainerDesktop = styled('div')`
     position: relative;
     background: rgba(255, 255, 255, 0.8);
-    padding: 16px;
     border-radius: 24px;
     width: 50vw;
     max-height: 85vh;
-    overflow-y: scroll;
+    overflow-y: hidden;
     overflow-x: hidden;
+
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 0;
+    box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.5);
 `;
 const BackDrop = styled('div')`
     background: rgba(0, 0, 0, 0.6);
@@ -121,8 +123,10 @@ const DropDownList = styled('ul')`
         margin-bottom: 0;
     }
 `;
+
 const Scroller = styled('div')`
-    overflow: auto;
+    overflow: scroll;
+    padding: 0 16px;
     flex-grow: 1;
 `;
 
@@ -177,11 +181,11 @@ const MiSelect = ({ value, tokens, error, setFieldValue, resetForm, coinSplitMod
     const [filterWallet, setFilterWallet] = React.useState<MinimaToken[]>([]);
     const [filterText, setFilterText] = React.useState('');
 
-    if (isOpen && mobileView) {
-        document.body.style.overflow = 'hidden';
-    } else {
-        document.body.style.overflow = 'auto';
-    }
+    // if (isOpen && mobileView) {
+    //     document.body.style.overflow = 'hidden';
+    // } else {
+    //     document.body.style.overflow = 'auto';
+    // }
 
     const toggling = () => setOpen(!isOpen);
     const onOptionClicked = (t: MinimaToken) => {
@@ -265,76 +269,72 @@ const MiSelect = ({ value, tokens, error, setFieldValue, resetForm, coinSplitMod
                     <>
                         <BackDrop className={styles['fadeIn']}>
                             <DropDownListContainer className={isOpen ? styles['slideIn'] : styles['slideOut']}>
-                                <Stack flexDirection="column">
-                                    <Stack flexDirection="row" justifyContent="flex-end">
-                                        <MiDismiss size={16} onClick={toggling} className={styles['dismiss']} />
-                                    </Stack>
-                                    <DropDownListHeader>Select token</DropDownListHeader>
-                                    <MiSearchBarWithIcon>
-                                        <MiSearchBar
-                                            value={filterText}
-                                            onChange={(v: any) => {
-                                                setFilterText(v.target.value);
-                                            }}
-                                            placeholder="Search by name or tokenid"
-                                        />
-                                        <MiSearch color="#fff" size={20} />
-                                    </MiSearchBarWithIcon>
-
-                                    <Scroller>
-                                        <DropDownList>
-                                            {filterWallet.length == 0 ? (
-                                                <NoResults>
-                                                    <h6>No results</h6>
-                                                    <p>Please try your search again.</p>
-                                                </NoResults>
-                                            ) : null}
-                                            {filterWallet.map((t: MinimaToken) => (
-                                                <MiTokenListItem key={t.tokenid} onClick={() => onOptionClicked(t)}>
-                                                    <Avatar
-                                                        className={styles['avatar']}
-                                                        variant="rounded"
-                                                        src={
-                                                            t.tokenid === MINIMA__TOKEN_ID
-                                                                ? MinimaIcon
-                                                                : t.token.url && t.token.url.length
-                                                                ? t.token.url
-                                                                : `https://robohash.org/${t.tokenid}`
-                                                        }
-                                                    />
-                                                    <Stack spacing={0.3} flexDirection="column" alignItems="flex-start">
-                                                        <MiTokenNameWrapper>
-                                                            <MiTokenName>
-                                                                {typeof t.token == 'string' ? t.token : t.token.name}
-                                                            </MiTokenName>
-                                                            {t.tokenid !== MINIMA__TOKEN_ID ? (
-                                                                <NFTAuthenticity token={t} />
-                                                            ) : null}
-                                                        </MiTokenNameWrapper>
-
-                                                        <MiTokenNameTicker>
-                                                            {t.tokenid == '0x00' ? (
-                                                                'MINIMA'
-                                                            ) : t.token.hasOwnProperty('ticker') ? (
-                                                                t.token.ticker
-                                                            ) : (
-                                                                <MiSkeleton />
-                                                            )}
-                                                        </MiTokenNameTicker>
-                                                        {!coinSplitMode && <MiTokenAmount>{t.sendable}</MiTokenAmount>}
-                                                        {coinSplitMode && (
-                                                            <MiTokenAmount>{`${t.coins} available coin${
-                                                                new Decimal(t.coins).greaterThan(new Decimal(1))
-                                                                    ? 's'
-                                                                    : ''
-                                                            }`}</MiTokenAmount>
-                                                        )}
-                                                    </Stack>
-                                                </MiTokenListItem>
-                                            ))}
-                                        </DropDownList>
-                                    </Scroller>
+                                <Stack flexDirection="row" justifyContent="flex-end" sx={{ padding: '16px' }}>
+                                    <MiDismiss size={16} onClick={toggling} className={styles['dismiss']} />
                                 </Stack>
+                                <DropDownListHeader>Select token</DropDownListHeader>
+                                <MiSearchBarWithIcon>
+                                    <MiSearchBar
+                                        value={filterText}
+                                        onChange={(v: any) => {
+                                            setFilterText(v.target.value);
+                                        }}
+                                        placeholder="Search by name or tokenid"
+                                    />
+                                    <MiSearch color="#fff" size={20} />
+                                </MiSearchBarWithIcon>
+
+                                <Scroller>
+                                    <DropDownList>
+                                        {filterWallet.length == 0 ? (
+                                            <NoResults>
+                                                <h6>No results</h6>
+                                                <p>Please try your search again.</p>
+                                            </NoResults>
+                                        ) : null}
+                                        {filterWallet.map((t: MinimaToken) => (
+                                            <MiTokenListItem key={t.tokenid} onClick={() => onOptionClicked(t)}>
+                                                <Avatar
+                                                    className={styles['avatar']}
+                                                    variant="rounded"
+                                                    src={
+                                                        t.tokenid === MINIMA__TOKEN_ID
+                                                            ? MinimaIcon
+                                                            : t.token.url && t.token.url.length
+                                                            ? t.token.url
+                                                            : `https://robohash.org/${t.tokenid}`
+                                                    }
+                                                />
+                                                <Stack spacing={0.3} flexDirection="column" alignItems="flex-start">
+                                                    <MiTokenNameWrapper>
+                                                        <MiTokenName>
+                                                            {typeof t.token == 'string' ? t.token : t.token.name}
+                                                        </MiTokenName>
+                                                        {t.tokenid !== MINIMA__TOKEN_ID ? (
+                                                            <NFTAuthenticity token={t} />
+                                                        ) : null}
+                                                    </MiTokenNameWrapper>
+
+                                                    <MiTokenNameTicker>
+                                                        {t.tokenid == '0x00' ? (
+                                                            'MINIMA'
+                                                        ) : t.token.hasOwnProperty('ticker') ? (
+                                                            t.token.ticker
+                                                        ) : (
+                                                            <MiSkeleton />
+                                                        )}
+                                                    </MiTokenNameTicker>
+                                                    {!coinSplitMode && <MiTokenAmount>{t.sendable}</MiTokenAmount>}
+                                                    {coinSplitMode && (
+                                                        <MiTokenAmount>{`${t.coins} available coin${
+                                                            new Decimal(t.coins).greaterThan(new Decimal(1)) ? 's' : ''
+                                                        }`}</MiTokenAmount>
+                                                    )}
+                                                </Stack>
+                                            </MiTokenListItem>
+                                        ))}
+                                    </DropDownList>
+                                </Scroller>
                             </DropDownListContainer>
                         </BackDrop>
                     </>
@@ -343,76 +343,72 @@ const MiSelect = ({ value, tokens, error, setFieldValue, resetForm, coinSplitMod
                     <>
                         <BackDrop>
                             <DropDownListContainerDesktop>
-                                <Stack flexDirection="column">
-                                    <Stack flexDirection="row" justifyContent="flex-end">
-                                        <MiDismiss size={16} onClick={toggling} className={styles['dismiss']} />
-                                    </Stack>
-                                    <DropDownListHeader>Select token</DropDownListHeader>
-                                    <MiSearchBarWithIcon>
-                                        <MiSearchBar
-                                            value={filterText}
-                                            onChange={(v: any) => {
-                                                setFilterText(v.target.value);
-                                            }}
-                                            placeholder="Search by name or tokenid"
-                                        />
-                                        <MiSearch color="#fff" size={20} />
-                                    </MiSearchBarWithIcon>
-
-                                    <Scroller>
-                                        <DropDownList>
-                                            {filterWallet.length == 0 ? (
-                                                <NoResults>
-                                                    <h6>No results</h6>
-                                                    <p>Please try your search again.</p>
-                                                </NoResults>
-                                            ) : null}
-                                            {filterWallet.map((t: MinimaToken) => (
-                                                <MiTokenListItem key={t.tokenid} onClick={() => onOptionClicked(t)}>
-                                                    <Avatar
-                                                        className={styles['avatar']}
-                                                        variant="rounded"
-                                                        src={
-                                                            t.tokenid === MINIMA__TOKEN_ID
-                                                                ? MinimaIcon
-                                                                : t.token.url && t.token.url.length
-                                                                ? t.token.url
-                                                                : `https://robohash.org/${t.tokenid}`
-                                                        }
-                                                    />
-                                                    <Stack spacing={0.3} flexDirection="column" alignItems="flex-start">
-                                                        <MiTokenNameWrapper>
-                                                            <MiTokenName>
-                                                                {typeof t.token == 'string' ? t.token : t.token.name}
-                                                            </MiTokenName>
-                                                            {t.tokenid !== MINIMA__TOKEN_ID ? (
-                                                                <NFTAuthenticity token={t} />
-                                                            ) : null}
-                                                        </MiTokenNameWrapper>
-
-                                                        <MiTokenNameTicker>
-                                                            {t.tokenid == '0x00' ? (
-                                                                'MINIMA'
-                                                            ) : t.token.hasOwnProperty('ticker') ? (
-                                                                t.token.ticker
-                                                            ) : (
-                                                                <MiSkeleton />
-                                                            )}
-                                                        </MiTokenNameTicker>
-                                                        {!coinSplitMode && <MiTokenAmount>{t.sendable}</MiTokenAmount>}
-                                                        {coinSplitMode && (
-                                                            <MiTokenAmount>{`${t.coins} available coin${
-                                                                new Decimal(t.coins).greaterThan(new Decimal(1))
-                                                                    ? 's'
-                                                                    : ''
-                                                            }`}</MiTokenAmount>
-                                                        )}
-                                                    </Stack>
-                                                </MiTokenListItem>
-                                            ))}
-                                        </DropDownList>
-                                    </Scroller>
+                                <Stack flexDirection="row" justifyContent="flex-end" sx={{ padding: '16px' }}>
+                                    <MiDismiss size={16} onClick={toggling} className={styles['dismiss']} />
                                 </Stack>
+                                <DropDownListHeader>Select token</DropDownListHeader>
+                                <MiSearchBarWithIcon>
+                                    <MiSearchBar
+                                        value={filterText}
+                                        onChange={(v: any) => {
+                                            setFilterText(v.target.value);
+                                        }}
+                                        placeholder="Search by name or tokenid"
+                                    />
+                                    <MiSearch color="#fff" size={20} />
+                                </MiSearchBarWithIcon>
+
+                                <Scroller>
+                                    <DropDownList>
+                                        {filterWallet.length == 0 ? (
+                                            <NoResults>
+                                                <h6>No results</h6>
+                                                <p>Please try your search again.</p>
+                                            </NoResults>
+                                        ) : null}
+                                        {filterWallet.map((t: MinimaToken) => (
+                                            <MiTokenListItem key={t.tokenid} onClick={() => onOptionClicked(t)}>
+                                                <Avatar
+                                                    className={styles['avatar']}
+                                                    variant="rounded"
+                                                    src={
+                                                        t.tokenid === MINIMA__TOKEN_ID
+                                                            ? MinimaIcon
+                                                            : t.token.url && t.token.url.length
+                                                            ? t.token.url
+                                                            : `https://robohash.org/${t.tokenid}`
+                                                    }
+                                                />
+                                                <Stack spacing={0.3} flexDirection="column" alignItems="flex-start">
+                                                    <MiTokenNameWrapper>
+                                                        <MiTokenName>
+                                                            {typeof t.token == 'string' ? t.token : t.token.name}
+                                                        </MiTokenName>
+                                                        {t.tokenid !== MINIMA__TOKEN_ID ? (
+                                                            <NFTAuthenticity token={t} />
+                                                        ) : null}
+                                                    </MiTokenNameWrapper>
+
+                                                    <MiTokenNameTicker>
+                                                        {t.tokenid == '0x00' ? (
+                                                            'MINIMA'
+                                                        ) : t.token.hasOwnProperty('ticker') ? (
+                                                            t.token.ticker
+                                                        ) : (
+                                                            <MiSkeleton />
+                                                        )}
+                                                    </MiTokenNameTicker>
+                                                    {!coinSplitMode && <MiTokenAmount>{t.sendable}</MiTokenAmount>}
+                                                    {coinSplitMode && (
+                                                        <MiTokenAmount>{`${t.coins} available coin${
+                                                            new Decimal(t.coins).greaterThan(new Decimal(1)) ? 's' : ''
+                                                        }`}</MiTokenAmount>
+                                                    )}
+                                                </Stack>
+                                            </MiTokenListItem>
+                                        ))}
+                                    </DropDownList>
+                                </Scroller>
                             </DropDownListContainerDesktop>
                         </BackDrop>
                     </>

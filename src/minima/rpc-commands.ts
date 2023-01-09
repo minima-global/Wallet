@@ -1,7 +1,6 @@
-import { resolve } from "path";
-import { MinimaToken } from "./types/minima2";
+import { MinimaToken } from './types/minima2';
 
-export {callSend, callGetAddress, callStatus, createCustomToken, getWalletBalance, callTokenValidate};
+export { callSend, callGetAddress, callStatus, createCustomToken, getWalletBalance, callTokenValidate };
 
 interface ISendPayload {
     token: MinimaToken;
@@ -11,111 +10,93 @@ interface ISendPayload {
 }
 const callSend = (data: ISendPayload) => {
     return rpc(`send amount:${data.amount} address:${data.address} tokenid:${data.token.tokenid} burn:${data.burn}`);
-}
- const callGetAddress = () => {
-    return req(`getaddress`);
-}
- const callStatus = () => {
-    return req(`status`);
-}
+};
+const callGetAddress = () => {
+    return rpc(`getaddress`);
+};
+const callStatus = () => {
+    return rpc(`status`);
+};
 
 const createCustomToken = (name: string, amount: string, decimals?: string, webvalidate?: string, burn?: string) => {
-    return rpc(`tokencreate name:${name} amount:${amount} ${decimals ? 'decimals:' + decimals : ''} ${webvalidate ? 'webvalidate:' + webvalidate : ''} ${burn ? 'burn:' + burn : ''}`);
-}
+    return rpc(
+        `tokencreate name:${name} amount:${amount} ${decimals ? 'decimals:' + decimals : ''} ${
+            webvalidate ? 'webvalidate:' + webvalidate : ''
+        } ${burn ? 'burn:' + burn : ''}`
+    );
+};
 
 /** Get Balance */
 
 const getWalletBalance = (): Promise<MinimaToken[]> => {
-
     return new Promise((resolve, reject) => {
-        rpc(`balance`).then((wallet) => {
-    
-            resolve(wallet);
-    
-        }).catch((err) => {
-    
-            reject(err);
-    
-        })
+        rpc(`balance`)
+            .then((wallet) => {
+                resolve(wallet);
+            })
+            .catch((err) => {
+                reject(err);
+            });
     });
-
-}
+};
 /**
- * 
- * @param tokenid 
+ *
+ * @param tokenid
  * @returns resolves promise if tokenvalidate is valid
  */
 const callTokenValidate = (tokenid: string): Promise<void> => {
     return new Promise((resolve, reject) => {
         rpc(`tokenvalidate tokenid:${tokenid}`).then((r) => {
             if (r.web.valid) {
-                resolve()
+                resolve();
             }
 
-            reject()
-        })
-    });
-}
-
-
-export const req = (command: string): Promise<any> => {
-    
-    return new Promise((resolve) => {
-        
-        MDS.cmd(command, (resp: any) => {
-            
-            resolve(resp);
-            
+            reject();
         });
-    
     });
-}
+};
 
 /** Rpc cmd v2 */
 
 export const rpc = (command: string): Promise<any> => {
     return new Promise((resolve, reject) => {
         MDS.cmd(command, (resp: any) => {
-            
-            
-
             if (resp.length > 0) {
                 //console.log(`multi command activity.`);
                 let success = true;
-                let error = "";
+                let error = '';
                 resp.forEach((r: any) => {
                     if (!r.status) {
                         success = false;
                         error = r.error;
                         return;
                     }
-                })
+                });
 
                 if (success) {
-                    resolve(resp[resp.length-1].response)
+                    resolve(resp[resp.length - 1].response);
                 } else {
-                    reject(error)
+                    reject(error);
                 }
             }
 
             if (resp.status && !resp.pending) {
-
                 resolve(resp.response);
-            
             }
-    
+
             if (!resp.status && resp.pending) {
-    
-                reject("pending"); 
-    
+                reject('pending');
             }
-    
+
             if (!resp.status && !resp.pending) {
-    
-                reject(resp.message ? resp.message : resp.error ? resp.error : `RPC ${command} has failed to fire off, please open this as an issue on Minima's official repo!`);
-    
+                reject(
+                    resp.message
+                        ? resp.message
+                        : resp.error
+                        ? resp.error
+                        : `RPC ${command} has failed to fire off, please open this as an issue on Minima's official repo!`
+                );
             }
-            
         });
     });
-}
+};

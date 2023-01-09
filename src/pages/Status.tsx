@@ -1,6 +1,5 @@
 import React, { useState, useEffect, FC, useContext } from 'react';
 import {
-    Chip,
     Grid,
     Card,
     CardContent,
@@ -10,33 +9,76 @@ import {
     ListItem,
     ListItemText,
     CircularProgress,
+    Stack,
 } from '@mui/material';
 import { Status as StatusType } from '../types/minima';
 import { callStatus } from '../minima/rpc-commands';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import CancelIcon from '@mui/icons-material/Cancel';
-import { useNavigate } from 'react-router-dom';
-// import { BalanceUpdates } from '../App';
 import { useAppSelector } from '../minima/redux/hooks';
 import { selectBalance } from '../minima/redux/slices/balanceSlice';
 
+import styled from '@emotion/styled';
+import MiCard from '../shared/components/layout/MiCard/MiCard';
+
+const MiStatusWrapper = styled('div')`
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    flex-flow: column;
+`;
+const MiStatusTitle = styled('h6')`
+    font-family: Manrope-semibold;
+    font-size: 1rem;
+    margin: 0;
+    padding: 0;
+    color: #16181c;
+`;
+
+const MiBreak = styled('hr')`
+    width: 100%;
+    height: 3px;
+    border-radius: 8px;
+    background-color: #317aff;
+
+    margin-bottom: 16px;
+`;
+
+const MiStatusItem = styled('div')`
+    * {
+        padding: 0;
+        margin: 0;
+    }
+    > p {
+        font-size: 0.875rem;
+        font-family: Manrope-regular;
+        color: #363a3f;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+    > label {
+        font-size: 1rem;
+        font-family: Manrope-semibold;
+        font-weight: 400;
+        color: #16181c;
+    }
+`;
+const MiStatusOnline = styled('div')`
+    border-radius: 25%;
+    padding: 8px;
+    background-color: #4e8b7c;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+`;
+
 const Status = () => {
     const [status, setStatus] = useState<StatusType>();
-    const [loading, setLoading] = useState(true);
 
     const balances = useAppSelector(selectBalance);
-
-    // const navigate = useNavigate();
 
     useEffect(() => {
         callStatus()
             .then((data: any) => {
                 setStatus(data.response);
-                setLoading(false);
             })
             .catch((err) => {
-                // navigate('/offline');
-                // setLoading(false);
                 console.error(err);
             });
     }, [balances]);
@@ -55,73 +97,67 @@ const Status = () => {
                     <CircularProgress sx={{ mt: 2 }} size={32} />
                 ) : (
                     <>
-                        <Grid item xs={12} md={12}>
-                            <Card variant="outlined">
-                                <CardContent>
-                                    <Box
-                                        sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
-                                    >
-                                        <Typography variant="h6">Overview</Typography>
-                                        <Chip
-                                            color="primary"
-                                            icon={status?.version ? <CheckCircleIcon /> : <CancelIcon />}
-                                            label={status?.version ? 'online' : 'offline'}
-                                        />
-                                    </Box>
-                                    <List className="MiniListItem-typography">
-                                        <ListItem>
-                                            <ListItemText
-                                                primary="Node Version"
-                                                secondary={status?.version ? status.version : null}
-                                            />
-                                        </ListItem>
-                                        <ListItem>
-                                            <ListItemText primary="Height" secondary={status?.chain.block} />
-                                        </ListItem>
-                                        <ListItem>
-                                            <ListItemText primary="Timestamp" secondary={status?.chain.time} />
-                                        </ListItem>
-                                        <ListItem>
-                                            <ListItemText primary="Devices" secondary={status?.devices} />
-                                        </ListItem>
-                                        <ListItem>
-                                            <ListItemText primary="Ram Usage" secondary={status?.memory.ram} />
-                                        </ListItem>
-                                        <ListItem>
-                                            <ListItemText primary="Disk Usage" secondary={status?.memory.disk} />
-                                        </ListItem>
-                                        <ListItem>
-                                            <ListItemText primary="User Data" secondary={status?.data} />
-                                        </ListItem>
-                                    </List>
-                                </CardContent>
-                            </Card>
+                        <Grid item xs={12} md={6}>
+                            <MiCard>
+                                <Stack justifyContent="space-between" alignItems="center" flexDirection="row">
+                                    <MiStatusTitle>Overview</MiStatusTitle>
+                                    {status?.version ? <MiStatusOnline /> : 'offline'}
+                                </Stack>
+                                <MiBreak />
+                                <MiStatusWrapper>
+                                    <MiStatusItem>
+                                        <label>Node Version</label>
+                                        <p>{status?.version ? status.version : 'N/A'}</p>
+                                    </MiStatusItem>
+                                    <MiStatusItem>
+                                        <label>Block Height</label>
+                                        <p>{status?.chain.block ? status.chain.block : 'N/A'}</p>
+                                    </MiStatusItem>
+                                    <MiStatusItem>
+                                        <label>Current timestamp</label>
+                                        <p>{status?.chain.time ? status.chain.time : 'N/A'}</p>
+                                    </MiStatusItem>
+                                    <MiStatusItem>
+                                        <label>Devices</label>
+                                        <p>{status?.devices ? status.devices : 'N/A'}</p>
+                                    </MiStatusItem>
+                                    <MiStatusItem>
+                                        <label>Ram Usage</label>
+                                        <p>{status?.memory.ram ? status.memory.ram : 'N/A'}</p>
+                                    </MiStatusItem>
+                                    <MiStatusItem>
+                                        <label>Disk Usage</label>
+                                        <p>{status?.memory.disk ? status.memory.disk : 'N/A'}</p>
+                                    </MiStatusItem>
+                                    <MiStatusItem>
+                                        <label>User Data</label>
+                                        <p>{status?.data ? status.data : 'N/A'}</p>
+                                    </MiStatusItem>
+                                    <MiStatusItem>
+                                        <label>RPC</label>
+                                        <p>{status?.network.rpc ? 'activated' : 'deactivated'}</p>
+                                    </MiStatusItem>
+                                </MiStatusWrapper>
+                            </MiCard>
+                        </Grid>
+
+                        <Grid item xs={12} md={6}>
+                            <MiCard>{status && status.memory ? <Memory memory={status.memory} /> : null}</MiCard>
                         </Grid>
                         <Grid item xs={12} md={6}>
-                            <Card variant="outlined">
-                                {status && status.memory ? <Memory memory={status.memory} /> : null}
-                            </Card>
+                            <MiCard>{status && status.chain ? <Chain chain={status.chain} /> : null}</MiCard>
                         </Grid>
                         <Grid item xs={12} md={6}>
-                            <Card variant="outlined">
-                                {status && status.chain ? <Chain chain={status.chain} /> : null}
-                            </Card>
+                            <MiCard>{status && status.txpow ? <TxPoW txpow={status.txpow} /> : null}</MiCard>
                         </Grid>
                         <Grid item xs={12} md={6}>
-                            <Card variant="outlined">
-                                {status && status.txpow ? <TxPoW txpow={status.txpow} /> : null}
-                            </Card>
-                        </Grid>
-                        <Grid item xs={12} md={6}>
-                            <Card variant="outlined">
-                                {status && status.network ? <Network network={status.network} /> : null}
-                            </Card>
+                            <MiCard>{status && status.network ? <Network network={status.network} /> : null}</MiCard>
                         </Grid>
                         {status && status.network.p2p && status.network.p2p.address ? (
                             <Grid item xs={12} md={12}>
-                                <Card variant="outlined">
+                                <MiCard>
                                     {status && status.network.p2p ? <P2P p2p={status.network.p2p} /> : null}
-                                </Card>
+                                </MiCard>
                             </Grid>
                         ) : null}
                     </>
@@ -134,12 +170,6 @@ const Status = () => {
 };
 
 export default Status;
-
-const bull = (
-    <Box component="span" sx={{ display: 'inline-block', mx: '2px', transform: 'scale(0.8)' }}>
-        •
-    </Box>
-);
 
 interface MemoryProps {
     memory: {
@@ -160,35 +190,41 @@ interface MemoryProps {
 const Memory: FC<MemoryProps> = (props: MemoryProps) => {
     return (
         <React.Fragment>
-            <CardContent>
-                <Box>
-                    <Typography variant="h6">Files</Typography>
-                </Box>
+            <Stack>
+                <MiStatusTitle>Database Sizes</MiStatusTitle>
+                <MiBreak />
+            </Stack>
 
-                <List className="MiniListItem-typography">
-                    <ListItem>
-                        <ListItemText primary="TxPoW Database" secondary={props.memory.files.txpowdb} />
-                    </ListItem>
-                    <ListItem>
-                        <ListItemText primary="Archive Database" secondary={props.memory.files.archivedb} />
-                    </ListItem>
-                    <ListItem>
-                        <ListItemText primary="Chaintree" secondary={props.memory.files.chaintree} />
-                    </ListItem>
-                    <ListItem>
-                        <ListItemText primary="Wallet" secondary={props.memory.files.wallet} />
-                    </ListItem>
-                    <ListItem>
-                        <ListItemText primary="User Database" secondary={props.memory.files.userdb} />
-                    </ListItem>
-                    <ListItem>
-                        <ListItemText primary="P2P Database" secondary={props.memory.ram} />
-                    </ListItem>
-                    <ListItem>
-                        <ListItemText primary="Archive Database" secondary={props.memory.files.p2pdb} />
-                    </ListItem>
-                </List>
-            </CardContent>
+            <MiStatusWrapper>
+                <MiStatusItem>
+                    <label>TxPOW</label>
+                    <p>{props.memory.files.txpowdb}</p>
+                </MiStatusItem>
+                <MiStatusItem>
+                    <label>Archive</label>
+                    <p>{props.memory.files.archivedb}</p>
+                </MiStatusItem>
+                <MiStatusItem>
+                    <label>Chaintree</label>
+                    <p>{props.memory.files.chaintree}</p>
+                </MiStatusItem>
+                <MiStatusItem>
+                    <label>Wallet</label>
+                    <p>{props.memory.files.wallet}</p>
+                </MiStatusItem>
+                <MiStatusItem>
+                    <label>User</label>
+                    <p>{props.memory.files.userdb}</p>
+                </MiStatusItem>
+                <MiStatusItem>
+                    <label>P2P</label>
+                    <p>{props.memory.ram}</p>
+                </MiStatusItem>
+                <MiStatusItem>
+                    <label>Archive</label>
+                    <p>{props.memory.files.p2pdb}</p>
+                </MiStatusItem>
+            </MiStatusWrapper>
         </React.Fragment>
     );
 };
@@ -216,37 +252,41 @@ interface ChainProps {
 const Chain: FC<ChainProps> = (props: ChainProps) => {
     return (
         <React.Fragment>
-            <CardContent>
-                <Box>
-                    <Typography variant="h6">Chain</Typography>
-                </Box>
+            <Stack>
+                <MiStatusTitle>Chain</MiStatusTitle>
+                <MiBreak />
+            </Stack>
 
-                <List className="MiniListItem-typography">
-                    <ListItem>
-                        <ListItemText primary="Branches" secondary={props.chain.branches} />
-                    </ListItem>
-                    <ListItem>
-                        <ListItemText primary="Difficulty" secondary={props.chain.difficulty} />
-                    </ListItem>
-                    <ListItem>
-                        <ListItemText primary="Hash" secondary={props.chain.hash} />
-                    </ListItem>
-                    <ListItem>
-                        <ListItemText primary="Length" secondary={props.chain.length} />
-                    </ListItem>
-                    <ListItem>
-                        <ListItemText primary="Size" secondary={props.chain.size} />
-                    </ListItem>
-
-                    <ListItem>
-                        <ListItemText primary="Speed" secondary={props.chain.speed} />
-                    </ListItem>
-
-                    <ListItem>
-                        <ListItemText primary="Weight" secondary={props.chain.weight} />
-                    </ListItem>
-                </List>
-            </CardContent>
+            <MiStatusWrapper>
+                <MiStatusItem>
+                    <label>Branches</label>
+                    <p>{props.chain.branches}</p>
+                </MiStatusItem>
+                <MiStatusItem>
+                    <label>Difficulty</label>
+                    <p>{props.chain.difficulty}</p>
+                </MiStatusItem>
+                <MiStatusItem>
+                    <label>Hash</label>
+                    <p>{props.chain.hash}</p>
+                </MiStatusItem>
+                <MiStatusItem>
+                    <label>Length</label>
+                    <p>{props.chain.length}</p>
+                </MiStatusItem>
+                <MiStatusItem>
+                    <label>Size</label>
+                    <p>{props.chain.size}</p>
+                </MiStatusItem>
+                <MiStatusItem>
+                    <label>Speed</label>
+                    <p>{props.chain.speed}</p>
+                </MiStatusItem>
+                <MiStatusItem>
+                    <label>Weight</label>
+                    <p>{props.chain.weight}</p>
+                </MiStatusItem>
+            </MiStatusWrapper>
         </React.Fragment>
     );
 };
@@ -263,52 +303,29 @@ interface TxPoWProps {
 const TxPoW: FC<TxPoWProps> = (props: TxPoWProps) => {
     return (
         <React.Fragment>
-            <CardContent>
-                <Box>
-                    <Typography variant="h6" sx={{ mb: 2 }}>
-                        TxPoW
-                    </Typography>
-                </Box>
+            <Stack>
+                <MiStatusTitle>TxPOW</MiStatusTitle>
+                <MiBreak />
+            </Stack>
 
-                <List>
-                    <ListItem>
-                        <ListItemText
-                            primary="Mempool"
-                            secondary={props.txpow.mempool}
-                            primaryTypographyProps={{
-                                fontWeight: 600,
-                            }}
-                        ></ListItemText>
-                    </ListItem>
-                    <ListItem>
-                        <ListItemText
-                            primary="RAM Database"
-                            secondary={props.txpow.ramdb}
-                            primaryTypographyProps={{
-                                fontWeight: 600,
-                            }}
-                        ></ListItemText>
-                    </ListItem>
-                    <ListItem>
-                        <ListItemText
-                            primary="TxPoW Database"
-                            secondary={props.txpow.txpowdb}
-                            primaryTypographyProps={{
-                                fontWeight: 600,
-                            }}
-                        ></ListItemText>
-                    </ListItem>
-                    <ListItem>
-                        <ListItemText
-                            primary="Archive Database"
-                            secondary={props.txpow.archivedb}
-                            primaryTypographyProps={{
-                                fontWeight: 600,
-                            }}
-                        ></ListItemText>
-                    </ListItem>
-                </List>
-            </CardContent>
+            <MiStatusWrapper>
+                <MiStatusItem>
+                    <label>Mempool</label>
+                    <p>{props.txpow.mempool}</p>
+                </MiStatusItem>
+                <MiStatusItem>
+                    <label>RAM Db</label>
+                    <p>{props.txpow.ramdb}</p>
+                </MiStatusItem>
+                <MiStatusItem>
+                    <label>TxPOW Db</label>
+                    <p>{props.txpow.txpowdb}</p>
+                </MiStatusItem>
+                <MiStatusItem>
+                    <label>Archive Db</label>
+                    <p>{props.txpow.archivedb}</p>
+                </MiStatusItem>
+            </MiStatusWrapper>
         </React.Fragment>
     );
 };
@@ -327,68 +344,37 @@ interface NetworkProps {
 const Network: FC<NetworkProps> = (props: NetworkProps) => {
     return (
         <React.Fragment>
-            <CardContent>
-                <Box>
-                    <Typography variant="h6">Network</Typography>
-                </Box>
+            <Stack>
+                <MiStatusTitle>Network</MiStatusTitle>
+                <MiBreak />
+            </Stack>
 
-                <List>
-                    <ListItem>
-                        <ListItemText
-                            primary="Connected"
-                            secondary={props.network.connected}
-                            primaryTypographyProps={{
-                                fontWeight: 600,
-                            }}
-                        ></ListItemText>
-                    </ListItem>
-                    <ListItem>
-                        <ListItemText
-                            primary="Connecting"
-                            secondary={props.network.connecting}
-                            primaryTypographyProps={{
-                                fontWeight: 600,
-                            }}
-                        ></ListItemText>
-                    </ListItem>
-                    <ListItem>
-                        <ListItemText
-                            primary="Host"
-                            secondary={props.network.host}
-                            primaryTypographyProps={{
-                                fontWeight: 600,
-                            }}
-                        ></ListItemText>
-                    </ListItem>
-                    <ListItem>
-                        <ListItemText
-                            primary="Host Set"
-                            secondary={props.network.hostset ? 'True' : 'False'}
-                            primaryTypographyProps={{
-                                fontWeight: 600,
-                            }}
-                        ></ListItemText>
-                    </ListItem>
-                    <ListItem>
-                        <ListItemText
-                            primary="Port"
-                            secondary={props.network.port}
-                            primaryTypographyProps={{
-                                fontWeight: 600,
-                            }}
-                        ></ListItemText>
-                    </ListItem>
-                    <ListItem>
-                        <ListItemText
-                            primary="P2P"
-                            secondary={props.network.rpc ? 'True' : 'False'}
-                            primaryTypographyProps={{
-                                fontWeight: 600,
-                            }}
-                        ></ListItemText>
-                    </ListItem>
-                </List>
-            </CardContent>
+            <MiStatusWrapper>
+                <MiStatusItem>
+                    <label>Connected</label>
+                    <p>{props.network.connected}</p>
+                </MiStatusItem>
+                <MiStatusItem>
+                    <label>Connecting</label>
+                    <p>{props.network.connecting}</p>
+                </MiStatusItem>
+                <MiStatusItem>
+                    <label>Host</label>
+                    <p>{props.network.host}</p>
+                </MiStatusItem>
+                <MiStatusItem>
+                    <label>Set Host</label>
+                    <p>{props.network.hostset ? 'activated' : 'deactivated'}</p>
+                </MiStatusItem>
+                <MiStatusItem>
+                    <label>Port</label>
+                    <p>{props.network.port}</p>
+                </MiStatusItem>
+                <MiStatusItem>
+                    <label>RPC</label>
+                    <p>{props.network.rpc ? 'activated' : 'deactivated'}</p>
+                </MiStatusItem>
+            </MiStatusWrapper>
         </React.Fragment>
     );
 };

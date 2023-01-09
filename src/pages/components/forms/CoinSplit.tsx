@@ -173,9 +173,9 @@ const useFormSchema = () => {
         token: Yup.object()
             .required('Field Required')
             .test('check-my-tokensendable', 'Invalid token sendable', function (val: any) {
-                const { path, createError } = this;
+                const { path, parent, createError } = this;
                 // console.log(val);
-                if (val === undefined || new Decimal(val.sendable).equals(0)) {
+                if (val === undefined) {
                     return false;
                 }
 
@@ -185,12 +185,12 @@ const useFormSchema = () => {
                         message: `Oops, not enough funds available to perform a split`,
                     });
                 }
-                if (val.token.type && val.token.type === 'NFT') {
-                    return createError({
-                        path,
-                        message: `You cannot split a non-fungible token`,
-                    });
-                }
+                // if (val.token.type && val.token.type === 'NFT') {
+                //     return createError({
+                //         path,
+                //         message: `You cannot split a non-fungible token`,
+                //     });
+                // }
 
                 return true;
             }),

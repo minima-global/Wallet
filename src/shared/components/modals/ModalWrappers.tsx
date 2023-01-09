@@ -24,7 +24,7 @@ const ModalStackedRow = ({ children }: any) => {
 const ModalButtonWrapper = ({ children }: any) => {
     return (
         <Stack direction="column" justifyContent="flex-end" mt={2} mb={2}>
-            <Stack direction="row" justifyContent="flex-end" alignItems="center">
+            <Stack direction="row" gap={2} justifyContent="flex-end" alignItems="center">
                 {children}
             </Stack>
         </Stack>
