@@ -7,9 +7,26 @@ interface ISendPayload {
     amount: string;
     address: string;
     burn?: string;
+    password?: string;
 }
-const callSend = (data: ISendPayload) => {
-    return rpc(`send amount:${data.amount} address:${data.address} tokenid:${data.token.tokenid} burn:${data.burn}`);
+const callSend = async (data: ISendPayload) => {
+    try {
+        const hasPassword = data.password && data.password.length ? data.password : false;
+        const hasBurn = data.burn && data.burn.length ? data.burn : false;
+
+        const response = await rpc(
+            `send amount:${data.amount} address:${data.address} tokenid:${data.token.tokenid} ${
+                hasBurn ? 'burn:' + hasBurn : ''
+            } ${hasPassword ? 'password:' + hasPassword : ''}`
+        );
+
+        return {
+            postedHeight: response.header.block,
+            postedTxpowid: response.txpowid,
+        };
+    } catch (err: any) {
+        throw new Error(err);
+    }
 };
 const callGetAddress = async () => {
     try {
@@ -97,7 +114,9 @@ export const rpc = (command: string): Promise<any> => {
             }
 
             if (!resp.status && resp.pending) {
-                reject('pending');
+                reject(
+                    `This action is pending, please confirm this in your action manager on the apk or your hub on desktop.`
+                );
             }
 
             if (!resp.status && !resp.pending) {
@@ -106,7 +125,7 @@ export const rpc = (command: string): Promise<any> => {
                         ? resp.message
                         : resp.error
                         ? resp.error
-                        : `RPC ${command} has failed to fire off, please open this as an issue on Minima's official repo!`
+                        : `RPC ${command} has failed to fire off, please try again later.`
                 );
             }
         });

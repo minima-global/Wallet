@@ -160,18 +160,7 @@ interface IProps {
                   burn: string;
               }>
           >;
-    resetForm: (
-        nextState?:
-            | Partial<
-                  FormikState<{
-                      token: MinimaToken;
-                      amount: string;
-                      address: string;
-                      burn: string;
-                  }>
-              >
-            | undefined
-    ) => void;
+    resetForm: any;
     coinSplitMode: boolean;
 }
 const MiSelect = ({ value, tokens, error, setFieldValue, resetForm, coinSplitMode = false }: IProps) => {

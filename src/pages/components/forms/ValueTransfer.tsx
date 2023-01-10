@@ -44,27 +44,30 @@ const ValueTransfer = ({}: IProps) => {
     const [openQrScanner, setOpenQrScanner] = React.useState(true);
     const [errorScannedMinimaAddress, setErrorScannedMinimaAddress] = React.useState<false | string>(false);
 
+    const [modalStatusMessage, setModalStatusMessage] = React.useState<false | string>(false);
+
     const formik = useFormik({
         initialValues: {
             token: wallet[0],
             amount: '',
             address: '',
             burn: '',
+            password: '',
         },
-        onSubmit: (formInputs: ISendForm) => {
-            callSend({ ...formInputs })
-                .then((r: any) => {
-                    // console.log(r);
-                    handleSuccessState();
-                })
-                .catch((err) => {
-                    if (err === 'pending') {
-                        return handlePendingState();
-                    }
-                    // TODO handle pending
-                    console.error(err);
-                    handleErrorState();
-                });
+        onSubmit: async (formInputs: ISendForm) => {
+            try {
+                console.log({ ...formInputs });
+                // send rpc
+                const jsonResponse = await callSend({ ...formInputs });
+                // success..
+                handleSuccessState(
+                    `Your transaction has been posted on block height: ${jsonResponse.postedHeight} and should arrive soon.`
+                );
+            } catch (error: any) {
+                console.log(error);
+
+                handleErrorState(error.message);
+            }
         },
         validationSchema: mySchema,
     });
@@ -76,21 +79,19 @@ const ValueTransfer = ({}: IProps) => {
         setOpenQrScanner(true);
     };
 
-    const handleSuccessState = () => {
+    const handleSuccessState = (message: string) => {
         setStatusModal('success');
+        setModalStatusMessage(message);
         handleCloseModalManager();
         formik.resetForm();
     };
-    const handleErrorState = () => {
+    const handleErrorState = (message: string) => {
         setStatusModal('error');
+        setModalStatusMessage(message);
         handleCloseModalManager();
         formik.setSubmitting(false);
     };
-    const handlePendingState = () => {
-        setStatusModal('pending');
-        handleCloseModalManager();
-        formik.resetForm();
-    };
+
     const handleCloseModalManager = () => {
         setModalEmployee('');
     };
@@ -232,6 +233,38 @@ const ValueTransfer = ({}: IProps) => {
                             />
                         }
                     />
+                    <FormFieldWrapper
+                        help="If your database (vault) is locked, use the password here otherwise ignore this"
+                        children={
+                            <TextField
+                                disabled={formik.isSubmitting}
+                                fullWidth
+                                id="password"
+                                name="password"
+                                placeholder="vault password"
+                                value={formik.values.password}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                error={formik.touched.password && Boolean(formik.errors.password)}
+                                helperText={formik.touched.password && formik.errors.password}
+                                FormHelperTextProps={{
+                                    className: styles['form-helper-text'],
+                                }}
+                                InputProps={{
+                                    style:
+                                        formik.touched.password && Boolean(formik.errors.password)
+                                            ? {
+                                                  borderBottomLeftRadius: 0,
+                                                  borderBottomRightRadius: 0,
+                                              }
+                                            : {
+                                                  borderBottomLeftRadius: 8,
+                                                  borderBottomRightRadius: 8,
+                                              },
+                                }}
+                            />
+                        }
+                    />
 
                     <Button
                         // type="submit"
@@ -255,17 +288,9 @@ const ValueTransfer = ({}: IProps) => {
             <MiniModal
                 open={statusModal.length > 0 ? true : false}
                 handleClose={handleCloseStatusModal}
-                header={statusModal === 'success' ? 'Success!' : statusModal === 'pending' ? 'Pending' : 'Failed!'}
+                header={statusModal === 'success' ? 'Success.' : 'Failed.'}
                 status="Transaction Status"
-                subtitle={
-                    statusModal === 'success' ? (
-                        'Your transaction will be received shortly'
-                    ) : statusModal === 'pending' ? (
-                        <Pending />
-                    ) : (
-                        'Please try again later.'
-                    )
-                }
+                subtitle={modalStatusMessage}
             />
         </>
     );
