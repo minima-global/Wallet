@@ -95,7 +95,7 @@ const TokenCreation: FC = () => {
                 const jsonResponse = await buildCustomTokenCreation(cToken, formData.amount, formData.burn);
                 // success..
                 handleSuccessState(
-                    `Your transaction has been posted on block height: ${jsonResponse.postedHeight} and should arrive soon.`
+                    `Your transaction has been posted on block height ${jsonResponse.postedHeight} and should arrive soon.`
                 );
             } catch (error: any) {
                 console.log(error);

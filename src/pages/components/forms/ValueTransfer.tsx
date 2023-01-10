@@ -60,7 +60,7 @@ const ValueTransfer = ({}: IProps) => {
                 const jsonResponse = await callSend({ ...formInputs });
                 // success..
                 handleSuccessState(
-                    `Your transaction has been posted on block height: ${jsonResponse.postedHeight} and should arrive soon.`
+                    `Your transaction has been posted on block height ${jsonResponse.postedHeight} and should arrive soon.`
                 );
             } catch (error: any) {
                 console.log(error);

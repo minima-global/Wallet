@@ -94,7 +94,7 @@ const CreateNFTForm = () => {
                 const jsonResponse = await buildCustomTokenCreation(cNFT, data.amount, data.burn);
                 // success..
                 handleSuccessState(
-                    `Your transaction has been posted on block height: ${jsonResponse.postedHeight} and should arrive soon.`
+                    `Your transaction has been posted on block height ${jsonResponse.postedHeight} and should arrive soon.`
                 );
             } catch (error: any) {
                 console.log(error);
