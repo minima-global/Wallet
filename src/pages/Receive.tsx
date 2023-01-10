@@ -39,28 +39,16 @@ const Receive: FC = () => {
     const [isCopied, setIsCopied] = useState(false);
     const [loading, setLoading] = useState(true);
 
-    // const balances = useContext(BalanceUpdates);
-
     const balances = useAppSelector(selectBalance);
 
-    // const navigate = useNavigate();
-
     useEffect(() => {
-        // console.log('Calling addr.');
         callGetAddress()
-            .then((res: any) => {
-                // console.log('getaddress', res);
-                if (res.response && res.response.miniaddress) {
-                    setAddress(res.response.miniaddress);
-                }
-                // setAddress(res.response.miniaddress);
+            .then((miniaddress) => {
+                setAddress(miniaddress);
                 setLoading(false);
             })
             .catch((err: any) => {
-                // navigate('/offline');
-                // setLoading(false);
-
-                console.error(`${err}`);
+                console.error(err);
             });
     }, [balances]);
 

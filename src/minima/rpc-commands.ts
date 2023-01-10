@@ -11,13 +11,23 @@ interface ISendPayload {
 const callSend = (data: ISendPayload) => {
     return rpc(`send amount:${data.amount} address:${data.address} tokenid:${data.token.tokenid} burn:${data.burn}`);
 };
-const callGetAddress = () => {
-    return rpc(`getaddress`);
+const callGetAddress = async () => {
+    try {
+        const getaddress = await rpc(`getaddress`);
+
+        return getaddress.miniaddress;
+    } catch (err: any) {
+        throw new Error(err);
+    }
 };
 const callStatus = async (): Promise<any> => {
-    const nodeStatus = await rpc(`status`);
+    try {
+        const nodeStatus = await rpc(`status`);
 
-    return nodeStatus;
+        return nodeStatus;
+    } catch (err: any) {
+        throw new Error(err);
+    }
 };
 
 const createCustomToken = (name: string, amount: string, decimals?: string, webvalidate?: string, burn?: string) => {

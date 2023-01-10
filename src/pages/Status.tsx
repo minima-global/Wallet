@@ -76,7 +76,7 @@ const Status = () => {
             .catch((err: any) => {
                 console.error(err);
             });
-    }, [status]);
+    }, []);
 
     return (
         <Grid container spacing={0} mb={2}>
