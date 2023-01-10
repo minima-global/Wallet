@@ -41,7 +41,7 @@ const QrContainer = styled('div')`
 `;
 const QrScanner = ({ setScannedResult, open, closeModal, error }: any) => {
     const cameraEnabled = useIsCameraEnabledPermissions();
-
+    // console.log('isCameraEnabled', cameraEnabled);
     return (
         open && (
             <BackDrop>
