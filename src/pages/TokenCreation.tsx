@@ -18,7 +18,7 @@ import Pending from './components/forms/Pending';
 import FormFieldWrapper from '../shared/components/FormFieldWrapper';
 import FormImageUrlSelect from '../shared/components/forms/FormImageUrlSelect';
 import { buildCustomTokenCreation } from '../minima/libs/nft';
-import { MiCustomToken } from '../minima/types/nft';
+import { MiCustomToken } from '../@types/nft';
 import Required from '../shared/components/forms/Required';
 import Decimal from 'decimal.js';
 import MiFunds from './components/forms/MiFunds';

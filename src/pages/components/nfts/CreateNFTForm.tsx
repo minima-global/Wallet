@@ -13,7 +13,7 @@ import NFTConfirmation from '../forms/common/NFTConfirmation';
 import MiniModal from '../../../shared/components/MiniModal';
 import Pending from '../forms/Pending';
 import FormImageUrlSelect from '../../../shared/components/forms/FormImageUrlSelect';
-import { MiNFT } from '../../../minima/types/nft';
+import { MiNFT } from '../../../@types/nft';
 import Required, { MiRequiredAsterisk } from '../../../shared/components/forms/Required';
 import FormFieldWrapper from '../../../shared/components/FormFieldWrapper';
 import { selectBalance } from '../../../minima/redux/slices/balanceSlice';

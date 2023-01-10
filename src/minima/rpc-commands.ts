@@ -1,4 +1,4 @@
-import { MinimaToken } from './types/minima2';
+import { MinimaToken, Status as NodeStatus } from '../@types/minima2';
 
 export { callSend, callGetAddress, callStatus, createCustomToken, getWalletBalance, callTokenValidate };
 
@@ -14,8 +14,10 @@ const callSend = (data: ISendPayload) => {
 const callGetAddress = () => {
     return rpc(`getaddress`);
 };
-const callStatus = () => {
-    return rpc(`status`);
+const callStatus = async (): Promise<any> => {
+    const nodeStatus = await rpc(`status`);
+
+    return nodeStatus;
 };
 
 const createCustomToken = (name: string, amount: string, decimals?: string, webvalidate?: string, burn?: string) => {

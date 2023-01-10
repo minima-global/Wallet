@@ -32,7 +32,7 @@ import { selectTokenWithID } from '../minima/redux/slices/balanceSlice';
 import CustomListItem from '../shared/components/CustomListItem';
 import styles from './tokendetail/TokenDetail.module.css';
 
-import { MiCustomToken, MiNFT } from '../minima/types/nft';
+import { MiCustomToken, MiNFT } from '../@types/nft';
 import { MINIMA__TOKEN_ID } from '../shared/constants';
 import NFTAuthenticity from './components/tokens/NFTAuthenticity';
 

@@ -14,7 +14,7 @@ import { toggleNotification } from '../../../minima/redux/slices/notificationSli
 import { useNavigate } from 'react-router-dom';
 
 import NFTAuthenticity from '../tokens/NFTAuthenticity';
-import { MinimaToken } from '../../../minima/types/minima2';
+import { MinimaToken } from '../../../@types/minima2';
 
 const NFTCard = ({ NFT }: any) => {
     const dispatch = useAppDispatch();

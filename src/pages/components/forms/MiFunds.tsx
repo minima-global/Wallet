@@ -1,7 +1,7 @@
 import MinimaIcon from '../../../assets/images/minimaLogoSquare.png';
 
 import styled from '@emotion/styled';
-import { MinimaToken } from '../../../minima/types/minima2';
+import { MinimaToken } from '../../../@types/minima2';
 import { Avatar, CircularProgress, Stack, Typography } from '@mui/material';
 
 const MiFundsWrapper = styled('div')`

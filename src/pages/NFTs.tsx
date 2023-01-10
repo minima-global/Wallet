@@ -10,7 +10,7 @@ import { useAppSelector } from '../minima/redux/hooks';
 import { selectFavouriteNFTs, selectNFTs } from '../minima/redux/slices/balanceSlice';
 
 import styles from '../theme/cssmodule/Components.module.css';
-import { MinimaToken } from '../minima/types/minima2';
+import { MinimaToken } from '../@types/minima2';
 import { NoResults } from '../shared/components/layout/MiToken';
 
 const NFTs: FC = () => {

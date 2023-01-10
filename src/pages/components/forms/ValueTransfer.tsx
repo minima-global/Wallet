@@ -5,7 +5,7 @@ import React from 'react';
 
 import { Button, Stack, TextField } from '@mui/material';
 import { callSend } from '../../../minima/rpc-commands';
-import { MinimaToken } from '../../../minima/types/minima2';
+import { MinimaToken } from '../../../@types/minima2';
 import { useAppSelector } from '../../../minima/redux/hooks';
 import styles from '../../../theme/cssmodule/Components.module.css';
 import MiSelect from '../../../shared/components/layout/MiSelect';
@@ -158,6 +158,15 @@ const ValueTransfer = ({}: IProps) => {
                                               borderBottomLeftRadius: 8,
                                               borderBottomRightRadius: 8,
                                           },
+                                endAdornment: (
+                                    <>
+                                        <QrCodeScannerIcon
+                                            className={styles['qr-scanner']}
+                                            color="inherit"
+                                            onClick={handleOpenQrScanner}
+                                        />
+                                    </>
+                                ),
                             }}
                         />
                         <MiCameraButton onClick={() => console.log('Open qr scanner')} src="" />
@@ -188,11 +197,6 @@ const ValueTransfer = ({}: IProps) => {
                                           borderBottomLeftRadius: 8,
                                           borderBottomRightRadius: 8,
                                       },
-                            endAdornment: (
-                                <>
-                                    <QrCodeScannerIcon color="inherit" onClick={handleOpenQrScanner} />
-                                </>
-                            ),
                         }}
                     />
                     {/* Choose a burn amount */}
