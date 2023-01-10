@@ -41,7 +41,7 @@ const ValueTransfer = ({}: IProps) => {
     const wallet = useAppSelector(selectBalance);
     const [modalEmployee, setModalEmployee] = React.useState('');
     const [statusModal, setStatusModal] = React.useState<IStatusModal>('');
-    const [openQrScanner, setOpenQrScanner] = React.useState(true);
+    const [openQrScanner, setOpenQrScanner] = React.useState(false);
     const [errorScannedMinimaAddress, setErrorScannedMinimaAddress] = React.useState<false | string>(false);
 
     const [modalStatusMessage, setModalStatusMessage] = React.useState<false | string>(false);

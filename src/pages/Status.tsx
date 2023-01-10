@@ -342,153 +342,57 @@ const CardP2P = (props: NodeStatus) => {
     const { p2p } = props.network;
     return (
         <React.Fragment>
-            <CardContent>
-                <Box>
-                    <Typography variant="h6">P2P</Typography>
-                </Box>
+            <Stack>
+                <MiStatusTitle>P2P</MiStatusTitle>
+                <MiBreak />
+            </Stack>
 
-                <List>
-                    <Grid container sx={{ justifyContent: 'space-between' }}>
-                        <Grid item>
-                            <ListItem>
-                                {p2p?.address ? (
-                                    <ListItemText
-                                        primary="P2P Address"
-                                        secondary={p2p.address}
-                                        primaryTypographyProps={{
-                                            fontWeight: 600,
-                                        }}
-                                    ></ListItemText>
-                                ) : null}
-                            </ListItem>
-
-                            <ListItem>
-                                {p2p?.isAcceptingInLinks ? (
-                                    <ListItemText
-                                        primary="Accepting inlinks"
-                                        secondary={p2p.isAcceptingInLinks ? 'True' : 'False'}
-                                        primaryTypographyProps={{
-                                            fontWeight: 600,
-                                        }}
-                                    ></ListItemText>
-                                ) : null}
-                            </ListItem>
-                            <ListItem>
-                                {p2p?.numInLinks ? (
-                                    <ListItemText
-                                        primary="Inlink Count"
-                                        secondary={p2p.numInLinks}
-                                        primaryTypographyProps={{
-                                            fontWeight: 600,
-                                        }}
-                                    ></ListItemText>
-                                ) : null}
-                            </ListItem>
-                            <ListItem>
-                                {p2p?.numOutLinks ? (
-                                    <ListItemText
-                                        primary="Outlink Count"
-                                        secondary={p2p.numOutLinks}
-                                        primaryTypographyProps={{
-                                            fontWeight: 600,
-                                        }}
-                                    ></ListItemText>
-                                ) : null}
-                            </ListItem>
-                            <ListItem>
-                                {p2p?.numAllLinks ? (
-                                    <ListItemText
-                                        primary="Count Of All Links"
-                                        secondary={p2p.numAllLinks}
-                                        primaryTypographyProps={{
-                                            fontWeight: 600,
-                                        }}
-                                    ></ListItemText>
-                                ) : null}
-                            </ListItem>
-                        </Grid>
-                        <Grid item>
-                            <ListItem>
-                                {p2p?.numAllLinks ? (
-                                    <ListItemText
-                                        primary="Count All Links"
-                                        secondary={p2p.numAllLinks}
-                                        primaryTypographyProps={{
-                                            fontWeight: 600,
-                                        }}
-                                    ></ListItemText>
-                                ) : null}
-                            </ListItem>
-                            <ListItem>
-                                {p2p?.numNotAcceptingConnP2PLinks ? (
-                                    <ListItemText
-                                        primary="Count Not Accepting p2p Links"
-                                        secondary={p2p.numNotAcceptingConnP2PLinks}
-                                        primaryTypographyProps={{
-                                            fontWeight: 600,
-                                        }}
-                                    ></ListItemText>
-                                ) : null}
-                            </ListItem>
-                            <ListItem>
-                                {p2p?.numNoneP2PLinks ? (
-                                    <ListItemText
-                                        primary="Count Not p2p Links"
-                                        secondary={p2p.numNoneP2PLinks}
-                                        primaryTypographyProps={{
-                                            fontWeight: 600,
-                                        }}
-                                    ></ListItemText>
-                                ) : null}
-                            </ListItem>
-                            <ListItem>
-                                {p2p?.numKnownPeers ? (
-                                    <ListItemText
-                                        primary="Count Known Peers"
-                                        secondary={p2p.numKnownPeers}
-                                        primaryTypographyProps={{
-                                            fontWeight: 600,
-                                        }}
-                                    ></ListItemText>
-                                ) : null}
-                            </ListItem>
-                            <ListItem>
-                                {p2p?.numUnvalidatedPeers ? (
-                                    <ListItemText
-                                        primary="Unvalidated Peers count"
-                                        secondary={p2p.numUnvalidatedPeers}
-                                        primaryTypographyProps={{
-                                            fontWeight: 600,
-                                        }}
-                                    ></ListItemText>
-                                ) : null}
-                            </ListItem>
-                            <ListItem>
-                                {p2p?.nio_inbound ? (
-                                    <ListItemText
-                                        primary="NIO Inbound"
-                                        secondary={p2p.nio_inbound}
-                                        primaryTypographyProps={{
-                                            fontWeight: 600,
-                                        }}
-                                    ></ListItemText>
-                                ) : null}
-                            </ListItem>
-                            <ListItem>
-                                {p2p?.nio_outbound ? (
-                                    <ListItemText
-                                        primary="NIO Outbound"
-                                        secondary={p2p.nio_outbound}
-                                        primaryTypographyProps={{
-                                            fontWeight: 600,
-                                        }}
-                                    ></ListItemText>
-                                ) : null}
-                            </ListItem>
-                        </Grid>
-                    </Grid>
-                </List>
-            </CardContent>
+            <MiStatusWrapper>
+                <MiStatusItem>
+                    <label>P2P Address</label>
+                    <p>{p2p?.address}</p>
+                </MiStatusItem>
+                <MiStatusItem>
+                    <label>Accepting inlinks</label>
+                    <p>{p2p?.isAcceptingInLinks}</p>
+                </MiStatusItem>
+                <MiStatusItem>
+                    <label>Inlink Count</label>
+                    <p>{p2p?.numInLinks}</p>
+                </MiStatusItem>
+                <MiStatusItem>
+                    <label>Outlink Count</label>
+                    <p>{p2p?.numOutLinks}</p>
+                </MiStatusItem>
+                <MiStatusItem>
+                    <label>Count All Links</label>
+                    <p>{p2p?.numAllLinks}</p>
+                </MiStatusItem>
+                <MiStatusItem>
+                    <label>Not Accepting P2P Links Count</label>
+                    <p>{p2p?.numNotAcceptingConnP2PLinks}</p>
+                </MiStatusItem>
+                <MiStatusItem>
+                    <label>Not P2P Links Count</label>
+                    <p>{p2p?.numNoneP2PLinks}</p>
+                </MiStatusItem>
+                <MiStatusItem>
+                    <label>Known Peers Count</label>
+                    <p>{p2p?.numKnownPeers}</p>
+                </MiStatusItem>
+                <MiStatusItem>
+                    <label>Unvalidated Peers Count</label>
+                    <p>{p2p?.numUnvalidatedPeers}</p>
+                </MiStatusItem>
+                <MiStatusItem>
+                    <label>NIO Inbound</label>
+                    <p>{p2p?.nio_inbound}</p>
+                </MiStatusItem>
+                <MiStatusItem>
+                    <label>NIO Outbound</label>
+                    <p>{p2p?.nio_outbound}</p>
+                </MiStatusItem>
+            </MiStatusWrapper>
         </React.Fragment>
     );
 };
