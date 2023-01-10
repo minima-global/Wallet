@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { Avatar, CircularProgress, Stack } from '@mui/material';
 import React from 'react';
-import { MinimaToken } from '../../../minima/types/minima2';
+import { MinimaToken } from '../../../@types/minima2';
 import { useAppSelector } from '../../../minima/redux/hooks';
 import { selectBalance } from '../../../minima/redux/slices/balanceSlice';
 import { containsText, numberWithCommas } from '../../../shared/functions';

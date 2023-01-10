@@ -14,70 +14,97 @@ export interface IncentiveCashUserRewards {
     details?: DetailIncentiveCashUserRewards;
 }
 
-interface Status {
-    version: string;
-    devices: number;
+export interface ArchiveDB {
+    size: number;
+    start: string;
+    startdate: string;
+    end: string;
+}
+
+export interface RPC {
+    enabled: boolean;
+    port: number;
+}
+export interface Traffic {
+    from: string;
+    totalread: string;
+    totalwrite: string;
+    write: string;
+}
+
+export interface P2P {
+    address: string;
+    isAcceptingInLinks: boolean;
+    numInLinks: number;
+    numOutLinks: number;
+    numNotAcceptingConnP2PLinks: number;
+    numNoneP2PLinks: number;
+    numKnownPeers: number;
+    numUnvalidatedPeers: number;
+    numAllLinks: number;
+    nio_inbound: number;
+    nio_outbound: number;
+}
+
+export interface Memory {
+    ram: string;
+    disk: string;
+    files: {
+        txpowdb: string;
+        archivedb: string;
+        cascade: string;
+        chaintree: string;
+        wallet: string;
+        userdb: string;
+        p2pdb: string;
+    };
+}
+export interface Chain {
+    block: number;
+    time: string;
+    hash: string;
+    speed: string;
+    difficulty: string;
+    size: number;
     length: number;
     weight: number;
-    configuration: string;
+    branches: number;
+    cascade: {
+        start: number;
+        length: number;
+        weight: string;
+    };
+}
+
+export interface Txpow {
+    mempool: number;
+    ramdb: number;
+    txpowdb: number;
+    archivedb: ArchiveDB;
+}
+
+export interface Network {
+    host: string;
+    hostset: boolean;
+    port: number;
+    connecting: number;
+    connected: number;
+    rpc: RPC;
+    traffic: Traffic;
+    p2p?: P2P;
+}
+
+export interface Status {
+    version: string;
+    length: number;
+    weight: number;
     minima: number;
     coins: number;
     data: string;
-    memory: {
-        ram: string;
-        disk: string;
-        files: {
-            txpowdb: string;
-            archivedb: string;
-            cascade: string;
-            chaintree: string;
-            wallet: string;
-            userdb: string;
-            p2pdb: string;
-        };
-    };
-    chain: {
-        block: number;
-        time: string;
-        hash: string;
-        speed: string;
-        difficulty: string;
-        size: number;
-        length: number;
-        weight: number;
-        branches: number;
-        cascade: {
-            start: number;
-            length: number;
-            weight: string;
-        };
-    };
-    txpow: {
-        mempool: number;
-        ramdb: number;
-        txpowdb: number;
-        archivedb: number;
-    };
-    network: {
-        host: string;
-        hostset: boolean;
-        port: number;
-        connecting: number;
-        connected: number;
-        rpc: boolean;
-        p2p: {
-            address: string;
-            isAcceptingInLinks: boolean;
-            numInLinks: number;
-            numOutLinks: number;
-            numNotAcceptingConnP2PLinks: number;
-            numNoneP2PLinks: number;
-            numKnownPeers: number;
-            numAllLinks: number;
-            nio_inbound: number;
-            nio_outbound: number;
-        };
-    };
+    memory: Memory;
+    chain: Chain;
+    txpow: Txpow;
+    network: Network;
 }
 
 interface NetworkPeer {
@@ -99,8 +126,7 @@ interface MinimaToken {
     unconfirmed: string;
     sendable: string;
     total: string;
-  }
-  
+}
 
 interface Token {
     tokenid: string;

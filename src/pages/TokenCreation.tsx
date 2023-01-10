@@ -18,7 +18,7 @@ import Pending from './components/forms/Pending';
 import FormFieldWrapper from '../shared/components/FormFieldWrapper';
 import FormImageUrlSelect from '../shared/components/forms/FormImageUrlSelect';
 import { buildCustomTokenCreation } from '../minima/libs/nft';
-import { MiCustomToken } from '../minima/types/nft';
+import { MiCustomToken } from '../@types/nft';
 import Required from '../shared/components/forms/Required';
 import Decimal from 'decimal.js';
 import MiFunds from './components/forms/MiFunds';
@@ -38,20 +38,20 @@ const TokenCreation: FC = () => {
     const wallet = useAppSelector(selectBalance);
     const [modalEmployee, setModalEmployee] = React.useState('');
     const [statusModal, setStatusModal] = React.useState<IStatusModal>('');
-    const handleSuccessState = () => {
+
+    const [modalStatusMessage, setModalStatusMessage] = React.useState<false | string>(false);
+
+    const handleSuccessState = (message: string) => {
         setStatusModal('success');
+        setModalStatusMessage(message);
         handleCloseModalManager();
         formik.resetForm();
     };
-    const handleErrorState = () => {
+    const handleErrorState = (message: string) => {
         setStatusModal('error');
+        setModalStatusMessage(message);
         handleCloseModalManager();
         formik.setSubmitting(false);
-    };
-    const handlePendingState = () => {
-        setStatusModal('pending');
-        handleCloseModalManager();
-        formik.resetForm();
     };
     const handleCloseModalManager = () => {
         setModalEmployee('');
@@ -77,7 +77,7 @@ const TokenCreation: FC = () => {
             ticker: '',
         },
         validationSchema: mySchema,
-        onSubmit: (formData) => {
+        onSubmit: async (formData) => {
             setModalEmployee('');
 
             const cToken: MiCustomToken = {
@@ -89,19 +89,19 @@ const TokenCreation: FC = () => {
                 webvalidate: formData.webvalidate || '',
                 version: '1.0',
             };
-            buildCustomTokenCreation(cToken, formData.amount, formData.burn)
-                .then((res: any) => {
-                    // console.log(res);
-                    handleSuccessState();
-                })
-                .catch((err: any) => {
-                    if (err === 'pending') {
-                        return handlePendingState();
-                    }
 
-                    console.error(err);
-                    handleErrorState();
-                });
+            try {
+                // send rpc
+                const jsonResponse = await buildCustomTokenCreation(cToken, formData.amount, formData.burn);
+                // success..
+                handleSuccessState(
+                    `Your transaction has been posted on block height ${jsonResponse.postedHeight} and should arrive soon.`
+                );
+            } catch (error: any) {
+                console.log(error);
+
+                handleErrorState(error.message);
+            }
         },
     });
     return (
@@ -318,19 +318,9 @@ const TokenCreation: FC = () => {
                     <MiniModal
                         open={statusModal.length > 0 ? true : false}
                         handleClose={handleCloseStatusModal}
-                        header={
-                            statusModal === 'success' ? 'Success!' : statusModal === 'pending' ? 'Pending' : 'Failed!'
-                        }
+                        header={statusModal === 'success' ? 'Success.' : 'Failed.'}
                         status="Transaction Status"
-                        subtitle={
-                            statusModal === 'success' ? (
-                                'Your transaction will be received shortly'
-                            ) : statusModal === 'pending' ? (
-                                <Pending />
-                            ) : (
-                                'Please try again later.'
-                            )
-                        }
+                        subtitle={modalStatusMessage}
                     />
                 </>
             }

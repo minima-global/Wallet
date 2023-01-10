@@ -1,7 +1,6 @@
-import React, { useState, useEffect, FC, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Grid,
-    Card,
     CardContent,
     Typography,
     Box,
@@ -11,13 +10,11 @@ import {
     CircularProgress,
     Stack,
 } from '@mui/material';
-import { Status as StatusType } from '../types/minima';
 import { callStatus } from '../minima/rpc-commands';
-import { useAppSelector } from '../minima/redux/hooks';
-import { selectBalance } from '../minima/redux/slices/balanceSlice';
 
 import styled from '@emotion/styled';
 import MiCard from '../shared/components/layout/MiCard/MiCard';
+import { Status as NodeStatus } from '../@types/minima2';
 
 const MiStatusWrapper = styled('div')`
     display: flex;
@@ -69,19 +66,17 @@ const MiStatusOnline = styled('div')`
 `;
 
 const Status = () => {
-    const [status, setStatus] = useState<StatusType>();
-
-    const balances = useAppSelector(selectBalance);
+    const [status, setStatus] = useState<false | NodeStatus>(false);
 
     useEffect(() => {
         callStatus()
-            .then((data: any) => {
-                setStatus(data.response);
+            .then((status) => {
+                setStatus(status);
             })
-            .catch((err) => {
+            .catch((err: any) => {
                 console.error(err);
             });
-    }, [balances]);
+    }, []);
 
     return (
         <Grid container spacing={0} mb={2}>
@@ -93,7 +88,7 @@ const Status = () => {
                 spacing={1}
                 sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
             >
-                {balances.length === 0 ? (
+                {!status ? (
                     <CircularProgress sx={{ mt: 2 }} size={32} />
                 ) : (
                     <>
@@ -118,8 +113,8 @@ const Status = () => {
                                         <p>{status?.chain.time ? status.chain.time : 'N/A'}</p>
                                     </MiStatusItem>
                                     <MiStatusItem>
-                                        <label>Devices</label>
-                                        <p>{status?.devices ? status.devices : 'N/A'}</p>
+                                        <label>Coins</label>
+                                        <p>{status?.coins ? status.coins : 'N/A'}</p>
                                     </MiStatusItem>
                                     <MiStatusItem>
                                         <label>Ram Usage</label>
@@ -142,22 +137,20 @@ const Status = () => {
                         </Grid>
 
                         <Grid item xs={12} md={6}>
-                            <MiCard>{status && status.memory ? <Memory memory={status.memory} /> : null}</MiCard>
+                            <MiCard>{status && status.memory ? <CardMemory {...status} /> : null}</MiCard>
                         </Grid>
                         <Grid item xs={12} md={6}>
-                            <MiCard>{status && status.chain ? <Chain chain={status.chain} /> : null}</MiCard>
+                            <MiCard>{status && status.chain ? <CardChain {...status} /> : null}</MiCard>
                         </Grid>
                         <Grid item xs={12} md={6}>
-                            <MiCard>{status && status.txpow ? <TxPoW txpow={status.txpow} /> : null}</MiCard>
+                            <MiCard>{status && status.txpow ? <CardTxPoW {...status} /> : null}</MiCard>
                         </Grid>
                         <Grid item xs={12} md={6}>
-                            <MiCard>{status && status.network ? <Network network={status.network} /> : null}</MiCard>
+                            <MiCard>{status && status.network ? <CardNetwork {...status} /> : null}</MiCard>
                         </Grid>
                         {status && status.network.p2p && status.network.p2p.address ? (
                             <Grid item xs={12} md={12}>
-                                <MiCard>
-                                    {status && status.network.p2p ? <P2P p2p={status.network.p2p} /> : null}
-                                </MiCard>
+                                <MiCard>{status && status.network.p2p ? <CardP2P {...status} /> : null}</MiCard>
                             </Grid>
                         ) : null}
                     </>
@@ -171,23 +164,9 @@ const Status = () => {
 
 export default Status;
 
-interface MemoryProps {
-    memory: {
-        ram: string;
-        disk: string;
-        files: {
-            txpowdb: string;
-            archivedb: string;
-            cascade: string;
-            chaintree: string;
-            wallet: string;
-            userdb: string;
-            p2pdb: string;
-        };
-    };
-}
+const CardMemory = (props: NodeStatus) => {
+    const { memory } = props;
 
-const Memory: FC<MemoryProps> = (props: MemoryProps) => {
     return (
         <React.Fragment>
             <Stack>
@@ -198,58 +177,39 @@ const Memory: FC<MemoryProps> = (props: MemoryProps) => {
             <MiStatusWrapper>
                 <MiStatusItem>
                     <label>TxPOW</label>
-                    <p>{props.memory.files.txpowdb}</p>
+                    <p>{memory.files.txpowdb}</p>
                 </MiStatusItem>
                 <MiStatusItem>
                     <label>Archive</label>
-                    <p>{props.memory.files.archivedb}</p>
+                    <p>{memory.files.archivedb}</p>
                 </MiStatusItem>
                 <MiStatusItem>
                     <label>Chaintree</label>
-                    <p>{props.memory.files.chaintree}</p>
+                    <p>{memory.files.chaintree}</p>
                 </MiStatusItem>
                 <MiStatusItem>
                     <label>Wallet</label>
-                    <p>{props.memory.files.wallet}</p>
+                    <p>{memory.files.wallet}</p>
                 </MiStatusItem>
                 <MiStatusItem>
                     <label>User</label>
-                    <p>{props.memory.files.userdb}</p>
+                    <p>{memory.files.userdb}</p>
                 </MiStatusItem>
                 <MiStatusItem>
                     <label>P2P</label>
-                    <p>{props.memory.ram}</p>
+                    <p>{memory.ram}</p>
                 </MiStatusItem>
                 <MiStatusItem>
                     <label>Archive</label>
-                    <p>{props.memory.files.p2pdb}</p>
+                    <p>{memory.files.p2pdb}</p>
                 </MiStatusItem>
             </MiStatusWrapper>
         </React.Fragment>
     );
 };
 
-interface ChainProps {
-    chain: {
-        block: number;
-
-        branches: number;
-        difficulty: string;
-        hash: string;
-        length: number;
-        size: number;
-        speed: string;
-        time: string;
-        weight: number;
-        cascade: {
-            start: number;
-            length: number;
-            weight: string;
-        };
-    };
-}
-
-const Chain: FC<ChainProps> = (props: ChainProps) => {
+const CardChain = (props: NodeStatus) => {
+    const { chain } = props;
     return (
         <React.Fragment>
             <Stack>
@@ -260,47 +220,40 @@ const Chain: FC<ChainProps> = (props: ChainProps) => {
             <MiStatusWrapper>
                 <MiStatusItem>
                     <label>Branches</label>
-                    <p>{props.chain.branches}</p>
+                    <p>{chain.branches}</p>
                 </MiStatusItem>
                 <MiStatusItem>
                     <label>Difficulty</label>
-                    <p>{props.chain.difficulty}</p>
+                    <p>{chain.difficulty}</p>
                 </MiStatusItem>
                 <MiStatusItem>
                     <label>Hash</label>
-                    <p>{props.chain.hash}</p>
+                    <p>{chain.hash}</p>
                 </MiStatusItem>
                 <MiStatusItem>
                     <label>Length</label>
-                    <p>{props.chain.length}</p>
+                    <p>{chain.length}</p>
                 </MiStatusItem>
                 <MiStatusItem>
                     <label>Size</label>
-                    <p>{props.chain.size}</p>
+                    <p>{chain.size}</p>
                 </MiStatusItem>
                 <MiStatusItem>
                     <label>Speed</label>
-                    <p>{props.chain.speed}</p>
+                    <p>{chain.speed}</p>
                 </MiStatusItem>
                 <MiStatusItem>
                     <label>Weight</label>
-                    <p>{props.chain.weight}</p>
+                    <p>{chain.weight}</p>
                 </MiStatusItem>
             </MiStatusWrapper>
         </React.Fragment>
     );
 };
 
-interface TxPoWProps {
-    txpow: {
-        mempool: number;
-        ramdb: number;
-        txpowdb: number;
-        archivedb: number;
-    };
-}
+const CardTxPoW = (props: NodeStatus) => {
+    const { txpow } = props;
 
-const TxPoW: FC<TxPoWProps> = (props: TxPoWProps) => {
     return (
         <React.Fragment>
             <Stack>
@@ -311,37 +264,39 @@ const TxPoW: FC<TxPoWProps> = (props: TxPoWProps) => {
             <MiStatusWrapper>
                 <MiStatusItem>
                     <label>Mempool</label>
-                    <p>{props.txpow.mempool}</p>
+                    <p>{txpow.mempool}</p>
                 </MiStatusItem>
                 <MiStatusItem>
                     <label>RAM Db</label>
-                    <p>{props.txpow.ramdb}</p>
+                    <p>{txpow.ramdb}</p>
                 </MiStatusItem>
                 <MiStatusItem>
                     <label>TxPOW Db</label>
-                    <p>{props.txpow.txpowdb}</p>
+                    <p>{txpow.txpowdb}</p>
                 </MiStatusItem>
                 <MiStatusItem>
-                    <label>Archive Db</label>
-                    <p>{props.txpow.archivedb}</p>
+                    <label>Archive Db Size</label>
+                    <p>{txpow.archivedb.size}</p>
+                </MiStatusItem>
+                <MiStatusItem>
+                    <label>Archive Db Start</label>
+                    <p>{txpow.archivedb.start}</p>
+                </MiStatusItem>
+                <MiStatusItem>
+                    <label>Archive Db Start Date</label>
+                    <p>{txpow.archivedb.startdate}</p>
+                </MiStatusItem>
+                <MiStatusItem>
+                    <label>Archive Db End</label>
+                    <p>{txpow.archivedb.end}</p>
                 </MiStatusItem>
             </MiStatusWrapper>
         </React.Fragment>
     );
 };
 
-interface NetworkProps {
-    network: {
-        connected: number;
-        connecting: number;
-        host: string;
-        hostset: boolean;
-        port: number;
-        rpc: boolean;
-    };
-}
-
-const Network: FC<NetworkProps> = (props: NetworkProps) => {
+const CardNetwork = (props: NodeStatus) => {
+    const { network } = props;
     return (
         <React.Fragment>
             <Stack>
@@ -352,198 +307,92 @@ const Network: FC<NetworkProps> = (props: NetworkProps) => {
             <MiStatusWrapper>
                 <MiStatusItem>
                     <label>Connected</label>
-                    <p>{props.network.connected}</p>
+                    <p>{network.connected}</p>
                 </MiStatusItem>
                 <MiStatusItem>
                     <label>Connecting</label>
-                    <p>{props.network.connecting}</p>
+                    <p>{network.connecting}</p>
                 </MiStatusItem>
                 <MiStatusItem>
                     <label>Host</label>
-                    <p>{props.network.host}</p>
+                    <p>{network.host}</p>
                 </MiStatusItem>
                 <MiStatusItem>
                     <label>Set Host</label>
-                    <p>{props.network.hostset ? 'activated' : 'deactivated'}</p>
+                    <p>{network.hostset ? 'activated' : 'deactivated'}</p>
                 </MiStatusItem>
                 <MiStatusItem>
                     <label>Port</label>
-                    <p>{props.network.port}</p>
+                    <p>{network.port}</p>
                 </MiStatusItem>
                 <MiStatusItem>
                     <label>RPC</label>
-                    <p>{props.network.rpc ? 'activated' : 'deactivated'}</p>
+                    <p>{network.rpc && network.rpc.enabled ? 'activated' : 'deactivated'}</p>
+                </MiStatusItem>
+                <MiStatusItem>
+                    <label>RPC Port</label>
+                    <p>{network.rpc && network.rpc.port ? network.rpc.port : 'N/A'}</p>
                 </MiStatusItem>
             </MiStatusWrapper>
         </React.Fragment>
     );
 };
 
-interface P2PProps {
-    p2p?: {
-        deviceHashRate: number;
-        address: string;
-        isAcceptingInLinks: boolean;
-        numInLinks: number;
-        numOutLinks: number;
-        numNotAcceptingConnP2PLinks: number;
-        numNoneP2PLinks: number;
-        numKnownPeers: number;
-        numAllLinks: number;
-        nio_inbound: number;
-        nio_outbound: number;
-    };
-}
-
-const P2P: FC<P2PProps> = (props: P2PProps) => {
+const CardP2P = (props: NodeStatus) => {
+    const { p2p } = props.network;
     return (
         <React.Fragment>
-            <CardContent>
-                <Box>
-                    <Typography variant="h6">P2P</Typography>
-                </Box>
+            <Stack>
+                <MiStatusTitle>P2P</MiStatusTitle>
+                <MiBreak />
+            </Stack>
 
-                <List>
-                    <Grid container sx={{ justifyContent: 'space-between' }}>
-                        <Grid item>
-                            <ListItem>
-                                {props.p2p?.deviceHashRate !== undefined ? (
-                                    <ListItemText
-                                        primary="Device Hashrate"
-                                        secondary={props.p2p.deviceHashRate}
-                                        primaryTypographyProps={{
-                                            fontWeight: 600,
-                                        }}
-                                    ></ListItemText>
-                                ) : null}
-                            </ListItem>
-                            <ListItem>
-                                {props.p2p?.address ? (
-                                    <ListItemText
-                                        primary="Address"
-                                        secondary={props.p2p.address}
-                                        primaryTypographyProps={{
-                                            fontWeight: 600,
-                                        }}
-                                    ></ListItemText>
-                                ) : null}
-                            </ListItem>
-                            <ListItem>
-                                {props.p2p?.isAcceptingInLinks !== undefined ? (
-                                    <ListItemText
-                                        primary="Accepting inlinks"
-                                        secondary={props.p2p.isAcceptingInLinks ? 'True' : 'False'}
-                                        primaryTypographyProps={{
-                                            fontWeight: 600,
-                                        }}
-                                    ></ListItemText>
-                                ) : null}
-                            </ListItem>
-                            <ListItem>
-                                {props.p2p?.numInLinks !== undefined ? (
-                                    <ListItemText
-                                        primary="Inlink Count"
-                                        secondary={props.p2p.numInLinks}
-                                        primaryTypographyProps={{
-                                            fontWeight: 600,
-                                        }}
-                                    ></ListItemText>
-                                ) : null}
-                            </ListItem>
-                            <ListItem>
-                                {props.p2p?.numOutLinks !== undefined ? (
-                                    <ListItemText
-                                        primary="Outlink Count"
-                                        secondary={props.p2p.numOutLinks}
-                                        primaryTypographyProps={{
-                                            fontWeight: 600,
-                                        }}
-                                    ></ListItemText>
-                                ) : null}
-                            </ListItem>
-                            <ListItem>
-                                {props.p2p?.numAllLinks !== undefined ? (
-                                    <ListItemText
-                                        primary="Count Of All Links"
-                                        secondary={props.p2p.numAllLinks}
-                                        primaryTypographyProps={{
-                                            fontWeight: 600,
-                                        }}
-                                    ></ListItemText>
-                                ) : null}
-                            </ListItem>
-                        </Grid>
-                        <Grid item>
-                            <ListItem>
-                                {props.p2p?.numAllLinks !== undefined ? (
-                                    <ListItemText
-                                        primary="Count All Links"
-                                        secondary={props.p2p.numAllLinks}
-                                        primaryTypographyProps={{
-                                            fontWeight: 600,
-                                        }}
-                                    ></ListItemText>
-                                ) : null}
-                            </ListItem>
-                            <ListItem>
-                                {props.p2p?.numNotAcceptingConnP2PLinks !== undefined ? (
-                                    <ListItemText
-                                        primary="Count Not Accepting P2P Links"
-                                        secondary={props.p2p.numNotAcceptingConnP2PLinks}
-                                        primaryTypographyProps={{
-                                            fontWeight: 600,
-                                        }}
-                                    ></ListItemText>
-                                ) : null}
-                            </ListItem>
-                            <ListItem>
-                                {props.p2p?.numNoneP2PLinks !== undefined ? (
-                                    <ListItemText
-                                        primary="Count Not P2P Links"
-                                        secondary={props.p2p.numNoneP2PLinks}
-                                        primaryTypographyProps={{
-                                            fontWeight: 600,
-                                        }}
-                                    ></ListItemText>
-                                ) : null}
-                            </ListItem>
-                            <ListItem>
-                                {props.p2p?.numKnownPeers !== undefined ? (
-                                    <ListItemText
-                                        primary="Count Known Peers"
-                                        secondary={props.p2p.numKnownPeers}
-                                        primaryTypographyProps={{
-                                            fontWeight: 600,
-                                        }}
-                                    ></ListItemText>
-                                ) : null}
-                            </ListItem>
-                            <ListItem>
-                                {props.p2p?.nio_inbound !== undefined ? (
-                                    <ListItemText
-                                        primary="NIO Inbound"
-                                        secondary={props.p2p.nio_inbound}
-                                        primaryTypographyProps={{
-                                            fontWeight: 600,
-                                        }}
-                                    ></ListItemText>
-                                ) : null}
-                            </ListItem>
-                            <ListItem>
-                                {props.p2p?.nio_outbound !== undefined ? (
-                                    <ListItemText
-                                        primary="NIO Outbound"
-                                        secondary={props.p2p.nio_outbound}
-                                        primaryTypographyProps={{
-                                            fontWeight: 600,
-                                        }}
-                                    ></ListItemText>
-                                ) : null}
-                            </ListItem>
-                        </Grid>
-                    </Grid>
-                </List>
-            </CardContent>
+            <MiStatusWrapper>
+                <MiStatusItem>
+                    <label>P2P Address</label>
+                    <p>{p2p?.address}</p>
+                </MiStatusItem>
+                <MiStatusItem>
+                    <label>Accepting inlinks</label>
+                    <p>{p2p?.isAcceptingInLinks}</p>
+                </MiStatusItem>
+                <MiStatusItem>
+                    <label>Inlink Count</label>
+                    <p>{p2p?.numInLinks}</p>
+                </MiStatusItem>
+                <MiStatusItem>
+                    <label>Outlink Count</label>
+                    <p>{p2p?.numOutLinks}</p>
+                </MiStatusItem>
+                <MiStatusItem>
+                    <label>Count All Links</label>
+                    <p>{p2p?.numAllLinks}</p>
+                </MiStatusItem>
+                <MiStatusItem>
+                    <label>Not Accepting P2P Links Count</label>
+                    <p>{p2p?.numNotAcceptingConnP2PLinks}</p>
+                </MiStatusItem>
+                <MiStatusItem>
+                    <label>Not P2P Links Count</label>
+                    <p>{p2p?.numNoneP2PLinks}</p>
+                </MiStatusItem>
+                <MiStatusItem>
+                    <label>Known Peers Count</label>
+                    <p>{p2p?.numKnownPeers}</p>
+                </MiStatusItem>
+                <MiStatusItem>
+                    <label>Unvalidated Peers Count</label>
+                    <p>{p2p?.numUnvalidatedPeers}</p>
+                </MiStatusItem>
+                <MiStatusItem>
+                    <label>NIO Inbound</label>
+                    <p>{p2p?.nio_inbound}</p>
+                </MiStatusItem>
+                <MiStatusItem>
+                    <label>NIO Outbound</label>
+                    <p>{p2p?.nio_outbound}</p>
+                </MiStatusItem>
+            </MiStatusWrapper>
         </React.Fragment>
     );
 };

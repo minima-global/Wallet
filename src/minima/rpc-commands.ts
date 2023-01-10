@@ -1,4 +1,4 @@
-import { MinimaToken } from './types/minima2';
+import { MinimaToken, Status as NodeStatus } from '../@types/minima2';
 
 export { callSend, callGetAddress, callStatus, createCustomToken, getWalletBalance, callTokenValidate };
 
@@ -7,23 +7,63 @@ interface ISendPayload {
     amount: string;
     address: string;
     burn?: string;
+    password?: string;
 }
-const callSend = (data: ISendPayload) => {
-    return rpc(`send amount:${data.amount} address:${data.address} tokenid:${data.token.tokenid} burn:${data.burn}`);
+const callSend = async (data: ISendPayload) => {
+    try {
+        const hasPassword = data.password && data.password.length ? data.password : false;
+        const hasBurn = data.burn && data.burn.length ? data.burn : false;
+
+        const response = await rpc(
+            `send amount:${data.amount} address:${data.address} tokenid:${data.token.tokenid} ${
+                hasBurn ? 'burn:' + hasBurn : ''
+            } ${hasPassword ? 'password:' + hasPassword : ''}`
+        );
+
+        return {
+            postedHeight: response.header.block,
+            postedTxpowid: response.txpowid,
+        };
+    } catch (err: any) {
+        throw new Error(err);
+    }
 };
-const callGetAddress = () => {
-    return rpc(`getaddress`);
+const callGetAddress = async () => {
+    try {
+        const getaddress = await rpc(`getaddress`);
+
+        return getaddress.miniaddress;
+    } catch (err: any) {
+        throw new Error(err);
+    }
 };
-const callStatus = () => {
-    return rpc(`status`);
+const callStatus = async (): Promise<any> => {
+    try {
+        const nodeStatus = await rpc(`status`);
+
+        return nodeStatus;
+    } catch (err: any) {
+        throw new Error(err);
+    }
 };
 
-const createCustomToken = (name: string, amount: string, decimals?: string, webvalidate?: string, burn?: string) => {
-    return rpc(
-        `tokencreate name:${name} amount:${amount} ${decimals ? 'decimals:' + decimals : ''} ${
-            webvalidate ? 'webvalidate:' + webvalidate : ''
-        } ${burn ? 'burn:' + burn : ''}`
-    );
+const createCustomToken = async (
+    name: string,
+    amount: string,
+    decimals?: string,
+    webvalidate?: string,
+    burn?: string
+) => {
+    try {
+        const hasBurn = burn && burn.length ? burn : false;
+        return await rpc(
+            `tokencreate name:${name} amount:${amount} ${decimals ? 'decimals:' + decimals : ''} ${
+                webvalidate ? 'webvalidate:' + webvalidate : ''
+            } ${hasBurn ? 'burn:' + hasBurn : ''}`
+        );
+    } catch (err: any) {
+        throw new Error(err);
+    }
 };
 
 /** Get Balance */
@@ -85,7 +125,9 @@ export const rpc = (command: string): Promise<any> => {
             }
 
             if (!resp.status && resp.pending) {
-                reject('pending');
+                reject(
+                    `This action is pending, please confirm this in your action manager on the apk or your hub on desktop.`
+                );
             }
 
             if (!resp.status && !resp.pending) {
@@ -94,7 +136,7 @@ export const rpc = (command: string): Promise<any> => {
                         ? resp.message
                         : resp.error
                         ? resp.error
-                        : `RPC ${command} has failed to fire off, please open this as an issue on Minima's official repo!`
+                        : `RPC ${command} has failed to fire off, please try again later.`
                 );
             }
         });
