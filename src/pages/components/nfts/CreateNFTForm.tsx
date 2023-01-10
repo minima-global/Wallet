@@ -36,20 +36,19 @@ const CreateNFTForm = () => {
     const [modalEmployee, setModalEmployee] = React.useState('');
     const [statusModal, setStatusModal] = React.useState<IStatusModal>('');
 
-    const handleSuccessState = () => {
+    const [modalStatusMessage, setModalStatusMessage] = React.useState<false | string>(false);
+
+    const handleSuccessState = (message: string) => {
         setStatusModal('success');
+        setModalStatusMessage(message);
         handleCloseModalManager();
         formik.resetForm();
     };
-    const handleErrorState = () => {
+    const handleErrorState = (message: string) => {
         setStatusModal('error');
+        setModalStatusMessage(message);
         handleCloseModalManager();
         formik.setSubmitting(false);
-    };
-    const handlePendingState = () => {
-        setStatusModal('pending');
-        handleCloseModalManager();
-        formik.resetForm();
     };
     const handleCloseModalManager = () => {
         setModalEmployee('');
@@ -76,7 +75,7 @@ const CreateNFTForm = () => {
             webvalidate: '',
             burn: '',
         },
-        onSubmit: (data: any) => {
+        onSubmit: async (data: any) => {
             setModalEmployee('');
 
             const cNFT: MiNFT = {
@@ -90,17 +89,18 @@ const CreateNFTForm = () => {
                 version: '1.0',
             };
 
-            buildCustomTokenCreation(cNFT, data.amount, data.burn)
-                .then((r) => {
-                    handleSuccessState();
-                })
-                .catch((err) => {
-                    if (err === 'pending') {
-                        return handlePendingState();
-                    }
-                    console.error(err);
-                    handleErrorState();
-                });
+            try {
+                // send rpc
+                const jsonResponse = await buildCustomTokenCreation(cNFT, data.amount, data.burn);
+                // success..
+                handleSuccessState(
+                    `Your transaction has been posted on block height: ${jsonResponse.postedHeight} and should arrive soon.`
+                );
+            } catch (error: any) {
+                console.log(error);
+
+                handleErrorState(error.message);
+            }
         },
         validationSchema: mySchema,
     });
@@ -341,17 +341,9 @@ const CreateNFTForm = () => {
             <MiniModal
                 open={statusModal.length > 0 ? true : false}
                 handleClose={handleCloseStatusModal}
-                header={statusModal === 'success' ? 'Success!' : statusModal === 'pending' ? 'Pending' : 'Failed!'}
+                header={statusModal === 'success' ? 'Success.' : 'Failed.'}
                 status="Transaction Status"
-                subtitle={
-                    statusModal === 'success' ? (
-                        'Your transaction will be received shortly'
-                    ) : statusModal === 'pending' ? (
-                        <Pending />
-                    ) : (
-                        'Please try again later.'
-                    )
-                }
+                subtitle={modalStatusMessage}
             />
         </form>
     );

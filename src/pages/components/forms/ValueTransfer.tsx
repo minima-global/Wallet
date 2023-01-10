@@ -56,7 +56,6 @@ const ValueTransfer = ({}: IProps) => {
         },
         onSubmit: async (formInputs: ISendForm) => {
             try {
-                console.log({ ...formInputs });
                 // send rpc
                 const jsonResponse = await callSend({ ...formInputs });
                 // success..

@@ -47,12 +47,23 @@ const callStatus = async (): Promise<any> => {
     }
 };
 
-const createCustomToken = (name: string, amount: string, decimals?: string, webvalidate?: string, burn?: string) => {
-    return rpc(
-        `tokencreate name:${name} amount:${amount} ${decimals ? 'decimals:' + decimals : ''} ${
-            webvalidate ? 'webvalidate:' + webvalidate : ''
-        } ${burn ? 'burn:' + burn : ''}`
-    );
+const createCustomToken = async (
+    name: string,
+    amount: string,
+    decimals?: string,
+    webvalidate?: string,
+    burn?: string
+) => {
+    try {
+        const hasBurn = burn && burn.length ? burn : false;
+        return await rpc(
+            `tokencreate name:${name} amount:${amount} ${decimals ? 'decimals:' + decimals : ''} ${
+                webvalidate ? 'webvalidate:' + webvalidate : ''
+            } ${hasBurn ? 'burn:' + hasBurn : ''}`
+        );
+    } catch (err: any) {
+        throw new Error(err);
+    }
 };
 
 /** Get Balance */
