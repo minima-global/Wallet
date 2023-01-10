@@ -34,43 +34,47 @@ const CoinSplit = ({}: IProps) => {
     const [modalEmployee, setModalEmployee] = React.useState('');
     const [statusModal, setStatusModal] = React.useState<IStatusModal>('');
 
+    const [modalStatusMessage, setModalStatusMessage] = React.useState<false | string>(false);
+
     const formik = useFormik({
         initialValues: {
             token: wallet[0],
             burn: '',
         },
-        onSubmit: (formInputs: ISendForm) => {
-            splitCoin(formInputs.token.tokenid, formInputs.token.sendable, formInputs.burn)
-                .then((r: any) => {
-                    // console.log(r);
-                    handleSuccessState();
-                })
-                .catch((err) => {
-                    if (err === 'pending') {
-                        return handlePendingState();
-                    }
-                    console.error(err);
-                    handleErrorState();
-                });
+        onSubmit: async (formInputs: ISendForm) => {
+            try {
+                // send rpc
+                const jsonResponse = await splitCoin(
+                    formInputs.token.tokenid,
+                    formInputs.token.sendable,
+                    formInputs.burn
+                );
+                // success..
+                handleSuccessState(
+                    `Your transaction has been posted on block height ${jsonResponse.postedHeight} and should arrive soon.`
+                );
+            } catch (error: any) {
+                console.log(error);
+
+                handleErrorState(error.message);
+            }
         },
         validationSchema: mySchema,
     });
 
-    const handleSuccessState = () => {
+    const handleSuccessState = (message: string) => {
         setStatusModal('success');
+        setModalStatusMessage(message);
         handleCloseModalManager();
         formik.resetForm();
     };
-    const handleErrorState = () => {
+    const handleErrorState = (message: string) => {
         setStatusModal('error');
+        setModalStatusMessage(message);
         handleCloseModalManager();
         formik.setSubmitting(false);
     };
-    const handlePendingState = () => {
-        setStatusModal('pending');
-        handleCloseModalManager();
-        formik.resetForm();
-    };
+
     const handleCloseModalManager = () => {
         setModalEmployee('');
     };
@@ -149,17 +153,9 @@ const CoinSplit = ({}: IProps) => {
             <MiniModal
                 open={statusModal.length > 0 ? true : false}
                 handleClose={handleCloseStatusModal}
-                header={statusModal === 'success' ? 'Success!' : statusModal === 'pending' ? 'Pending' : 'Failed!'}
+                header={statusModal === 'success' ? 'Success.' : 'Failed.'}
                 status="Transaction Status"
-                subtitle={
-                    statusModal === 'success' ? (
-                        'Your transaction will be received shortly'
-                    ) : statusModal === 'pending' ? (
-                        <Pending />
-                    ) : (
-                        'Please try again later.'
-                    )
-                }
+                subtitle={modalStatusMessage}
             />
         </>
     );
