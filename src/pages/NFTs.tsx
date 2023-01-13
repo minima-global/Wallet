@@ -19,10 +19,10 @@ const NFTs: FC = () => {
     const [filterText, setFilterText] = useState('');
 
     let allNFTs = useAppSelector(selectNFTs);
-    const favourited = useAppSelector(selectFavouriteNFTs);
+    const favouritedNFTs = useAppSelector(selectFavouriteNFTs);
 
     if (tabsValue === 'two') {
-        allNFTs = allNFTs?.filter((t: MinimaToken) => favourited?.includes(t));
+        allNFTs = allNFTs?.filter((t: MinimaToken) => favouritedNFTs?.includes(t));
     }
 
     const getFilteredBalanceList = (arr: MinimaToken[], filterText: string) => {
@@ -48,6 +48,8 @@ const NFTs: FC = () => {
         setFilterText(value);
         // when the component re-renders the updated filter text will create a new filteredBalance variable
     }
+
+    const userIsSearching = filterText.length > 0;
 
     return (
         <GridLayout
@@ -90,9 +92,12 @@ const NFTs: FC = () => {
                                     placeholder="Search by name, creator name or tokenid"
                                 />
                                 <Grid justifyContent="space-around" container spacing={{ sm: 1, xs: 0 }}>
-                                    {displayedOptions &&
-                                    typeof displayedOptions !== 'undefined' &&
-                                    displayedOptions.length > 0 ? (
+                                    {userIsSearching && displayedOptions && displayedOptions.length === 0 ? (
+                                        <NoResults>
+                                            <h6>No results</h6>
+                                            <p>Please try your search again.</p>
+                                        </NoResults>
+                                    ) : (
                                         displayedOptions.map((n) => {
                                             return (
                                                 <Grid key={n.tokenid} item xs={12} sm={5} mb={1}>
@@ -100,28 +105,18 @@ const NFTs: FC = () => {
                                                 </Grid>
                                             );
                                         })
-                                    ) : tabsValue === 'one' ? (
+                                    )}
+                                    {!userIsSearching && allNFTs && allNFTs.length === 0 ? (
                                         <NoResults>
-                                            <h6>No results</h6>
-                                            <p>Please try your search again.</p>
-                                        </NoResults>
-                                    ) : null}
-                                    {allNFTs &&
-                                    typeof allNFTs !== 'undefined' &&
-                                    tabsValue === 'two' &&
-                                    allNFTs.length === 0 &&
-                                    filterText.length === 0 ? (
-                                        <NoResults>
-                                            <h6>No favorites yet</h6>
-                                            <p>
-                                                Tap the heart button on the top right corner of your non-fungible token.
-                                            </p>
-                                        </NoResults>
-                                    ) : null}
-                                    {allNFTs && allNFTs.length === 0 && filterText.length > 0 ? (
-                                        <NoResults>
-                                            <h6>No results</h6>
-                                            <p>Please try your search again.</p>
+                                            <h6>No results found</h6>
+                                            {tabsValue === 'one' ? (
+                                                <p>Click create to create a new NFT.</p>
+                                            ) : (
+                                                <p>
+                                                    Tap the heart button in the top-right corner of an NFT card to
+                                                    favorite.
+                                                </p>
+                                            )}
                                         </NoResults>
                                     ) : null}
                                 </Grid>
