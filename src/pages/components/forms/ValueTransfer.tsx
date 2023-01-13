@@ -23,6 +23,7 @@ import QrScanner from '../../../shared/components/qrscanner/QrScanner';
 import validateMinimaAddress from '../../../minima/commands/validateMinimaAddress/validateMinimaAddress';
 import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
 import { useModalHandler } from '../../../hooks/useModalHandler';
+import { useParams } from 'react-router-dom';
 
 Decimal.set({ precision: MINIMA__DECIMAL_PRECISION });
 
@@ -36,12 +37,13 @@ interface ISendForm {
 const MiCameraButton = styled('img')``;
 
 interface IProps {}
-type IStatusModal = 'Success' | 'Failed' | 'Pending' | false;
 const ValueTransfer = ({}: IProps) => {
     const mySchema = useFormSchema();
     const wallet = useAppSelector(selectBalance);
     const [openQrScanner, setOpenQrScanner] = React.useState(false);
     const [errorScannedMinimaAddress, setErrorScannedMinimaAddress] = React.useState<false | string>(false);
+
+    const { tokenid } = useParams();
 
     const {
         statusModal,
@@ -54,9 +56,14 @@ const ValueTransfer = ({}: IProps) => {
         handleCloseStatusModal,
     } = useModalHandler();
 
+    const requestedToken =
+        tokenid && wallet.find((i) => i.tokenid === tokenid)
+            ? wallet.filter((i) => i.tokenid === tokenid)[0]
+            : wallet[0];
+
     const formik = useFormik({
         initialValues: {
-            token: wallet[0],
+            token: requestedToken,
             amount: '',
             address: '',
             burn: '',

@@ -170,12 +170,6 @@ const MiSelect = ({ value, tokens, error, setFieldValue, resetForm, coinSplitMod
     const [filterWallet, setFilterWallet] = React.useState<MinimaToken[]>([]);
     const [filterText, setFilterText] = React.useState('');
 
-    // if (isOpen && mobileView) {
-    //     document.body.style.overflow = 'hidden';
-    // } else {
-    //     document.body.style.overflow = 'auto';
-    // }
-
     const toggling = () => setOpen(!isOpen);
     const onOptionClicked = (t: MinimaToken) => {
         resetForm();
