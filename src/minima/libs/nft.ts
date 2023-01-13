@@ -34,7 +34,9 @@ const buildCustomTokenCreation = async (tokenData: MiNFT | MiCustomToken, amount
             amount,
             tokenData.type === 'NFT' ? '0' : undefined,
             tokenData.webvalidate
-        );
+        ).catch((err) => {
+            throw err;
+        });
     } catch (error: any) {
         throw new Error(error);
     }

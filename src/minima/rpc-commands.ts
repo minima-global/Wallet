@@ -60,7 +60,7 @@ const createCustomToken = async (
             webvalidate ? 'webvalidate:' + webvalidate : ''
         } ${hasBurn ? 'burn:' + hasBurn : ''}`
     ).catch((err) => {
-        throw new Error(err);
+        throw err;
     });
 };
 
