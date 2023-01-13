@@ -88,15 +88,17 @@ theme = createTheme(theme, {
         MuiFormHelperText: {
             styleOverrides: {
                 root: {
-                    fontWeight: 400,
-                    padding: 5,
+                    backgroundColor: 'rgb(254, 242, 242)',
+                    color: 'rgb(153, 27, 27)!important',
+                    padding: 8,
                     margin: 0,
-
-                    '&$error': {
-                        color: 'black',
-                    },
+                    fontSize: '0.875rem',
+                    fontFamily: 'Manrope-regular',
+                    letterSpacing: '0.00938em',
                     borderTopLeftRadius: 0,
                     borderTopRightRadius: 0,
+                    marginTop: 4,
+                    borderRadius: 4,
                 },
                 '&$error': {
                     color: 'black',
