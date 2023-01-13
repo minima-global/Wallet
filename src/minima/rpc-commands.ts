@@ -54,16 +54,14 @@ const createCustomToken = async (
     webvalidate?: string,
     burn?: string
 ) => {
-    try {
-        const hasBurn = burn && burn.length ? burn : false;
-        return await rpc(
-            `tokencreate name:${name} amount:${amount} ${decimals ? 'decimals:' + decimals : ''} ${
-                webvalidate ? 'webvalidate:' + webvalidate : ''
-            } ${hasBurn ? 'burn:' + hasBurn : ''}`
-        );
-    } catch (err: any) {
+    const hasBurn = burn && burn.length ? burn : false;
+    return await rpc(
+        `tokencreate name:${name} amount:${amount} ${decimals ? 'decimals:' + decimals : ''} ${
+            webvalidate ? 'webvalidate:' + webvalidate : ''
+        } ${hasBurn ? 'burn:' + hasBurn : ''}`
+    ).catch((err) => {
         throw new Error(err);
-    }
+    });
 };
 
 /** Get Balance */

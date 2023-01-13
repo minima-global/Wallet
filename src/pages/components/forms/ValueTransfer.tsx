@@ -73,10 +73,11 @@ const ValueTransfer = ({}: IProps) => {
 
                 formik.resetForm();
             } catch (error: any) {
-                console.log(error);
-
                 const isPending = error.message === 'pending';
-
+                if (isPending) {
+                    // time to reset
+                    formik.resetForm();
+                }
                 handleErrorState(isPending, error.message);
             }
         },

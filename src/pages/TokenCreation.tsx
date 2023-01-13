@@ -23,6 +23,7 @@ import Required from '../shared/components/forms/Required';
 import Decimal from 'decimal.js';
 import MiFunds from './components/forms/MiFunds';
 import React from 'react';
+import { useModalHandler } from '../hooks/useModalHandler';
 
 /**
  * Minima scales up to 64 decimal places
@@ -32,34 +33,21 @@ import React from 'react';
 Decimal.set({ precision: 64 });
 Decimal.set({ toExpNeg: -36 });
 
-type IStatusModal = 'success' | 'error' | 'pending' | '';
 const TokenCreation: FC = () => {
     const mySchema = useMySchema();
     const wallet = useAppSelector(selectBalance);
-    const [modalEmployee, setModalEmployee] = React.useState('');
-    const [statusModal, setStatusModal] = React.useState<IStatusModal>('');
 
-    const [modalStatusMessage, setModalStatusMessage] = React.useState<false | string>(false);
-
-    const handleSuccessState = (message: string) => {
-        setStatusModal('success');
-        setModalStatusMessage(message);
-        handleCloseModalManager();
-        formik.resetForm();
-    };
-    const handleErrorState = (message: string) => {
-        setStatusModal('error');
-        setModalStatusMessage(message);
-        handleCloseModalManager();
-        formik.setSubmitting(false);
-    };
-    const handleCloseModalManager = () => {
-        setModalEmployee('');
-    };
-    const handleProceedButton = () => {
-        setModalEmployee('confirmation');
-    };
-    const handleCloseStatusModal = () => setStatusModal('');
+    const {
+        statusModal,
+        modalStatusMessage,
+        handleSuccessState,
+        handleErrorState,
+        handleProceedButton,
+        modalEmployee,
+        handleCloseModalManager,
+        handleCloseStatusModal,
+        setModalEmployee,
+    } = useModalHandler();
 
     React.useEffect(() => {
         formik.setFieldValue('funds', wallet[0]);
@@ -92,15 +80,19 @@ const TokenCreation: FC = () => {
 
             try {
                 // send rpc
-                const jsonResponse = await buildCustomTokenCreation(cToken, formData.amount, formData.burn);
+                await buildCustomTokenCreation(cToken, formData.amount, formData.burn);
                 // success..
-                handleSuccessState(
-                    `Your transaction has been posted on block height ${jsonResponse.postedHeight} and should arrive soon.`
-                );
+                handleSuccessState(`You have successfully created this token, it should arrive in your balance soon.`);
+                // time to reset
+                formik.resetForm();
             } catch (error: any) {
-                console.log(error);
+                const isPending = error.message === 'pending';
 
-                handleErrorState(error.message);
+                if (isPending) {
+                    // time to reset
+                    formik.resetForm();
+                }
+                handleErrorState(isPending, error.message);
             }
         },
     });
@@ -316,9 +308,9 @@ const TokenCreation: FC = () => {
                     />
 
                     <MiniModal
-                        open={statusModal.length > 0 ? true : false}
+                        open={statusModal && statusModal.length > 0}
                         handleClose={handleCloseStatusModal}
-                        header={statusModal === 'success' ? 'Success.' : 'Failed.'}
+                        header={statusModal && statusModal.length > 0 ? statusModal : ''}
                         status="Transaction Status"
                         subtitle={modalStatusMessage}
                     />

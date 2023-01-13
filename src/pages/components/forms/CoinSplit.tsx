@@ -68,6 +68,10 @@ const CoinSplit = ({}: IProps) => {
             } catch (error: any) {
                 const isPending = error.message === 'pending';
 
+                if (isPending) {
+                    // time to reset
+                    formik.resetForm();
+                }
                 handleErrorState(isPending, error.message);
             }
         },
