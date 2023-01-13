@@ -13,27 +13,24 @@ import Decimal from 'decimal.js';
 /**
  * Split a coin by 2
  */
-export const splitCoin = async (tokenid: string, sendable: string, burn: string) => {
+export const splitCoin = async (tokenid: string, sendable: string, burn: string, password: string) => {
+    let miniaddress = '';
     try {
-        const miniaddress = await callGetAddress();
-
-        let finalTotalToSend = new Decimal(0);
-
-        if (burn.length > 0 && tokenid === MINIMA__TOKEN_ID) {
-            // minus the burn, get total to send back after splitting
-            finalTotalToSend = new Decimal(sendable).minus(new Decimal(burn));
-            //console.log(finalTotalToSend.toString())
-            return rpc(
-                `send address:${miniaddress} tokenid:${tokenid} amount:${finalTotalToSend.toString()} split:${2} burn:${burn}`
-            );
-        }
-
-        if (burn.length > 0 && tokenid !== MINIMA__TOKEN_ID) {
-            return rpc(`send address:${miniaddress} tokenid:${tokenid} amount:${sendable} split:${2} burn:${burn}`);
-        }
-
-        return rpc(`send address:${miniaddress} tokenid:${tokenid} amount:${sendable} split:${2}`);
+        miniaddress = await callGetAddress();
     } catch (error: any) {
         throw new Error(error);
     }
+    let finalAmountToSend = new Decimal(0);
+    const hasBurn = burn && burn.length ? burn : false;
+    const hasPassword = password && password.length ? password : false;
+    finalAmountToSend =
+        hasBurn && MINIMA__TOKEN_ID === '0x00' ? new Decimal(sendable).minus(new Decimal(burn)) : new Decimal(sendable);
+
+    return rpc(
+        `send address:${miniaddress} tokenid:${tokenid} amount:${finalAmountToSend.toString()} split:${2} ${
+            hasBurn ? 'burn:' + burn : ''
+        } ${hasPassword ? 'password:' + hasPassword : ''}`
+    ).catch((err) => {
+        throw new Error(err);
+    });
 };

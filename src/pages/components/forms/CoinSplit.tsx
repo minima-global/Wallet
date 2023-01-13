@@ -18,28 +18,37 @@ import ModalManager from '../managers/ModalManager';
 import React from 'react';
 import { splitCoin } from '../../../minima/utils';
 import FormFieldWrapper from '../../../shared/components/FormFieldWrapper';
+import { useModalHandler } from '../../../hooks/useModalHandler';
 
 Decimal.set({ precision: MINIMA__DECIMAL_PRECISION });
 
 interface ISendForm {
     token: MinimaToken;
     burn: string;
+    password: string;
 }
 interface IProps {}
-type IStatusModal = 'success' | 'error' | 'pending' | '';
+type IStatusModal = 'Success' | 'Failed' | 'Pending' | false;
 
 const CoinSplit = ({}: IProps) => {
     const mySchema = useFormSchema();
     const wallet = useAppSelector(selectBalance);
-    const [modalEmployee, setModalEmployee] = React.useState('');
-    const [statusModal, setStatusModal] = React.useState<IStatusModal>('');
-
-    const [modalStatusMessage, setModalStatusMessage] = React.useState<false | string>(false);
+    const {
+        statusModal,
+        modalStatusMessage,
+        handleSuccessState,
+        handleErrorState,
+        handleProceedButton,
+        modalEmployee,
+        handleCloseModalManager,
+        handleCloseStatusModal,
+    } = useModalHandler();
 
     const formik = useFormik({
         initialValues: {
             token: wallet[0],
             burn: '',
+            password: '',
         },
         onSubmit: async (formInputs: ISendForm) => {
             try {
@@ -47,41 +56,23 @@ const CoinSplit = ({}: IProps) => {
                 const jsonResponse = await splitCoin(
                     formInputs.token.tokenid,
                     formInputs.token.sendable,
-                    formInputs.burn
+                    formInputs.burn,
+                    formInputs.password
                 );
                 // success..
                 handleSuccessState(
                     `Your transaction has been posted on block height ${jsonResponse.postedHeight} and should arrive soon.`
                 );
+                // time to reset
+                formik.resetForm();
             } catch (error: any) {
-                console.log(error);
+                const isPending = error.message === 'pending';
 
-                handleErrorState(error.message);
+                handleErrorState(isPending, error.message);
             }
         },
         validationSchema: mySchema,
     });
-
-    const handleSuccessState = (message: string) => {
-        setStatusModal('success');
-        setModalStatusMessage(message);
-        handleCloseModalManager();
-        formik.resetForm();
-    };
-    const handleErrorState = (message: string) => {
-        setStatusModal('error');
-        setModalStatusMessage(message);
-        handleCloseModalManager();
-        formik.setSubmitting(false);
-    };
-
-    const handleCloseModalManager = () => {
-        setModalEmployee('');
-    };
-    const handleProceedButton = () => {
-        setModalEmployee('confirmation');
-    };
-    const handleCloseStatusModal = () => setStatusModal('');
 
     return (
         <>
@@ -129,6 +120,39 @@ const CoinSplit = ({}: IProps) => {
                             />
                         }
                     />
+                    <FormFieldWrapper
+                        help="If your database (vault) is locked, use the password here otherwise ignore this"
+                        children={
+                            <TextField
+                                type="password"
+                                disabled={formik.isSubmitting}
+                                fullWidth
+                                id="password"
+                                name="password"
+                                placeholder="vault password"
+                                value={formik.values.password}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                error={formik.touched.password && Boolean(formik.errors.password)}
+                                helperText={formik.touched.password && formik.errors.password}
+                                FormHelperTextProps={{
+                                    className: styles['form-helper-text'],
+                                }}
+                                InputProps={{
+                                    style:
+                                        formik.touched.password && Boolean(formik.errors.password)
+                                            ? {
+                                                  borderBottomLeftRadius: 0,
+                                                  borderBottomRightRadius: 0,
+                                              }
+                                            : {
+                                                  borderBottomLeftRadius: 8,
+                                                  borderBottomRightRadius: 8,
+                                              },
+                                }}
+                            />
+                        }
+                    />
                     <Button
                         onClick={handleProceedButton}
                         color="primary"
@@ -151,9 +175,9 @@ const CoinSplit = ({}: IProps) => {
                 children={<CoinSplitConfirmation formik={formik} />}
             />
             <MiniModal
-                open={statusModal.length > 0 ? true : false}
+                open={statusModal && statusModal.length > 0}
                 handleClose={handleCloseStatusModal}
-                header={statusModal === 'success' ? 'Success.' : 'Failed.'}
+                header={statusModal && statusModal.length > 0 ? statusModal : ''}
                 status="Transaction Status"
                 subtitle={modalStatusMessage}
             />
@@ -181,12 +205,6 @@ const useFormSchema = () => {
                         message: `Oops, not enough funds available to perform a split`,
                     });
                 }
-                // if (val.token.type && val.token.type === 'NFT') {
-                //     return createError({
-                //         path,
-                //         message: `You cannot split a non-fungible token`,
-                //     });
-                // }
 
                 return true;
             }),

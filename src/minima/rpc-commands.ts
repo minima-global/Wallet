@@ -125,9 +125,7 @@ export const rpc = (command: string): Promise<any> => {
             }
 
             if (!resp.status && resp.pending) {
-                reject(
-                    `This action is pending, please confirm this in your action manager on the apk or your hub on desktop.`
-                );
+                reject('pending');
             }
 
             if (!resp.status && !resp.pending) {

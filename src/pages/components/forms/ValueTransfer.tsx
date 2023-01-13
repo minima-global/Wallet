@@ -22,6 +22,7 @@ import styled from '@emotion/styled';
 import QrScanner from '../../../shared/components/qrscanner/QrScanner';
 import validateMinimaAddress from '../../../minima/commands/validateMinimaAddress/validateMinimaAddress';
 import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
+import { useModalHandler } from '../../../hooks/useModalHandler';
 
 Decimal.set({ precision: MINIMA__DECIMAL_PRECISION });
 
@@ -35,16 +36,23 @@ interface ISendForm {
 const MiCameraButton = styled('img')``;
 
 interface IProps {}
-type IStatusModal = 'success' | 'error' | 'pending' | '';
+type IStatusModal = 'Success' | 'Failed' | 'Pending' | false;
 const ValueTransfer = ({}: IProps) => {
     const mySchema = useFormSchema();
     const wallet = useAppSelector(selectBalance);
-    const [modalEmployee, setModalEmployee] = React.useState('');
-    const [statusModal, setStatusModal] = React.useState<IStatusModal>('');
     const [openQrScanner, setOpenQrScanner] = React.useState(false);
     const [errorScannedMinimaAddress, setErrorScannedMinimaAddress] = React.useState<false | string>(false);
 
-    const [modalStatusMessage, setModalStatusMessage] = React.useState<false | string>(false);
+    const {
+        statusModal,
+        modalStatusMessage,
+        handleSuccessState,
+        handleErrorState,
+        handleProceedButton,
+        modalEmployee,
+        handleCloseModalManager,
+        handleCloseStatusModal,
+    } = useModalHandler();
 
     const formik = useFormik({
         initialValues: {
@@ -62,10 +70,14 @@ const ValueTransfer = ({}: IProps) => {
                 handleSuccessState(
                     `Your transaction has been posted on block height ${jsonResponse.postedHeight} and should arrive soon.`
                 );
+
+                formik.resetForm();
             } catch (error: any) {
                 console.log(error);
 
-                handleErrorState(error.message);
+                const isPending = error.message === 'pending';
+
+                handleErrorState(isPending, error.message);
             }
         },
         validationSchema: mySchema,
@@ -77,27 +89,6 @@ const ValueTransfer = ({}: IProps) => {
     const handleOpenQrScanner = () => {
         setOpenQrScanner(true);
     };
-
-    const handleSuccessState = (message: string) => {
-        setStatusModal('success');
-        setModalStatusMessage(message);
-        handleCloseModalManager();
-        formik.resetForm();
-    };
-    const handleErrorState = (message: string) => {
-        setStatusModal('error');
-        setModalStatusMessage(message);
-        handleCloseModalManager();
-        formik.setSubmitting(false);
-    };
-
-    const handleCloseModalManager = () => {
-        setModalEmployee('');
-    };
-    const handleProceedButton = () => {
-        setModalEmployee('confirmation');
-    };
-    const handleCloseStatusModal = () => setStatusModal('');
 
     const setAddressFieldValue = async (scannedMinimaAddress: string) => {
         setErrorScannedMinimaAddress(false);
@@ -236,6 +227,7 @@ const ValueTransfer = ({}: IProps) => {
                         help="If your database (vault) is locked, use the password here otherwise ignore this"
                         children={
                             <TextField
+                                type="password"
                                 disabled={formik.isSubmitting}
                                 fullWidth
                                 id="password"
@@ -285,9 +277,9 @@ const ValueTransfer = ({}: IProps) => {
                 children={<ValueTransferConfirmation formik={formik} />}
             />
             <MiniModal
-                open={statusModal.length > 0 ? true : false}
+                open={statusModal && statusModal.length > 0}
                 handleClose={handleCloseStatusModal}
-                header={statusModal === 'success' ? 'Success.' : 'Failed.'}
+                header={statusModal && statusModal.length > 0 ? statusModal : ''}
                 status="Transaction Status"
                 subtitle={modalStatusMessage}
             />
