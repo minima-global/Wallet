@@ -78,7 +78,7 @@ let whenNewBalance = (d: NewBalanceData) => {
     // console.log("NEW BALANCE event ... please resgister custom callback", d);
 };
 let whenInit = () => {
-    console.log('INIT event ... please resgister custom callback');
+    // console.log('INIT event ... please resgister custom callback');
 };
 let whenMinimaLog = (d: MinimaLogData) => {
     // console.log("MINIMA LOG event ... please resgister custom callback", d);

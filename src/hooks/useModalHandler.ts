@@ -12,7 +12,7 @@ export const useModalHandler = () => {
         handleCloseModalManager();
     };
     const handleErrorState = (pending: boolean, message: string) => {
-        console.log('pending', pending);
+        // console.log('pending', pending);
         setStatusModal(pending ? 'Pending' : 'Failed');
         setModalStatusMessage(
             pending

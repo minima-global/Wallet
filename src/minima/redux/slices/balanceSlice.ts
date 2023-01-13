@@ -123,7 +123,7 @@ export const selectBalance = (state: RootState): MinimaToken[] => {
     // make all nfts & tokens if uploaded content into renderable uris
     return state.balance.funds.map((t) => {
         if (t.token.url && t.token.url.startsWith('<artimage>', 0)) {
-            console.log(makeTokenImage(t.token.url, t.tokenid));
+            // console.log(makeTokenImage(t.token.url, t.tokenid));
             //t.token.url = makeTokenImage(t.token.url, t.tokenid);
 
             return t;
