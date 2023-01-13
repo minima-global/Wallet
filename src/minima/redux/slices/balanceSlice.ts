@@ -21,23 +21,23 @@ const initialState: BalanceState = {
 };
 
 export const callAndStoreBalance = (): AppThunk => async (dispatch) => {
-    // console.log(`Calling for new balance at ${ms}`)
-    getWalletBalance()
-        .then((wallet: MinimaToken[]) => {
-            const hasUnconfirmedBalance = !!wallet.find((i) => i.unconfirmed !== '0');
-            if (hasUnconfirmedBalance) {
-                dispatch(needsUpdating(true));
-            }
+    try {
+        const walletBalance = await getWalletBalance();
 
-            if (!hasUnconfirmedBalance) {
-                dispatch(needsUpdating(false));
-            }
+        const hasUnconfirmedBalance = !!walletBalance.find((i) => i.unconfirmed !== '0');
 
-            dispatch(updateBalance(wallet));
-        })
-        .catch((err) => {
-            console.error(err);
-        });
+        if (hasUnconfirmedBalance) {
+            dispatch(needsUpdating(true));
+        }
+
+        if (!hasUnconfirmedBalance) {
+            dispatch(needsUpdating(false));
+        }
+
+        dispatch(updateBalance(walletBalance));
+    } catch (error) {
+        console.error(error);
+    }
 };
 export const initFavoritesTableAndUpdate = (): AppThunk => async (dispatch, getState) => {
     selectFavorites()

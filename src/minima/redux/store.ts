@@ -1,7 +1,7 @@
-import { configureStore, ThunkAction, Action, AnyAction } from "@reduxjs/toolkit";
+import { configureStore, ThunkAction, Action, AnyAction } from '@reduxjs/toolkit';
 
-import { BalanceState } from './slices/balanceSlice';
-import { MiningState } from "./slices/miningSlice";
+import { balanceMiddleware, BalanceState } from './slices/balanceSlice';
+import { MiningState } from './slices/miningSlice';
 import { SendFormState } from './slices/app/sendSlice';
 import { NotificationState } from './slices/notificationSlice';
 import balanceReducer from './slices/balanceSlice';
@@ -13,7 +13,7 @@ export type RootState = {
     balance: BalanceState;
     notification: NotificationState;
     mining: MiningState;
-    sendForm: SendFormState
+    sendForm: SendFormState;
 };
 
 export const store = configureStore({
@@ -21,8 +21,9 @@ export const store = configureStore({
         balance: balanceReducer,
         notification: notificationReducer,
         mining: miningReducer,
-        sendForm: sendFormReducer
-    }
+        sendForm: sendFormReducer,
+    },
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(balanceMiddleware),
 });
 
 export type AppDispatch = typeof store.dispatch;
