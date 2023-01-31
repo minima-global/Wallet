@@ -5,23 +5,25 @@ import { Routes, Route, useLocation, Navigate, useNavigate, Outlet } from 'react
 import MenuIcon from '@mui/icons-material/Menu';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
-import Balance from './pages/Balance';
-import Send from './pages/Send';
-import Status from './pages/Status';
-import Receive from './pages/Receive';
-import TokenCreation from './pages/TokenCreation';
-import TokenDetail from './pages/TokenDetail';
-import { DRAWERWIDTH } from './shared/constants';
-import SideMenu from './layout/SideMenu';
-import Offline from './pages/Offline';
-import NFTs from './pages/NFTs';
-import MiningCog from './pages/components/mining/MiningCog';
-import { useAppSelector } from './minima/redux/hooks';
-import { selectMiningState } from './minima/redux/slices/miningSlice';
-import CreateNFT from './pages/components/nfts/CreateNFT';
-import NFTDetail from './pages/NFTDetail';
-import { selectBalance } from './minima/redux/slices/balanceSlice';
-import { NoResults } from './shared/components/layout/MiToken';
+import Balance from '../pages/Balance';
+import Send from '../pages/Send';
+import Status from '../pages/Status';
+import Receive from '../pages/Receive';
+import TokenCreation from '../pages/TokenCreation';
+import TokenDetail from '../pages/TokenDetail';
+import { DRAWERWIDTH } from '../shared/constants';
+import SideMenu from '../layout/SideMenu';
+import Offline from '../pages/Offline';
+import NFTs from '../pages/NFTs';
+import MiningCog from '../pages/components/mining/MiningCog';
+import { useAppSelector } from '../minima/redux/hooks';
+import { selectMiningState } from '../minima/redux/slices/miningSlice';
+import CreateNFT from '../pages/components/nfts/CreateNFT';
+import NFTDetail from '../pages/NFTDetail';
+import { selectBalance } from '../minima/redux/slices/balanceSlice';
+import { NoResults } from '../shared/components/layout/MiToken';
+
+import styles from './Navigation.module.css';
 
 export interface RouteType {
     path: string;
@@ -113,7 +115,7 @@ const AppNavigation = () => {
 
     return (
         <>
-            <Toolbar sx={[start, appwidth]} variant="dense">
+            <Toolbar className={styles['navigation']} variant="dense">
                 <Grid container>
                     <Grid xs={0} md={2} item />
                     <Grid
@@ -154,7 +156,7 @@ const AppNavigation = () => {
                 </Grid>
             </Toolbar>
 
-            <Box component="main" sx={[appwidth, contentPadding, scroller]}>
+            <Stack className={styles['content']}>
                 {wallet.length ? (
                     <Routes>
                         <Route path="/" element={<Navigate replace to="/balance" />} />
@@ -179,8 +181,8 @@ const AppNavigation = () => {
                         </NoResults>
                     </Stack>
                 )}
-            </Box>
-            <Box component="nav" sx={nav} aria-label="mailbox folders">
+            </Stack>
+            <Box component="nav" className={styles['drawer']}>
                 <Drawer
                     variant="temporary"
                     open={open}
@@ -197,24 +199,7 @@ const AppNavigation = () => {
         </>
     );
 };
-const HEADER__HEIGHT = 48;
-const scroller = {
-    height: `calc(100vh - ${HEADER__HEIGHT}px)`,
-    overflowY: 'scroll',
-};
-const nav = {
-    width: { sm: DRAWERWIDTH },
-    flexShrink: { sm: 0 },
-};
-const start = {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-};
-const appwidth = {
-    width: { sm: `calc(100% - ${DRAWERWIDTH}px)` },
-    ml: { sm: `${DRAWERWIDTH}px` },
-};
+
 const drawerdisplay = {
     display: { xs: 'block', sm: 'none' },
     '& .MuiDrawer-paper': { boxSizing: 'border-box', width: DRAWERWIDTH },
@@ -222,10 +207,6 @@ const drawerdisplay = {
 const drawerdisplaydesktop = {
     display: { xs: 'none', sm: 'block' },
     '& .MuiDrawer-paper': { width: DRAWERWIDTH },
-};
-
-const contentPadding = {
-    padding: { xs: '16px 8px!important' },
 };
 
 export default AppNavigation;
