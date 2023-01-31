@@ -114,8 +114,8 @@ const AppNavigation = () => {
     };
 
     return (
-        <>
-            <Toolbar className={styles['navigation']} variant="dense">
+        <Stack>
+            <header className={styles['navigation']}>
                 <Grid container>
                     <Grid xs={0} md={2} item />
                     <Grid
@@ -154,7 +154,7 @@ const AppNavigation = () => {
                     </Grid>
                     <Grid xs={0} md={2} item />
                 </Grid>
-            </Toolbar>
+            </header>
 
             <Stack className={styles['content']}>
                 {wallet.length ? (
@@ -196,7 +196,7 @@ const AppNavigation = () => {
                     <SideMenu handleDrawerOpen={handleDrawerOpen} handleDrawerClose={handleDrawerClose} />
                 </Drawer>
             </Box>
-        </>
+        </Stack>
     );
 };
 
