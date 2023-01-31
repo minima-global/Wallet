@@ -109,9 +109,9 @@ const TokenDetail = () => {
                                                             {token.tokenid !== MINIMA__TOKEN_ID ? (
                                                                 <NFTAuthenticity token={token} />
                                                             ) : null}
-                                                            {token.tokenid === MINIMA__TOKEN_ID ? (
+                                                            {/* {token.tokenid === MINIMA__TOKEN_ID ? (
                                                                 <MiTestnet>Testnet</MiTestnet>
-                                                            ) : null}
+                                                            ) : null} */}
                                                         </MiTokenNameWrapper>
                                                         <MiTokenNameTicker>
                                                             {token.tokenid === '0x00' ? (

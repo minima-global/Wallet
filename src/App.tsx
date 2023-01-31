@@ -3,7 +3,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import theme from './theme/theme';
 import { SnackbarProvider } from 'notistack';
-import AppNavigation from './AppNavigation';
+import AppNavigation from './Navigation/AppNavigation';
 import Notifications from './layout/Notifications';
 
 import { useAppDispatch } from './minima/redux/hooks';

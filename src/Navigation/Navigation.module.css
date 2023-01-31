@@ -1,0 +1,50 @@
+
+.content {
+  width: calc(100% - 240px);
+  margin-left: 240px;
+  padding: 16px 8px;
+  height: calc(100vh - 48px);
+  overflow-y: scroll;
+}
+
+.navigation {
+  width: calc(100% - 240px);
+  margin-left: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.drawer {
+  width: 240px;
+}
+
+.drawer-display {
+  display: block;
+
+}
+
+.drawer-display-desktop {
+  display: none;
+}
+
+@media only screen and (max-width: 600px) {
+  .content {
+    width: 100%;
+    margin-left: 0;
+  }
+  .navigation {
+    width: 100%;
+    margin-left: 0;
+  }
+  .drawer {
+    flex-shrink: 0;
+  }
+  .drawer-display {
+    display: none;
+  
+  }
+  .drawer-display-desktop {
+    display: block;
+  }
+}

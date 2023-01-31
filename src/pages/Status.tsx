@@ -197,10 +197,6 @@ const CardMemory = (props: NodeStatus) => {
                 </MiStatusItem>
                 <MiStatusItem>
                     <label>P2P</label>
-                    <p>{memory.ram}</p>
-                </MiStatusItem>
-                <MiStatusItem>
-                    <label>Archive</label>
                     <p>{memory.files.p2pdb}</p>
                 </MiStatusItem>
             </MiStatusWrapper>
