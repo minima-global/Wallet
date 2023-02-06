@@ -4,7 +4,12 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { AppThunk, RootState } from '../store';
 
 import { getWalletBalance } from '../../rpc-commands';
-import { addTokenToFavoritesTable, removeTokenFromFavoritesTable, selectFavorites } from '../../libs/nft';
+import {
+    addTokenToFavoritesTable,
+    removeTokenFromFavoritesTable,
+    selectFavorites,
+    showTablesCount,
+} from '../../libs/nft';
 import { MinimaToken } from '../../../@types/minima2';
 
 const NEWBLOCK = 'NEWBLOCK';
@@ -39,15 +44,26 @@ export const callAndStoreBalance = (): AppThunk => async (dispatch) => {
         console.error(error);
     }
 };
+const delay = async (ms = 1000) => new Promise((resolve) => setTimeout(resolve, ms));
+
 export const initFavoritesTableAndUpdate = (): AppThunk => async (dispatch, getState) => {
-    selectFavorites()
-        .then((data: any) => {
-            const tokenids = data.map((d: any) => d.TOKENID);
-            dispatch(initFavoritesTable(tokenids));
-        })
-        .catch((err) => {
-            console.error(err);
-        });
+    try {
+        const tablesCount = await showTablesCount();
+        const favoritesTableCreated = tablesCount === 1;
+        // are there any tables?
+        if (favoritesTableCreated) {
+            const myFavoriteTokensArray = await selectFavorites();
+            // console.log('myFavoriteTokensArray', myFavoriteTokensArray);
+            dispatch(initFavoritesTable(myFavoriteTokensArray));
+        }
+        // if no tables.. wait and re-try
+        if (!favoritesTableCreated) {
+            await delay(2000);
+            initFavoritesTableAndUpdate();
+        }
+    } catch (error) {
+        console.error(error);
+    }
 };
 export const addFavoritesTableAndUpdate =
     (tokenid: string): AppThunk =>
@@ -56,8 +72,7 @@ export const addFavoritesTableAndUpdate =
             .then(() => {
                 selectFavorites()
                     .then((data: any) => {
-                        const tokenids = data.map((d: any) => d.TOKENID);
-                        dispatch(initFavoritesTable(tokenids));
+                        dispatch(initFavoritesTable(data));
                     })
                     .catch((err) => {
                         console.error(err);
@@ -75,8 +90,7 @@ export const removeFromFavoritesTableAndUpdate =
             .then(() => {
                 selectFavorites()
                     .then((data: any) => {
-                        const tokenids = data.map((d: any) => d.TOKENID);
-                        dispatch(initFavoritesTable(tokenids));
+                        dispatch(initFavoritesTable(data));
                     })
                     .catch((err) => {
                         console.error(err);
