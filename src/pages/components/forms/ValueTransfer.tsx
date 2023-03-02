@@ -8,7 +8,7 @@ import { callSend } from '../../../minima/rpc-commands';
 import { MinimaToken } from '../../../@types/minima2';
 import { useAppSelector } from '../../../minima/redux/hooks';
 import styles from '../../../theme/cssmodule/Components.module.css';
-import MiSelect from '../../../shared/components/layout/MiSelect';
+import MiSelect from '../../../shared/components/layout/MiSelect/MiSelect';
 import { selectBalance } from '../../../minima/redux/slices/balanceSlice';
 import { MINIMA__DECIMAL_PRECISION, MINIMA__TOKEN_ID } from '../../../shared/constants';
 import ValueTransferConfirmation from './common/ValueTransferConfirmation';

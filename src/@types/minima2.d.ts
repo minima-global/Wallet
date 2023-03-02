@@ -91,7 +91,7 @@ export interface Network {
     connected: number;
     rpc: RPC;
     traffic: Traffic;
-    p2p?: P2P;
+    p2p: P2P | 'disabled';
 }
 
 export interface Status {

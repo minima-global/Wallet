@@ -136,23 +136,42 @@ const Status = () => {
                             </MiCard>
                         </Grid>
 
-                        <Grid item xs={12} md={6}>
-                            <MiCard>{status && status.memory ? <CardMemory {...status} /> : null}</MiCard>
-                        </Grid>
-                        <Grid item xs={12} md={6}>
-                            <MiCard>{status && status.chain ? <CardChain {...status} /> : null}</MiCard>
-                        </Grid>
-                        <Grid item xs={12} md={6}>
-                            <MiCard>{status && status.txpow ? <CardTxPoW {...status} /> : null}</MiCard>
-                        </Grid>
-                        <Grid item xs={12} md={6}>
-                            <MiCard>{status && status.network ? <CardNetwork {...status} /> : null}</MiCard>
-                        </Grid>
-                        {status && status.network.p2p && status.network.p2p.address ? (
-                            <Grid item xs={12} md={12}>
-                                <MiCard>{status && status.network.p2p ? <CardP2P {...status} /> : null}</MiCard>
+                        {status.memory && (
+                            <Grid item xs={12} md={6}>
+                                <MiCard>
+                                    <CardMemory {...status} />
+                                </MiCard>
                             </Grid>
-                        ) : null}
+                        )}
+                        {status.chain && (
+                            <Grid item xs={12} md={6}>
+                                <MiCard>
+                                    <CardChain {...status} />
+                                </MiCard>
+                            </Grid>
+                        )}
+                        {status.txpow && (
+                            <Grid item xs={12} md={6}>
+                                <MiCard>
+                                    <CardTxPoW {...status} />
+                                </MiCard>
+                            </Grid>
+                        )}
+                        {status.network && (
+                            <Grid item xs={12} md={6}>
+                                <MiCard>
+                                    {' '}
+                                    <CardNetwork {...status} />{' '}
+                                </MiCard>
+                            </Grid>
+                        )}
+                        {status.network.p2p && status.network.p2p !== 'disabled' && (
+                            <Grid item xs={12} md={12}>
+                                <MiCard>
+                                    <CardP2P {...status} />{' '}
+                                </MiCard>
+                            </Grid>
+                        )}
                     </>
                 )}
             </Grid>
@@ -258,34 +277,50 @@ const CardTxPoW = (props: NodeStatus) => {
             </Stack>
 
             <MiStatusWrapper>
-                <MiStatusItem>
-                    <label>Mempool</label>
-                    <p>{txpow.mempool}</p>
-                </MiStatusItem>
-                <MiStatusItem>
-                    <label>RAM Db</label>
-                    <p>{txpow.ramdb}</p>
-                </MiStatusItem>
-                <MiStatusItem>
-                    <label>TxPOW Db</label>
-                    <p>{txpow.txpowdb}</p>
-                </MiStatusItem>
-                <MiStatusItem>
-                    <label>Archive Db Size</label>
-                    <p>{txpow.archivedb.size}</p>
-                </MiStatusItem>
-                <MiStatusItem>
-                    <label>Archive Db Start</label>
-                    <p>{txpow.archivedb.start}</p>
-                </MiStatusItem>
-                <MiStatusItem>
-                    <label>Archive Db Start Date</label>
-                    <p>{txpow.archivedb.startdate}</p>
-                </MiStatusItem>
-                <MiStatusItem>
-                    <label>Archive Db End</label>
-                    <p>{txpow.archivedb.end}</p>
-                </MiStatusItem>
+                {!!txpow.ramdb && (
+                    <MiStatusItem>
+                        <label>RAM Db</label>
+                        <p>{txpow.ramdb}</p>
+                    </MiStatusItem>
+                )}
+                {!!txpow.mempool && (
+                    <MiStatusItem>
+                        <label>Mempool</label>
+                        <p>{txpow.mempool}</p>
+                    </MiStatusItem>
+                )}
+
+                {!!txpow.txpowdb && (
+                    <MiStatusItem>
+                        <label>TxPOW Db</label>
+                        <p>{txpow.txpowdb}</p>
+                    </MiStatusItem>
+                )}
+
+                {!!txpow.archivedb.size && (
+                    <MiStatusItem>
+                        <label>Archive Db Size</label>
+                        <p>{txpow.archivedb.size}</p>
+                    </MiStatusItem>
+                )}
+                {!!txpow.archivedb.start && (
+                    <MiStatusItem>
+                        <label>Archive Db Start</label>
+                        <p>{txpow.archivedb.start}</p>
+                    </MiStatusItem>
+                )}
+                {!!txpow.archivedb.startdate && (
+                    <MiStatusItem>
+                        <label>Archive Db Start Date</label>
+                        <p>{txpow.archivedb.startdate}</p>
+                    </MiStatusItem>
+                )}
+                {!!txpow.archivedb.end && (
+                    <MiStatusItem>
+                        <label>Archive Db End</label>
+                        <p>{txpow.archivedb.end}</p>
+                    </MiStatusItem>
+                )}
             </MiStatusWrapper>
         </React.Fragment>
     );
@@ -344,50 +379,73 @@ const CardP2P = (props: NodeStatus) => {
             </Stack>
 
             <MiStatusWrapper>
-                <MiStatusItem>
-                    <label>P2P Address</label>
-                    <p>{p2p?.address}</p>
-                </MiStatusItem>
-                <MiStatusItem>
-                    <label>Accepting inlinks</label>
-                    <p>{p2p?.isAcceptingInLinks}</p>
-                </MiStatusItem>
-                <MiStatusItem>
-                    <label>Inlink Count</label>
-                    <p>{p2p?.numInLinks}</p>
-                </MiStatusItem>
-                <MiStatusItem>
-                    <label>Outlink Count</label>
-                    <p>{p2p?.numOutLinks}</p>
-                </MiStatusItem>
-                <MiStatusItem>
-                    <label>Count All Links</label>
-                    <p>{p2p?.numAllLinks}</p>
-                </MiStatusItem>
-                <MiStatusItem>
-                    <label>Not Accepting P2P Links Count</label>
-                    <p>{p2p?.numNotAcceptingConnP2PLinks}</p>
-                </MiStatusItem>
-                <MiStatusItem>
-                    <label>Not P2P Links Count</label>
-                    <p>{p2p?.numNoneP2PLinks}</p>
-                </MiStatusItem>
-                <MiStatusItem>
-                    <label>Known Peers Count</label>
-                    <p>{p2p?.numKnownPeers}</p>
-                </MiStatusItem>
-                <MiStatusItem>
-                    <label>Unvalidated Peers Count</label>
-                    <p>{p2p?.numUnvalidatedPeers}</p>
-                </MiStatusItem>
-                <MiStatusItem>
-                    <label>NIO Inbound</label>
-                    <p>{p2p?.nio_inbound}</p>
-                </MiStatusItem>
-                <MiStatusItem>
-                    <label>NIO Outbound</label>
-                    <p>{p2p?.nio_outbound}</p>
-                </MiStatusItem>
+                {p2p && p2p !== 'disabled' && !!p2p.address && (
+                    <MiStatusItem>
+                        <label>P2P Address</label>
+                        <p>{p2p.address}</p>
+                    </MiStatusItem>
+                )}
+                {p2p && p2p !== 'disabled' && !!p2p.isAcceptingInLinks && (
+                    <MiStatusItem>
+                        <label>Accepting inlinks</label>
+                        <p>{p2p.isAcceptingInLinks}</p>
+                    </MiStatusItem>
+                )}
+                {p2p && p2p !== 'disabled' && !!p2p.numInLinks && (
+                    <MiStatusItem>
+                        <label>Inlink Count</label>
+                        <p>{p2p.numInLinks}</p>
+                    </MiStatusItem>
+                )}
+                {p2p && p2p !== 'disabled' && !!p2p.numOutLinks && (
+                    <MiStatusItem>
+                        <label>Outlink Count</label>
+                        <p>{p2p.numOutLinks}</p>
+                    </MiStatusItem>
+                )}
+                {p2p && p2p !== 'disabled' && !!p2p.numAllLinks && (
+                    <MiStatusItem>
+                        <label>Count All Links</label>
+                        <p>{p2p.numAllLinks}</p>
+                    </MiStatusItem>
+                )}
+                {p2p && p2p !== 'disabled' && !!p2p.numNotAcceptingConnP2PLinks && (
+                    <MiStatusItem>
+                        <label>Not Accepting P2P Links Count</label>
+                        <p>{p2p.numNotAcceptingConnP2PLinks}</p>
+                    </MiStatusItem>
+                )}
+                {p2p && p2p !== 'disabled' && !!p2p.numNoneP2PLinks && (
+                    <MiStatusItem>
+                        <label>Not P2P Links Count</label>
+                        <p>{p2p.numNoneP2PLinks}</p>
+                    </MiStatusItem>
+                )}
+                {p2p && p2p !== 'disabled' && !!p2p.numKnownPeers && (
+                    <MiStatusItem>
+                        <label>Known Peers Count</label>
+                        <p>{p2p.numKnownPeers}</p>
+                    </MiStatusItem>
+                )}
+
+                {p2p && p2p !== 'disabled' && !!p2p.numUnvalidatedPeers && (
+                    <MiStatusItem>
+                        <label>Unvalidated Peers Count</label>
+                        <p>{p2p.numUnvalidatedPeers}</p>
+                    </MiStatusItem>
+                )}
+                {p2p && p2p !== 'disabled' && !!p2p.nio_inbound && (
+                    <MiStatusItem>
+                        <label>NIO Inbound</label>
+                        <p>{p2p.nio_inbound}</p>
+                    </MiStatusItem>
+                )}
+                {p2p && p2p !== 'disabled' && !!p2p.nio_outbound && (
+                    <MiStatusItem>
+                        <label>NIO Outbound</label>
+                        <p>{p2p.nio_outbound}</p>
+                    </MiStatusItem>
+                )}
             </MiStatusWrapper>
         </React.Fragment>
     );

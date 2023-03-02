@@ -66,6 +66,7 @@ const MiTokenListItem = styled('li')`
     flex-direction: row;
     border: 1px solid #fefefe !important;
     overflow: hidden;
+    gap: 2px;
 
     > .MuiAvatar-root {
         margin-right: 8px !important;

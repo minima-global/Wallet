@@ -6,7 +6,7 @@ import { Button, Stack, TextField, Typography } from '@mui/material';
 import { MinimaToken } from '../../../@types/minima2';
 import { useAppSelector } from '../../../minima/redux/hooks';
 import styles from '../../../theme/cssmodule/Components.module.css';
-import MiSelect from '../../../shared/components/layout/MiSelect';
+import MiSelect from '../../../shared/components/layout/MiSelect/MiSelect';
 import { selectBalance } from '../../../minima/redux/slices/balanceSlice';
 import { MINIMA__DECIMAL_PRECISION } from '../../../shared/constants';
 

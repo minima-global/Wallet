@@ -1,6 +1,17 @@
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Card, CardHeader, CardContent, Avatar, Typography, Grid, CardMedia, Stack, Divider } from '@mui/material';
+import {
+    Card,
+    CardHeader,
+    CardContent,
+    Avatar,
+    Typography,
+    Grid,
+    CardMedia,
+    Stack,
+    Divider,
+    Badge,
+} from '@mui/material';
 
 import {
     MiTokenName,
@@ -17,6 +28,7 @@ import { selectTokenWithID } from '../../minima/redux/slices/balanceSlice';
 import CustomListItem from '../../shared/components/CustomListItem';
 import NFTAuthenticity from '../components/tokens/NFTAuthenticity';
 import styles from './TokenDetail.module.css';
+import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 
 const TokenDetail = () => {
     const { tokenid } = useParams();
@@ -38,44 +50,57 @@ const TokenDetail = () => {
                                     <CardHeader
                                         title={
                                             <MiTokenListItem>
-                                                {token.tokenid === '0x00' && (
-                                                    <Avatar src="./assets/minimaLogoSquare.png" />
-                                                )}
-                                                {token.tokenid !== '0x00' && (
-                                                    <Avatar
-                                                        src={
-                                                            token.token.url && token.token.url.length
-                                                                ? token.token.url
-                                                                : `https://robohash.org/${token.tokenid}`
-                                                        }
-                                                    />
-                                                )}
-
-                                                <Stack
-                                                    spacing={0.3}
-                                                    flexDirection="column"
-                                                    alignItems="flex-start"
-                                                    className={styles['token-name']}
-                                                >
-                                                    <MiTokenNameWrapper>
+                                                <Stack width="100%" flexDirection="row" justifyContent="space-between">
+                                                    <Stack flexDirection="row" gap={1}>
                                                         {token.tokenid === '0x00' && (
-                                                            <MiTokenName>{token.token}</MiTokenName>
+                                                            <Avatar src="./assets/minimaLogoSquare.png" />
                                                         )}
                                                         {token.tokenid !== '0x00' && (
-                                                            <MiTokenName>
-                                                                {token.token.name ? token.token.name : 'N/A'}
-                                                            </MiTokenName>
+                                                            <Avatar
+                                                                src={
+                                                                    token.token.url && token.token.url.length
+                                                                        ? token.token.url
+                                                                        : `https://robohash.org/${token.tokenid}`
+                                                                }
+                                                            />
                                                         )}
 
-                                                        {token.tokenid !== '0x00' && <NFTAuthenticity token={token} />}
-                                                    </MiTokenNameWrapper>
+                                                        <Stack
+                                                            spacing={0.3}
+                                                            flexDirection="column"
+                                                            alignItems="flex-start"
+                                                            className={styles['token-name']}
+                                                        >
+                                                            <MiTokenNameWrapper>
+                                                                {token.tokenid === '0x00' && (
+                                                                    <MiTokenName>{token.token}</MiTokenName>
+                                                                )}
+                                                                {token.tokenid !== '0x00' && (
+                                                                    <MiTokenName>
+                                                                        {token.token.name ? token.token.name : 'N/A'}
+                                                                    </MiTokenName>
+                                                                )}
+
+                                                                {token.tokenid !== '0x00' && (
+                                                                    <NFTAuthenticity token={token} />
+                                                                )}
+                                                            </MiTokenNameWrapper>
+                                                            {token.tokenid === '0x00' && (
+                                                                <MiTokenNameTicker>MINIMA</MiTokenNameTicker>
+                                                            )}
+                                                            {token.tokenid !== '0x00' && (
+                                                                <MiTokenNameTicker>
+                                                                    {token.token.ticker ? (
+                                                                        token.token.ticker
+                                                                    ) : (
+                                                                        <MiSkeleton />
+                                                                    )}
+                                                                </MiTokenNameTicker>
+                                                            )}
+                                                        </Stack>
+                                                    </Stack>
                                                     {token.tokenid === '0x00' && (
-                                                        <MiTokenNameTicker>MINIMA</MiTokenNameTicker>
-                                                    )}
-                                                    {token.tokenid !== '0x00' && (
-                                                        <MiTokenNameTicker>
-                                                            {token.token.ticker ? token.token.ticker : <MiSkeleton />}
-                                                        </MiTokenNameTicker>
+                                                        <VerifiedUserIcon sx={{ fontSize: 16 }} color="primary" />
                                                     )}
                                                 </Stack>
                                             </MiTokenListItem>
