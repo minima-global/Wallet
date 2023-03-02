@@ -3,7 +3,7 @@ import { styled, Tooltip, TooltipProps, tooltipClasses } from '@mui/material';
 
 import VerifiedIcon from '@mui/icons-material/Verified';
 import { callTokenValidate } from '../../../minima/rpc-commands';
-import { MinimaToken } from '../../../minima/types/minima2';
+import { MinimaToken } from '../../../@types/minima2';
 
 interface IProps {
     token: MinimaToken;

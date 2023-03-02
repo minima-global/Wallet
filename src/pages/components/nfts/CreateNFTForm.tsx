@@ -13,13 +13,14 @@ import NFTConfirmation from '../forms/common/NFTConfirmation';
 import MiniModal from '../../../shared/components/MiniModal';
 import Pending from '../forms/Pending';
 import FormImageUrlSelect from '../../../shared/components/forms/FormImageUrlSelect';
-import { MiNFT } from '../../../minima/types/nft';
+import { MiNFT } from '../../../@types/nft';
 import Required, { MiRequiredAsterisk } from '../../../shared/components/forms/Required';
 import FormFieldWrapper from '../../../shared/components/FormFieldWrapper';
 import { selectBalance } from '../../../minima/redux/slices/balanceSlice';
 
 import Decimal from 'decimal.js';
 import MiFunds from '../forms/MiFunds';
+import { useModalHandler } from '../../../hooks/useModalHandler';
 
 /**
  * Minima scales up to 64 decimal places
@@ -33,31 +34,17 @@ type IStatusModal = 'success' | 'error' | 'pending' | '';
 const CreateNFTForm = () => {
     const mySchema = useMySchema();
     const wallet = useAppSelector(selectBalance);
-    const [modalEmployee, setModalEmployee] = React.useState('');
-    const [statusModal, setStatusModal] = React.useState<IStatusModal>('');
-
-    const handleSuccessState = () => {
-        setStatusModal('success');
-        handleCloseModalManager();
-        formik.resetForm();
-    };
-    const handleErrorState = () => {
-        setStatusModal('error');
-        handleCloseModalManager();
-        formik.setSubmitting(false);
-    };
-    const handlePendingState = () => {
-        setStatusModal('pending');
-        handleCloseModalManager();
-        formik.resetForm();
-    };
-    const handleCloseModalManager = () => {
-        setModalEmployee('');
-    };
-    const handleProceedButton = () => {
-        setModalEmployee('confirmation');
-    };
-    const handleCloseStatusModal = () => setStatusModal('');
+    const {
+        statusModal,
+        modalStatusMessage,
+        handleSuccessState,
+        handleErrorState,
+        handleProceedButton,
+        modalEmployee,
+        handleCloseModalManager,
+        handleCloseStatusModal,
+        setModalEmployee,
+    } = useModalHandler();
 
     React.useEffect(() => {
         formik.setFieldValue('funds', wallet[0]);
@@ -76,7 +63,7 @@ const CreateNFTForm = () => {
             webvalidate: '',
             burn: '',
         },
-        onSubmit: (data: any) => {
+        onSubmit: async (data: any) => {
             setModalEmployee('');
 
             const cNFT: MiNFT = {
@@ -90,17 +77,19 @@ const CreateNFTForm = () => {
                 version: '1.0',
             };
 
-            buildCustomTokenCreation(cNFT, data.amount, data.burn)
-                .then((r) => {
-                    handleSuccessState();
-                })
-                .catch((err) => {
-                    if (err === 'pending') {
-                        return handlePendingState();
-                    }
-                    console.error(err);
-                    handleErrorState();
-                });
+            try {
+                // send rpc
+                await buildCustomTokenCreation(cNFT, data.amount, data.burn);
+                // success..
+                handleSuccessState(`You have successfully created this token, it should arrive in your balance soon.`);
+            } catch (error: any) {
+                const isPending = error.message === 'pending';
+                if (isPending) {
+                    // time to reset
+                    formik.resetForm();
+                }
+                handleErrorState(isPending, error.message);
+            }
         },
         validationSchema: mySchema,
     });
@@ -339,19 +328,11 @@ const CreateNFTForm = () => {
             />
 
             <MiniModal
-                open={statusModal.length > 0 ? true : false}
+                open={statusModal && statusModal.length > 0}
                 handleClose={handleCloseStatusModal}
-                header={statusModal === 'success' ? 'Success!' : statusModal === 'pending' ? 'Pending' : 'Failed!'}
+                header={statusModal && statusModal.length > 0 ? statusModal : ''}
                 status="Transaction Status"
-                subtitle={
-                    statusModal === 'success' ? (
-                        'Your transaction will be received shortly'
-                    ) : statusModal === 'pending' ? (
-                        <Pending />
-                    ) : (
-                        'Please try again later.'
-                    )
-                }
+                subtitle={modalStatusMessage}
             />
         </form>
     );

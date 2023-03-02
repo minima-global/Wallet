@@ -18,11 +18,12 @@ import Pending from './components/forms/Pending';
 import FormFieldWrapper from '../shared/components/FormFieldWrapper';
 import FormImageUrlSelect from '../shared/components/forms/FormImageUrlSelect';
 import { buildCustomTokenCreation } from '../minima/libs/nft';
-import { MiCustomToken } from '../minima/types/nft';
+import { MiCustomToken } from '../@types/nft';
 import Required from '../shared/components/forms/Required';
 import Decimal from 'decimal.js';
 import MiFunds from './components/forms/MiFunds';
 import React from 'react';
+import { useModalHandler } from '../hooks/useModalHandler';
 
 /**
  * Minima scales up to 64 decimal places
@@ -32,34 +33,21 @@ import React from 'react';
 Decimal.set({ precision: 64 });
 Decimal.set({ toExpNeg: -36 });
 
-type IStatusModal = 'success' | 'error' | 'pending' | '';
 const TokenCreation: FC = () => {
     const mySchema = useMySchema();
     const wallet = useAppSelector(selectBalance);
-    const [modalEmployee, setModalEmployee] = React.useState('');
-    const [statusModal, setStatusModal] = React.useState<IStatusModal>('');
-    const handleSuccessState = () => {
-        setStatusModal('success');
-        handleCloseModalManager();
-        formik.resetForm();
-    };
-    const handleErrorState = () => {
-        setStatusModal('error');
-        handleCloseModalManager();
-        formik.setSubmitting(false);
-    };
-    const handlePendingState = () => {
-        setStatusModal('pending');
-        handleCloseModalManager();
-        formik.resetForm();
-    };
-    const handleCloseModalManager = () => {
-        setModalEmployee('');
-    };
-    const handleProceedButton = () => {
-        setModalEmployee('confirmation');
-    };
-    const handleCloseStatusModal = () => setStatusModal('');
+
+    const {
+        statusModal,
+        modalStatusMessage,
+        handleSuccessState,
+        handleErrorState,
+        handleProceedButton,
+        modalEmployee,
+        handleCloseModalManager,
+        handleCloseStatusModal,
+        setModalEmployee,
+    } = useModalHandler();
 
     React.useEffect(() => {
         formik.setFieldValue('funds', wallet[0]);
@@ -77,7 +65,7 @@ const TokenCreation: FC = () => {
             ticker: '',
         },
         validationSchema: mySchema,
-        onSubmit: (formData) => {
+        onSubmit: async (formData) => {
             setModalEmployee('');
 
             const cToken: MiCustomToken = {
@@ -89,19 +77,23 @@ const TokenCreation: FC = () => {
                 webvalidate: formData.webvalidate || '',
                 version: '1.0',
             };
-            buildCustomTokenCreation(cToken, formData.amount, formData.burn)
-                .then((res: any) => {
-                    // console.log(res);
-                    handleSuccessState();
-                })
-                .catch((err: any) => {
-                    if (err === 'pending') {
-                        return handlePendingState();
-                    }
 
-                    console.error(err);
-                    handleErrorState();
-                });
+            try {
+                // send rpc
+                await buildCustomTokenCreation(cToken, formData.amount, formData.burn);
+                // success..
+                handleSuccessState(`You have successfully created this token, it should arrive in your balance soon.`);
+                // time to reset
+                formik.resetForm();
+            } catch (error: any) {
+                const isPending = error.message === 'pending';
+
+                if (isPending) {
+                    // time to reset
+                    formik.resetForm();
+                }
+                handleErrorState(isPending, error.message);
+            }
         },
     });
     return (
@@ -119,7 +111,7 @@ const TokenCreation: FC = () => {
                                     {/* Asterisk required  */}
                                     <Required />
                                     <FormFieldWrapper
-                                        required={true}
+                                        required={false}
                                         help="Use a public image URL ending in .png .jpg or .jpeg or upload your own content"
                                         children={<FormImageUrlSelect formik={formik} />} // selector for url or upload
                                     />
@@ -316,21 +308,11 @@ const TokenCreation: FC = () => {
                     />
 
                     <MiniModal
-                        open={statusModal.length > 0 ? true : false}
+                        open={statusModal && statusModal.length > 0}
                         handleClose={handleCloseStatusModal}
-                        header={
-                            statusModal === 'success' ? 'Success!' : statusModal === 'pending' ? 'Pending' : 'Failed!'
-                        }
+                        header={statusModal && statusModal.length > 0 ? statusModal : ''}
                         status="Transaction Status"
-                        subtitle={
-                            statusModal === 'success' ? (
-                                'Your transaction will be received shortly'
-                            ) : statusModal === 'pending' ? (
-                                <Pending />
-                            ) : (
-                                'Please try again later.'
-                            )
-                        }
+                        subtitle={modalStatusMessage}
                     />
                 </>
             }
@@ -417,12 +399,11 @@ const useMySchema = () => {
             }),
         url: Yup.string()
             .trim()
-            .required('This field is required.')
             .test('check-my-url', 'Invalid Url.', function (val) {
                 const { path, createError, parent } = this;
 
-                if (val == undefined) {
-                    return false;
+                if (val === undefined) {
+                    return true;
                 }
 
                 if (parent.url.substring(0, 'data:image'.length) === 'data:image') {

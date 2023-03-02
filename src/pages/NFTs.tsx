@@ -1,8 +1,8 @@
 import { FC, useState, useMemo } from 'react';
-import { Grid, Card, CardContent, TextField, Button, Stack, Typography, CardHeader, Tabs, Tab } from '@mui/material';
+import { Grid, Card, CardContent, TextField, Button, Stack, CardHeader, Tabs, Tab } from '@mui/material';
 
 import { useNavigate } from 'react-router-dom';
-import { containsText, isPropertyString, strToHex } from '../shared/functions';
+import { containsText, isPropertyString } from '../shared/functions';
 
 import NFTCard from './components/nfts/NFTCard';
 import GridLayout from '../layout/GridLayout';
@@ -10,17 +10,19 @@ import { useAppSelector } from '../minima/redux/hooks';
 import { selectFavouriteNFTs, selectNFTs } from '../minima/redux/slices/balanceSlice';
 
 import styles from '../theme/cssmodule/Components.module.css';
-import { MinimaToken } from '../minima/types/minima2';
+import { MinimaToken } from '../@types/minima2';
+import { NoResults } from '../shared/components/layout/MiToken';
 
 const NFTs: FC = () => {
     const navigate = useNavigate();
     const [tabsValue, setTabsValue] = useState('one');
     const [filterText, setFilterText] = useState('');
+
     let allNFTs = useAppSelector(selectNFTs);
-    const favourited = useAppSelector(selectFavouriteNFTs);
+    const favouritedNFTs = useAppSelector(selectFavouriteNFTs);
 
     if (tabsValue === 'two') {
-        allNFTs = allNFTs?.filter((t: MinimaToken) => favourited?.includes(t));
+        allNFTs = allNFTs?.filter((t: MinimaToken) => favouritedNFTs?.includes(t));
     }
 
     const getFilteredBalanceList = (arr: MinimaToken[], filterText: string) => {
@@ -46,6 +48,8 @@ const NFTs: FC = () => {
         setFilterText(value);
         // when the component re-renders the updated filter text will create a new filteredBalance variable
     }
+
+    const userIsSearching = filterText.length > 0;
 
     return (
         <GridLayout
@@ -88,9 +92,12 @@ const NFTs: FC = () => {
                                     placeholder="Search by name, creator name or tokenid"
                                 />
                                 <Grid justifyContent="space-around" container spacing={{ sm: 1, xs: 0 }}>
-                                    {displayedOptions &&
-                                    typeof displayedOptions !== 'undefined' &&
-                                    displayedOptions.length > 0 ? (
+                                    {userIsSearching && displayedOptions && displayedOptions.length === 0 ? (
+                                        <NoResults>
+                                            <h6>No results</h6>
+                                            <p>Please try your search again.</p>
+                                        </NoResults>
+                                    ) : (
                                         displayedOptions.map((n) => {
                                             return (
                                                 <Grid key={n.tokenid} item xs={12} sm={5} mb={1}>
@@ -98,16 +105,19 @@ const NFTs: FC = () => {
                                                 </Grid>
                                             );
                                         })
-                                    ) : tabsValue === 'one' ? (
-                                        <Typography variant="caption" className={styles['no-results-text-display']}>
-                                            No NFTs collected yet.
-                                        </Typography>
-                                    ) : null}
-                                    {allNFTs &&
-                                    typeof allNFTs !== 'undefined' &&
-                                    tabsValue === 'two' &&
-                                    allNFTs.length === 0 ? (
-                                        <Typography variant="caption">No favourites yet.</Typography>
+                                    )}
+                                    {!userIsSearching && allNFTs && allNFTs.length === 0 ? (
+                                        <NoResults>
+                                            <h6>No results found</h6>
+                                            {tabsValue === 'one' ? (
+                                                <p>Click create to create a new NFT.</p>
+                                            ) : (
+                                                <p>
+                                                    Tap the heart button in the top-right corner of an NFT card to
+                                                    favorite.
+                                                </p>
+                                            )}
+                                        </NoResults>
                                     ) : null}
                                 </Grid>
                             </Stack>

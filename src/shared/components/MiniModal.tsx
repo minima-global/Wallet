@@ -17,7 +17,7 @@ const MiniModal: FC<MiniModalProp> = ({ open, handleClose, executeName, customFn
                     <Typography sx={heading} id="modal-modal-heading" variant="h6" component="h3">
                         {header}
                     </Typography>
-                    <Box component="div" id="modal-modal-description" sx={{ mt: 1 }}>
+                    <Box component="div" id="modal-modal-description" sx={{ mt: 1, wordBreak: 'break-word' }}>
                         {subtitle}
                     </Box>
                 </Box>

@@ -3,7 +3,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import theme from './theme/theme';
 import { SnackbarProvider } from 'notistack';
-import AppNavigation from './AppNavigation';
+import AppNavigation from './Navigation/AppNavigation';
 import Notifications from './layout/Notifications';
 
 import { useAppDispatch } from './minima/redux/hooks';
@@ -33,7 +33,6 @@ export default function App() {
         });
 
         events.onNewBalance(() => {
-            // console.log(`new balance update..`);
             const balanceNotification = {
                 message: 'New balance update',
                 severity: 'info',
@@ -48,12 +47,6 @@ export default function App() {
         events.onMining((data) => {
             const isMining = data.mining;
             const isTransaction = data.txpow.body.txn.inputs.length > 0 ? true : false;
-
-            // console.log(data.txpow);
-
-            // console.log('Is mining?', data.mining);
-            // console.log('am i transaction?', data.txpow.body.txn.inputs.length > 0);
-
             if (isMining && isTransaction) {
                 dispatch(updateMiningState(true));
             }

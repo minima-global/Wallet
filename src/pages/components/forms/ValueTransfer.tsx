@@ -5,10 +5,10 @@ import React from 'react';
 
 import { Button, Stack, TextField } from '@mui/material';
 import { callSend } from '../../../minima/rpc-commands';
-import { MinimaToken } from '../../../minima/types/minima2';
+import { MinimaToken } from '../../../@types/minima2';
 import { useAppSelector } from '../../../minima/redux/hooks';
 import styles from '../../../theme/cssmodule/Components.module.css';
-import MiSelect from '../../../shared/components/layout/MiSelect';
+import MiSelect from '../../../shared/components/layout/MiSelect/MiSelect';
 import { selectBalance } from '../../../minima/redux/slices/balanceSlice';
 import { MINIMA__DECIMAL_PRECISION, MINIMA__TOKEN_ID } from '../../../shared/constants';
 import ValueTransferConfirmation from './common/ValueTransferConfirmation';
@@ -17,6 +17,13 @@ import ModalManager from '../managers/ModalManager';
 import MiniModal from '../../../shared/components/MiniModal';
 import Pending from './Pending';
 import FormFieldWrapper from '../../../shared/components/FormFieldWrapper';
+import styled from '@emotion/styled';
+
+import QrScanner from '../../../shared/components/qrscanner/QrScanner';
+import validateMinimaAddress from '../../../minima/commands/validateMinimaAddress/validateMinimaAddress';
+import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
+import { useModalHandler } from '../../../hooks/useModalHandler';
+import { useParams } from 'react-router-dom';
 
 Decimal.set({ precision: MINIMA__DECIMAL_PRECISION });
 
@@ -26,64 +33,94 @@ interface ISendForm {
     address: string;
     burn: string;
 }
+
+const MiCameraButton = styled('img')``;
+
 interface IProps {}
-type IStatusModal = 'success' | 'error' | 'pending' | '';
 const ValueTransfer = ({}: IProps) => {
     const mySchema = useFormSchema();
     const wallet = useAppSelector(selectBalance);
-    const [modalEmployee, setModalEmployee] = React.useState('');
-    const [statusModal, setStatusModal] = React.useState<IStatusModal>('');
+    const [openQrScanner, setOpenQrScanner] = React.useState(false);
+    const [errorScannedMinimaAddress, setErrorScannedMinimaAddress] = React.useState<false | string>(false);
+
+    const { tokenid } = useParams();
+
+    const {
+        statusModal,
+        modalStatusMessage,
+        handleSuccessState,
+        handleErrorState,
+        handleProceedButton,
+        modalEmployee,
+        handleCloseModalManager,
+        handleCloseStatusModal,
+    } = useModalHandler();
+
+    const requestedToken =
+        tokenid && wallet.find((i) => i.tokenid === tokenid)
+            ? wallet.filter((i) => i.tokenid === tokenid)[0]
+            : wallet[0];
 
     const formik = useFormik({
         initialValues: {
-            token: wallet[0],
+            token: requestedToken,
             amount: '',
             address: '',
             burn: '',
+            password: '',
         },
-        onSubmit: (formInputs: ISendForm) => {
-            callSend({ ...formInputs })
-                .then((r: any) => {
-                    // console.log(r);
-                    handleSuccessState();
-                })
-                .catch((err) => {
-                    if (err === 'pending') {
-                        return handlePendingState();
-                    }
-                    // TODO handle pending
-                    console.error(err);
-                    handleErrorState();
-                });
+        onSubmit: async (formInputs: ISendForm) => {
+            try {
+                // send rpc
+                const jsonResponse = await callSend({ ...formInputs });
+                // success..
+                handleSuccessState(
+                    `Your transaction has been posted on block height ${jsonResponse.postedHeight} and should arrive soon.`
+                );
+
+                formik.resetForm();
+            } catch (error: any) {
+                const isPending = error.message === 'pending';
+                if (isPending) {
+                    // time to reset
+                    formik.resetForm();
+                }
+                handleErrorState(isPending, error.message);
+            }
         },
         validationSchema: mySchema,
     });
 
-    const handleSuccessState = () => {
-        setStatusModal('success');
-        handleCloseModalManager();
-        formik.resetForm();
+    const handleCloseQrScanner = () => {
+        setOpenQrScanner(false);
     };
-    const handleErrorState = () => {
-        setStatusModal('error');
-        handleCloseModalManager();
-        formik.setSubmitting(false);
+    const handleOpenQrScanner = () => {
+        setOpenQrScanner(true);
     };
-    const handlePendingState = () => {
-        setStatusModal('pending');
-        handleCloseModalManager();
-        formik.resetForm();
+
+    const setAddressFieldValue = async (scannedMinimaAddress: string) => {
+        setErrorScannedMinimaAddress(false);
+        try {
+            await validateMinimaAddress(scannedMinimaAddress);
+            // it's valid so set input field
+            formik.setFieldValue('address', scannedMinimaAddress);
+            // close Modal
+            setOpenQrScanner(false);
+        } catch (error: any) {
+            console.error(error);
+            // set error
+            setErrorScannedMinimaAddress(error.message);
+        }
     };
-    const handleCloseModalManager = () => {
-        setModalEmployee('');
-    };
-    const handleProceedButton = () => {
-        setModalEmployee('confirmation');
-    };
-    const handleCloseStatusModal = () => setStatusModal('');
 
     return (
         <>
+            <QrScanner
+                setScannedResult={setAddressFieldValue}
+                closeModal={handleCloseQrScanner}
+                open={openQrScanner}
+                error={errorScannedMinimaAddress}
+            />
             <form onSubmit={formik.handleSubmit}>
                 <Stack spacing={2}>
                     {/* Select a token */}
@@ -96,31 +133,43 @@ const ValueTransfer = ({}: IProps) => {
                         resetForm={formik.resetForm}
                     />
                     {/* Choose an address */}
-                    <TextField
-                        disabled={formik.isSubmitting}
-                        fullWidth
-                        id="address"
-                        name="address"
-                        placeholder="minima address"
-                        value={formik.values.address}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        error={formik.touched.address && Boolean(formik.errors.address)}
-                        helperText={formik.touched.address && formik.errors.address}
-                        FormHelperTextProps={{ className: styles['form-helper-text'] }}
-                        InputProps={{
-                            style:
-                                formik.touched.address && Boolean(formik.errors.address)
-                                    ? {
-                                          borderBottomLeftRadius: 0,
-                                          borderBottomRightRadius: 0,
-                                      }
-                                    : {
-                                          borderBottomLeftRadius: 8,
-                                          borderBottomRightRadius: 8,
-                                      },
-                        }}
-                    />
+                    <Stack alignItems="center" justifyContent="center">
+                        <TextField
+                            disabled={formik.isSubmitting}
+                            fullWidth
+                            id="address"
+                            name="address"
+                            placeholder="minima address"
+                            value={formik.values.address}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            error={formik.touched.address && Boolean(formik.errors.address)}
+                            helperText={formik.touched.address && formik.errors.address}
+                            FormHelperTextProps={{ className: styles['form-helper-text'] }}
+                            InputProps={{
+                                style:
+                                    formik.touched.address && Boolean(formik.errors.address)
+                                        ? {
+                                              borderBottomLeftRadius: 0,
+                                              borderBottomRightRadius: 0,
+                                          }
+                                        : {
+                                              borderBottomLeftRadius: 8,
+                                              borderBottomRightRadius: 8,
+                                          },
+                                endAdornment: (
+                                    <>
+                                        <QrCodeScannerIcon
+                                            className={styles['qr-scanner']}
+                                            color="inherit"
+                                            onClick={handleOpenQrScanner}
+                                        />
+                                    </>
+                                ),
+                            }}
+                        />
+                        <MiCameraButton onClick={() => console.log('Open qr scanner')} src="" />
+                    </Stack>
                     {/* Choose an amount */}
                     <TextField
                         disabled={formik.isSubmitting}
@@ -182,6 +231,39 @@ const ValueTransfer = ({}: IProps) => {
                             />
                         }
                     />
+                    <FormFieldWrapper
+                        help="If your database (vault) is locked, use the password here otherwise ignore this"
+                        children={
+                            <TextField
+                                type="password"
+                                disabled={formik.isSubmitting}
+                                fullWidth
+                                id="password"
+                                name="password"
+                                placeholder="vault password"
+                                value={formik.values.password}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                error={formik.touched.password && Boolean(formik.errors.password)}
+                                helperText={formik.touched.password && formik.errors.password}
+                                FormHelperTextProps={{
+                                    className: styles['form-helper-text'],
+                                }}
+                                InputProps={{
+                                    style:
+                                        formik.touched.password && Boolean(formik.errors.password)
+                                            ? {
+                                                  borderBottomLeftRadius: 0,
+                                                  borderBottomRightRadius: 0,
+                                              }
+                                            : {
+                                                  borderBottomLeftRadius: 8,
+                                                  borderBottomRightRadius: 8,
+                                              },
+                                }}
+                            />
+                        }
+                    />
 
                     <Button
                         // type="submit"
@@ -203,19 +285,11 @@ const ValueTransfer = ({}: IProps) => {
                 children={<ValueTransferConfirmation formik={formik} />}
             />
             <MiniModal
-                open={statusModal.length > 0 ? true : false}
+                open={statusModal && statusModal.length > 0}
                 handleClose={handleCloseStatusModal}
-                header={statusModal === 'success' ? 'Success!' : statusModal === 'pending' ? 'Pending' : 'Failed!'}
+                header={statusModal && statusModal.length > 0 ? statusModal : ''}
                 status="Transaction Status"
-                subtitle={
-                    statusModal === 'success' ? (
-                        'Your transaction will be received shortly'
-                    ) : statusModal === 'pending' ? (
-                        <Pending />
-                    ) : (
-                        'Please try again later.'
-                    )
-                }
+                subtitle={modalStatusMessage}
             />
         </>
     );

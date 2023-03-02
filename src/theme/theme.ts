@@ -33,9 +33,7 @@ let theme = createTheme({
         menu: { main: 'rgba(255, 255, 255, 0.95)' },
     },
     typography: {
-        fontFamily: [
-            'Manrope-regular'
-        ].join(','),
+        fontFamily: ['Manrope-regular'].join(','),
         h4: {
             lineHeight: '27px',
             letterSpacing: '0.02em',
@@ -45,18 +43,18 @@ let theme = createTheme({
         },
         caption: {
             fontFamily: 'Manrope-semibold',
-            color: 'rgb(118, 118, 130)'
+            color: 'rgb(118, 118, 130)',
         },
         subtitle1: {
-            fontSize: "0.9em",
-            fontFamily: "Manrope-semibold",
-            color: '#363A3F'
+            fontSize: '0.9em',
+            fontFamily: 'Manrope-semibold',
+            color: '#363A3F',
         },
         body2: {
-            fontSize: "1em",
-            fontFamily: "Manrope-semibold",
-            color: '#363A3F!important'
-        }
+            fontSize: '1em',
+            fontFamily: 'Manrope-semibold',
+            color: '#363A3F!important',
+        },
     },
     shape: {
         borderRadius: 8,
@@ -83,42 +81,34 @@ theme = createTheme(theme, {
                 root: {
                     paddingTop: 14,
                     paddingBottom: 14,
-                    backgroundColor: '#fff'
-                }
-            }
-        },
-        MuiCardContent: {
-            styleOverrides: {
-                root: {
-                    "&:last-child": {
-                        paddingBottom: 16
-                      }
-                }
-            }
+                    backgroundColor: '#fff',
+                },
+            },
         },
         MuiFormHelperText: {
             styleOverrides: {
                 root: {
-                    
-                    fontWeight: 400,
-                    padding: 5,
+                    backgroundColor: 'rgb(254, 242, 242)',
+                    color: 'rgb(153, 27, 27)!important',
+                    padding: 8,
                     margin: 0,
-                    
-                    '&$error': {
-                        color: 'black'
-                    },
+                    fontSize: '0.875rem',
+                    fontFamily: 'Manrope-regular',
+                    letterSpacing: '0.00938em',
                     borderTopLeftRadius: 0,
-                    borderTopRightRadius: 0
+                    borderTopRightRadius: 0,
+                    marginTop: 4,
+                    borderRadius: 4,
                 },
-                "&$error": {
-                    color: 'black'
-                }
+                '&$error': {
+                    color: 'black',
+                },
             },
             root: {
-                "&$error": {
-                    color: 'black'
-                }
-            }
+                '&$error': {
+                    color: 'black',
+                },
+            },
         },
         MuiButton: {
             styleOverrides: {
@@ -127,15 +117,15 @@ theme = createTheme(theme, {
                     // Some CSS
                     borderRadius: 8,
                     textTransform: 'none',
-                    fontWeight: 800,                     
+                    fontWeight: 800,
                     lineHeight: '21px',
                     minHeight: 44,
                     fontSize: '0.875rem',
-                    
+
                     '&:disabled': {
                         backgroundColor: '#EDEDED',
                         opacity: 0.5,
-                    }
+                    },
                 },
             },
         },
@@ -146,15 +136,15 @@ theme = createTheme(theme, {
                 },
             },
         },
-        
+
         MuiDrawer: {
             styleOverrides: {
                 paperAnchorLeft: {
                     backgroundColor: theme.palette.menu.main,
                 },
                 paper: {
-                    borderRight: 'none'
-                }
+                    borderRight: 'none',
+                },
             },
         },
         MuiTextField: {
@@ -162,7 +152,7 @@ theme = createTheme(theme, {
                 root: {
                     backgroundColor: 'rgba(255, 255, 255, 0.5)',
                     borderRadius: 8,
-                    
+
                     input: {
                         paddingLeft: 16,
                         borderRadius: 8,
@@ -175,17 +165,13 @@ theme = createTheme(theme, {
                             color: '#91919D',
                             // fontSize: '1rem',
                             fontWeight: '100',
-
                         },
                         '&:focus': {
-                            backgroundColor: 'rgba(255, 255, 255, 0.8)'
+                            backgroundColor: 'rgba(255, 255, 255, 0.8)',
                         },
-
-
                     },
-
-                }
-            }
+                },
+            },
         },
         MuiToolbar: {
             styleOverrides: {
@@ -195,42 +181,39 @@ theme = createTheme(theme, {
                     backgroundColor: '#0D0E10',
                     color: '#fff',
                     padding: '0px 8px!important',
-                }
-            }
+                },
+            },
         },
         MuiList: {
             styleOverrides: {
                 root: {
                     '&& .Mui-selected, && .Mui-selected:hover': {
                         color: '#317AFF',
-                        
                     },
-                }
-            }
+                },
+            },
         },
         MuiListItemButton: {
             styleOverrides: {
                 root: {
                     backgroundColor: 'rgba(255, 255, 255, 0.8)',
-                    borderRadius: 8
-                }
-            }
+                    borderRadius: 8,
+                },
+            },
         },
         MuiListSubheader: {
             styleOverrides: {
                 root: {
-                    backgroundColor: 'transparent'
-                }
-            }
+                    backgroundColor: 'transparent',
+                },
+            },
         },
         MuiCard: {
             styleOverrides: {
                 root: {
                     backgroundColor: 'rgba(255, 255, 255, 0.5)',
-                    paddingBottom: 0,
-                    boxShadow: '0px 4px 10px 4px rgba(0, 0, 0, 0.05)'
-                }
-            }
+                },
+            },
         },
         MuiListItem: {
             styleOverrides: {
@@ -244,11 +227,11 @@ theme = createTheme(theme, {
             styleOverrides: {
                 root: {
                     '&:focus': {
-                        backgroundColor: 'rgba(255, 255, 255, 0.8)'
-                    }
+                        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                    },
                 },
             },
-        },     
+        },
     },
 });
 
