@@ -289,46 +289,65 @@ const MiSelect = ({ value, tokens, error, setFieldValue, resetForm, coinSplitMod
                                         ) : null}
                                         {filterWallet.map((t: MinimaToken) => (
                                             <MiTokenListItem key={t.tokenid} onClick={() => onOptionClicked(t)}>
-                                                {t.tokenid === '0x00' && (
-                                                    <Avatar
-                                                        className={styles['avatar']}
-                                                        variant="rounded"
-                                                        src="./assets/minimaLogoSquare.png"
-                                                    />
-                                                )}
-                                                {t.tokenid !== '0x00' && (
-                                                    <Avatar
-                                                        className={styles['avatar']}
-                                                        variant="rounded"
-                                                        src={
-                                                            t.token.url && t.token.url.length
-                                                                ? value.token.url
-                                                                : `https://robohash.org/${t.tokenid}`
-                                                        }
-                                                    />
-                                                )}
-                                                <Stack spacing={0.3} flexDirection="column" alignItems="flex-start">
-                                                    <MiTokenNameWrapper>
-                                                        <MiTokenName>
-                                                            {typeof t.token == 'string' ? t.token : t.token.name}
-                                                        </MiTokenName>
-                                                        {t.tokenid !== '0x00' ? <NFTAuthenticity token={t} /> : null}
-                                                    </MiTokenNameWrapper>
-
-                                                    <MiTokenNameTicker>
-                                                        {t.tokenid == '0x00' ? (
-                                                            'MINIMA'
-                                                        ) : t.token.hasOwnProperty('ticker') ? (
-                                                            t.token.ticker
-                                                        ) : (
-                                                            <MiSkeleton />
+                                                <Stack width="100%" flexDirection="row" justifyContent="space-between">
+                                                    <Stack flexDirection="row" gap={1}>
+                                                        {t.tokenid === '0x00' && (
+                                                            <Avatar
+                                                                className={styles['avatar']}
+                                                                variant="rounded"
+                                                                src="./assets/minimaLogoSquare.png"
+                                                            />
                                                         )}
-                                                    </MiTokenNameTicker>
-                                                    {!coinSplitMode && <MiTokenAmount>{t.sendable}</MiTokenAmount>}
-                                                    {coinSplitMode && (
-                                                        <MiTokenAmount>{`${t.coins} available coin${
-                                                            new Decimal(t.coins).greaterThan(new Decimal(1)) ? 's' : ''
-                                                        }`}</MiTokenAmount>
+                                                        {t.tokenid !== '0x00' && (
+                                                            <Avatar
+                                                                className={styles['avatar']}
+                                                                variant="rounded"
+                                                                src={
+                                                                    t.token.url && t.token.url.length
+                                                                        ? value.token.url
+                                                                        : `https://robohash.org/${t.tokenid}`
+                                                                }
+                                                            />
+                                                        )}
+                                                        <Stack
+                                                            spacing={0.3}
+                                                            flexDirection="column"
+                                                            alignItems="flex-start"
+                                                        >
+                                                            <MiTokenNameWrapper>
+                                                                <MiTokenName>
+                                                                    {typeof t.token == 'string'
+                                                                        ? t.token
+                                                                        : t.token.name}
+                                                                </MiTokenName>
+                                                                {t.tokenid !== '0x00' ? (
+                                                                    <NFTAuthenticity token={t} />
+                                                                ) : null}
+                                                            </MiTokenNameWrapper>
+
+                                                            <MiTokenNameTicker>
+                                                                {t.tokenid == '0x00' ? (
+                                                                    'MINIMA'
+                                                                ) : t.token.hasOwnProperty('ticker') ? (
+                                                                    t.token.ticker
+                                                                ) : (
+                                                                    <MiSkeleton />
+                                                                )}
+                                                            </MiTokenNameTicker>
+                                                            {!coinSplitMode && (
+                                                                <MiTokenAmount>{t.sendable}</MiTokenAmount>
+                                                            )}
+                                                            {coinSplitMode && (
+                                                                <MiTokenAmount>{`${t.coins} available coin${
+                                                                    new Decimal(t.coins).greaterThan(new Decimal(1))
+                                                                        ? 's'
+                                                                        : ''
+                                                                }`}</MiTokenAmount>
+                                                            )}
+                                                        </Stack>
+                                                    </Stack>
+                                                    {t.tokenid === '0x00' && (
+                                                        <VerifiedUserIcon sx={{ fontSize: 16 }} color="primary" />
                                                     )}
                                                 </Stack>
                                             </MiTokenListItem>
@@ -368,46 +387,65 @@ const MiSelect = ({ value, tokens, error, setFieldValue, resetForm, coinSplitMod
                                         ) : null}
                                         {filterWallet.map((t: MinimaToken) => (
                                             <MiTokenListItem key={t.tokenid} onClick={() => onOptionClicked(t)}>
-                                                {t.tokenid === '0x00' && (
-                                                    <Avatar
-                                                        className={styles['avatar']}
-                                                        variant="rounded"
-                                                        src="./assets/minimaLogoSquare.png"
-                                                    />
-                                                )}
-                                                {t.tokenid !== '0x00' && (
-                                                    <Avatar
-                                                        className={styles['avatar']}
-                                                        variant="rounded"
-                                                        src={
-                                                            t.token.url && t.token.url.length
-                                                                ? value.token.url
-                                                                : `https://robohash.org/${t.tokenid}`
-                                                        }
-                                                    />
-                                                )}
-                                                <Stack spacing={0.3} flexDirection="column" alignItems="flex-start">
-                                                    <MiTokenNameWrapper>
-                                                        <MiTokenName>
-                                                            {typeof t.token == 'string' ? t.token : t.token.name}
-                                                        </MiTokenName>
-                                                        {t.tokenid !== '0x00' ? <NFTAuthenticity token={t} /> : null}
-                                                    </MiTokenNameWrapper>
-
-                                                    <MiTokenNameTicker>
-                                                        {t.tokenid == '0x00' ? (
-                                                            'MINIMA'
-                                                        ) : t.token.hasOwnProperty('ticker') ? (
-                                                            t.token.ticker
-                                                        ) : (
-                                                            <MiSkeleton />
+                                                <Stack width="100%" flexDirection="row" justifyContent="space-between">
+                                                    <Stack flexDirection="row" gap={1}>
+                                                        {t.tokenid === '0x00' && (
+                                                            <Avatar
+                                                                className={styles['avatar']}
+                                                                variant="rounded"
+                                                                src="./assets/minimaLogoSquare.png"
+                                                            />
                                                         )}
-                                                    </MiTokenNameTicker>
-                                                    {!coinSplitMode && <MiTokenAmount>{t.sendable}</MiTokenAmount>}
-                                                    {coinSplitMode && (
-                                                        <MiTokenAmount>{`${t.coins} available coin${
-                                                            new Decimal(t.coins).greaterThan(new Decimal(1)) ? 's' : ''
-                                                        }`}</MiTokenAmount>
+                                                        {t.tokenid !== '0x00' && (
+                                                            <Avatar
+                                                                className={styles['avatar']}
+                                                                variant="rounded"
+                                                                src={
+                                                                    t.token.url && t.token.url.length
+                                                                        ? value.token.url
+                                                                        : `https://robohash.org/${t.tokenid}`
+                                                                }
+                                                            />
+                                                        )}
+                                                        <Stack
+                                                            spacing={0.3}
+                                                            flexDirection="column"
+                                                            alignItems="flex-start"
+                                                        >
+                                                            <MiTokenNameWrapper>
+                                                                <MiTokenName>
+                                                                    {typeof t.token == 'string'
+                                                                        ? t.token
+                                                                        : t.token.name}
+                                                                </MiTokenName>
+                                                                {t.tokenid !== '0x00' ? (
+                                                                    <NFTAuthenticity token={t} />
+                                                                ) : null}
+                                                            </MiTokenNameWrapper>
+
+                                                            <MiTokenNameTicker>
+                                                                {t.tokenid == '0x00' ? (
+                                                                    'MINIMA'
+                                                                ) : t.token.hasOwnProperty('ticker') ? (
+                                                                    t.token.ticker
+                                                                ) : (
+                                                                    <MiSkeleton />
+                                                                )}
+                                                            </MiTokenNameTicker>
+                                                            {!coinSplitMode && (
+                                                                <MiTokenAmount>{t.sendable}</MiTokenAmount>
+                                                            )}
+                                                            {coinSplitMode && (
+                                                                <MiTokenAmount>{`${t.coins} available coin${
+                                                                    new Decimal(t.coins).greaterThan(new Decimal(1))
+                                                                        ? 's'
+                                                                        : ''
+                                                                }`}</MiTokenAmount>
+                                                            )}
+                                                        </Stack>
+                                                    </Stack>
+                                                    {t.tokenid === '0x00' && (
+                                                        <VerifiedUserIcon sx={{ fontSize: 16 }} color="primary" />
                                                     )}
                                                 </Stack>
                                             </MiTokenListItem>

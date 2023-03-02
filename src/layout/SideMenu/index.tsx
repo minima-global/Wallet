@@ -12,9 +12,9 @@ import {
     Stack,
 } from '@mui/material';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { ReactComponent as LandscapeLogo } from '../assets/images/LANDSCAPE-01.svg';
+// import { ReactComponent as LandscapeLogo } from '../assets/images/LANDSCAPE-01.svg';
 
-import { ReactComponent as WalletSvg } from '../assets/images/wallet.svg';
+import styles from './SideMenu.module.css';
 
 interface DrawerItem {
     pathname: string;
@@ -74,25 +74,13 @@ const SideMenu = ({ handleDrawerClose, handleDrawerOpen }: IProps) => {
     ];
 
     return (
-        <Grid
-            container
-            sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                flexGrow: '',
-                height: '100vh',
-                backgroundColor: '#fff',
-            }}
-        >
-            <Grid item>
-                <Toolbar sx={{ borderRight: '0.5px solid #363A3F' }} variant="dense">
-                    <Avatar sx={{ ml: 1, height: 32, width: 32 }} variant="rounded">
-                        <WalletSvg className="wallet-svg" />
-                    </Avatar>
-                    <Typography sx={{ ml: 1 }} variant="h6">
-                        Wallet
-                    </Typography>
+        <Stack height="100%" justifyContent="space-between">
+            <Stack>
+                <Toolbar className={styles['header-toolbar']} variant="dense">
+                    <Stack pl={1.5} alignItems="center" justifyContent="center" flexDirection="row" gap={0.8}>
+                        <Avatar sx={{ height: 32, width: 32 }} variant="rounded" src="./assets/wallet.svg"></Avatar>
+                        <h6>Wallet</h6>
+                    </Stack>
                 </Toolbar>
                 <Divider />
 
@@ -115,11 +103,12 @@ const SideMenu = ({ handleDrawerClose, handleDrawerOpen }: IProps) => {
                         );
                     })}
                 </List>
-            </Grid>
-            <Stack sx={{ padding: '16px 16px' }} direction="row">
-                <LandscapeLogo className="minima-landscape" />
             </Stack>
-        </Grid>
+
+            <Stack className={styles['landscape-icon-wrapper']} direction="row">
+                <img src="./assets/minima-landscape.png" />
+            </Stack>
+        </Stack>
     );
 };
 

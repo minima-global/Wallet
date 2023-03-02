@@ -157,7 +157,7 @@ const MiTokenAmount = styled('p')`
     letter-spacing: 0.02em;
     font-variant: tabular-nums;
     color: #363a3f;
-    max-width: 35vw;
+    max-width: 25vw;
     overflow: hidden;
     text-align: left;
     text-overflow: ellipsis;

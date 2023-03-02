@@ -1,0 +1,20 @@
+.header-toolbar {
+  border-right: 0.5px solid #363A3F;
+}
+
+.header-toolbar h6 {
+  font-family: Manrope-regular;
+  letter-spacing: 0.05rem;
+  margin: 0;
+  padding: 0;
+  font-size: 1.1rem;
+}
+
+.landscape-icon-wrapper img {
+  width: 140px;
+}
+
+.landscape-icon-wrapper {
+  margin-left: 16px;
+  margin-bottom: 16px;
+}
