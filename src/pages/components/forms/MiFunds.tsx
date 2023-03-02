@@ -1,8 +1,6 @@
-import MinimaIcon from '../../../assets/images/minimaLogoSquare.png';
-
 import styled from '@emotion/styled';
 import { MinimaToken } from '../../../@types/minima2';
-import { Avatar, CircularProgress, Stack, Typography } from '@mui/material';
+import { Avatar, CircularProgress, Stack } from '@mui/material';
 
 const MiFundsWrapper = styled('div')`
     background: #fff;
@@ -45,7 +43,7 @@ const MiFunds = ({ funds, formik }: IProps) => {
         (funds && (
             <Stack alignItems="flex-start" justifyContent="center">
                 <MiFundsWrapper>
-                    <Avatar variant="rounded" src={MinimaIcon} />
+                    <Avatar variant="rounded" src="./assets/minimaLogoSquare.png" />
                     <input
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
