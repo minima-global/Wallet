@@ -4,7 +4,7 @@ import styles from './styling/sendpage/TokenSelect.module.css';
 import { MinimaToken } from '../../../@types/minima2';
 import React from 'react';
 import MiDismiss from './svgs/MiDismiss/MiDismiss';
-import { Stack, useMediaQuery, useTheme } from '@mui/material';
+import { Chip, Stack, useMediaQuery, useTheme } from '@mui/material';
 import MiSearch from './svgs/MiSearch';
 import { Avatar } from '@mui/material';
 
@@ -222,6 +222,7 @@ const MiSelect = ({ value, tokens, error, setFieldValue, resetForm, coinSplitMod
                                         <MiTokenName>
                                             {typeof value.token == 'string' ? value.token : value.token.name}
                                         </MiTokenName>
+
                                         {value.tokenid !== MINIMA__TOKEN_ID ? <NFTAuthenticity token={value} /> : null}
                                     </MiTokenNameWrapper>
                                     <MiTokenNameTicker>

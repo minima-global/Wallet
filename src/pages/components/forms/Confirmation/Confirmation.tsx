@@ -4,8 +4,8 @@
  *
  */
 import { Modal, Box, Typography, Stack, Button, Toolbar } from '@mui/material';
-import { ModalButtonWrapper } from '../../../shared/components/modals/ModalWrappers';
-import styles from '../../../theme/cssmodule/Components.module.css';
+import { ModalButtonWrapper } from '../../../../shared/components/modals/ModalWrappers';
+import styles from './Confirmation.module.css';
 
 const Confirmation = ({ title, children, closeFn, open, formik, modalTitle }: any) => {
     return (
@@ -16,7 +16,7 @@ const Confirmation = ({ title, children, closeFn, open, formik, modalTitle }: an
                         {modalTitle && modalTitle.length ? modalTitle : 'Confirmation'}
                     </Typography>
                 </Toolbar>
-                <Box component="div" className={styles['content']}>
+                <Box component="div">
                     <Stack direction="column" sx={{ padding: '8px 16px', overflow: 'auto', height: '100%' }}>
                         {children}
                         <ModalButtonWrapper

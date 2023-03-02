@@ -1,10 +1,11 @@
-import styled from '@emotion/styled';
-import { Avatar, CircularProgress, Stack } from '@mui/material';
 import React from 'react';
+import styled from '@emotion/styled';
+
+import { Avatar, Stack } from '@mui/material';
 import { MinimaToken } from '../../../@types/minima2';
 import { useAppSelector } from '../../../minima/redux/hooks';
 import { selectBalance } from '../../../minima/redux/slices/balanceSlice';
-import { containsText, numberWithCommas } from '../../../shared/functions';
+import { containsText } from '../../../shared/functions';
 import MiCard from '../../../shared/components/layout/MiCard/MiCard';
 
 import styles from './Wallet.module.css';
@@ -84,6 +85,7 @@ const Wallet = () => {
                             <Stack spacing={0.3} flexDirection="column" alignItems="flex-start">
                                 <MiTokenNameWrapper>
                                     <MiTokenName>{typeof t.token == 'string' ? t.token : t.token.name}</MiTokenName>
+
                                     {t.tokenid !== MINIMA__TOKEN_ID ? <NFTAuthenticity token={t} /> : null}
                                 </MiTokenNameWrapper>
 

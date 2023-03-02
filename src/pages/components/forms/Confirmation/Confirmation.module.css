@@ -1,0 +1,44 @@
+.burn-modal {
+  padding: 0;
+  height: 100%;
+  display: flex;
+  overflow: hidden;
+  align-items: stretch;
+  flex-direction: column;
+  background-color: rgba(255, 255, 255, 0.9);
+}
+.burn-modal .content {
+  height: 100%;
+  overflow: scroll;
+}
+.burn-modal-title {
+  color:#fff;
+}
+.burn-modal:focus {
+  outline:0;
+}
+.burn-modal-hdr {
+  height: 48px;
+  padding: 32px 0;
+}
+@media all and (min-width: 600px) {
+  .burn-modal-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .burn-modal {
+    height: auto;
+    width: 425px;
+    min-height: 360px!important;
+    max-height: 95vh;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .burn-modal-hdr {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+  }
+}

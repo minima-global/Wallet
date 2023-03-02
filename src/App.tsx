@@ -47,12 +47,6 @@ export default function App() {
         events.onMining((data) => {
             const isMining = data.mining;
             const isTransaction = data.txpow.body.txn.inputs.length > 0 ? true : false;
-
-            // console.log(data.txpow);
-
-            // console.log('Is mining?', data.mining);
-            // console.log('am i transaction?', data.txpow.body.txn.inputs.length > 0);
-
             if (isMining && isTransaction) {
                 dispatch(updateMiningState(true));
             }

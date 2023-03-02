@@ -149,7 +149,7 @@ export const selectBalance = (state: RootState): MinimaToken[] => {
 
 // Return token
 export const selectTokenWithID =
-    (id: string) =>
+    (id?: string) =>
     (state: RootState): MinimaToken | undefined => {
         return state.balance.funds.find((b: MinimaToken) => b.tokenid === id);
     };

@@ -32,10 +32,11 @@ const QrContainer = styled('div')`
     row-gap: 8px;
     flex-direction: column;
     align-items: space-around;
-    background-color: rgba(255, 255, 255, 0.5);
+    background-color: rgba(255, 255, 255, 1);
     border-radius: 12px;
     padding-bottom: 8px;
     overflow-y: scroll;
+    padding: 16px;
 
     position: relative;
 `;

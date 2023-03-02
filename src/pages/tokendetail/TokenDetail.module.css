@@ -1,8 +1,9 @@
 .avatar {
-  width: 56px!important;
-  height: 56px!important;
+  width: 56px;
+  height: 56px;
   background: #ffffff;
-  padding: 0!important;
+
+  padding: 0;
   margin-right: 8px;
 }
 .avatar img {
@@ -10,4 +11,8 @@
   height: inherit;
   padding: 0;
   margin: 0;
+}
+
+.token-name * {
+  text-overflow: ellipsis;
 }
