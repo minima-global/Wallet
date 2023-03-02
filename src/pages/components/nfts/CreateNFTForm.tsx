@@ -105,10 +105,10 @@ const CreateNFTForm = () => {
                 <Required />
 
                 <Typography variant="h6" className={styles['form-image-title']}>
-                    Image <MiRequiredAsterisk>*</MiRequiredAsterisk>
+                    Image
                 </Typography>
                 <FormFieldWrapper
-                    required={true}
+                    required={false}
                     help="Use a public image URL ending in .png .jpg or .jpeg or upload your own content"
                     children={<FormImageUrlSelect formik={formik} />}
                 />
@@ -364,11 +364,11 @@ const useMySchema = () => {
             .matches(/^[^\\;]+$/, 'Invalid characters.'),
         url: Yup.string()
             .trim()
-            .required('This field is required.')
+
             .test('check-my-url', 'Invalid Url.', function (val) {
                 const { path, createError, parent } = this;
-                if (val == undefined) {
-                    return false;
+                if (val === undefined) {
+                    return true;
                 }
 
                 if (parent.url.substring(0, 'data:image'.length) === 'data:image') {

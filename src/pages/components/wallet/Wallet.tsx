@@ -104,15 +104,17 @@ const Wallet = () => {
                                             {t.tokenid !== MINIMA__TOKEN_ID ? <NFTAuthenticity token={t} /> : null}
                                         </MiTokenNameWrapper>
 
-                                        <MiTokenNameTicker>
-                                            {t.tokenid == '0x00' ? (
-                                                'MINIMA'
-                                            ) : t.token.hasOwnProperty('ticker') ? (
-                                                t.token.ticker
-                                            ) : (
-                                                <MiSkeleton />
-                                            )}
-                                        </MiTokenNameTicker>
+                                        {t.tokenid === '0x00' && <MiTokenNameTicker>MINIMA</MiTokenNameTicker>}
+                                        {t.tokenid !== '0x00' && (
+                                            <MiTokenNameTicker>
+                                                {t.token.ticker && t.token.ticker.length ? (
+                                                    t.token.ticker
+                                                ) : (
+                                                    <MiSkeleton />
+                                                )}
+                                            </MiTokenNameTicker>
+                                        )}
+
                                         <MiTokenAmount>{t.sendable}</MiTokenAmount>
                                     </Stack>
                                 </Stack>

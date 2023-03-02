@@ -231,15 +231,17 @@ const MiSelect = ({ value, tokens, error, setFieldValue, resetForm, coinSplitMod
 
                                                 {value.tokenid !== '0x00' ? <NFTAuthenticity token={value} /> : null}
                                             </MiTokenNameWrapper>
-                                            <MiTokenNameTicker>
-                                                {value.tokenid === '0x00' ? (
-                                                    'MINIMA'
-                                                ) : value.token.ticker ? (
-                                                    value.token.ticker
-                                                ) : (
-                                                    <MiSkeleton />
-                                                )}
-                                            </MiTokenNameTicker>
+
+                                            {value.tokenid === '0x00' && <MiTokenNameTicker>MINIMA</MiTokenNameTicker>}
+                                            {value.tokenid !== '0x00' && (
+                                                <MiTokenNameTicker>
+                                                    {value.token.ticker && value.token.ticker.length ? (
+                                                        value.token.ticker
+                                                    ) : (
+                                                        <MiSkeleton />
+                                                    )}
+                                                </MiTokenNameTicker>
+                                            )}
                                             {!coinSplitMode && <MiTokenAmount>{value.sendable}</MiTokenAmount>}
                                             {coinSplitMode && (
                                                 <MiTokenAmount>{`${value.coins} available coin${
@@ -325,15 +327,18 @@ const MiSelect = ({ value, tokens, error, setFieldValue, resetForm, coinSplitMod
                                                                 ) : null}
                                                             </MiTokenNameWrapper>
 
-                                                            <MiTokenNameTicker>
-                                                                {t.tokenid == '0x00' ? (
-                                                                    'MINIMA'
-                                                                ) : t.token.hasOwnProperty('ticker') ? (
-                                                                    t.token.ticker
-                                                                ) : (
-                                                                    <MiSkeleton />
-                                                                )}
-                                                            </MiTokenNameTicker>
+                                                            {t.tokenid === '0x00' && (
+                                                                <MiTokenNameTicker>MINIMA</MiTokenNameTicker>
+                                                            )}
+                                                            {t.tokenid !== '0x00' && (
+                                                                <MiTokenNameTicker>
+                                                                    {t.token.ticker && t.token.ticker.length ? (
+                                                                        t.token.ticker
+                                                                    ) : (
+                                                                        <MiSkeleton />
+                                                                    )}
+                                                                </MiTokenNameTicker>
+                                                            )}
                                                             {!coinSplitMode && (
                                                                 <MiTokenAmount>{t.sendable}</MiTokenAmount>
                                                             )}
@@ -423,15 +428,18 @@ const MiSelect = ({ value, tokens, error, setFieldValue, resetForm, coinSplitMod
                                                                 ) : null}
                                                             </MiTokenNameWrapper>
 
-                                                            <MiTokenNameTicker>
-                                                                {t.tokenid == '0x00' ? (
-                                                                    'MINIMA'
-                                                                ) : t.token.hasOwnProperty('ticker') ? (
-                                                                    t.token.ticker
-                                                                ) : (
-                                                                    <MiSkeleton />
-                                                                )}
-                                                            </MiTokenNameTicker>
+                                                            {t.tokenid === '0x00' && (
+                                                                <MiTokenNameTicker>MINIMA</MiTokenNameTicker>
+                                                            )}
+                                                            {t.tokenid !== '0x00' && (
+                                                                <MiTokenNameTicker>
+                                                                    {t.token.ticker && t.token.ticker.length ? (
+                                                                        t.token.ticker
+                                                                    ) : (
+                                                                        <MiSkeleton />
+                                                                    )}
+                                                                </MiTokenNameTicker>
+                                                            )}
                                                             {!coinSplitMode && (
                                                                 <MiTokenAmount>{t.sendable}</MiTokenAmount>
                                                             )}

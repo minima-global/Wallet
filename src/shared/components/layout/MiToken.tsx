@@ -187,10 +187,10 @@ const NoResults = styled('div')`
     }
 `;
 
-const MiSkeleton = styled('span')`
+const MiSkeleton = styled('div')`
     padding: 0;
     margin: 0;
-    line-height: 16px;
+    line-height: 21px;
     letter-spacing: 0.02em;
-    height: 10px;
+    height: 15px;
 `;
