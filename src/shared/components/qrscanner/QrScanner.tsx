@@ -41,25 +41,8 @@ const QrContainer = styled('div')`
     position: relative;
 `;
 const QrScanner = ({ setScannedResult, open, closeModal, error }: any) => {
-    const videoTag = React.createRef<HTMLVideoElement>();
     const { cameraStatus } = useIsCameraEnabledPermissions();
 
-    // React.useEffect(() => {
-    //     if (cameraStatus && cameraStatus === 'granted' && open) {
-    //         navigator.mediaDevices
-    //             .getUserMedia({ audio: false, video: true })
-    //             .then((stream) => {
-    //                 if (videoTag && videoTag.current) {
-    //                     console.log('setting streasm..');
-    //                     videoTag.current.srcObject = stream;
-    //                     videoTag.current.playsInline = true;
-    //                 }
-    //             })
-    //             .catch((err) => {
-    //                 console.log('Cannot access camera.. it is not accessible', err);
-    //             });
-    //     }
-    // }, [cameraStatus]);
     return (
         open && (
             <BackDrop>
@@ -67,7 +50,7 @@ const QrScanner = ({ setScannedResult, open, closeModal, error }: any) => {
                     <Grid item xs={0} md={2}></Grid>
                     <Grid item xs={12} md={8}>
                         <QrContainer>
-                            {cameraStatus === 'granted' && (
+                            {cameraStatus === 'granted' && open && (
                                 <Stack rowGap={2} flexDirection="column">
                                     <QrReader
                                         videoContainerStyle={{
@@ -97,7 +80,7 @@ const QrScanner = ({ setScannedResult, open, closeModal, error }: any) => {
                                     )}
                                 </Stack>
                             )}
-                            {/* {cameraStatus === 'granted' && <video autoPlay ref={videoTag} />} */}
+
                             {cameraStatus === 'denied' && (
                                 <Stack alignItems="center" justifyContent="center">
                                     <NoResults>
@@ -108,6 +91,7 @@ const QrScanner = ({ setScannedResult, open, closeModal, error }: any) => {
                                     </NoResults>
                                 </Stack>
                             )}
+
                             {!cameraStatus && (
                                 <Stack alignItems="center" justifyContent="center">
                                     <NoResults>
@@ -119,6 +103,7 @@ const QrScanner = ({ setScannedResult, open, closeModal, error }: any) => {
                                     </NoResults>
                                 </Stack>
                             )}
+
                             {cameraStatus === 'prompt' && (
                                 <Stack alignItems="center" justifyContent="center">
                                     <NoResults>
