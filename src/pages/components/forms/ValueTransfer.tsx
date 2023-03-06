@@ -133,43 +133,43 @@ const ValueTransfer = ({}: IProps) => {
                         resetForm={formik.resetForm}
                     />
                     {/* Choose an address */}
-                    <Stack alignItems="center" justifyContent="center">
-                        <TextField
-                            disabled={formik.isSubmitting}
-                            fullWidth
-                            id="address"
-                            name="address"
-                            placeholder="minima address"
-                            value={formik.values.address}
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            error={formik.touched.address && Boolean(formik.errors.address)}
-                            helperText={formik.touched.address && formik.errors.address}
-                            FormHelperTextProps={{ className: styles['form-helper-text'] }}
-                            InputProps={{
-                                style:
-                                    formik.touched.address && Boolean(formik.errors.address)
-                                        ? {
-                                              borderBottomLeftRadius: 0,
-                                              borderBottomRightRadius: 0,
-                                          }
-                                        : {
-                                              borderBottomLeftRadius: 8,
-                                              borderBottomRightRadius: 8,
-                                          },
-                                endAdornment: (
-                                    <>
-                                        <QrCodeScannerIcon
-                                            className={styles['qr-scanner']}
-                                            color="inherit"
-                                            onClick={handleOpenQrScanner}
-                                        />
-                                    </>
-                                ),
-                            }}
-                        />
-                        <MiCameraButton onClick={() => console.log('Open qr scanner')} src="" />
-                    </Stack>
+
+                    <TextField
+                        disabled={formik.isSubmitting}
+                        fullWidth
+                        id="address"
+                        name="address"
+                        placeholder="minima address"
+                        value={formik.values.address}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        error={formik.touched.address && Boolean(formik.errors.address)}
+                        helperText={formik.touched.address && formik.errors.address}
+                        FormHelperTextProps={{ className: styles['form-helper-text'] }}
+                        InputProps={{
+                            style:
+                                formik.touched.address && Boolean(formik.errors.address)
+                                    ? {
+                                          borderBottomLeftRadius: 0,
+                                          borderBottomRightRadius: 0,
+                                      }
+                                    : {
+                                          borderBottomLeftRadius: 8,
+                                          borderBottomRightRadius: 8,
+                                      },
+                            endAdornment: (
+                                <>
+                                    {}
+                                    <QrCodeScannerIcon
+                                        className={styles['qr-scanner']}
+                                        color="inherit"
+                                        onClick={handleOpenQrScanner}
+                                    />
+                                </>
+                            ),
+                        }}
+                    />
+
                     {/* Choose an amount */}
                     <TextField
                         disabled={formik.isSubmitting}

@@ -1,18 +1,32 @@
 import React from 'react';
 
 type PermissionsCamera = PermissionName & 'camera';
+type PermissionState = 'denied' | 'granted' | 'prompt' | undefined;
 const useIsCameraEnabledPermissions = () => {
-    const [cameraEnabled, setCameraEnabled] = React.useState(false);
+    const [cameraStatus, setCameraStatus] = React.useState<PermissionState>(undefined);
 
     React.useEffect(() => {
-        navigator.permissions.query({ name: 'camera' } as PermissionsCamera).then((v) => {
-            if (v.state === 'granted') {
-                setCameraEnabled(true);
-            }
-        });
-    }, []);
+        if (navigator && 'permissions' in navigator) {
+            navigator.permissions
+                .query({ name: 'camera' } as PermissionsCamera)
+                .then((v) => {
+                    if (v.state === 'granted') {
+                        navigator.mediaDevices.getUserMedia({ audio: false, video: true }).catch((err) => {
+                            console.error('Camera unavailable', err);
+                            return setCameraStatus('denied');
+                        });
+                    }
 
-    return cameraEnabled;
+                    setCameraStatus(v.state);
+                })
+                .catch((err) => {
+                    console.error('Camera permissions', err);
+                    setCameraStatus(undefined);
+                });
+        }
+    }, [navigator.permissions.query]);
+
+    return { cameraStatus };
 };
 
 export default useIsCameraEnabledPermissions;

@@ -41,8 +41,8 @@ const QrContainer = styled('div')`
     position: relative;
 `;
 const QrScanner = ({ setScannedResult, open, closeModal, error }: any) => {
-    const cameraEnabled = useIsCameraEnabledPermissions();
-    // console.log('isCameraEnabled', cameraEnabled);
+    const { cameraStatus } = useIsCameraEnabledPermissions();
+
     return (
         open && (
             <BackDrop>
@@ -50,7 +50,7 @@ const QrScanner = ({ setScannedResult, open, closeModal, error }: any) => {
                     <Grid item xs={0} md={2}></Grid>
                     <Grid item xs={12} md={8}>
                         <QrContainer>
-                            {cameraEnabled ? (
+                            {cameraStatus === 'granted' && open && (
                                 <Stack rowGap={2} flexDirection="column">
                                     <QrReader
                                         videoContainerStyle={{
@@ -79,11 +79,36 @@ const QrScanner = ({ setScannedResult, open, closeModal, error }: any) => {
                                         </MiError>
                                     )}
                                 </Stack>
-                            ) : (
+                            )}
+
+                            {cameraStatus === 'denied' && (
                                 <Stack alignItems="center" justifyContent="center">
                                     <NoResults>
                                         <h6>Camera is unavailable!</h6>
-                                        <p>If you haven't accepted camera permissions, enable it and try again.</p>
+                                        <p>
+                                            You have denied camera permissions, please enable it and refresh this page.
+                                        </p>
+                                    </NoResults>
+                                </Stack>
+                            )}
+
+                            {!cameraStatus && (
+                                <Stack alignItems="center" justifyContent="center">
+                                    <NoResults>
+                                        <h6>Camera API is unavailable on this browser!</h6>
+                                        <p>
+                                            Please consider using compatible and up to date browser. Try a later version
+                                            of google chrome, firefox, brave or safari.
+                                        </p>
+                                    </NoResults>
+                                </Stack>
+                            )}
+
+                            {cameraStatus === 'prompt' && (
+                                <Stack alignItems="center" justifyContent="center">
+                                    <NoResults>
+                                        <h6>Camera is unavailable</h6>
+                                        <p>Accept the camera permissions prompt and proceed.</p>
                                     </NoResults>
                                 </Stack>
                             )}
