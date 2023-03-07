@@ -10,7 +10,7 @@ import {
     selectFavorites,
     showTablesCount,
 } from '../../libs/nft';
-import { MinimaToken } from '../../../@types/minima2';
+import { MinimaToken } from '../../../@types/minima';
 
 const NEWBLOCK = 'NEWBLOCK';
 

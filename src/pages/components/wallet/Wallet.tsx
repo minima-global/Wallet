@@ -2,7 +2,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 
 import { Avatar, Stack } from '@mui/material';
-import { MinimaToken } from '../../../@types/minima2';
+import { MinimaToken } from '../../../@types/minima';
 import { useAppSelector } from '../../../minima/redux/hooks';
 import { selectBalance } from '../../../minima/redux/slices/balanceSlice';
 import { containsText } from '../../../shared/functions';

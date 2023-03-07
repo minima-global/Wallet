@@ -1,4 +1,4 @@
-import { MinimaToken, Status as NodeStatus } from '../@types/minima2';
+import { MinimaToken, Status as NodeStatus } from '../@types/minima';
 
 export { callSend, callGetAddress, callStatus, createCustomToken, getWalletBalance, callTokenValidate };
 

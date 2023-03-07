@@ -129,21 +129,15 @@ interface MinimaToken {
 }
 
 interface Token {
+    name: any;
     tokenid: string;
-    token: string;
     total: string;
-    sendable: string;
-    unconfirmed: string;
-    confirmed: string;
-    decimals: string;
-    mempool: string;
+    decimals: number;
+    scale: string;
     coinid?: string;
-    totalamount?: string;
-    scale?: string;
-    description?: string;
-    icon?: string;
-    proof?: string;
     script?: string;
+    totalamount?: string;
+    created?: string;
 }
 
 interface NetworkStatus {

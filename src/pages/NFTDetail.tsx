@@ -7,7 +7,7 @@ import CustomListItem from '../shared/components/CustomListItem';
 
 import styles from '../theme/cssmodule/Components.module.css';
 import NFTAuthenticity from './components/tokens/NFTAuthenticity';
-import { MinimaToken } from '../@types/minima2';
+import { MinimaToken } from '../@types/minima';
 import { MiNFT } from '../@types/nft';
 
 const NFTDetail = () => {

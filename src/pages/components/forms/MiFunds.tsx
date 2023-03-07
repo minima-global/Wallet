@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { MinimaToken } from '../../../@types/minima2';
+import { MinimaToken } from '../../../@types/minima';
 import { Avatar, CircularProgress, Stack } from '@mui/material';
 
 const MiFundsWrapper = styled('div')`

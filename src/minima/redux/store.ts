@@ -8,12 +8,15 @@ import balanceReducer from './slices/balanceSlice';
 import notificationReducer from './slices/notificationSlice';
 import miningReducer from './slices/miningSlice';
 import sendFormReducer from './slices/app/sendSlice';
+import { TokenState } from './slices/tokenSlice';
+import tokenReducer from './slices/tokenSlice';
 
 export type RootState = {
     balance: BalanceState;
     notification: NotificationState;
     mining: MiningState;
     sendForm: SendFormState;
+    tokens: TokenState;
 };
 
 export const store = configureStore({
@@ -22,6 +25,7 @@ export const store = configureStore({
         notification: notificationReducer,
         mining: miningReducer,
         sendForm: sendFormReducer,
+        tokens: tokenReducer,
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(balanceMiddleware),
 });

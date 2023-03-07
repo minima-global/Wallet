@@ -3,7 +3,7 @@ import Decimal from 'decimal.js';
 import * as Yup from 'yup';
 
 import { Button, Stack, TextField, Typography } from '@mui/material';
-import { MinimaToken } from '../../../@types/minima2';
+import { MinimaToken } from '../../../@types/minima';
 import { useAppSelector } from '../../../minima/redux/hooks';
 import styles from '../../../theme/cssmodule/Components.module.css';
 import MiSelect from '../../../shared/components/layout/MiSelect/MiSelect';

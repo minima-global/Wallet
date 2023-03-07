@@ -14,7 +14,7 @@ import TokenDetail from '../pages/TokenDetail';
 import { DRAWERWIDTH } from '../shared/constants';
 import SideMenu from '../layout/SideMenu';
 import Offline from '../pages/Offline';
-import NFTs from '../pages/NFTs';
+import NFTs from '../pages/NFT';
 import MiningCog from '../pages/components/mining/MiningCog';
 import { useAppSelector } from '../minima/redux/hooks';
 import { selectMiningState } from '../minima/redux/slices/miningSlice';

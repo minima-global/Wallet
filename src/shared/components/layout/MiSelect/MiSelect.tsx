@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 
 import styles from './MiSelect.module.css';
-import { MinimaToken } from '../../../../@types/minima2';
+import { MinimaToken } from '../../../../@types/minima';
 import React from 'react';
 import MiDismiss from '../svgs/MiDismiss/MiDismiss';
 import { Stack, useMediaQuery, useTheme } from '@mui/material';
