@@ -103,7 +103,7 @@ const NFTDetail = () => {
                                     <p>{'owner' in NFT.name && !!NFT.name.owner.length && 'by ' + NFT.name.owner}</p>
                                 </NFTDescription>
                                 <Stack spacing={5}>
-                                    <Stack>
+                                    <Stack spacing={1}>
                                         <CustomListItem
                                             title="Description"
                                             value={
@@ -155,59 +155,3 @@ const NFTDetail = () => {
     );
 };
 export default NFTDetail;
-
-// <Card>
-//                         {NFT.token.url ? (
-//                             <CardMedia image={NFT.token.url} component="img" height="auto" />
-//                         ) : (
-//                             <CardMedia
-//                                 component="img"
-//                                 aria-label="NFT-url-image"
-//                                 src={`https://robohash.org/${NFT.tokenid}`}
-//                             />
-//                         )}
-
-//                         <CardContent>
-
-//                             <Stack mt={2} mb={3} spacing={1}>
-//                                 <CustomListItem title="Total Minted" value={NFT.total} />
-//                                 <CustomListItem title="Token ID" value={NFT.tokenid} />
-
-//                                 <CustomListItem
-//                                     title="Web Validation"
-//                                     value={
-//                                         NFT.token && NFT.token.webvalidate && NFT.token.webvalidate.length > 0
-//                                             ? NFT.token.webvalidate
-//                                             : 'No web validation available.'
-//                                     }
-//                                 />
-//                                 <CustomListItem
-//                                     title="External URL"
-//                                     value={
-//                                         NFT.token.external_url &&
-//                                         NFT.token.external_url.length > 0 &&
-//                                         NFT.token.external_url ? (
-//                                             <Link
-//                                                 aria-label={NFT.token.name}
-//                                                 href={NFT.token.external_url}
-//                                                 target="_blank"
-//                                             >
-//                                                 {NFT.token.external_url}
-//                                             </Link>
-//                                         ) : (
-//                                             'No external link available.'
-//                                         )
-//                                     }
-//                                 />
-//                             </Stack>
-//                             <Button
-//                                 disableElevation
-//                                 variant="contained"
-//                                 onClick={() => navigate(`/send/${NFT.tokenid}`, { replace: true })}
-//                                 fullWidth
-//                                 sx={{ fontSize: '0.9rem' }}
-//                             >
-//                                 Transfer
-//                             </Button>
-//                         </CardContent>
-//                     </Card>

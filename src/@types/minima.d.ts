@@ -357,20 +357,3 @@ interface State {
     data: string;
     keeper: string;
 }
-
-// check for interface types
-export function isToken(obj: any): obj is CustomTokenJson {
-    return 'name' in obj && 'url' in obj && 'description' in obj;
-}
-
-export function isNFT(obj: any): obj is NFT {
-    return (
-        'name' in obj &&
-        'description' in obj &&
-        'external_url' in obj &&
-        'image' in obj &&
-        'owner' in obj &&
-        'nft' in obj &&
-        'webvalidate' in obj
-    );
-}

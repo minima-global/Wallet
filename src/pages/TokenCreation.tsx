@@ -73,14 +73,12 @@ const TokenCreation: FC = () => {
                 url: formData.url, // upload image or normal url
                 description: formData.description.replaceAll(`"`, `'`) || '',
                 ticker: formData.ticker.replaceAll(`"`, `'`) || '',
-                type: 'STANDARDTOKEN',
                 webvalidate: formData.webvalidate || '',
-                version: '1.0',
             };
 
             try {
                 // send rpc
-                await buildCustomTokenCreation(cToken, formData.amount, formData.burn);
+                await buildCustomTokenCreation(cToken, formData.amount, false);
                 // success..
                 handleSuccessState(`You have successfully created this token, it should arrive in your balance soon.`);
                 // time to reset

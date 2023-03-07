@@ -88,15 +88,18 @@ const TokenDetail = () => {
                                                             {token.tokenid === '0x00' && (
                                                                 <MiTokenNameTicker>MINIMA</MiTokenNameTicker>
                                                             )}
-                                                            {token.tokenid !== '0x00' && (
-                                                                <MiTokenNameTicker>
-                                                                    {token.token.ticker ? (
-                                                                        token.token.ticker
-                                                                    ) : (
-                                                                        <MiSkeleton />
-                                                                    )}
-                                                                </MiTokenNameTicker>
-                                                            )}
+                                                            {token.tokenid !== '0x00' &&
+                                                                'ticker' in token.token &&
+                                                                !!token.token.ticker.length && (
+                                                                    <MiTokenNameTicker>
+                                                                        {token.token.ticker}
+                                                                    </MiTokenNameTicker>
+                                                                )}
+                                                            {token.tokenid !== '0x00' &&
+                                                                'ticker' in token.token &&
+                                                                token.token.ticker.length === 0 && <MiSkeleton />}
+                                                            {token.tokenid !== '0x00' &&
+                                                                'ticker' in token.token === false && <MiSkeleton />}
                                                         </Stack>
                                                     </Stack>
                                                     {token.tokenid === '0x00' && (
