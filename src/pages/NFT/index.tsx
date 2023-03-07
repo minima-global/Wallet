@@ -23,11 +23,14 @@ const NFTs: FC = () => {
     const [filterText, setFilterText] = useState('');
     const tokenNFTsWithDecimalZero = useAppSelector(selectTokensWithDecimalZero);
 
-    function handleInputChange(event: any) {
-        const value = event.target.value;
-        setFilterText(value);
-        // when the component re-renders the updated filter text will create a new filteredBalance variable
-    }
+    useEffect(() => {
+        tokenNFTsWithDecimalZero.filter(
+            (t) =>
+                containsText(t.name.name, filterText) ||
+                containsText(t.tokenid, filterText) ||
+                ('owner' in t.name && containsText(t.name.owner, filterText))
+        );
+    }, [filterText]);
 
     return (
         <GridLayout
@@ -48,7 +51,6 @@ const NFTs: FC = () => {
                                         <MiSearch color="#fff" size={20} />
                                     </MiSearchBarWithIcon>
                                     <Stack direction="column" justifyContent="space-between" spacing={1}>
-                                        {/* <CreateButton onClick={() => navigate('/createnft')}>Create New</CreateButton> */}
                                         <Button
                                             variant="outlined"
                                             fullWidth
@@ -79,40 +81,29 @@ const NFTs: FC = () => {
                         <CardContent>
                             <Stack spacing={3}>
                                 <Stack spacing={1}>
-                                    {tokenNFTsWithDecimalZero.map((token) => (
-                                        <NFTCard key={token.coinid} NFT={token} />
-                                    ))}
+                                    {tokenNFTsWithDecimalZero
+                                        .filter(
+                                            (t) =>
+                                                containsText(t.name.name, filterText) ||
+                                                containsText(t.tokenid, filterText) ||
+                                                ('owner' in t.name && containsText(t.name.owner, filterText))
+                                        )
+                                        .map((token) => (
+                                            <NFTCard key={token.coinid} NFT={token} />
+                                        ))}
+                                    {filterText.length &&
+                                        tokenNFTsWithDecimalZero.filter(
+                                            (t) =>
+                                                containsText(t.name.name, filterText) ||
+                                                containsText(t.tokenid, filterText) ||
+                                                ('owner' in t.name && containsText(t.name.owner, filterText))
+                                        ).length === 0 && (
+                                            <NoResults>
+                                                <h6>No results</h6>
+                                                <p>Please try your search again.</p>
+                                            </NoResults>
+                                        )}
                                 </Stack>
-
-                                {/* <Grid justifyContent="space-around" container spacing={{ sm: 1, xs: 0 }}>
-                                    {userIsSearching && displayedOptions && displayedOptions.length === 0 ? (
-                                        <NoResults>
-                                            <h6>No results</h6>
-                                            <p>Please try your search again.</p>
-                                        </NoResults>
-                                    ) : (
-                                        displayedOptions.map((n) => {
-                                            return (
-                                                <Grid key={n.tokenid} item xs={12} sm={5} mb={1}>
-                                                    <NFTCard key={n.tokenid} NFT={n} />
-                                                </Grid>
-                                            );
-                                        })
-                                    )}
-                                    {!userIsSearching && allNFTs && allNFTs.length === 0 ? (
-                                        <NoResults>
-                                            <h6>No results found</h6>
-                                            {tabSelected === 1 ? (
-                                                <p>Click create to create a new NFT.</p>
-                                            ) : (
-                                                <p>
-                                                    Tap the heart button in the top-right corner of an NFT card to
-                                                    favorite.
-                                                </p>
-                                            )}
-                                        </NoResults>
-                                    ) : null}
-                                </Grid> */}
                             </Stack>
                         </CardContent>
                     </Card>

@@ -8,7 +8,7 @@ const NFTImage = styled('img')`
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     position: relative;
-    border-bottom: 1px solid #bdbdc4;
+    // border-bottom: 1px solid #bdbdc4;
 `;
 
 export default NFTImage;
