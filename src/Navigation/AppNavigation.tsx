@@ -1,6 +1,6 @@
-import { IconButton, Toolbar, AppBar, Grid, Drawer, Box, Container, Typography, Stack } from '@mui/material';
+import { IconButton, Grid, Drawer, Box, Typography, Stack } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { Routes, Route, useLocation, Navigate, useNavigate, Outlet } from 'react-router-dom';
+import { Routes, Route, useLocation, Navigate, useNavigate } from 'react-router-dom';
 
 import MenuIcon from '@mui/icons-material/Menu';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -14,7 +14,7 @@ import TokenDetail from '../pages/TokenDetail';
 import { DRAWERWIDTH } from '../shared/constants';
 import SideMenu from '../layout/SideMenu';
 import Offline from '../pages/Offline';
-import NFTs from '../pages/NFTs';
+import NFTs from '../pages/NFT';
 import MiningCog from '../pages/components/mining/MiningCog';
 import { useAppSelector } from '../minima/redux/hooks';
 import { selectMiningState } from '../minima/redux/slices/miningSlice';

@@ -129,21 +129,15 @@ interface MinimaToken {
 }
 
 interface Token {
+    name: any;
     tokenid: string;
-    token: string;
     total: string;
-    sendable: string;
-    unconfirmed: string;
-    confirmed: string;
-    decimals: string;
-    mempool: string;
+    decimals: number;
+    scale: string;
     coinid?: string;
-    totalamount?: string;
-    scale?: string;
-    description?: string;
-    icon?: string;
-    proof?: string;
     script?: string;
+    totalamount?: string;
+    created?: string;
 }
 
 interface NetworkStatus {
@@ -362,21 +356,4 @@ interface State {
     port: string;
     data: string;
     keeper: string;
-}
-
-// check for interface types
-export function isToken(obj: any): obj is CustomTokenJson {
-    return 'name' in obj && 'url' in obj && 'description' in obj;
-}
-
-export function isNFT(obj: any): obj is NFT {
-    return (
-        'name' in obj &&
-        'description' in obj &&
-        'external_url' in obj &&
-        'image' in obj &&
-        'owner' in obj &&
-        'nft' in obj &&
-        'webvalidate' in obj
-    );
 }

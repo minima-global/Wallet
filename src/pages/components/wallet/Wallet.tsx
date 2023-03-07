@@ -2,7 +2,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 
 import { Avatar, Stack } from '@mui/material';
-import { MinimaToken } from '../../../@types/minima2';
+import { MinimaToken } from '../../../@types/minima';
 import { useAppSelector } from '../../../minima/redux/hooks';
 import { selectBalance } from '../../../minima/redux/slices/balanceSlice';
 import { containsText } from '../../../shared/functions';
@@ -105,14 +105,14 @@ const Wallet = () => {
                                         </MiTokenNameWrapper>
 
                                         {t.tokenid === '0x00' && <MiTokenNameTicker>MINIMA</MiTokenNameTicker>}
-                                        {t.tokenid !== '0x00' && (
-                                            <MiTokenNameTicker>
-                                                {t.token.ticker && t.token.ticker.length ? (
-                                                    t.token.ticker
-                                                ) : (
-                                                    <MiSkeleton />
-                                                )}
-                                            </MiTokenNameTicker>
+                                        {t.tokenid !== '0x00' && 'ticker' in t.token && !!t.token.ticker.length && (
+                                            <MiTokenNameTicker>{t.token.ticker}</MiTokenNameTicker>
+                                        )}
+                                        {t.tokenid !== '0x00' && 'ticker' in t.token && t.token.ticker.length === 0 && (
+                                            <MiSkeleton></MiSkeleton>
+                                        )}
+                                        {t.tokenid !== '0x00' && 'ticker' in t.token === false && (
+                                            <MiSkeleton></MiSkeleton>
                                         )}
 
                                         <MiTokenAmount>{t.sendable}</MiTokenAmount>

@@ -2,8 +2,8 @@ import React from 'react';
 import { styled, Tooltip, TooltipProps, tooltipClasses } from '@mui/material';
 
 import VerifiedIcon from '@mui/icons-material/Verified';
-import { callTokenValidate } from '../../../minima/rpc-commands';
-import { MinimaToken } from '../../../@types/minima2';
+import * as RPC from '../../../minima/commands';
+import { MinimaToken } from '../../../@types/minima';
 
 interface IProps {
     token: MinimaToken;
@@ -12,7 +12,7 @@ const NFTAuthenticity = ({ token }: IProps) => {
     const [isTokenValidated, setIsTokenValidated] = React.useState(false);
 
     React.useEffect(() => {
-        callTokenValidate(token.tokenid)
+        RPC.tokenValidate(token.tokenid)
             .then(() => {
                 // resolves so it is validated
                 setIsTokenValidated(true);

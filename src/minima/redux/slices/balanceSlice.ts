@@ -1,3 +1,4 @@
+import { callAndStoreTokens } from './tokenSlice';
 import { toggleNotification } from './notificationSlice';
 import { isPropertyString, containsText, hexToString, makeTokenImage } from './../../../shared/functions';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
@@ -10,7 +11,7 @@ import {
     selectFavorites,
     showTablesCount,
 } from '../../libs/nft';
-import { MinimaToken } from '../../../@types/minima2';
+import { MinimaToken, Token } from '../../../@types/minima';
 
 const NEWBLOCK = 'NEWBLOCK';
 
@@ -53,7 +54,6 @@ export const initFavoritesTableAndUpdate = (): AppThunk => async (dispatch, getS
         // are there any tables?
         if (favoritesTableCreated) {
             const myFavoriteTokensArray = await selectFavorites();
-            // console.log('myFavoriteTokensArray', myFavoriteTokensArray);
             dispatch(initFavoritesTable(myFavoriteTokensArray));
         }
         // if no tables.. wait and re-try
@@ -164,8 +164,8 @@ export const selectFilterNFTs =
         return state.balance.funds.find((b: MinimaToken) => b.tokenid === id);
     };
 // Return Favourite NFTs
-export const selectFavouriteNFTs = (state: RootState): MinimaToken[] | undefined => {
-    return state.balance.funds.filter((t: MinimaToken) => state.balance.favouriteNFT?.includes(t.tokenid));
+export const selectFavouriteNFTs = (state: RootState): Token[] => {
+    return state.tokens.tokens.filter((t: Token) => state.balance.favouriteNFT?.includes(t.tokenid));
 };
 
 // Return filtered list
@@ -187,6 +187,7 @@ export const selectBalanceNeedsUpdating = (state: RootState): boolean => {
 export const balanceMiddleware = (store: any) => (next: any) => (action: any) => {
     if (action.type === NEWBLOCK && selectBalanceNeedsUpdating(store.getState())) {
         store.dispatch(callAndStoreBalance());
+        store.dispatch(callAndStoreTokens());
     }
 
     return next(action);

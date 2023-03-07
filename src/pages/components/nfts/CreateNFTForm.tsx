@@ -73,13 +73,11 @@ const CreateNFTForm = () => {
                 webvalidate: data.webvalidate.replaceAll(`"`, `'`) || '',
                 owner: data.owner.replaceAll(`"`, `'`) || '',
                 external_url: data.external_url.replaceAll(`"`, `'`) || '',
-                type: 'NFT',
-                version: '1.0',
             };
 
             try {
                 // send rpc
-                await buildCustomTokenCreation(cNFT, data.amount, data.burn);
+                await buildCustomTokenCreation(cNFT, data.amount, true);
                 // success..
                 handleSuccessState(`You have successfully created this token, it should arrive in your balance soon.`);
             } catch (error: any) {

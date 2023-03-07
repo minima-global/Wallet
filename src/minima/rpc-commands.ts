@@ -1,6 +1,6 @@
-import { MinimaToken, Status as NodeStatus } from '../@types/minima2';
+import { MinimaToken, Status as NodeStatus } from '../@types/minima';
 
-export { callSend, callGetAddress, callStatus, createCustomToken, getWalletBalance, callTokenValidate };
+export { callSend, callGetAddress, callStatus, createCustomToken, getWalletBalance };
 
 interface ISendPayload {
     token: MinimaToken;
@@ -75,22 +75,6 @@ const getWalletBalance = (): Promise<MinimaToken[]> => {
             .catch((err) => {
                 reject(err);
             });
-    });
-};
-/**
- *
- * @param tokenid
- * @returns resolves promise if tokenvalidate is valid
- */
-const callTokenValidate = (tokenid: string): Promise<void> => {
-    return new Promise((resolve, reject) => {
-        rpc(`tokenvalidate tokenid:${tokenid}`).then((r) => {
-            if (r.web.valid) {
-                resolve();
-            }
-
-            reject();
-        });
     });
 };
 

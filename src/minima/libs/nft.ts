@@ -15,7 +15,7 @@ export {
     removeTokenFromFavoritesTable,
     showTablesCount,
 };
-const buildCustomTokenCreation = async (tokenData: MiNFT | MiCustomToken, amount: string, burn?: string) => {
+const buildCustomTokenCreation = async (tokenData: MiNFT | MiCustomToken, amount: string, nft: boolean) => {
     try {
         // if this is a data uri then compress it..
         if (tokenData.url.startsWith('data:image/', 0)) {
@@ -33,7 +33,7 @@ const buildCustomTokenCreation = async (tokenData: MiNFT | MiCustomToken, amount
         return await createCustomToken(
             JSON.stringify(tokenData),
             amount,
-            tokenData.type === 'NFT' ? '0' : undefined,
+            nft ? '0' : undefined,
             tokenData.webvalidate
         ).catch((err) => {
             throw err;

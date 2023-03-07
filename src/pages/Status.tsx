@@ -14,7 +14,7 @@ import { callStatus } from '../minima/rpc-commands';
 
 import styled from '@emotion/styled';
 import MiCard from '../shared/components/layout/MiCard/MiCard';
-import { Status as NodeStatus } from '../@types/minima2';
+import { Status as NodeStatus } from '../@types/minima';
 
 const MiStatusWrapper = styled('div')`
     display: flex;
