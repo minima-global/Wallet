@@ -3,6 +3,8 @@ import styled from '@emotion/styled';
 const NFTDescription = styled('div')`
     padding: 8px;
     overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
     * {
         text-overflow: ellipsis;
         overflow: hidden;

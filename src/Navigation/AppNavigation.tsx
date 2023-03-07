@@ -1,6 +1,6 @@
-import { IconButton, Toolbar, AppBar, Grid, Drawer, Box, Container, Typography, Stack } from '@mui/material';
+import { IconButton, Grid, Drawer, Box, Typography, Stack } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { Routes, Route, useLocation, Navigate, useNavigate, Outlet } from 'react-router-dom';
+import { Routes, Route, useLocation, Navigate, useNavigate } from 'react-router-dom';
 
 import MenuIcon from '@mui/icons-material/Menu';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
