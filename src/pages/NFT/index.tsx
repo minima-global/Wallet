@@ -30,26 +30,28 @@ const NFTs = () => {
                         <CardHeader
                             title={
                                 <Stack spacing={1}>
-                                    <MiSearchBarWithIcon>
-                                        <MiSearchBar
-                                            value={filterText}
-                                            onChange={(v: any) => {
-                                                setFilterText(v.target.value);
-                                            }}
-                                            placeholder="Search by name, creator name or tokenid"
-                                        />
-                                        <MiSearch color="#fff" size={20} />
-                                    </MiSearchBarWithIcon>
+                                    <Stack flexDirection="row" alignItems="center" justifyContent="center">
+                                        <MiSearchBarWithIcon>
+                                            <MiSearchBar
+                                                value={filterText}
+                                                onChange={(v: any) => {
+                                                    setFilterText(v.target.value);
+                                                }}
+                                                placeholder="Search by name, creator name or tokenid"
+                                            />
+
+                                            <Button
+                                                variant="contained"
+                                                disableElevation
+                                                size="small"
+                                                color="primary"
+                                                onClick={() => navigate('/createnft')}
+                                            >
+                                                Create
+                                            </Button>
+                                        </MiSearchBarWithIcon>
+                                    </Stack>
                                     <Stack direction="column" justifyContent="space-between" spacing={1}>
-                                        <Button
-                                            variant="outlined"
-                                            fullWidth
-                                            disableElevation
-                                            color="inherit"
-                                            onClick={() => navigate('/createnft')}
-                                        >
-                                            Create New
-                                        </Button>
                                         <Tabs>
                                             <TabButton
                                                 onClick={() => toggleTab(0)}

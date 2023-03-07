@@ -103,12 +103,16 @@ const MiSearchBarWithIcon = styled('div')`
     border-bottom: 1px solid #bdbdc4;
     padding: 0 16px;
     padding-bottom: 16px;
+    gap: 8px;
     & > svg {
         position: absolute;
         right: 32px;
         top: 15px;
         transition: 0.3s;
     }
+    display: flex;
+    align-items: center;
+    justify-content: center;
 `;
 
 const MiTokenNameWrapper = styled('div')`
