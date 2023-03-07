@@ -114,6 +114,9 @@ const NFTDetail = () => {
                                         />
                                         <CustomListItem title="Total Minted" value={NFT.total} />
                                         <CustomListItem title="Token ID" value={NFT.tokenid} />
+                                        <CustomListItem title="Script" value={NFT.script} />
+                                        <CustomListItem title="Decimals" value={NFT.decimals} />
+                                        <CustomListItem title="Block Created" value={NFT.created} />
                                         <CustomListItem
                                             title="Web Validation"
                                             value={
