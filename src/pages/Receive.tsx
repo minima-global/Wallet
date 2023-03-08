@@ -51,12 +51,15 @@ const Receive: FC = () => {
     const checkMinimaAddress = (address: string) => {
         setError(false);
         setAddressValid(false);
+
         checkAddress(address)
             .then((data: any) => {
                 setAddressValid(data);
             })
             .catch((err) => {
-                setError(err);
+                const hasJavaLangError = err.startsWith('java.lang.IllegalArgumentException: ');
+
+                setError(!hasJavaLangError ? err : err.split('java.lang.IllegalArgumentException: ')[1]);
                 setFormAddress('');
             });
     };
@@ -68,7 +71,7 @@ const Receive: FC = () => {
 
     useEffect(() => {
         getScripts().then((scripts) => {
-            const allSimpleAddresses = scripts.filter((s) => s.simple);
+            const allSimpleAddresses = scripts.filter((s) => s.simple && s.default);
             setDefaultAddress(allSimpleAddresses);
             setAddress(allSimpleAddresses[Math.floor(Math.random() * allSimpleAddresses.length)].miniaddress);
         });
@@ -150,6 +153,7 @@ const Receive: FC = () => {
                                         />
                                         <Stack spacing={0.5}>
                                             <Button
+                                                disabled={!formAddress.length}
                                                 onClick={() => checkMinimaAddress(formAddress)}
                                                 disableElevation
                                                 variant="contained"

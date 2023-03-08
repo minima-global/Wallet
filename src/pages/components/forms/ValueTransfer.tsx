@@ -184,6 +184,7 @@ const ValueTransfer = ({}: IProps) => {
                             className: styles['form-helper-text'],
                         }}
                         InputProps={{
+                            autoComplete: 'off',
                             style:
                                 formik.touched.amount && Boolean(formik.errors.amount)
                                     ? {
@@ -201,6 +202,7 @@ const ValueTransfer = ({}: IProps) => {
                         help="Prioritize your transaction by adding a burn. Burn amounts are denominated in Minima only."
                         children={
                             <TextField
+                                autoComplete="off"
                                 disabled={formik.isSubmitting}
                                 fullWidth
                                 id="burn"
@@ -249,7 +251,7 @@ const ValueTransfer = ({}: IProps) => {
                                     className: styles['form-helper-text'],
                                 }}
                                 InputProps={{
-                                    autoComplete: 'off',
+                                    autoComplete: 'vault-password',
                                     style:
                                         formik.touched.password && Boolean(formik.errors.password)
                                             ? {
