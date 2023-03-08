@@ -71,7 +71,7 @@ const NFTs = () => {
                             }
                         />
                         <CardContent>
-                            <Stack spacing={3}>
+                            <Stack spacing={3} sx={{ overflowY: 'auto' }}>
                                 {tabs === 0 && (
                                     <Stack spacing={1}>
                                         {tokenNFTsWithDecimalZero

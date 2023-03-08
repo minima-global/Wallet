@@ -34,8 +34,6 @@ interface ISendForm {
     burn: string;
 }
 
-const MiCameraButton = styled('img')``;
-
 interface IProps {}
 const ValueTransfer = ({}: IProps) => {
     const mySchema = useFormSchema();
@@ -217,6 +215,7 @@ const ValueTransfer = ({}: IProps) => {
                                     className: styles['form-helper-text'],
                                 }}
                                 InputProps={{
+                                    autoComplete: 'off',
                                     style:
                                         formik.touched.burn && Boolean(formik.errors.burn)
                                             ? {
@@ -250,6 +249,7 @@ const ValueTransfer = ({}: IProps) => {
                                     className: styles['form-helper-text'],
                                 }}
                                 InputProps={{
+                                    autoComplete: 'off',
                                     style:
                                         formik.touched.password && Boolean(formik.errors.password)
                                             ? {

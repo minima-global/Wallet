@@ -6,12 +6,8 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow: hidden;
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
 }
-::-webkit-scrollbar {
-    display: none;
-  }
+
 
 @font-face {
     font-family: Manrope-regular;

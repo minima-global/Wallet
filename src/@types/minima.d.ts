@@ -180,11 +180,16 @@ interface Address {
 interface Coin {
     coinid: string;
     address: string;
-    mxaddress: string;
+    miniaddress: string;
     amount: string;
     tokenid: string;
-    floating: boolean;
+    token: Token;
+    tokenamount: string;
     storestate: boolean;
+    state: [];
+    spent: boolean;
+    mmrentry: string;
+    created: string;
 }
 
 interface MMRProof {
@@ -224,6 +229,15 @@ interface SignatureWitness {
 interface Script {
     script: string;
     proof: Proof;
+}
+export interface Scripts {
+    script: string;
+    address: string;
+    miniaddress: string;
+    simple: boolean;
+    default: boolean;
+    publickey: string;
+    track: boolean;
 }
 
 interface Proof {

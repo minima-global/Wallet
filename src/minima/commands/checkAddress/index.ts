@@ -1,8 +1,6 @@
-import { Coin } from '../../../@types/minima';
-
-export const getTokens = (): Promise<Coin[]> => {
+export const checkAddress = (address: string): Promise<any> => {
     return new Promise((resolve, reject) => {
-        MDS.cmd('coins relevant:true', (res) => {
+        MDS.cmd(`checkaddress address:${address}`, (res) => {
             if (!res.status) reject(res.error ? res.error : 'RPC Failed');
 
             resolve(res.response);
@@ -10,4 +8,4 @@ export const getTokens = (): Promise<Coin[]> => {
     });
 };
 
-export default getTokens;
+export default checkAddress;

@@ -1,8 +1,8 @@
-import { Coin } from '../../../@types/minima';
+import { Scripts } from '../../../@types/minima';
 
-export const getTokens = (): Promise<Coin[]> => {
+export const getScripts = (): Promise<Scripts[]> => {
     return new Promise((resolve, reject) => {
-        MDS.cmd('coins relevant:true', (res) => {
+        MDS.cmd('scripts', (res) => {
             if (!res.status) reject(res.error ? res.error : 'RPC Failed');
 
             resolve(res.response);
@@ -10,4 +10,4 @@ export const getTokens = (): Promise<Coin[]> => {
     });
 };
 
-export default getTokens;
+export default getScripts;
