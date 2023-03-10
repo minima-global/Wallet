@@ -1,6 +1,6 @@
 {
     "name": "wallet",
-    "version": "2.10.0",
+    "version": "2.12.0",
     "private": true,
     "scripts": {
         "start": "env-cmd -f .env.development react-scripts start",
@@ -46,6 +46,7 @@
         "react-redux": "^8.0.2",
         "react-router-dom": "^6.2.1",
         "react-scripts": "5.0.0",
+        "sanitize-html": "^2.10.0",
         "typescript": "^4.5.5",
         "yup": "^0.32.11"
     },
@@ -69,6 +70,7 @@
         "printWidth": 120
     },
     "devDependencies": {
-        "@redux-devtools/core": "^3.13.1"
+        "@redux-devtools/core": "^3.13.1",
+        "@types/sanitize-html": "^2.8.1"
     }
 }

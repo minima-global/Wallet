@@ -14,7 +14,7 @@ export async function copyTextToClipboard(text: string) {
 // https://stackoverflow.com/questions/400212/how-do-i-copy-to-the-clipboard-in-javascript/33928558#33928558
 export function copy(text: string) {
     var input = document.createElement('textarea');
-    input.innerHTML = text;
+    input.textContent = encodeURIComponent(text);
     document.body.appendChild(input);
     input.select();
     var result = document.execCommand('copy');
