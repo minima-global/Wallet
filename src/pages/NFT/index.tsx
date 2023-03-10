@@ -8,7 +8,6 @@ import NFTCard from '../components/nfts/NFTCard/NFTCard';
 import GridLayout from '../../layout/GridLayout';
 import { useAppSelector } from '../../minima/redux/hooks';
 
-import styles from './NFT.module.css';
 import { MiSearchBar, MiSearchBarWithIcon, NoResults } from '../../shared/components/layout/MiToken';
 import { selectTokensWithDecimalZero } from '../../minima/redux/slices/tokenSlice';
 import MiSearch from '../../shared/components/layout/svgs/MiSearch';
@@ -26,7 +25,7 @@ const NFTs = () => {
         <GridLayout
             children={
                 <>
-                    <Card variant="outlined" className={styles['nft-page-card']}>
+                    <Card variant="outlined">
                         <CardHeader
                             title={
                                 <Stack spacing={1}>
