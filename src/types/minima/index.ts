@@ -151,7 +151,7 @@ interface HeaderTxPOW {
     readonly date: string;
 }
 interface TokenInputTransactionTxPOW {
-    readonly name: JSON;
+    readonly name: any;
     readonly coinid: string;
     readonly total: string;
     readonly decimals: number;
@@ -172,6 +172,7 @@ interface InputOutputTransactionTxPOW {
     readonly spent: boolean;
     readonly mmrentry: string;
     readonly created: string;
+    readonly tokenamount: string;
 }
 
 interface DataProof {
@@ -250,6 +251,7 @@ export interface TxPOW {
     header: HeaderTxPOW;
     hasbody: boolean;
     body: BodyTxPOW;
+    burn: number;
 }
 
 export interface MinimaToken {

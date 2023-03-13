@@ -81,6 +81,10 @@ const AppNavigation = () => {
             name: 'Create NFT',
         },
         {
+            pathname: '/history',
+            name: 'Transaction History',
+        },
+        {
             pathname: '/offline',
             name: 'Node Status',
         },
@@ -90,21 +94,21 @@ const AppNavigation = () => {
         getPageTitle();
         setOnDetail(false);
         if (location.pathname.substring(0, 9) === '/balance/') {
-            // console.log('Token Detail page');
             setOnDetail(true);
             setPageTitle('Token Details');
         }
         if (location.pathname.substring(0, 6) === '/nfts/') {
-            // console.log('Token Detail page');
             setOnDetail(true);
             setPageTitle('NFT Details');
         }
 
         if (location.pathname.substring(0, 10) === '/createnft') {
-            // console.log('Token Detail page');
             setOnDetail(true);
         }
-        return () => {};
+        if (location.pathname.substring(0, 9) === '/history/') {
+            setPageTitle('Transaction Details');
+            setOnDetail(true);
+        }
     }, [location]);
 
     const getPageTitle = () => {
