@@ -24,6 +24,8 @@ import { selectBalance } from '../minima/redux/slices/balanceSlice';
 import { NoResults } from '../shared/components/layout/MiToken';
 
 import styles from './Navigation.module.css';
+import History from '../pages/History';
+import HistoryTransactionDetail from '../pages/HistoryTransactionDetail';
 
 export interface RouteType {
     path: string;
@@ -79,6 +81,10 @@ const AppNavigation = () => {
             name: 'Create NFT',
         },
         {
+            pathname: '/history',
+            name: 'Transaction History',
+        },
+        {
             pathname: '/offline',
             name: 'Node Status',
         },
@@ -88,21 +94,21 @@ const AppNavigation = () => {
         getPageTitle();
         setOnDetail(false);
         if (location.pathname.substring(0, 9) === '/balance/') {
-            // console.log('Token Detail page');
             setOnDetail(true);
             setPageTitle('Token Details');
         }
         if (location.pathname.substring(0, 6) === '/nfts/') {
-            // console.log('Token Detail page');
             setOnDetail(true);
             setPageTitle('NFT Details');
         }
 
         if (location.pathname.substring(0, 10) === '/createnft') {
-            // console.log('Token Detail page');
             setOnDetail(true);
         }
-        return () => {};
+        if (location.pathname.substring(0, 9) === '/history/') {
+            setPageTitle('Transaction Details');
+            setOnDetail(true);
+        }
     }, [location]);
 
     const getPageTitle = () => {
@@ -170,6 +176,9 @@ const AppNavigation = () => {
                         <Route path="/nfts" element={<NFTs />}></Route>
                         <Route path="nfts/:tokenid" element={<NFTDetail />} />
                         <Route path="/createnft" element={<CreateNFT />} />
+                        <Route path="/history" element={<History />}>
+                            <Route path=":transactionid" element={<HistoryTransactionDetail />} />
+                        </Route>
                         <Route path="/offline" element={<Offline />} />
                         <Route path="*" element={<Navigate replace to="/balance" />} />
                     </Routes>
