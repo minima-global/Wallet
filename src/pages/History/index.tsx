@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Card, CardHeader, Button, CardContent } from '@mui/material';
+import { Card, CardHeader, Button, CardContent, Pagination } from '@mui/material';
 import { Stack } from '@mui/system';
 import { Outlet, useMatch, useNavigate } from 'react-router-dom';
 import GridLayout from '../../layout/GridLayout';
@@ -24,16 +24,25 @@ const History = () => {
     const isViewingTransactionDetail = useMatch('/history/:transactionid');
     const [splitByMonths, setSplitByMonth] = useState<Map<string, TxPOW[]>[]>([]);
 
+    const [paginationPageSize, setPaginationSize] = useState(20);
+    const [paginationPageNumber, setPaginationNumber] = useState(1);
+    const handlePaginationChange = (event: React.ChangeEvent<unknown>, value: number) => {
+        setPaginationNumber(value);
+    };
+
     useEffect(() => {
         dispatch(callAndStoreHistory());
     }, []);
 
     useEffect(() => {
         const split = splitByMonth(
-            historyTxpows.slice().sort((a, b) => b.header.timemilli.localeCompare(a.header.timemilli))
+            historyTxpows
+                .slice()
+                .sort((a, b) => b.header.timemilli.localeCompare(a.header.timemilli))
+                .slice((paginationPageNumber - 1) * paginationPageSize, paginationPageSize * paginationPageNumber)
         );
         setSplitByMonth(split);
-    }, [historyTxpows]);
+    }, [historyTxpows, paginationPageNumber]);
 
     return (
         <GridLayout
@@ -56,7 +65,7 @@ const History = () => {
                                             </MiSearchBarWithIcon>
                                         </Stack>
 
-                                        <CardContent>
+                                        <CardContent sx={{ p: 0, overFlow: 'auto' }}>
                                             <MiTransactionHeader>
                                                 <h6 id="txpowid">TxPow ID</h6>
                                                 {/* <h6 id="name">Type</h6> */}
@@ -82,7 +91,9 @@ const History = () => {
                                                                             <li
                                                                                 onClick={() =>
                                                                                     navigate(t.txpowid, {
-                                                                                        state: { txpowid: t.txpowid },
+                                                                                        state: {
+                                                                                            txpowid: t.txpowid,
+                                                                                        },
                                                                                     })
                                                                                 }
                                                                                 key={t.txpowid}
@@ -116,6 +127,21 @@ const History = () => {
                                                         }
                                                     })}
 
+                                                {!filterText.length && historyTxpows.length > paginationPageSize && (
+                                                    <Stack mt={5} alignItems="center">
+                                                        <Pagination
+                                                            shape="rounded"
+                                                            variant="outlined"
+                                                            size="small"
+                                                            count={Math.floor(
+                                                                historyTxpows.length / paginationPageSize
+                                                            )}
+                                                            page={paginationPageNumber}
+                                                            onChange={handlePaginationChange}
+                                                        />
+                                                    </Stack>
+                                                )}
+
                                                 {!!filterText.length &&
                                                     historyTxpows
                                                         .filter((t) => containsText(t.txpowid, filterText))
@@ -129,14 +155,6 @@ const History = () => {
                                                                 key={t.txpowid}
                                                             >
                                                                 <p id="txpowid">{t.txpowid}</p>
-
-                                                                {/* <p id="name">
-                                                                    {t.isblock && t.istransaction
-                                                                        ? 'TxPoW Unit'
-                                                                        : !t.isblock && t.istransaction
-                                                                        ? 'Basic'
-                                                                        : 'Pulse'}
-                                                                </p> */}
 
                                                                 <p>{t.body.txnlist.length}</p>
                                                                 <p id="time">
