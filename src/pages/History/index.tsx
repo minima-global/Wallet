@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardHeader, Button, CardContent, Pagination } from '@mui/material';
 import { Stack } from '@mui/system';
 import { Outlet, useMatch, useNavigate } from 'react-router-dom';
@@ -66,12 +66,14 @@ const History = () => {
                                         </Stack>
 
                                         <CardContent sx={{ p: 0, overFlow: 'auto' }}>
-                                            <MiTransactionHeader>
-                                                <h6 id="txpowid">TxPow ID</h6>
-                                                {/* <h6 id="name">Type</h6> */}
-                                                <h6 id="transactions">Transactions</h6>
-                                                <h6 id="time">Time</h6>
-                                            </MiTransactionHeader>
+                                            {!filterText.length && !!historyTxpows.length && (
+                                                <MiTransactionHeader>
+                                                    <h6 id="txpowid">TxPow ID</h6>
+                                                    {/* <h6 id="name">Type</h6> */}
+                                                    <h6 id="transactions">Transactions</h6>
+                                                    <h6 id="time">Time</h6>
+                                                </MiTransactionHeader>
+                                            )}
 
                                             <MiTransactionList>
                                                 {!filterText.length &&
@@ -79,8 +81,8 @@ const History = () => {
                                                         for (const [key, value] of n) {
                                                             if (value.length)
                                                                 return (
-                                                                    <>
-                                                                        <div key={key} className="month">
+                                                                    <React.Fragment key={key}>
+                                                                        <div className="month">
                                                                             {key +
                                                                                 ` ${format(
                                                                                     parseInt(value[0].header.timemilli),
@@ -89,6 +91,7 @@ const History = () => {
                                                                         </div>
                                                                         {value.map((t) => (
                                                                             <li
+                                                                                key={t.txpowid + 'key'}
                                                                                 onClick={() =>
                                                                                     navigate(t.txpowid, {
                                                                                         state: {
@@ -96,7 +99,6 @@ const History = () => {
                                                                                         },
                                                                                     })
                                                                                 }
-                                                                                key={t.txpowid}
                                                                             >
                                                                                 <p id="txpowid">{t.txpowid}</p>
 
@@ -122,10 +124,16 @@ const History = () => {
                                                                                 </p>
                                                                             </li>
                                                                         ))}
-                                                                    </>
+                                                                    </React.Fragment>
                                                                 );
                                                         }
                                                     })}
+
+                                                {!filterText.length && !historyTxpows.length && (
+                                                    <NoResults>
+                                                        <h6>No transactions in your history yet</h6>
+                                                    </NoResults>
+                                                )}
 
                                                 {!filterText.length && historyTxpows.length > paginationPageSize && (
                                                     <Stack mt={5} alignItems="center">
@@ -158,9 +166,9 @@ const History = () => {
 
                                                                 <p>{t.body.txnlist.length}</p>
                                                                 <p id="time">
-                                                                    {format(parseInt(t.header.timemilli), 'MMM yyyy')}{' '}
+                                                                    {format(parseInt(t.header.timemilli), 'MMM yyyy')}
                                                                     <br />
-                                                                    {format(parseInt(t.header.timemilli), 'E do')}{' '}
+                                                                    {format(parseInt(t.header.timemilli), 'E do')}
                                                                     <br />
                                                                     {format(parseInt(t.header.timemilli), 'hh:m aa')}
                                                                 </p>
