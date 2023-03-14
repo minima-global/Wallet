@@ -14,7 +14,6 @@ import {
     Button,
 } from '@mui/material';
 import GridLayout from '../layout/GridLayout';
-import { callGetAddress } from '../minima/rpc-commands';
 import { copy } from '../shared/functions';
 import QRCode from 'react-qr-code';
 
