@@ -9,7 +9,7 @@
         "build:dev": "env-cmd -f .env.development react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject",
-        "build-zip": "npm run build && rm minidapp/wallet_* && cd build && zip -r wallet_$npm_package_version.mds.zip . && mv wallet_$npm_package_version.mds.zip ../minidapp/"
+        "build-zip": "npm run build && rm minidapp/wallet-* && cd build && zip -r wallet-$npm_package_version.mds.zip . && mv wallet-$npm_package_version.mds.zip ../minidapp/"
     },
     "homepage": ".",
     "eslintConfig": {
