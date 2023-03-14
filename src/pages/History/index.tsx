@@ -16,6 +16,10 @@ import { containsText } from '../../shared/functions';
 import splitByMonth from '../../shared/utils/splitByMonth';
 import { TxPOW } from '../../types/minima';
 
+import checkAddress from '../../minima/commands/checkAddress';
+import TransactionAmount from '../components/history/TransactionAmount';
+import TransactionImage from '../components/history/TransactionImage';
+
 const History = () => {
     const dispatch = useAppDispatch();
     const [filterText, setFilterText] = useState('');
@@ -68,9 +72,9 @@ const History = () => {
                                         <CardContent sx={{ p: 0, overFlow: 'auto' }}>
                                             {!filterText.length && !!historyTxpows.length && (
                                                 <MiTransactionHeader>
-                                                    <h6 id="txpowid">TxPow ID</h6>
-                                                    {/* <h6 id="name">Type</h6> */}
-                                                    <h6 id="transactions">Transactions</h6>
+                                                    <h6></h6>
+                                                    <h6 id="txpowid">Transaction ID</h6>
+                                                    <h6 id="amount">Amount</h6>
                                                     <h6 id="time">Time</h6>
                                                 </MiTransactionHeader>
                                             )}
@@ -100,17 +104,38 @@ const History = () => {
                                                                                     })
                                                                                 }
                                                                             >
+                                                                                <TransactionImage
+                                                                                    address={
+                                                                                        t.body.txn.outputs[0].address
+                                                                                    }
+                                                                                />
                                                                                 <p id="txpowid">{t.txpowid}</p>
 
-                                                                                {/* <p id="name">
-                                                                                    {t.isblock && t.istransaction
-                                                                                        ? 'Block'
-                                                                                        : !t.isblock && t.istransaction
-                                                                                        ? 'Basic'
-                                                                                        : 'Pulse'}
-                                                                                </p> */}
-
-                                                                                <p>{t.body.txnlist.length}</p>
+                                                                                {t.body.txn.outputs[0].tokenid ===
+                                                                                    '0x00' && (
+                                                                                    <TransactionAmount
+                                                                                        address={
+                                                                                            t.body.txn.outputs[0]
+                                                                                                .address
+                                                                                        }
+                                                                                        amount={
+                                                                                            t.body.txn.outputs[0].amount
+                                                                                        }
+                                                                                    />
+                                                                                )}
+                                                                                {t.body.txn.outputs[0].tokenid !==
+                                                                                    '0x00' && (
+                                                                                    <TransactionAmount
+                                                                                        address={
+                                                                                            t.body.txn.outputs[0]
+                                                                                                .address
+                                                                                        }
+                                                                                        amount={
+                                                                                            t.body.txn.outputs[0]
+                                                                                                .tokenamount
+                                                                                        }
+                                                                                    />
+                                                                                )}
                                                                                 <p id="time">
                                                                                     {format(
                                                                                         parseInt(t.header.timemilli),

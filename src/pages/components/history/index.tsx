@@ -11,7 +11,7 @@ export const MiTransactionList = styled('ul')`
         border-radius: 8px;
         background-color: #fff;
         display: grid;
-        grid-template-columns: 2fr 1fr 1fr;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
         grid-gap: 20px;
         padding: 8px;
         margin-bottom: 8px;
@@ -57,7 +57,7 @@ export const MiTransactionList = styled('ul')`
 
 export const MiTransactionHeader = styled('div')`
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-gap: 20px;
     border-bottom: 1px solid #d3d3d3;
     border-radius: 8px;
@@ -67,7 +67,7 @@ export const MiTransactionHeader = styled('div')`
     > h6#name {
         text-align: left;
     }
-    > h6#transactions {
+    > h6#amount {
         text-align: center;
     }
     > h6#time {
