@@ -54,7 +54,7 @@ const Receive: FC = () => {
     useEffect(() => {
         getCurrentNodeVersion().then((v) => {
             const versionCheckAddressWasIntroduced = '1.0.21';
-            const comparison = '1.0.20'.localeCompare(versionCheckAddressWasIntroduced);
+            const comparison = v.localeCompare(versionCheckAddressWasIntroduced);
             const isRunningSufficientVersion = comparison === 0 || comparison === 1;
 
             if (isRunningSufficientVersion) setValidBuild(true);
