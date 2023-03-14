@@ -44,7 +44,7 @@ const NFTCard = ({ NFT }: IProps) => {
 
     useEffect(() => {
         RPC.tokenValidate(NFT.tokenid).then(() => {
-            setTokenWebValidated(false);
+            setTokenWebValidated(true);
         });
     }, []);
 

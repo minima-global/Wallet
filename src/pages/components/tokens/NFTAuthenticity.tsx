@@ -12,12 +12,10 @@ const NFTAuthenticity = ({ token }: IProps) => {
     const [isTokenValidated, setIsTokenValidated] = React.useState(false);
 
     React.useEffect(() => {
-        RPC.tokenValidate(token.tokenid)
-            .then(() => {
-                // resolves so it is validated
-                setIsTokenValidated(true);
-            })
-            .catch((err) => {});
+        RPC.tokenValidate(token.tokenid).then(() => {
+            // resolves so it is validated
+            setIsTokenValidated(true);
+        });
     }, [token]);
     return isTokenValidated && token.token.webvalidate ? (
         <BootstrapTooltip placement="top-end" title={'NFT has been validated, ' + token.token.webvalidate}>

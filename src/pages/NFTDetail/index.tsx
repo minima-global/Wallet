@@ -49,7 +49,7 @@ const NFTDetail = () => {
     useEffect(() => {
         if (NFT) {
             RPC.tokenValidate(NFT.tokenid).then(() => {
-                setTokenWebValidated(false);
+                setTokenWebValidated(true);
             });
         }
     }, []);
