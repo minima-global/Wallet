@@ -1,7 +1,7 @@
 import { useFormik } from 'formik';
 import Decimal from 'decimal.js';
 import * as Yup from 'yup';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Button, Stack, TextField } from '@mui/material';
 import { callSend } from '../../../minima/rpc-commands';
@@ -24,6 +24,8 @@ import validateMinimaAddress from '../../../minima/commands/validateMinimaAddres
 import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
 import { useModalHandler } from '../../../hooks/useModalHandler';
 import { useParams } from 'react-router-dom';
+import useIsUserRunningWebView from '../../../hooks/useIsUserRunningWebView';
+import FeatureUnavailable from '../FeatureUnavailable';
 
 Decimal.set({ precision: MINIMA__DECIMAL_PRECISION });
 
@@ -40,6 +42,9 @@ const ValueTransfer = ({}: IProps) => {
     const wallet = useAppSelector(selectBalance);
     const [openQrScanner, setOpenQrScanner] = React.useState(false);
     const [errorScannedMinimaAddress, setErrorScannedMinimaAddress] = React.useState<false | string>(false);
+
+    const [internalBrowserWarningModal, setInternalBrowserWarningModal] = useState(false);
+    const isUserRunningWebView = useIsUserRunningWebView();
 
     const { tokenid } = useParams();
 
@@ -113,6 +118,10 @@ const ValueTransfer = ({}: IProps) => {
 
     return (
         <>
+            <FeatureUnavailable
+                open={internalBrowserWarningModal}
+                closeModal={() => setInternalBrowserWarningModal(false)}
+            />
             <QrScanner
                 setScannedResult={setAddressFieldValue}
                 closeModal={handleCloseQrScanner}
@@ -157,11 +166,14 @@ const ValueTransfer = ({}: IProps) => {
                                       },
                             endAdornment: (
                                 <>
-                                    {}
                                     <QrCodeScannerIcon
                                         className={styles['qr-scanner']}
                                         color="inherit"
-                                        onClick={handleOpenQrScanner}
+                                        onClick={
+                                            !isUserRunningWebView
+                                                ? handleOpenQrScanner
+                                                : () => setInternalBrowserWarningModal(true)
+                                        }
                                     />
                                 </>
                             ),

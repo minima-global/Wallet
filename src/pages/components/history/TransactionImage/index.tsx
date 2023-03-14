@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import checkAddress from '../../../../minima/commands/checkAddress';
 
-import styles from './TransactionAmount.module.css';
+import styles from './TransactionImage.module.css';
 
 interface IProps {
     address: string;

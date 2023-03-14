@@ -12,6 +12,7 @@ import {
     Stack,
     TextField,
     Button,
+    Modal,
 } from '@mui/material';
 import GridLayout from '../layout/GridLayout';
 import { copy } from '../shared/functions';
@@ -28,6 +29,8 @@ import MiError from '../shared/components/layout/MiError/MiError';
 import CustomListItem from '../shared/components/CustomListItem';
 import getCurrentNodeVersion from '../minima/commands/getCurrentVersion';
 import { NoResults } from '../shared/components/layout/MiToken';
+import useIsUserRunningWebView from '../hooks/useIsUserRunningWebView';
+import FeatureUnavailable from './components/FeatureUnavailable';
 // import { BalanceUpdates } from '../App';
 
 const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
@@ -50,6 +53,8 @@ const Receive: FC = () => {
     const [formAddress, setFormAddress] = useState('');
 
     const [validBuild, setValidBuild] = useState(false);
+    const [internalBrowserWarningModal, setInternalBrowserWarningModal] = useState(false);
+    const isUserRunningWebView = useIsUserRunningWebView();
 
     useEffect(() => {
         getCurrentNodeVersion().then((v) => {
@@ -103,6 +108,16 @@ const Receive: FC = () => {
             // loading={loading}
             children={
                 <Stack spacing={1}>
+                    <FeatureUnavailable
+                        open={internalBrowserWarningModal}
+                        closeModal={() => setInternalBrowserWarningModal(false)}
+                        children={
+                            <Stack alignItems="center">
+                                <p>Or, just hold and copy below...</p>
+                                <input readOnly defaultValue={address} />
+                            </Stack>
+                        }
+                    />
                     <Card variant="outlined">
                         <CardContent sx={{ display: 'flex', flexDirection: 'column' }}>
                             {address && address.length > 0 ? (
@@ -133,7 +148,11 @@ const Receive: FC = () => {
                                             title={!isCopied ? 'Copy Address' : 'Copied!'}
                                         >
                                             <ListItemIcon
-                                                onClick={handleCopyClick}
+                                                onClick={
+                                                    !isUserRunningWebView
+                                                        ? handleCopyClick
+                                                        : () => setInternalBrowserWarningModal(true)
+                                                }
                                                 sx={[copyBtn, { backgroundColor: isCopied ? '#00B74A' : null }]}
                                             >
                                                 {!isCopied ? (

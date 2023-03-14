@@ -1,9 +1,11 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useState } from 'react';
 
 import ClearIcon from '@mui/icons-material/Clear';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import styles from '../../../theme/cssmodule/Components.module.css';
 import { Box, Stack, Typography } from '@mui/material';
+import useIsUserRunningWebView from '../../../hooks/useIsUserRunningWebView';
+import FeatureUnavailable from '../FeatureUnavailable';
 
 function isString(myString: string | ArrayBuffer | null): myString is string {
     return (myString as string).length !== undefined; // ArrayBuffer has byteLength property not length
@@ -23,6 +25,9 @@ interface IProps {
 
 const AddImage = ({ onImageChange = () => {}, formik }: IProps) => {
     const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
+
+    const [internalBrowserWarningModal, setInternalBrowserWarningModal] = useState(false);
+    const isUserRunningWebView = useIsUserRunningWebView();
 
     const handleCapture = ({ target }: any) => {
         setSelectedFile(target.files[0]);
@@ -52,6 +57,10 @@ const AddImage = ({ onImageChange = () => {}, formik }: IProps) => {
     };
     return (
         <>
+            <FeatureUnavailable
+                open={internalBrowserWarningModal}
+                closeModal={() => setInternalBrowserWarningModal(false)}
+            />
             {formik.values.url && selectedFile && !formik.isSubmitting ? (
                 <>
                     <img src={formik.values.url} className={styles['form-image-preview-box-img']} />
@@ -82,17 +91,35 @@ const AddImage = ({ onImageChange = () => {}, formik }: IProps) => {
                     <Typography variant="caption">Click here to upload</Typography>
                 </Stack>
             )}
-            <input
-                disabled={formik.isSubmitting}
-                id="url"
-                name="url"
-                type="file"
-                key={formik.values.url}
-                hidden
-                accept="image/*"
-                onChange={handleCapture}
-                onBlur={formik.handleBlur}
-            />
+
+            {isUserRunningWebView && (
+                <input
+                    disabled={formik.isSubmitting}
+                    id="url"
+                    name="url"
+                    onClick={() => setInternalBrowserWarningModal(true)}
+                    // type="file"
+                    key={formik.values.url}
+                    hidden
+                    accept="image/*"
+                    onChange={handleCapture}
+                    onBlur={formik.handleBlur}
+                />
+            )}
+
+            {!isUserRunningWebView && (
+                <input
+                    disabled={formik.isSubmitting}
+                    id="url"
+                    name="url"
+                    type="file"
+                    key={formik.values.url}
+                    hidden
+                    accept="image/*"
+                    onChange={handleCapture}
+                    onBlur={formik.handleBlur}
+                />
+            )}
         </>
     );
 };
