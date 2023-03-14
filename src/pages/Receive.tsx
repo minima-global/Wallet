@@ -26,6 +26,8 @@ import FormFieldWrapper from '../shared/components/FormFieldWrapper';
 import checkAddress from '../minima/commands/checkAddress';
 import MiError from '../shared/components/layout/MiError/MiError';
 import CustomListItem from '../shared/components/CustomListItem';
+import getCurrentNodeVersion from '../minima/commands/getCurrentVersion';
+import { NoResults } from '../shared/components/layout/MiToken';
 // import { BalanceUpdates } from '../App';
 
 const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
@@ -46,6 +48,18 @@ const Receive: FC = () => {
     const [error, setError] = useState<boolean | string>(false);
     const [addressValidity, setAddressValid] = useState<false | any>(false);
     const [formAddress, setFormAddress] = useState('');
+
+    const [validBuild, setValidBuild] = useState(false);
+
+    useEffect(() => {
+        getCurrentNodeVersion().then((v) => {
+            const versionCheckAddressWasIntroduced = '1.0.21';
+            const comparison = '1.0.20'.localeCompare(versionCheckAddressWasIntroduced);
+            const isRunningSufficientVersion = comparison === 0 || comparison === 1;
+
+            if (isRunningSufficientVersion) setValidBuild(true);
+        });
+    }, []);
 
     const checkMinimaAddress = (address: string) => {
         setError(false);
@@ -139,57 +153,90 @@ const Receive: FC = () => {
                     </Card>
                     <Card variant="outlined">
                         <CardContent>
-                            <FormFieldWrapper
-                                help="Check validity of a Minima address"
-                                children={
-                                    <Stack spacing={2}>
-                                        <TextField
-                                            onChange={(e) => setFormAddress(e.target.value)}
-                                            id="address"
-                                            name="address"
-                                            placeholder="minima address"
-                                            value={formAddress}
-                                        />
-                                        <Stack spacing={0.5}>
-                                            <Button
-                                                disabled={!formAddress.length}
-                                                onClick={() => checkMinimaAddress(formAddress)}
-                                                disableElevation
-                                                variant="contained"
-                                            >
-                                                Check address
-                                            </Button>
-                                            <Button onClick={() => clearForm()} disableElevation variant="outlined">
-                                                Clear
-                                            </Button>
+                            {validBuild && (
+                                <FormFieldWrapper
+                                    help="Check validity of a Minima address"
+                                    children={
+                                        <Stack spacing={2}>
+                                            <TextField
+                                                onChange={(e) => setFormAddress(e.target.value)}
+                                                id="address"
+                                                name="address"
+                                                placeholder="minima address"
+                                                value={formAddress}
+                                            />
+                                            <Stack spacing={0.5}>
+                                                <Button
+                                                    disabled={!formAddress.length}
+                                                    onClick={() => checkMinimaAddress(formAddress)}
+                                                    disableElevation
+                                                    variant="contained"
+                                                >
+                                                    Check address
+                                                </Button>
+                                                <Button onClick={() => clearForm()} disableElevation variant="outlined">
+                                                    Clear
+                                                </Button>
+                                            </Stack>
+
+                                            {error && (
+                                                <Stack spacing={1}>
+                                                    <CustomListItem title="Valid Address" value="No" />
+
+                                                    <CustomListItem title="Reason" value={error} />
+                                                </Stack>
+                                            )}
+                                            {addressValidity && (
+                                                <Stack spacing={1}>
+                                                    <CustomListItem title="Valid Address" value="Yes" />
+
+                                                    <CustomListItem
+                                                        title="0x Address"
+                                                        value={addressValidity.original}
+                                                    />
+                                                    <CustomListItem title="Mx Address" value={addressValidity.Mx} />
+                                                    <CustomListItem
+                                                        title="Address belongs to this node"
+                                                        value={addressValidity.relevant ? 'Yes' : 'No'}
+                                                    />
+                                                    <CustomListItem
+                                                        title="Simple Address"
+                                                        value={addressValidity.simple ? 'Yes' : 'No'}
+                                                    />
+                                                </Stack>
+                                            )}
                                         </Stack>
-
-                                        {error && (
-                                            <Stack spacing={1}>
-                                                <CustomListItem title="Valid Address" value="No" />
-
-                                                <CustomListItem title="Reason" value={error} />
+                                    }
+                                />
+                            )}
+                            {!validBuild && (
+                                <FormFieldWrapper
+                                    help="Check validity of a Minima address"
+                                    children={
+                                        <Stack spacing={2}>
+                                            <NoResults>
+                                                <h6>Oops, looks like you are running an older version of Minima.</h6>
+                                                <p>
+                                                    Upgrade your node to version 1.0.21 or higher to access this
+                                                    feature.
+                                                </p>
+                                            </NoResults>
+                                            <TextField
+                                                id="address"
+                                                name="address"
+                                                placeholder="minima address"
+                                                value={formAddress}
+                                                disabled={true}
+                                            />
+                                            <Stack spacing={0.5}>
+                                                <Button disabled={true} disableElevation variant="contained">
+                                                    Check address
+                                                </Button>
                                             </Stack>
-                                        )}
-                                        {addressValidity && (
-                                            <Stack spacing={1}>
-                                                <CustomListItem title="Valid Address" value="Yes" />
-
-                                                <CustomListItem title="0x Address" value={addressValidity.original} />
-                                                <CustomListItem title="Mx Address" value={addressValidity.Mx} />
-                                                <CustomListItem
-                                                    title="Address belongs to this node"
-                                                    value={addressValidity.relevant ? 'Yes' : 'No'}
-                                                />
-                                                <CustomListItem
-                                                    title="Simple Address"
-                                                    value={addressValidity.simple ? 'Yes' : 'No'}
-                                                />
-                                            </Stack>
-                                        )}
-                                    </Stack>
-                                }
-                            />
+                                        </Stack>
+                                    }
+                                />
+                            )}
                         </CardContent>
                     </Card>
                 </Stack>
