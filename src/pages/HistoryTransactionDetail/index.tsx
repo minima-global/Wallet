@@ -247,6 +247,29 @@ const HistoryTransactionDetail = () => {
                                                 ))}
                                             </ul>
                                         </MiTransactionSummary>
+                                        <MiTransactionSummary>
+                                            <h6 id="input">State Variable(s)</h6>
+
+                                            <ul id="input">
+                                                {viewTransaction.body.txn.state.map((input, i) => (
+                                                    <ul key={input.port} id="iterator">
+                                                        <li id="list-subheader">State Variable {input.port}</li>
+                                                        <li>
+                                                            <p>Port:</p>
+                                                            <p>{input.port}</p>
+                                                        </li>
+                                                        <li>
+                                                            <p>Type:</p>
+                                                            <p>{input.type}</p>
+                                                        </li>
+                                                        <li>
+                                                            <p>Data:</p>
+                                                            <p>{input.data}</p>
+                                                        </li>
+                                                    </ul>
+                                                ))}
+                                            </ul>
+                                        </MiTransactionSummary>
                                     </Stack>
                                 }
                             />
