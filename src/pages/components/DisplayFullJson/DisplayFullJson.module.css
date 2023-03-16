@@ -40,3 +40,6 @@
  padding: 8px;
  text-overflow: ellipsis;
 }
+.modal-wrapper svg{
+  cursor: pointer;
+}

@@ -1,3 +1,4 @@
+import { CloseOutlined } from '@mui/icons-material';
 import { Button, Modal, Stack } from '@mui/material';
 import styles from './DisplayFullJson.module.css';
 
@@ -10,13 +11,21 @@ const DisplayFullJson = ({ json, open, closeModal }: IProps) => {
     return (
         <Modal open={open} className={styles['modal']}>
             <Stack className={styles['modal-wrapper']}>
-                <h6>Advanced Transaction View</h6>
+                <Stack
+                    sx={{ width: '100%' }}
+                    mb={2}
+                    gap={0.5}
+                    flexDirection="row"
+                    alignItems="center"
+                    justifyContent="space-between"
+                >
+                    <h6>Advanced Transaction View</h6>
+                    <CloseOutlined onClick={closeModal} />
+                </Stack>
+
                 <pre>
                     <code>{JSON.stringify(json, null, 3)}</code>
                 </pre>
-                <Button color="inherit" fullWidth disableElevation onClick={closeModal} variant="outlined">
-                    Cancel
-                </Button>
             </Stack>
         </Modal>
     );
