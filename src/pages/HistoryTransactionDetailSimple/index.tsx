@@ -34,6 +34,7 @@ const HistoryTransactionDetailSimple = () => {
                 type: transactionType,
                 block: viewTransaction?.header.block,
                 burn: viewTransaction?.burn,
+                json: JSON.stringify(viewTransaction),
             },
         ]);
     }, [historyTransactions]);

@@ -2,12 +2,12 @@ const exportToCsv = (e: any, transaction: any) => {
     e.preventDefault();
 
     // Headers for each column
-    let headers = ['Id,Amount,Tokenid,Address,Date,Type,Block,Burn'];
+    let headers = ['Id,Amount,Tokenid,Address,Date,Type,Block,Burn,Json'];
 
     // Convert users transaction data to a csv
     let usersCsv = transaction.reduce((acc: any, transaction: any) => {
-        const { id, amount, tokenid, address, date, type, block, burn } = transaction;
-        acc.push([id, amount, tokenid, address, date, type, block, burn].join(','));
+        const { id, amount, tokenid, address, date, type, block, burn, json } = transaction;
+        acc.push([id, amount, tokenid, address, date, type, block, burn, json].join(','));
         return acc;
     }, []);
 
