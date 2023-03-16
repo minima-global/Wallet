@@ -14,7 +14,7 @@ const FeatureUnavailable = ({ children, open, closeModal }: IProps) => {
             <Box className={styles['modal-wrapper']}>
                 <NoResults>
                     <h6>This feature is unavailable on the internal browser.</h6>
-                    <p>You can access this feature by running Wallet with the external browser.</p>
+                    <p>You can access this feature by choosing "Open in Browser" from the menu in the top right.</p>
                 </NoResults>
 
                 {children && children}

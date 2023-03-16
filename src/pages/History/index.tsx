@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, CardHeader, Button, CardContent, Pagination, CircularProgress } from '@mui/material';
+import { Card, CardHeader, Button, CardContent, Pagination } from '@mui/material';
 import { Stack } from '@mui/system';
 import { Outlet, useMatch, useNavigate } from 'react-router-dom';
 import GridLayout from '../../layout/GridLayout';
@@ -166,25 +166,75 @@ const History = () => {
                                                     historyTxpows
                                                         .filter((t) => containsText(t.txpowid, filterText))
                                                         .map((t) => (
-                                                            <li
-                                                                onClick={() =>
-                                                                    navigate(t.txpowid, {
-                                                                        state: { txpowid: t.txpowid },
-                                                                    })
-                                                                }
-                                                                key={t.txpowid}
-                                                            >
-                                                                <p id="txpowid">{t.txpowid}</p>
+                                                            <React.Fragment key={t.txpowid}>
+                                                                <li
+                                                                    key={t.txpowid + 'key'}
+                                                                    onClick={() =>
+                                                                        navigate(t.txpowid, {
+                                                                            state: {
+                                                                                txpowid: t.txpowid,
+                                                                            },
+                                                                        })
+                                                                    }
+                                                                >
+                                                                    <Stack
+                                                                        flexDirection="row"
+                                                                        gap={2}
+                                                                        sx={{ minWidth: 0 }}
+                                                                        alignItems="center"
+                                                                    >
+                                                                        <TransactionImage
+                                                                            tokenid={t.body.txn.outputs[0].tokenid}
+                                                                            address={t.body.txn.outputs[0].address}
+                                                                        />
 
-                                                                <p>{t.body.txnlist.length}</p>
-                                                                <p id="time">
-                                                                    {format(parseInt(t.header.timemilli), 'MMM yyyy')}
-                                                                    <br />
-                                                                    {format(parseInt(t.header.timemilli), 'E do')}
-                                                                    <br />
-                                                                    {format(parseInt(t.header.timemilli), 'hh:mm aa')}
-                                                                </p>
-                                                            </li>
+                                                                        <MiTokenNameAmountWrapper>
+                                                                            <p>
+                                                                                {t.body.txn.outputs[0].tokenid ===
+                                                                                '0x00'
+                                                                                    ? 'Minima'
+                                                                                    : t.body.txn.outputs[0].token
+                                                                                    ? t.body.txn.outputs[0].token.name
+                                                                                          .name
+                                                                                    : 'N/A'}
+                                                                            </p>
+
+                                                                            {t.body.txn.outputs[0].tokenid ===
+                                                                                '0x00' && (
+                                                                                <TransactionAmount
+                                                                                    address={
+                                                                                        t.body.txn.outputs[0].address
+                                                                                    }
+                                                                                    amount={
+                                                                                        t.body.txn.outputs[0].amount
+                                                                                    }
+                                                                                />
+                                                                            )}
+                                                                            {t.body.txn.outputs[0].tokenid !==
+                                                                                '0x00' && (
+                                                                                <TransactionAmount
+                                                                                    address={
+                                                                                        t.body.txn.outputs[0].address
+                                                                                    }
+                                                                                    amount={
+                                                                                        t.body.txn.outputs[0]
+                                                                                            .tokenamount
+                                                                                    }
+                                                                                />
+                                                                            )}
+                                                                        </MiTokenNameAmountWrapper>
+                                                                    </Stack>
+
+                                                                    <MiTimeWrapper>
+                                                                        <p id="time">
+                                                                            {format(
+                                                                                parseInt(t.header.timemilli),
+                                                                                'hh:mm aa'
+                                                                            )}
+                                                                        </p>
+                                                                    </MiTimeWrapper>
+                                                                </li>
+                                                            </React.Fragment>
                                                         ))}
 
                                                 {!!filterText.length &&

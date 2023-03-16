@@ -62,7 +62,7 @@ const Wallet = () => {
                     }}
                     placeholder="Search by name or tokenid"
                 />
-                <MiSearch color="#fff" size={20} />
+                {/* <MiSearch color="#fff" size={20} /> */}
             </MiSearchBarWithIcon>
             <Scroller>
                 {filterWallet.length === 0 ? (

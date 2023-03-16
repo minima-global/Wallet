@@ -128,7 +128,6 @@ const MiSearchBar = styled('input')`
     border-radius: 8px;
     min-height: 48px;
     padding: 0px 16px;
-    padding-right: 44px;
     font-family: Manrope-regular;
     font-size: 14px;
     font-weight: 400;

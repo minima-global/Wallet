@@ -270,16 +270,18 @@ const MiSelect = ({ value, tokens, error, setFieldValue, resetForm, coinSplitMod
                                     <MiDismiss size={16} onClick={toggling} className={styles['dismiss']} />
                                 </Stack>
                                 <DropDownListHeader>Select token</DropDownListHeader>
-                                <MiSearchBarWithIcon>
-                                    <MiSearchBar
-                                        value={filterText}
-                                        onChange={(v: any) => {
-                                            setFilterText(v.target.value);
-                                        }}
-                                        placeholder="Search by name or tokenid"
-                                    />
-                                    <MiSearch color="#fff" size={20} />
-                                </MiSearchBarWithIcon>
+                                <Stack mr={2} ml={2}>
+                                    <MiSearchBarWithIcon>
+                                        <MiSearchBar
+                                            value={filterText}
+                                            onChange={(v: any) => {
+                                                setFilterText(v.target.value);
+                                            }}
+                                            placeholder="Search by name or tokenid"
+                                        />
+                                        {/* <MiSearch color="#fff" size={20} /> */}
+                                    </MiSearchBarWithIcon>
+                                </Stack>
 
                                 <Scroller>
                                     <DropDownList>
@@ -371,16 +373,18 @@ const MiSelect = ({ value, tokens, error, setFieldValue, resetForm, coinSplitMod
                                     <MiDismiss size={16} onClick={toggling} className={styles['dismiss']} />
                                 </Stack>
                                 <DropDownListHeader>Select token</DropDownListHeader>
-                                <MiSearchBarWithIcon>
-                                    <MiSearchBar
-                                        value={filterText}
-                                        onChange={(v: any) => {
-                                            setFilterText(v.target.value);
-                                        }}
-                                        placeholder="Search by name or tokenid"
-                                    />
-                                    <MiSearch color="#fff" size={20} />
-                                </MiSearchBarWithIcon>
+                                <Stack mr={2} ml={2}>
+                                    <MiSearchBarWithIcon>
+                                        <MiSearchBar
+                                            value={filterText}
+                                            onChange={(v: any) => {
+                                                setFilterText(v.target.value);
+                                            }}
+                                            placeholder="Search by name or tokenid"
+                                        />
+                                        {/* <MiSearch color="#fff" size={20} /> */}
+                                    </MiSearchBarWithIcon>
+                                </Stack>
 
                                 <Scroller>
                                     <DropDownList>

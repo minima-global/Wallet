@@ -4,13 +4,12 @@ import {
     AccordionSummary,
     Button,
     Card,
-    CardContent,
     CardHeader,
     CircularProgress,
     Stack,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import { useAppSelector } from '../../minima/redux/hooks';
 import { selectHistory } from '../../minima/redux/slices/historySlice';
@@ -23,6 +22,8 @@ import DataObjectIcon from '@mui/icons-material/DataObject';
 import DisplayFullJson from '../components/DisplayFullJson';
 import { ExpandMoreOutlined } from '@mui/icons-material';
 import { NoResults } from '../../shared/components/layout/MiToken';
+import useIsUserRunningWebView from '../../hooks/useIsUserRunningWebView';
+import FeatureUnavailable from '../components/FeatureUnavailable';
 
 const HistoryTransactionDetailSimple = () => {
     const location = useLocation();
@@ -31,6 +32,9 @@ const HistoryTransactionDetailSimple = () => {
     const [transactionType, setTransactionType] = useState<false | string>(false);
     const [transactionSummary, setTransactionSummary] = useState<any>();
     const [openAdvancedModal, setAdvanced] = useState(false);
+    const navigate = useNavigate();
+    const [internalBrowserWarningModal, setInternalBrowserWarningModal] = useState(false);
+    const isUserRunningWebView = useIsUserRunningWebView();
 
     const handleExportingToCSV = (e: any) => {
         exportToCsv(e, transactionSummary);
@@ -39,21 +43,12 @@ const HistoryTransactionDetailSimple = () => {
     const handleFullJSONView = () => setAdvanced(true);
 
     useEffect(() => {
-        setTransaction(historyTransactions.find((t) => t.txpowid === location.state.txpowid));
-
-        setTransactionSummary([
-            {
-                id: viewTransaction?.txpowid,
-                amount: viewTransaction?.body.txn.outputs[0].amount,
-                tokenid: viewTransaction?.body.txn.outputs[0].amount,
-                address: viewTransaction?.body.txn.outputs[0].miniaddress,
-                date: viewTransaction?.header.date,
-                type: transactionType,
-                block: viewTransaction?.header.block,
-                burn: viewTransaction?.burn,
-                json: JSON.stringify(viewTransaction),
-            },
-        ]);
+        if (!(location.state && 'txpowid' in location.state)) {
+            navigate('/history');
+        }
+        if (location.state && 'txpowid' in location.state) {
+            setTransaction(historyTransactions.find((t) => t.txpowid === location.state.txpowid));
+        }
     }, [historyTransactions]);
 
     useEffect(() => {
@@ -70,11 +65,29 @@ const HistoryTransactionDetailSimple = () => {
                     setTransactionType('Send');
                 }
             });
+
+            setTransactionSummary([
+                {
+                    id: viewTransaction?.txpowid,
+                    amount: viewTransaction?.body.txn.outputs[0].amount,
+                    tokenid: viewTransaction?.body.txn.outputs[0].amount,
+                    address: viewTransaction?.body.txn.outputs[0].miniaddress,
+                    date: viewTransaction?.header.date,
+                    type: transactionType,
+                    block: viewTransaction?.header.block,
+                    burn: viewTransaction?.burn,
+                    json: JSON.stringify(viewTransaction),
+                },
+            ]);
         }
     }, [viewTransaction]);
 
     return (
         <>
+            <FeatureUnavailable
+                open={internalBrowserWarningModal}
+                closeModal={() => setInternalBrowserWarningModal(false)}
+            />
             <DisplayFullJson open={openAdvancedModal} closeModal={() => setAdvanced(false)} json={viewTransaction} />
             {viewTransaction && (
                 <Stack spacing={2}>
@@ -147,7 +160,15 @@ const HistoryTransactionDetailSimple = () => {
                                             </li>
                                         </ul>
                                     </MiTransactionSummary>
-                                    <Button onClick={handleExportingToCSV} color="inherit" variant="outlined">
+                                    <Button
+                                        onClick={
+                                            !isUserRunningWebView
+                                                ? handleExportingToCSV
+                                                : () => setInternalBrowserWarningModal(true)
+                                        }
+                                        color="inherit"
+                                        variant="outlined"
+                                    >
                                         Download Receipt
                                     </Button>
                                 </Stack>
