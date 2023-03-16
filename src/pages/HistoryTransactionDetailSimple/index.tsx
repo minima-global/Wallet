@@ -9,6 +9,8 @@ import { MiTransactionSummary } from '../components/history';
 import Decimal from 'decimal.js';
 import checkAddress from '../../minima/commands/checkAddress';
 import exportToCsv from '../../shared/utils/jsonToCsv';
+import DataObjectIcon from '@mui/icons-material/DataObject';
+import DisplayFullJson from '../components/DisplayFullJson';
 
 const HistoryTransactionDetailSimple = () => {
     const location = useLocation();
@@ -16,10 +18,13 @@ const HistoryTransactionDetailSimple = () => {
     const [viewTransaction, setTransaction] = useState<undefined | TxPOW>(undefined);
     const [transactionType, setTransactionType] = useState<false | string>(false);
     const [transactionSummary, setTransactionSummary] = useState<any>();
+    const [openAdvancedModal, setAdvanced] = useState(false);
 
     const handleExportingToCSV = (e: any) => {
         exportToCsv(e, transactionSummary);
     };
+
+    const handleFullJSONView = () => setAdvanced(true);
 
     useEffect(() => {
         setTransaction(historyTransactions.find((t) => t.txpowid === location.state.txpowid));
@@ -58,6 +63,7 @@ const HistoryTransactionDetailSimple = () => {
 
     return (
         <>
+            <DisplayFullJson open={openAdvancedModal} closeModal={() => setAdvanced(false)} json={viewTransaction} />
             {viewTransaction && (
                 <Stack spacing={2}>
                     <Card variant="outlined">
@@ -65,7 +71,10 @@ const HistoryTransactionDetailSimple = () => {
                             title={
                                 <Stack spacing={2}>
                                     <MiTransactionSummary>
-                                        <h6>Quick Summary</h6>
+                                        <Stack mb={2} gap={0.5} flexDirection="row" alignItems="center">
+                                            <h6>Quick Summary</h6>
+                                            <DataObjectIcon onClick={handleFullJSONView} color="primary" />
+                                        </Stack>
                                         <ul>
                                             <li>
                                                 <p>Transaction ID (TxPoW)</p>

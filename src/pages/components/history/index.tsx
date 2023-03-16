@@ -114,7 +114,13 @@ export const MiTransactionSummary = styled('div')`
         font-size: 1.25rem;
         color: #16181c;
         // border-bottom: 1px solid #d3d3d3;
-        margin-bottom: 16px;
+        // margin-bottom: 16px;
+    }
+    svg {
+        fill: #317aff;
+        cursor: pointer;
+        width: 20px;
+        height: 20px;
     }
     ul {
         padding: 0;
