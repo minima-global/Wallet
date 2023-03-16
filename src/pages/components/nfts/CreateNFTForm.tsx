@@ -21,6 +21,7 @@ import { selectBalance } from '../../../minima/redux/slices/balanceSlice';
 import Decimal from 'decimal.js';
 import MiFunds from '../forms/MiFunds';
 import { useModalHandler } from '../../../hooks/useModalHandler';
+import useIsVaultLocked from '../../../hooks/useIsVaultLocked';
 
 /**
  * Minima scales up to 64 decimal places

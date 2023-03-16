@@ -19,6 +19,7 @@ import React from 'react';
 import { splitCoin } from '../../../minima/utils';
 import FormFieldWrapper from '../../../shared/components/FormFieldWrapper';
 import { useModalHandler } from '../../../hooks/useModalHandler';
+import useIsVaultLocked from '../../../hooks/useIsVaultLocked';
 
 Decimal.set({ precision: MINIMA__DECIMAL_PRECISION });
 
@@ -43,6 +44,8 @@ const CoinSplit = ({}: IProps) => {
         handleCloseModalManager,
         handleCloseStatusModal,
     } = useModalHandler();
+
+    const userLockedVault = useIsVaultLocked();
 
     const formik = useFormik({
         initialValues: {
@@ -124,39 +127,41 @@ const CoinSplit = ({}: IProps) => {
                             />
                         }
                     />
-                    <FormFieldWrapper
-                        help="If your database (vault) is locked, use the password here otherwise ignore this"
-                        children={
-                            <TextField
-                                type="password"
-                                disabled={formik.isSubmitting}
-                                fullWidth
-                                id="password"
-                                name="password"
-                                placeholder="vault password"
-                                value={formik.values.password}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                error={formik.touched.password && Boolean(formik.errors.password)}
-                                helperText={formik.touched.password && formik.errors.password}
-                                FormHelperTextProps={{
-                                    className: styles['form-helper-text'],
-                                }}
-                                InputProps={{
-                                    style:
-                                        formik.touched.password && Boolean(formik.errors.password)
-                                            ? {
-                                                  borderBottomLeftRadius: 0,
-                                                  borderBottomRightRadius: 0,
-                                              }
-                                            : {
-                                                  borderBottomLeftRadius: 8,
-                                                  borderBottomRightRadius: 8,
-                                              },
-                                }}
-                            />
-                        }
-                    />
+                    {userLockedVault && (
+                        <FormFieldWrapper
+                            help="Your vault is locked.  Use your password so you can process this transaction."
+                            children={
+                                <TextField
+                                    type="password"
+                                    disabled={formik.isSubmitting}
+                                    fullWidth
+                                    id="password"
+                                    name="password"
+                                    placeholder="vault password"
+                                    value={formik.values.password}
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                    error={formik.touched.password && Boolean(formik.errors.password)}
+                                    helperText={formik.touched.password && formik.errors.password}
+                                    FormHelperTextProps={{
+                                        className: styles['form-helper-text'],
+                                    }}
+                                    InputProps={{
+                                        style:
+                                            formik.touched.password && Boolean(formik.errors.password)
+                                                ? {
+                                                      borderBottomLeftRadius: 0,
+                                                      borderBottomRightRadius: 0,
+                                                  }
+                                                : {
+                                                      borderBottomLeftRadius: 8,
+                                                      borderBottomRightRadius: 8,
+                                                  },
+                                    }}
+                                />
+                            }
+                        />
+                    )}
                     <Button
                         onClick={handleProceedButton}
                         color="primary"

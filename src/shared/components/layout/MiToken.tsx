@@ -14,7 +14,47 @@ export {
     MiTestnet,
     MiTokenNameWrapper,
     NoResults,
+    MiTokenNameAmountWrapper,
+    MiTimeWrapper,
 };
+
+const MiTimeWrapper = styled('div')`
+    min-width: 0;
+    > p {
+        margin: 0;
+        font-size: 1rem !important;
+        text-align: right;
+        line-height: 16px;
+    }
+`;
+
+const MiTokenNameAmountWrapper = styled('div')`
+    max-width: 100%;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    > * {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        font-size: 1rem !important;
+        padding: 0;
+        margin: 0;
+        text-align: left;
+    }
+    > p:first-of-type {
+        line-height: 20px;
+        color: #17191c;
+        font-weight: 800;
+    }
+    > p:last-of-type {
+        line-height: 16px;
+        color: #000;
+        opacity: 0.8;
+        letter-spacing: 2%;
+    }
+`;
 
 const MiTestnet = styled('p')`
     margin: 0;
@@ -101,7 +141,6 @@ const MiSearchBarWithIcon = styled('div')`
     width: 100%;
     position: relative;
     border-bottom: 1px solid #bdbdc4;
-    padding: 0 16px;
     padding-bottom: 16px;
     gap: 8px;
     & > svg {

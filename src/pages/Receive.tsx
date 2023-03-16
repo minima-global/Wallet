@@ -12,6 +12,8 @@ import {
     Stack,
     TextField,
     Button,
+    Modal,
+    CircularProgress,
 } from '@mui/material';
 import GridLayout from '../layout/GridLayout';
 import { copy } from '../shared/functions';
@@ -28,6 +30,8 @@ import MiError from '../shared/components/layout/MiError/MiError';
 import CustomListItem from '../shared/components/CustomListItem';
 import getCurrentNodeVersion from '../minima/commands/getCurrentVersion';
 import { NoResults } from '../shared/components/layout/MiToken';
+import useIsUserRunningWebView from '../hooks/useIsUserRunningWebView';
+import FeatureUnavailable from './components/FeatureUnavailable';
 // import { BalanceUpdates } from '../App';
 
 const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
@@ -49,7 +53,9 @@ const Receive: FC = () => {
     const [addressValidity, setAddressValid] = useState<false | any>(false);
     const [formAddress, setFormAddress] = useState('');
 
-    const [validBuild, setValidBuild] = useState(false);
+    const [validBuild, setValidBuild] = useState<boolean | undefined>(undefined);
+    const [internalBrowserWarningModal, setInternalBrowserWarningModal] = useState(false);
+    const isUserRunningWebView = useIsUserRunningWebView();
 
     useEffect(() => {
         getCurrentNodeVersion().then((v) => {
@@ -57,7 +63,12 @@ const Receive: FC = () => {
             const comparison = v.localeCompare(versionCheckAddressWasIntroduced);
             const isRunningSufficientVersion = comparison === 0 || comparison === 1;
 
-            if (isRunningSufficientVersion) setValidBuild(true);
+            if (isRunningSufficientVersion) {
+                setValidBuild(true);
+            }
+            if (!isRunningSufficientVersion) {
+                setValidBuild(false);
+            }
         });
     }, []);
 
@@ -103,6 +114,16 @@ const Receive: FC = () => {
             // loading={loading}
             children={
                 <Stack spacing={1}>
+                    <FeatureUnavailable
+                        open={internalBrowserWarningModal}
+                        closeModal={() => setInternalBrowserWarningModal(false)}
+                        children={
+                            <Stack alignItems="center">
+                                <p>Or, just hold and copy below...</p>
+                                <input readOnly defaultValue={address} />
+                            </Stack>
+                        }
+                    />
                     <Card variant="outlined">
                         <CardContent sx={{ display: 'flex', flexDirection: 'column' }}>
                             {address && address.length > 0 ? (
@@ -133,7 +154,11 @@ const Receive: FC = () => {
                                             title={!isCopied ? 'Copy Address' : 'Copied!'}
                                         >
                                             <ListItemIcon
-                                                onClick={handleCopyClick}
+                                                onClick={
+                                                    !isUserRunningWebView
+                                                        ? handleCopyClick
+                                                        : () => setInternalBrowserWarningModal(true)
+                                                }
                                                 sx={[copyBtn, { backgroundColor: isCopied ? '#00B74A' : null }]}
                                             >
                                                 {!isCopied ? (
@@ -209,7 +234,13 @@ const Receive: FC = () => {
                                     }
                                 />
                             )}
-                            {!validBuild && (
+
+                            {validBuild === undefined && (
+                                <Stack alignItems="center">
+                                    <CircularProgress size={32} />
+                                </Stack>
+                            )}
+                            {validBuild !== undefined && !validBuild && (
                                 <FormFieldWrapper
                                     help="Check validity of a Minima address"
                                     children={
