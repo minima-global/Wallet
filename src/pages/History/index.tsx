@@ -1,24 +1,26 @@
 import React, { useEffect, useState } from 'react';
-import { Card, CardHeader, Button, CardContent, Pagination } from '@mui/material';
+import { Card, CardHeader, Button, CardContent, Pagination, CircularProgress } from '@mui/material';
 import { Stack } from '@mui/system';
 import { Outlet, useMatch, useNavigate } from 'react-router-dom';
 import GridLayout from '../../layout/GridLayout';
-import { MiSearchBarWithIcon, MiSearchBar, NoResults } from '../../shared/components/layout/MiToken';
+import {
+    MiSearchBarWithIcon,
+    MiSearchBar,
+    NoResults,
+    MiTokenAmount,
+    MiTokenNameAmountWrapper,
+    MiTimeWrapper,
+} from '../../shared/components/layout/MiToken';
 
 import { useAppDispatch, useAppSelector } from '../../minima/redux/hooks';
 import { callAndStoreHistory, selectHistory } from '../../minima/redux/slices/historySlice';
-
-import { MiTransactionHeader, MiTransactionList } from '../components/history';
-
+import { MiTransactionList } from '../components/history';
 import { format } from 'date-fns';
-
 import { containsText } from '../../shared/functions';
-import splitByMonth from '../../shared/utils/splitByMonth';
+import { extractByMonthAndDay } from '../../shared/utils/splitByMonth';
 import { TxPOW } from '../../types/minima';
-
-import checkAddress from '../../minima/commands/checkAddress';
-import TransactionAmount from '../components/history/TransactionAmount';
 import TransactionImage from '../components/history/TransactionImage';
+import TransactionAmount from '../components/history/TransactionAmount';
 
 const History = () => {
     const dispatch = useAppDispatch();
@@ -26,7 +28,9 @@ const History = () => {
     const navigate = useNavigate();
     const historyTxpows = useAppSelector(selectHistory);
     const isViewingTransactionDetail = useMatch('/history/:transactionid');
-    const [splitByMonths, setSplitByMonth] = useState<Map<string, TxPOW[]>[]>([]);
+    const [splitByMonths, setSplitByMonth] = useState<Map<string, TxPOW[]>>();
+
+    const [loading, setLoading] = useState(true);
 
     const [paginationPageSize, setPaginationSize] = useState(20);
     const [paginationPageNumber, setPaginationNumber] = useState(1);
@@ -39,17 +43,81 @@ const History = () => {
     }, []);
 
     useEffect(() => {
-        const split = splitByMonth(
+        const split = extractByMonthAndDay(
             historyTxpows
                 .slice()
                 .sort((a, b) => b.header.timemilli.localeCompare(a.header.timemilli))
                 .slice((paginationPageNumber - 1) * paginationPageSize, paginationPageSize * paginationPageNumber)
         );
+
+        setTimeout(() => setLoading(false), 1000);
         setSplitByMonth(split);
     }, [historyTxpows, paginationPageNumber]);
 
+    const createElements = (arr: Map<string, TxPOW[]>) => {
+        let elements = [];
+
+        for (let [key, value] of arr) {
+            const txpow = arr.get(key);
+            const day = txpow && format(parseInt(txpow[0].header.timemilli), 'iiii do');
+
+            elements.push(
+                <React.Fragment key={key}>
+                    <div className="month">{day}</div>
+                    {value.map((t: any) => (
+                        <li
+                            key={t.txpowid + 'key'}
+                            onClick={() =>
+                                navigate(t.txpowid, {
+                                    state: {
+                                        txpowid: t.txpowid,
+                                    },
+                                })
+                            }
+                        >
+                            <Stack flexDirection="row" gap={2} sx={{ minWidth: 0 }} alignItems="center">
+                                <TransactionImage
+                                    tokenid={t.body.txn.outputs[0].tokenid}
+                                    address={t.body.txn.outputs[0].address}
+                                />
+
+                                <MiTokenNameAmountWrapper>
+                                    <p>
+                                        {t.body.txn.outputs[0].tokenid === '0x00'
+                                            ? 'Minima'
+                                            : t.body.txn.outputs[0].token.name.name}
+                                    </p>
+
+                                    {t.body.txn.outputs[0].tokenid === '0x00' && (
+                                        <TransactionAmount
+                                            address={t.body.txn.outputs[0].address}
+                                            amount={t.body.txn.outputs[0].amount}
+                                        />
+                                    )}
+                                    {t.body.txn.outputs[0].tokenid !== '0x00' && (
+                                        <TransactionAmount
+                                            address={t.body.txn.outputs[0].address}
+                                            amount={t.body.txn.outputs[0].tokenamount}
+                                        />
+                                    )}
+                                </MiTokenNameAmountWrapper>
+                            </Stack>
+
+                            <MiTimeWrapper>
+                                <p id="time">{format(parseInt(t.header.timemilli), 'hh:mm aa')}</p>
+                            </MiTimeWrapper>
+                        </li>
+                    ))}
+                </React.Fragment>
+            );
+        }
+
+        return elements;
+    };
+
     return (
         <GridLayout
+            loading={loading}
             children={
                 <>
                     {!isViewingTransactionDetail && (
@@ -64,95 +132,14 @@ const History = () => {
                                                     onChange={(v: any) => {
                                                         setFilterText(v.target.value);
                                                     }}
-                                                    placeholder="Search by txpowid"
+                                                    placeholder="Search by transaction id"
                                                 />
                                             </MiSearchBarWithIcon>
                                         </Stack>
 
                                         <CardContent sx={{ p: 0, overFlow: 'auto' }}>
-                                            {!filterText.length && !!historyTxpows.length && (
-                                                <MiTransactionHeader>
-                                                    <h6></h6>
-                                                    <h6 id="txpowid">Transaction ID</h6>
-                                                    <h6 id="amount">Amount</h6>
-                                                    <h6 id="time">Time</h6>
-                                                </MiTransactionHeader>
-                                            )}
-
                                             <MiTransactionList>
-                                                {!filterText.length &&
-                                                    splitByMonths.map((n) => {
-                                                        for (const [key, value] of n) {
-                                                            if (value.length)
-                                                                return (
-                                                                    <React.Fragment key={key}>
-                                                                        <div className="month">
-                                                                            {key +
-                                                                                ` ${format(
-                                                                                    parseInt(value[0].header.timemilli),
-                                                                                    'yyyy'
-                                                                                )}`}
-                                                                        </div>
-                                                                        {value.map((t) => (
-                                                                            <li
-                                                                                key={t.txpowid + 'key'}
-                                                                                onClick={() =>
-                                                                                    navigate(t.txpowid, {
-                                                                                        state: {
-                                                                                            txpowid: t.txpowid,
-                                                                                        },
-                                                                                    })
-                                                                                }
-                                                                            >
-                                                                                <TransactionImage
-                                                                                    address={
-                                                                                        t.body.txn.outputs[0].address
-                                                                                    }
-                                                                                />
-                                                                                <p id="txpowid">{t.txpowid}</p>
-
-                                                                                {t.body.txn.outputs[0].tokenid ===
-                                                                                    '0x00' && (
-                                                                                    <TransactionAmount
-                                                                                        address={
-                                                                                            t.body.txn.outputs[0]
-                                                                                                .address
-                                                                                        }
-                                                                                        amount={
-                                                                                            t.body.txn.outputs[0].amount
-                                                                                        }
-                                                                                    />
-                                                                                )}
-                                                                                {t.body.txn.outputs[0].tokenid !==
-                                                                                    '0x00' && (
-                                                                                    <TransactionAmount
-                                                                                        address={
-                                                                                            t.body.txn.outputs[0]
-                                                                                                .address
-                                                                                        }
-                                                                                        amount={
-                                                                                            t.body.txn.outputs[0]
-                                                                                                .tokenamount
-                                                                                        }
-                                                                                    />
-                                                                                )}
-                                                                                <p id="time">
-                                                                                    {format(
-                                                                                        parseInt(t.header.timemilli),
-                                                                                        'E do'
-                                                                                    )}{' '}
-                                                                                    <br />
-                                                                                    {format(
-                                                                                        parseInt(t.header.timemilli),
-                                                                                        'hh:m aa'
-                                                                                    )}
-                                                                                </p>
-                                                                            </li>
-                                                                        ))}
-                                                                    </React.Fragment>
-                                                                );
-                                                        }
-                                                    })}
+                                                {!filterText.length && splitByMonths && createElements(splitByMonths)}
 
                                                 {!filterText.length && !historyTxpows.length && (
                                                     <NoResults>
@@ -195,7 +182,7 @@ const History = () => {
                                                                     <br />
                                                                     {format(parseInt(t.header.timemilli), 'E do')}
                                                                     <br />
-                                                                    {format(parseInt(t.header.timemilli), 'hh:m aa')}
+                                                                    {format(parseInt(t.header.timemilli), 'hh:mm aa')}
                                                                 </p>
                                                             </li>
                                                         ))}

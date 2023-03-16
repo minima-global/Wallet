@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CircularProgress, Stack } from '@mui/material';
+import { Button, Card, CardContent, CardHeader, CircularProgress, Stack } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
@@ -7,15 +7,34 @@ import { selectHistory } from '../../minima/redux/slices/historySlice';
 import { TxPOW } from '../../types/minima';
 import { MiTransactionSummary } from '../components/history';
 import Decimal from 'decimal.js';
+import checkAddress from '../../minima/commands/checkAddress';
 
 const HistoryTransactionDetailSimple = () => {
     const location = useLocation();
     const historyTransactions = useAppSelector(selectHistory);
     const [viewTransaction, setTransaction] = useState<undefined | TxPOW>(undefined);
+    const [transactionType, setTransactionType] = useState<false | string>(false);
 
     useEffect(() => {
         setTransaction(historyTransactions.find((t) => t.txpowid === location.state.txpowid));
     }, [historyTransactions]);
+
+    useEffect(() => {
+        if (viewTransaction) {
+            if (viewTransaction?.body.txn.outputs[0].tokenid === '0xFF') {
+                return setTransactionType('Token');
+            }
+            checkAddress(viewTransaction?.body.txn.outputs[0].address).then((res) => {
+                if (res.relevant) {
+                    setTransactionType('Receive');
+                }
+
+                if (!res.relevant) {
+                    setTransactionType('Send');
+                }
+            });
+        }
+    }, [viewTransaction]);
 
     return (
         <>
@@ -24,26 +43,40 @@ const HistoryTransactionDetailSimple = () => {
                     <Card variant="outlined">
                         <CardHeader
                             title={
-                                <>
+                                <Stack spacing={2}>
                                     <MiTransactionSummary>
-                                        <h6>TxPoW Summary</h6>
+                                        <h6>Quick Summary</h6>
                                         <ul>
                                             <li>
-                                                <p>TxPoW ID:</p>
+                                                <p>Transaction ID (TxPoW)</p>
                                                 <p>{viewTransaction.txpowid}</p>
                                             </li>
                                             <li>
-                                                <p>Type:</p>
+                                                <p>Amount</p>
+                                                <p>
+                                                    {viewTransaction.body.txn.outputs[0].tokenid === '0x00'
+                                                        ? viewTransaction.body.txn.outputs[0].amount
+                                                        : viewTransaction.body.txn.outputs[0].tokenamount}
+                                                </p>
+                                            </li>
+                                            <li>
+                                                <p>Type</p>
 
-                                                {viewTransaction.isblock && viewTransaction.istransaction && (
-                                                    <p>TxPoW Block</p>
-                                                )}
-                                                {!viewTransaction.isblock && viewTransaction.istransaction && (
-                                                    <p>Basic TxPoW Unit</p>
-                                                )}
-                                                {!viewTransaction.isblock && !viewTransaction.istransaction && (
-                                                    <p>Pulse</p>
-                                                )}
+                                                {transactionType ? <p>{transactionType}</p> : <p>...</p>}
+                                            </li>
+                                            <li>
+                                                <p>Sent to</p>
+
+                                                <p>{viewTransaction.body.txn.outputs[0].miniaddress}</p>
+                                            </li>
+                                            <li>
+                                                <p>Token</p>
+
+                                                <p>
+                                                    {viewTransaction.body.txn.outputs[0].tokenid === '0x00'
+                                                        ? 'Minima'
+                                                        : viewTransaction.body.txn.outputs[0].token?.name.name}
+                                                </p>
                                             </li>
                                             <li>
                                                 <p>Block:</p>
@@ -54,67 +87,22 @@ const HistoryTransactionDetailSimple = () => {
                                                 <p>Date:</p>
 
                                                 <p>
-                                                    {format(
-                                                        parseInt(viewTransaction.header.timemilli),
-                                                        'MMMM dd, yyyy hh:m:s a'
-                                                    )}
+                                                    {format(parseInt(viewTransaction.header.timemilli), 'hh:mm:s a')} •{' '}
+                                                    {format(parseInt(viewTransaction.header.timemilli), 'dd/MM/yy')}
                                                 </p>
                                             </li>
-                                            <li>
-                                                <p>Total Known Unconfirmed Transactions:</p>
 
-                                                <p>{viewTransaction.body.txnlist.length}</p>
-                                            </li>
                                             <li>
-                                                <p>Total MMR Proofs:</p>
-
-                                                <p>{viewTransaction.body.witness.mmrproofs.length}</p>
-                                            </li>
-                                            <li>
-                                                <p>Total Signatures:</p>
-
-                                                <p>{viewTransaction.body.witness.signatures.length}</p>
-                                            </li>
-                                            <li>
-                                                <p>Total Output(s) Amount (Minima):</p>
-
-                                                <p>
-                                                    {viewTransaction.body.txn.outputs
-                                                        .reduce(
-                                                            (accumulator, currentVal) =>
-                                                                new Decimal(accumulator).plus(currentVal.amount),
-                                                            new Decimal(0)
-                                                        )
-                                                        .toString()}
-                                                </p>
-                                            </li>
-                                            {!!viewTransaction.body.txn.outputs.filter((o) => o.tokenid !== '0x00')
-                                                .length && (
-                                                <li>
-                                                    <p>Total Output(s) Amount (Token):</p>
-
-                                                    <p>
-                                                        {viewTransaction.body.txn.outputs
-                                                            .filter((o) => o.tokenid !== '0x00' && o.tokenamount)
-                                                            .reduce(
-                                                                (accumulator, currentVal) =>
-                                                                    new Decimal(accumulator).plus(
-                                                                        currentVal.tokenamount
-                                                                    ),
-                                                                new Decimal(0)
-                                                            )
-                                                            .toString()}
-                                                    </p>
-                                                </li>
-                                            )}
-                                            <li>
-                                                <p>Burn:</p>
+                                                <p>Burn</p>
 
                                                 <p>{viewTransaction.burn}</p>
                                             </li>
                                         </ul>
                                     </MiTransactionSummary>
-                                </>
+                                    <Button color="inherit" variant="outlined">
+                                        Download Receipt
+                                    </Button>
+                                </Stack>
                             }
                         />
                     </Card>

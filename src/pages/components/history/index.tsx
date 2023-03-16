@@ -11,10 +11,11 @@ export const MiTransactionList = styled('ul')`
         border-radius: 8px;
         background-color: #fff;
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr 1fr;
-        grid-gap: 20px;
-        padding: 8px;
-        margin-bottom: 8px;
+        grid-template-columns: 3fr 1fr;
+        grid-gap: 6px;
+        padding: 16px 16px;
+        max-height: 78px;
+        margin-bottom: 16px;
     }
     li:last-child {
         margin-bottom: 0;
@@ -28,29 +29,18 @@ export const MiTransactionList = styled('ul')`
     > li p {
         text-overflow: ellipsis;
         overflow: hidden;
-        text-align: center;
         font-family: Manrope-regular;
         font-size: 0.875rem;
-        line-height: 30px;
-    }
-    > li p#time {
-        text-align: right;
-        line-height: 18px;
-    }
-    > li p#name {
-        text-align: left;
-    }
-    > li p#txpowid {
-        text-align: left;
+        white-space: nowrap;
     }
 
     > div.month {
+        color: #000;
         font-family: Manrope-regular;
-        font-size: 0.8rem;
-        text-align: right;
-        padding-right: 8px;
+        font-weight: 500;
+        font-size: 1rem;
+        text-align: left;
         font-weight: 800;
-        color: #ff6b4e;
         margin-bottom: 8px;
     }
 `;
@@ -121,16 +111,19 @@ export const MiTransactionSummary = styled('div')`
     h6 {
         margin: 0;
         font-family: Manrope-regular;
-        font-size: 1rem;
+        font-size: 1.25rem;
         color: #16181c;
-        border-bottom: 1px solid #d3d3d3;
-        padding-bottom: 8px;
-        margin-bottom: 22px;
+        // border-bottom: 1px solid #d3d3d3;
+        margin-bottom: 16px;
     }
     ul {
         padding: 0;
         margin: 0;
         list-style-type: none;
+
+        display: grid;
+        grid-template-columns: 4fr;
+        row-gap: 4px;
     }
     * {
         font-size: 1rem;
@@ -138,26 +131,31 @@ export const MiTransactionSummary = styled('div')`
         overflow: hidden;
         color: #363a3f;
     }
-    li > p:last-child {
+    li > p:last-of-type {
         font-weight: 800;
+        text-align: right;
     }
 
     li {
+        background-color: #fff;
+        padding: 16px;
         overflow: hidden;
         display: grid;
         grid-template-columns: 1fr 3fr;
-        grid-gap: 20px;
+        grid-gap: 8px;
         text-overflow: ellipsis;
-        border-bottom: 1px solid #d3d3d3;
     }
-    li:last-of-type {
-        border-bottom: none;
+    li > p {
+        margin: 0 !important;
     }
 
     @media only screen and (max-width: 733px) {
         li {
             grid-template-columns: 4fr;
             grid-gap: 8px;
+        }
+        li > p {
+            margin: 0 !important;
         }
         li > p:first-of-type {
             margin-bottom: 0;

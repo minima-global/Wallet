@@ -5,28 +5,44 @@ import styles from './TransactionImage.module.css';
 
 interface IProps {
     address: string;
+    tokenid: string;
 }
 
 type Transaction = 'Receive' | 'Send' | 'Token';
-const TransactionImage = ({ address }: IProps) => {
+const TransactionImage = ({ address, tokenid }: IProps) => {
     const [type, setType] = useState<false | Transaction>(false);
 
     useEffect(() => {
-        if (address === '0xFF') {
+        if (tokenid === '0xFF') {
             return setType('Token');
         }
         checkAddress(address).then((res) => {
-            if (res.relevant) return setType('Receive');
-        });
+            if (res.relevant) {
+                setType('Receive');
+            }
 
-        setType('Send');
+            if (!res.relevant) {
+                setType('Send');
+            }
+        });
     }, []);
 
     return (
-        <img
-            src={type === 'Receive' ? '' : type === 'Send' ? '' : type === 'Token' ? '' : ''}
-            className={styles[type === 'Receive' || type === 'Token' ? 'receive' : 'send']}
-        />
+        <>
+            {type && (
+                <img
+                    src={
+                        type === 'Receive'
+                            ? './assets/in.svg'
+                            : type === 'Send'
+                            ? './assets/out.svg'
+                            : './assets/create.svg'
+                    }
+                    className={styles['img']}
+                />
+            )}
+            {!type && <img />}
+        </>
     );
 };
 

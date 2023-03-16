@@ -26,6 +26,7 @@ import { NoResults } from '../shared/components/layout/MiToken';
 import styles from './Navigation.module.css';
 import History from '../pages/History';
 import HistoryTransactionDetail from '../pages/HistoryTransactionDetail';
+import HistoryTransactionDetailSimple from '../pages/HistoryTransactionDetailSimple';
 
 export interface RouteType {
     path: string;
@@ -177,7 +178,7 @@ const AppNavigation = () => {
                         <Route path="nfts/:tokenid" element={<NFTDetail />} />
                         <Route path="/createnft" element={<CreateNFT />} />
                         <Route path="/history" element={<History />}>
-                            <Route path=":transactionid" element={<HistoryTransactionDetail />} />
+                            <Route path=":transactionid" element={<HistoryTransactionDetailSimple />} />
                         </Route>
                         <Route path="/offline" element={<Offline />} />
                         <Route path="*" element={<Navigate replace to="/balance" />} />
