@@ -13,6 +13,7 @@ import {
     TextField,
     Button,
     Modal,
+    CircularProgress,
 } from '@mui/material';
 import GridLayout from '../layout/GridLayout';
 import { copy } from '../shared/functions';
@@ -52,7 +53,7 @@ const Receive: FC = () => {
     const [addressValidity, setAddressValid] = useState<false | any>(false);
     const [formAddress, setFormAddress] = useState('');
 
-    const [validBuild, setValidBuild] = useState(false);
+    const [validBuild, setValidBuild] = useState<boolean | undefined>(undefined);
     const [internalBrowserWarningModal, setInternalBrowserWarningModal] = useState(false);
     const isUserRunningWebView = useIsUserRunningWebView();
 
@@ -62,7 +63,12 @@ const Receive: FC = () => {
             const comparison = v.localeCompare(versionCheckAddressWasIntroduced);
             const isRunningSufficientVersion = comparison === 0 || comparison === 1;
 
-            if (isRunningSufficientVersion) setValidBuild(true);
+            if (isRunningSufficientVersion) {
+                setValidBuild(true);
+            }
+            if (!isRunningSufficientVersion) {
+                setValidBuild(false);
+            }
         });
     }, []);
 
@@ -228,7 +234,13 @@ const Receive: FC = () => {
                                     }
                                 />
                             )}
-                            {!validBuild && (
+
+                            {validBuild === undefined && (
+                                <Stack alignItems="center">
+                                    <CircularProgress size={32} />
+                                </Stack>
+                            )}
+                            {validBuild !== undefined && !validBuild && (
                                 <FormFieldWrapper
                                     help="Check validity of a Minima address"
                                     children={

@@ -1,4 +1,14 @@
-import { Button, Card, CardContent, CardHeader, CircularProgress, Stack } from '@mui/material';
+import {
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
+    Button,
+    Card,
+    CardContent,
+    CardHeader,
+    CircularProgress,
+    Stack,
+} from '@mui/material';
 import { useEffect, useState } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
@@ -11,6 +21,8 @@ import checkAddress from '../../minima/commands/checkAddress';
 import exportToCsv from '../../shared/utils/jsonToCsv';
 import DataObjectIcon from '@mui/icons-material/DataObject';
 import DisplayFullJson from '../components/DisplayFullJson';
+import { ExpandMoreOutlined } from '@mui/icons-material';
+import { NoResults } from '../../shared/components/layout/MiToken';
 
 const HistoryTransactionDetailSimple = () => {
     const location = useLocation();
@@ -137,140 +149,152 @@ const HistoryTransactionDetailSimple = () => {
                     </Card>
 
                     {viewTransaction.hasbody && viewTransaction.body.txn && (
-                        <Card variant="outlined">
-                            <CardHeader
-                                title={
-                                    <Stack>
-                                        <MiTransactionSummary>
-                                            <h6>Transaction</h6>
-                                            <ul>
-                                                <li>
-                                                    <p>Transaction ID:</p>
-                                                    <p>{viewTransaction.body.txn.transactionid}</p>
-                                                </li>
-                                            </ul>
-                                        </MiTransactionSummary>
-                                        <MiTransactionSummary>
-                                            <h6 id="input">Input(s)</h6>
+                        <Stack spacing={1}>
+                            <Accordion
+                                disabled={!viewTransaction.body.txn.inputs.length}
+                                sx={{ background: 'rgba(255, 255, 255, 0.5)', boxShadow: 'none' }}
+                            >
+                                <AccordionSummary expandIcon={<ExpandMoreOutlined />}>Inputs</AccordionSummary>
+                                <AccordionDetails>
+                                    <MiTransactionSummary>
+                                        <ul id="input">
+                                            {viewTransaction.body.txn.inputs.map((input, i) => (
+                                                <ul key={input.coinid} id="iterator">
+                                                    <li id="list-subheader">{i + 1}.</li>
+                                                    <li>
+                                                        <p>Coin ID</p>
+                                                        <p>{input.coinid}</p>
+                                                    </li>
+                                                    <li>
+                                                        <p>Token ID</p>
+                                                        <p>{input.tokenid}</p>
+                                                    </li>
+                                                    {input.token !== null && (
+                                                        <li>
+                                                            <p>Token Name</p>
+                                                            <p>{input.token.name.name}</p>
+                                                        </li>
+                                                    )}
+                                                    {input.tokenid === '0x00' && (
+                                                        <li>
+                                                            <p>Token Name</p>
+                                                            <p>Minima</p>
+                                                        </li>
+                                                    )}
+                                                    <li>
+                                                        <p>Address</p>
+                                                        <p>{input.address}</p>
+                                                    </li>
+                                                    <li>
+                                                        <p>Mini Address</p>
+                                                        <p>{input.miniaddress ? input.miniaddress : 'N/A'}</p>
+                                                    </li>
+                                                    <li>
+                                                        <p>Spent</p>
+                                                        <p>{input.spent ? 'Yes' : 'No'}</p>
+                                                    </li>
+                                                    <li>
+                                                        <p>Store State</p>
+                                                        <p>{input.storestate ? 'Yes' : 'No'}</p>
+                                                    </li>
+                                                    <li>
+                                                        <p>Amount</p>
+                                                        <p>{input.amount}</p>
+                                                    </li>
+                                                    {input.tokenamount && (
+                                                        <li>
+                                                            <p>Token Amount</p>
+                                                            <p>{input.tokenamount}</p>
+                                                        </li>
+                                                    )}
+                                                </ul>
+                                            ))}
+                                        </ul>
+                                    </MiTransactionSummary>
+                                </AccordionDetails>
+                            </Accordion>
+                            <Accordion
+                                disabled={!viewTransaction.body.txn.outputs.length}
+                                sx={{ background: 'rgba(255, 255, 255, 0.5)', boxShadow: 'none' }}
+                            >
+                                <AccordionSummary expandIcon={<ExpandMoreOutlined />}>Outputs</AccordionSummary>
+                                <AccordionDetails>
+                                    <MiTransactionSummary>
+                                        <ul id="input">
+                                            {viewTransaction.body.txn.outputs.map((input, i) => (
+                                                <ul key={input.coinid} id="iterator">
+                                                    <li id="list-subheader">{i + 1}.</li>
+                                                    <li>
+                                                        <p>Coin ID</p>
+                                                        <p>{input.coinid}</p>
+                                                    </li>
+                                                    <li>
+                                                        <p>Token ID</p>
+                                                        <p>{input.tokenid}</p>
+                                                    </li>
+                                                    {input.token !== null && (
+                                                        <li>
+                                                            <p>Token Name</p>
+                                                            <p>{input.token.name.name}</p>
+                                                        </li>
+                                                    )}
+                                                    {input.tokenid === '0x00' && (
+                                                        <li>
+                                                            <p>Token Name</p>
+                                                            <p>Minima</p>
+                                                        </li>
+                                                    )}
+                                                    <li>
+                                                        <p>Address</p>
+                                                        <p>{input.address}</p>
+                                                    </li>
+                                                    <li>
+                                                        <p>Mini Address</p>
+                                                        <p>{input.miniaddress ? input.miniaddress : 'N/A'}</p>
+                                                    </li>
+                                                    <li>
+                                                        <p>Spent</p>
+                                                        <p>{input.spent ? 'Yes' : 'No'}</p>
+                                                    </li>
+                                                    <li>
+                                                        <p>Store State</p>
+                                                        <p>{input.storestate ? 'Yes' : 'No'}</p>
+                                                    </li>
+                                                    <li>
+                                                        <p>Amount</p>
+                                                        <p>{input.amount}</p>
+                                                    </li>
+                                                    {input.tokenamount && (
+                                                        <li>
+                                                            <p>Token Amount</p>
+                                                            <p>{input.tokenamount}</p>
+                                                        </li>
+                                                    )}
+                                                </ul>
+                                            ))}
+                                        </ul>
+                                    </MiTransactionSummary>
+                                </AccordionDetails>
+                            </Accordion>
 
-                                            <ul id="input">
-                                                {viewTransaction.body.txn.inputs.map((input, i) => (
-                                                    <ul key={input.coinid} id="iterator">
-                                                        <li id="list-subheader">Input {i + 1}</li>
-                                                        <li>
-                                                            <p>Coin ID:</p>
-                                                            <p>{input.coinid}</p>
-                                                        </li>
-                                                        <li>
-                                                            <p>Token ID:</p>
-                                                            <p>{input.tokenid}</p>
-                                                        </li>
-                                                        {input.token !== null && (
-                                                            <li>
-                                                                <p>Token Name:</p>
-                                                                <p>{input.token.name.name}</p>
-                                                            </li>
-                                                        )}
-                                                        {input.tokenid === '0x00' && (
-                                                            <li>
-                                                                <p>Token Name:</p>
-                                                                <p>Minima</p>
-                                                            </li>
-                                                        )}
-                                                        <li>
-                                                            <p>Address:</p>
-                                                            <p>{input.address}</p>
-                                                        </li>
-                                                        <li>
-                                                            <p>Mini Address:</p>
-                                                            <p>{input.miniaddress ? input.miniaddress : 'N/A'}</p>
-                                                        </li>
-                                                        <li>
-                                                            <p>Spent:</p>
-                                                            <p>{input.spent ? 'Yes' : 'No'}</p>
-                                                        </li>
-                                                        <li>
-                                                            <p>Store State:</p>
-                                                            <p>{input.storestate ? 'Yes' : 'No'}</p>
-                                                        </li>
-                                                        <li>
-                                                            <p>Amount:</p>
-                                                            <p>{input.amount}</p>
-                                                        </li>
-                                                        {input.tokenamount && (
-                                                            <li>
-                                                                <p>Token Amount:</p>
-                                                                <p>{input.tokenamount}</p>
-                                                            </li>
-                                                        )}
-                                                    </ul>
-                                                ))}
-                                            </ul>
-                                        </MiTransactionSummary>
-                                        <MiTransactionSummary>
-                                            <h6 id="input">Output(s)</h6>
-
-                                            <ul id="input">
-                                                {viewTransaction.body.txn.outputs.map((input, i) => (
-                                                    <ul key={input.coinid} id="iterator">
-                                                        <li id="list-subheader">Output {i + 1}</li>
-                                                        <li>
-                                                            <p>Coin ID:</p>
-                                                            <p>{input.coinid}</p>
-                                                        </li>
-                                                        <li>
-                                                            <p>Token ID:</p>
-                                                            <p>{input.tokenid}</p>
-                                                        </li>
-                                                        {input.token !== null && (
-                                                            <li>
-                                                                <p>Token Name:</p>
-                                                                <p>{input.token.name.name}</p>
-                                                            </li>
-                                                        )}
-                                                        {input.tokenid === '0x00' && (
-                                                            <li>
-                                                                <p>Token Name:</p>
-                                                                <p>Minima</p>
-                                                            </li>
-                                                        )}
-                                                        <li>
-                                                            <p>Address:</p>
-                                                            <p>{input.address}</p>
-                                                        </li>
-                                                        <li>
-                                                            <p>Mini Address:</p>
-                                                            <p>{input.miniaddress ? input.miniaddress : 'N/A'}</p>
-                                                        </li>
-                                                        <li>
-                                                            <p>Spent:</p>
-                                                            <p>{input.spent ? 'Yes' : 'No'}</p>
-                                                        </li>
-                                                        <li>
-                                                            <p>Store State:</p>
-                                                            <p>{input.storestate ? 'Yes' : 'No'}</p>
-                                                        </li>
-                                                        <li>
-                                                            <p>Amount:</p>
-                                                            <p>{input.amount}</p>
-                                                        </li>
-                                                        {input.tokenamount && (
-                                                            <li>
-                                                                <p>Token Amount:</p>
-                                                                <p>{input.tokenamount}</p>
-                                                            </li>
-                                                        )}
-                                                    </ul>
-                                                ))}
-                                            </ul>
-                                        </MiTransactionSummary>
-                                        <MiTransactionSummary>
-                                            <h6 id="input">State Variable(s)</h6>
-
-                                            <ul id="input">
-                                                {viewTransaction.body.txn.state.map((input, i) => (
+                            <Accordion
+                                disabled={!viewTransaction.body.txn.state.length}
+                                sx={{ background: 'rgba(255, 255, 255, 0.5)', boxShadow: 'none' }}
+                            >
+                                <AccordionSummary expandIcon={<ExpandMoreOutlined />}>State Variables</AccordionSummary>
+                                <AccordionDetails>
+                                    <MiTransactionSummary>
+                                        <ul id="input">
+                                            {!viewTransaction.body.txn.state.length && (
+                                                <NoResults>
+                                                    <h6>None Available</h6>
+                                                    <p>this transaction doesn't hold any state variables.</p>
+                                                </NoResults>
+                                            )}
+                                            {!!viewTransaction.body.txn.state.length &&
+                                                viewTransaction.body.txn.state.map((input, i) => (
                                                     <ul key={input.port} id="iterator">
-                                                        <li id="list-subheader">State Variable {input.port}</li>
+                                                        <li id="list-subheader">{input.port}</li>
                                                         <li>
                                                             <p>Port:</p>
                                                             <p>{input.port}</p>
@@ -285,38 +309,11 @@ const HistoryTransactionDetailSimple = () => {
                                                         </li>
                                                     </ul>
                                                 ))}
-                                            </ul>
-                                        </MiTransactionSummary>
-                                    </Stack>
-                                }
-                            />
-                        </Card>
-                    )}
-
-                    {viewTransaction.hasbody && (
-                        <Card variant="outlined">
-                            <CardHeader
-                                title={
-                                    <Stack>
-                                        <MiTransactionSummary>
-                                            <h6>Known Unconfirmed Transactions</h6>
-                                            <ul>
-                                                <li>
-                                                    <p>Total:</p>
-                                                    <p>{viewTransaction.body.txnlist.length}</p>
-                                                </li>
-                                                {viewTransaction.body.txnlist.map((t, i) => (
-                                                    <li>
-                                                        <p>Transaction {i + 1}:</p>
-                                                        <p>t</p>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </MiTransactionSummary>
-                                    </Stack>
-                                }
-                            />
-                        </Card>
+                                        </ul>
+                                    </MiTransactionSummary>
+                                </AccordionDetails>
+                            </Accordion>
+                        </Stack>
                     )}
                 </Stack>
             )}

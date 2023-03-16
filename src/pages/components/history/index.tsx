@@ -71,41 +71,28 @@ export const MiTransactionHeader = styled('div')`
 `;
 
 export const MiTransactionSummary = styled('div')`
-    h6#input {
-        color: #317aff;
-        background-color: #16181c;
-        color: #fff;
-        padding: 8px;
-        border-radius: 4px;
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0;
-        margin-bottom: 0;
-        margin-top: 22px;
-    }
-
     ul#iterator > li#list-subheader {
         font-family: Manrope-regular;
         font-size: 1rem;
         color: #16181c;
-        border-bottom: 1px solid #317aff;
         padding-bottom: 8px;
         font-weight: 800;
     }
     ul#iterator {
         margin-bottom: 8px;
-        border-bottom: 1px solid #317aff;
+    }
+
+    ul#iterator > li {
+        background-color: #fff;
+    }
+    ul#iterator > li#list-subheader {
+        background-color: transparent;
+        padding: 0;
+        margin-bottom: 16px;
     }
     ul#iterator:last-of-type {
         margin-bottom: 0px;
         border-bottom: none;
-    }
-
-    ul#input {
-        border: 1px solid #d3d3d3;
-        border-top: none;
-        border-bottom-left-radius: 4px;
-        border-bottom-right-radius: 4px;
-        padding: 8px;
     }
 
     h6 {
@@ -147,7 +134,7 @@ export const MiTransactionSummary = styled('div')`
         padding: 16px;
         overflow: hidden;
         display: grid;
-        grid-template-columns: 1fr 3fr;
+        grid-template-columns: max-content 3fr;
         grid-gap: 8px;
         text-overflow: ellipsis;
     }
