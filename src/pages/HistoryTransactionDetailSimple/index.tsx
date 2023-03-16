@@ -8,15 +8,34 @@ import { TxPOW } from '../../types/minima';
 import { MiTransactionSummary } from '../components/history';
 import Decimal from 'decimal.js';
 import checkAddress from '../../minima/commands/checkAddress';
+import exportToCsv from '../../shared/utils/jsonToCsv';
 
 const HistoryTransactionDetailSimple = () => {
     const location = useLocation();
     const historyTransactions = useAppSelector(selectHistory);
     const [viewTransaction, setTransaction] = useState<undefined | TxPOW>(undefined);
     const [transactionType, setTransactionType] = useState<false | string>(false);
+    const [transactionSummary, setTransactionSummary] = useState<any>();
+
+    const handleExportingToCSV = (e: any) => {
+        exportToCsv(e, transactionSummary);
+    };
 
     useEffect(() => {
         setTransaction(historyTransactions.find((t) => t.txpowid === location.state.txpowid));
+
+        setTransactionSummary([
+            {
+                id: viewTransaction?.txpowid,
+                amount: viewTransaction?.body.txn.outputs[0].amount,
+                tokenid: viewTransaction?.body.txn.outputs[0].amount,
+                address: viewTransaction?.body.txn.outputs[0].miniaddress,
+                date: viewTransaction?.header.date,
+                type: transactionType,
+                block: viewTransaction?.header.block,
+                burn: viewTransaction?.burn,
+            },
+        ]);
     }, [historyTransactions]);
 
     useEffect(() => {
@@ -99,7 +118,7 @@ const HistoryTransactionDetailSimple = () => {
                                             </li>
                                         </ul>
                                     </MiTransactionSummary>
-                                    <Button color="inherit" variant="outlined">
+                                    <Button onClick={handleExportingToCSV} color="inherit" variant="outlined">
                                         Download Receipt
                                     </Button>
                                 </Stack>
