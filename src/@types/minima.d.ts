@@ -98,6 +98,7 @@ export interface Status {
     version: string;
     length: number;
     weight: number;
+    locked: boolean;
     minima: number;
     coins: number;
     data: string;

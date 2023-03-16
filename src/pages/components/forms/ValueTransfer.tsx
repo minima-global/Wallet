@@ -26,6 +26,7 @@ import { useModalHandler } from '../../../hooks/useModalHandler';
 import { useParams } from 'react-router-dom';
 import useIsUserRunningWebView from '../../../hooks/useIsUserRunningWebView';
 import FeatureUnavailable from '../FeatureUnavailable';
+import useIsVaultLocked from '../../../hooks/useIsVaultLocked';
 
 Decimal.set({ precision: MINIMA__DECIMAL_PRECISION });
 
@@ -42,6 +43,8 @@ const ValueTransfer = ({}: IProps) => {
     const wallet = useAppSelector(selectBalance);
     const [openQrScanner, setOpenQrScanner] = React.useState(false);
     const [errorScannedMinimaAddress, setErrorScannedMinimaAddress] = React.useState<false | string>(false);
+
+    const userLockedVault = useIsVaultLocked();
 
     const [internalBrowserWarningModal, setInternalBrowserWarningModal] = useState(false);
     const isUserRunningWebView = useIsUserRunningWebView();
@@ -244,40 +247,42 @@ const ValueTransfer = ({}: IProps) => {
                             />
                         }
                     />
-                    <FormFieldWrapper
-                        help="If your database (vault) is locked, use the password here otherwise ignore this"
-                        children={
-                            <TextField
-                                type="password"
-                                disabled={formik.isSubmitting}
-                                fullWidth
-                                id="password"
-                                name="password"
-                                placeholder="vault password"
-                                value={formik.values.password}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                error={formik.touched.password && Boolean(formik.errors.password)}
-                                helperText={formik.touched.password && formik.errors.password}
-                                FormHelperTextProps={{
-                                    className: styles['form-helper-text'],
-                                }}
-                                InputProps={{
-                                    autoComplete: 'vault-password',
-                                    style:
-                                        formik.touched.password && Boolean(formik.errors.password)
-                                            ? {
-                                                  borderBottomLeftRadius: 0,
-                                                  borderBottomRightRadius: 0,
-                                              }
-                                            : {
-                                                  borderBottomLeftRadius: 8,
-                                                  borderBottomRightRadius: 8,
-                                              },
-                                }}
-                            />
-                        }
-                    />
+                    {userLockedVault && (
+                        <FormFieldWrapper
+                            help="Your vault is locked.  Use your password so you can process this transaction."
+                            children={
+                                <TextField
+                                    type="password"
+                                    disabled={formik.isSubmitting}
+                                    fullWidth
+                                    id="password"
+                                    name="password"
+                                    placeholder="vault password"
+                                    value={formik.values.password}
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                    error={formik.touched.password && Boolean(formik.errors.password)}
+                                    helperText={formik.touched.password && formik.errors.password}
+                                    FormHelperTextProps={{
+                                        className: styles['form-helper-text'],
+                                    }}
+                                    InputProps={{
+                                        autoComplete: 'vault-password',
+                                        style:
+                                            formik.touched.password && Boolean(formik.errors.password)
+                                                ? {
+                                                      borderBottomLeftRadius: 0,
+                                                      borderBottomRightRadius: 0,
+                                                  }
+                                                : {
+                                                      borderBottomLeftRadius: 8,
+                                                      borderBottomRightRadius: 8,
+                                                  },
+                                    }}
+                                />
+                            }
+                        />
+                    )}
 
                     <Button
                         // type="submit"
