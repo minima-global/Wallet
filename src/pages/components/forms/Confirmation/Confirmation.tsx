@@ -16,7 +16,7 @@ const Confirmation = ({ title, children, closeFn, open, formik, modalTitle }: an
                         {modalTitle && modalTitle.length ? modalTitle : 'Confirmation'}
                     </Typography>
                 </Toolbar>
-                <Box component="div">
+                <Box component="div" sx={{ overflow: 'auto' }}>
                     <Stack direction="column" sx={{ padding: '8px 16px', overflow: 'auto', height: '100%' }}>
                         {children}
                         <ModalButtonWrapper
