@@ -21,7 +21,6 @@ import {
     MiTokenNameWrapper,
     NoResults,
 } from '../../../shared/components/layout/MiToken';
-import MiSearch from '../../../shared/components/layout/svgs/MiSearch';
 import { MINIMA__TOKEN_ID } from '../../../shared/constants';
 
 import { useNavigate } from 'react-router-dom';

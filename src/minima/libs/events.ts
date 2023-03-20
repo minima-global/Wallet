@@ -1,4 +1,4 @@
-import { Txpow } from '../../@types/minima';
+import { TxPOW } from '../../types/minima';
 
 ////////////// response interfaces //////////
 interface InitResponse {
@@ -11,7 +11,7 @@ interface MiningResponse {
 }
 interface MiningData {
     mining: boolean;
-    txpow: Txpow;
+    txpow: TxPOW;
 }
 
 interface NewBlockResponse {
@@ -25,7 +25,7 @@ interface MDSTimerResponse {
 }
 
 interface NewBlockData {
-    txpow: Txpow;
+    txpow: TxPOW;
 }
 
 interface MinimaLogResponse {
@@ -64,6 +64,15 @@ interface MaximaData {
     to: string;
 }
 
+interface NewMDSFail {
+    event: 'MDSFAIL';
+    data: {
+        command: string;
+        error: number;
+        params: string;
+    };
+}
+
 //////////////////////// empty functions before registration //////////////////////
 let whenNewBlock = (d: NewBlockData) => {
     // console.log("NEWBLOCK event ... please resgister custom callback", d);
@@ -78,25 +87,28 @@ let whenNewBalance = (d: NewBalanceData) => {
     // console.log("NEW BALANCE event ... please resgister custom callback", d);
 };
 let whenInit = () => {
-    // console.log('INIT event ... please resgister custom callback');
+    console.log('INIT event ... please register custom callback');
 };
 let whenMinimaLog = (d: MinimaLogData) => {
     // console.log("MINIMA LOG event ... please resgister custom callback", d);
 };
 
+let whenMDSTimer = (d: any) => {
+    // console.log("MINIMA MDS TIMER event ... please register custom callback", d);
+};
+
+let whenFail = (d: any) => {
+    // console.log("MINIMA MDS TIMER event ... please register custom callback", d);
+};
+
 ///////////////////////////
 
 const initializeMinima = () => {
-    if (process.env.NODE_ENV == 'development') {
-        // console.log(process.env.REACTAPP_MINIDAPPID)
-        MDS.DEBUG_HOST = '127.0.0.1';
-        MDS.DEBUG_PORT = 9003;
-        MDS.DEBUG_MINIDAPPID = process.env.REACT_APP_MINIDAPPID;
-    }
-    // MDS.DEBUG_HOST = '127.0.0.1';
+    /** to debug on dev server */
+    // MDS.DEBUG_HOST = "127.0.0.1";
     // MDS.DEBUG_PORT = 9003;
     // MDS.DEBUG_MINIDAPPID =
-    //     '0x2E588FD599805FA288372AAA287220E35E3EDD3594B6C4327DD515155BA23B731BE45F88F0208884B8D4A00324CFD3D856B76FC61E50804E978798B861797A9300C83983379AF516E1A957022CE1A616030FA031E2D1E9344F28F6C9D93CD54A89723FD8633B2F4816003681AB1B2D556604031C2C012C255171415A5726BA25';
+    //   "0x47AEF6D6B5DD843D9313925314C366DFB9200A34C8D647CB0738DFCAC75BFAAA524018C7A7A93577EF6F9AE1A94191125C49C4666A654E199F1CA7B508C763292989819B5538440C7496FA27D19E3505E3042E8BA8C4C642D2B0ADFB2A9F3B9AE9D8B141B7B506F6555778AA7793267713DE456FB77ECB90CCF1AB9C4B9413DF";
 
     MDS.init(
         (
@@ -109,6 +121,7 @@ const initializeMinima = () => {
                 | MaximaResponse
                 | MDSTimerResponse
                 | MaximaHosts
+                | NewMDSFail
         ) => {
             switch (nodeEvent.event) {
                 case 'inited':
@@ -118,6 +131,11 @@ const initializeMinima = () => {
                 case 'NEWBLOCK':
                     const newBlockData = nodeEvent.data;
                     whenNewBlock(newBlockData);
+                    break;
+                case 'MDSFAIL':
+                    const errorData = nodeEvent.data;
+
+                    whenFail(errorData);
                     break;
                 case 'MINING':
                     const miningData = nodeEvent.data;
@@ -129,6 +147,7 @@ const initializeMinima = () => {
                     break;
                 case 'NEWBALANCE':
                     const newBalanceData = nodeEvent.data;
+
                     whenNewBalance(newBalanceData);
                     break;
                 case 'MINIMALOG':
@@ -136,6 +155,8 @@ const initializeMinima = () => {
                     whenMinimaLog(minimaLogeData);
                     break;
                 case 'MDS_TIMER_10SECONDS':
+                    const mdstimerdata = nodeEvent.data;
+                    whenMDSTimer(mdstimerdata);
                     break;
                 case 'MAXIMAHOSTS':
                     break;
@@ -153,6 +174,10 @@ const initializeMinima = () => {
 
 function onNewBlock(callback: (data: NewBlockData) => void) {
     whenNewBlock = callback;
+}
+
+function onFail(callback: (data: NewMDSFail) => void) {
+    whenFail = callback;
 }
 
 function onMining(callback: (data: MiningData) => void) {
@@ -173,6 +198,10 @@ function onInit(callback: () => void) {
     initializeMinima();
 }
 
+function onMDSTimer(callback: (data: any) => void) {
+    whenMDSTimer = callback;
+}
+
 function onMinimaLog(callback: (data: MinimaLogData) => void) {
     whenMinimaLog = callback;
 }
@@ -184,4 +213,6 @@ export const events = {
     onNewBalance,
     onInit,
     onMinimaLog,
+    onMDSTimer,
+    onFail,
 };

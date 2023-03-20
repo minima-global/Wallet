@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, useCallback } from 'react';
+import { useEffect } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import theme from './theme/theme';
@@ -7,33 +7,20 @@ import AppNavigation from './navigation/AppNavigation';
 import Notifications from './layout/Notifications';
 
 import { useAppDispatch } from './minima/redux/hooks';
-import { callAndStoreBalance, initFavoritesTableAndUpdate, onNewBlock } from './minima/redux/slices/balanceSlice';
+import { callAndStoreBalance, onNewBlock } from './minima/redux/slices/balanceSlice';
 import { events } from './minima/libs/events';
 
 import { toggleNotification } from './minima/redux/slices/notificationSlice';
 import { updateMiningState } from './minima/redux/slices/miningSlice';
-import { createFavoritesTable } from './minima/libs/nft';
 import { callAndStoreTokens } from './minima/redux/slices/tokenSlice';
 
 export default function App() {
-    // const [myBalance, setMyBalance] = useState<AllBalance>({ prevBalance: [], newBalance: [] });
-    const [isMining, setIsMining] = useState<boolean>(false);
-
     const dispatch = useAppDispatch();
+
     useEffect(() => {
-        events.onInit(() => {
-            dispatch(callAndStoreBalance());
-            dispatch(callAndStoreTokens());
-
-            // init sql tables
-            createFavoritesTable();
-            dispatch(initFavoritesTableAndUpdate());
-        });
-
         events.onNewBlock(() => {
             dispatch(onNewBlock());
         });
-
         events.onNewBalance(() => {
             const balanceNotification = {
                 message: 'New balance update',

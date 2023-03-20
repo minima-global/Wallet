@@ -308,7 +308,7 @@ const MiSelect = ({ value, tokens, error, setFieldValue, resetForm, coinSplitMod
                                                                 variant="rounded"
                                                                 src={
                                                                     t.token.url && t.token.url.length
-                                                                        ? value.token.url
+                                                                        ? t.token.url
                                                                         : `https://robohash.org/${t.tokenid}`
                                                                 }
                                                             />
@@ -411,7 +411,7 @@ const MiSelect = ({ value, tokens, error, setFieldValue, resetForm, coinSplitMod
                                                                 variant="rounded"
                                                                 src={
                                                                     t.token.url && t.token.url.length
-                                                                        ? value.token.url
+                                                                        ? t.token.url
                                                                         : `https://robohash.org/${t.tokenid}`
                                                                 }
                                                             />
