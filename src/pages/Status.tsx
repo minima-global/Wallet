@@ -130,7 +130,7 @@ const Status = () => {
                                     </MiStatusItem>
                                     <MiStatusItem>
                                         <label>RPC</label>
-                                        <p>{status?.network.rpc ? 'activated' : 'deactivated'}</p>
+                                        <p>{status?.network.rpc.enabled ? 'activated' : 'deactivated'}</p>
                                     </MiStatusItem>
                                 </MiStatusWrapper>
                             </MiCard>

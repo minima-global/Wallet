@@ -201,9 +201,9 @@ const AppNavigation = () => {
                             <Route path="/nfts" element={<NFTs />}></Route>
                             <Route path="nfts/:tokenid" element={<NFTDetail />} />
                             <Route path="/createnft" element={<CreateNFT />} />
-                            <Route path="/history" element={<History />}>
+                            {/* <Route path="/history" element={<History />}>
                                 <Route path=":transactionid" element={<HistoryTransactionDetailSimple />} />
-                            </Route>
+                            </Route> */}
                             <Route path="/offline" element={<Offline />} />
                             <Route path="*" element={<Navigate replace to="/balance" />} />
                         </Routes>
