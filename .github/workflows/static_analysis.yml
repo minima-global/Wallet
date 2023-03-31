@@ -1,35 +1,34 @@
 name: Static Analysis
-on: pull_request:
-    branches: master
+on: workflow_dispatch
 
 jobs:
-  static_analysis:
-    name: Static Analysis
-    runs-on: ubuntu-latest
+    static_analysis:
+        name: Static Analysis
+        runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v3
+        steps:
+            - uses: actions/checkout@v3
 
-      - name: Get current time
-        uses: josStorer/get-current-time@v2
-        id: current-time
-        with:
-          format: YYYY-MM-DD HH:mm:ss
-          utcOffset: "0"
+            - name: Get current time
+              uses: josStorer/get-current-time@v2
+              id: current-time
+              with:
+                  format: YYYY-MM-DD HH:mm:ss
+                  utcOffset: '0'
 
-      - name: get-npm-version
-        id: package-version
-        uses: martinbeentjes/npm-get-version-action@main
+            - name: get-npm-version
+              id: package-version
+              uses: martinbeentjes/npm-get-version-action@main
 
-      - name: Zip production files
-        run: yarn run src:zip
+            - name: Zip production files
+              run: yarn run src:zip
 
-      - name: Veracode Upload And Scan
-        uses: veracode/veracode-uploadandscan-action@0.2.4
-        with:
-          appname: "Minima APK + MiniDAPPS"
-          version: Wallet v${{ steps.package-version.outputs.current-version}} - Github - ${{ steps.current-time.outputs.formattedTime }}
-          createprofile: false
-          filepath: "wallet-src-${{ steps.package-version.outputs.current-version}}.mds.zip"
-          vid: "${{ secrets.VERACODE_API_ID }}"
-          vkey: "${{ secrets.VERACODE_API_KEY }}"
+            - name: Veracode Upload And Scan
+              uses: veracode/veracode-uploadandscan-action@0.2.4
+              with:
+                  appname: 'Minima APK + MiniDAPPS'
+                  version: Wallet v${{ steps.package-version.outputs.current-version}} - Github - ${{ steps.current-time.outputs.formattedTime }}
+                  createprofile: false
+                  filepath: 'wallet-src-${{ steps.package-version.outputs.current-version}}.mds.zip'
+                  vid: '${{ secrets.VERACODE_API_ID }}'
+                  vkey: '${{ secrets.VERACODE_API_KEY }}'
