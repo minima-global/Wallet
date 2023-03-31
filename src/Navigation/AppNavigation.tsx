@@ -1,4 +1,4 @@
-import { IconButton, Grid, Drawer, Box, Typography, Stack } from '@mui/material';
+import { IconButton, Grid, Drawer, Box, Typography, Stack, CircularProgress } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { Routes, Route, useLocation, Navigate, useNavigate } from 'react-router-dom';
 
@@ -40,8 +40,7 @@ const AppNavigation = () => {
     const [open, setOpen] = useState(false);
     const [pageTitle, setPageTitle] = useState('Balance');
     const isMining = useAppSelector(selectMiningState);
-    const { nodeStatus, myMDSStatus } = useMinimaStatusCheck();
-    const wallet = useAppSelector(selectBalance);
+    const { nodeStatus, MDSStatus } = useMinimaStatusCheck();
 
     // Back Button
     const [onDetail, setOnDetail] = useState(false);
@@ -125,7 +124,12 @@ const AppNavigation = () => {
 
     return (
         <>
-            {(!myMDSStatus || !wallet.length) && (
+            {nodeStatus === 'offline' && MDSStatus === 'offline' && (
+                <Stack mt={2} alignItems="center" justifyContent="center">
+                    <CircularProgress size={16} />
+                </Stack>
+            )}
+            {nodeStatus === 'online' && MDSStatus === 'offline' && (
                 <Unavailable>
                     <Stack spacing={1} alignItems="center">
                         <img src="./assets/failed.svg" />
@@ -145,7 +149,7 @@ const AppNavigation = () => {
                     </Stack>
                 </Unavailable>
             )}
-            {!!myMDSStatus && !!wallet.length && (
+            {nodeStatus === 'online' && MDSStatus === 'online' && (
                 <Stack>
                     <header className={styles['navigation']}>
                         <Grid container>

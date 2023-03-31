@@ -7,26 +7,28 @@ import { createFavoritesTable } from '../minima/libs/nft';
 export const useMinimaStatusCheck = () => {
     const dispatch = useAppDispatch();
 
-    const [nodeStatus, setNodeStatus] = useState(false);
-    const [myMDSStatus, setMDSStatus] = useState(false);
+    const [nodeStatus, setNodeStatus] = useState<'offline' | 'online' | 'checking'>('checking');
+    const [MDSStatus, setMDSStatus] = useState<'offline' | 'online' | 'checking'>('checking');
 
     useEffect(() => {
         events.onInit(() => {
+            setNodeStatus('online');
+            setMDSStatus('online');
+
             dispatch(callAndStoreBalance());
             dispatch(callAndStoreTokens());
             createFavoritesTable();
             dispatch(initFavoritesTableAndUpdate());
-
-            setNodeStatus(true);
-            setMDSStatus(true);
         });
 
-        events.onFail(() => setMDSStatus(false));
-    }, []);
+        events.onFail(() => {
+            setMDSStatus('offline');
+        });
+    }, [dispatch]);
 
     return {
         nodeStatus,
-        myMDSStatus,
+        MDSStatus,
     };
 };
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 
-import { Avatar, Stack } from '@mui/material';
+import { Avatar, CircularProgress, Stack } from '@mui/material';
 import { MinimaToken } from '../../../@types/minima';
 import { useAppSelector } from '../../../minima/redux/hooks';
 import { selectBalance } from '../../../minima/redux/slices/balanceSlice';
@@ -64,7 +64,13 @@ const Wallet = () => {
                 {/* <MiSearch color="#fff" size={20} /> */}
             </MiSearchBarWithIcon>
             <Scroller>
-                {filterWallet.length === 0 ? (
+                {!walletTokens.length && (
+                    <Stack mt={2} alignItems="center" justifyContent="center">
+                        <CircularProgress size={16} />
+                        <p>Fetching your tokens...</p>
+                    </Stack>
+                )}
+                {walletTokens.length && filterWallet.length === 0 ? (
                     <NoResults>
                         <h6>No results</h6>
                         <p>Please try your search again.</p>

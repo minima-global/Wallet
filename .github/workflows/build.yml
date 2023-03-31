@@ -1,0 +1,35 @@
+name: Build
+on: workflow_dispatch
+
+jobs:
+    build:
+        name: Build
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v3
+
+            - name: Set Node.js 16.x
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 16.x
+                  cache: 'yarn'
+
+            - name: Install JS dependencies
+              run: yarn install
+
+            - name: Build production JS files
+              run: yarn run build
+
+            - name: Zip production files
+              run: yarn run zip
+
+            - name: get-npm-version
+              id: package-version
+              uses: martinbeentjes/npm-get-version-action@main
+
+            - name: Artifact build files
+              uses: actions/upload-artifact@v3
+              with:
+                  name: wallet-${{ steps.package-version.outputs.current-version}}.mds
+                  path: wallet-${{ steps.package-version.outputs.current-version}}.mds.zip

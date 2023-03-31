@@ -23,6 +23,10 @@ interface MDSTimerResponse {
     event: 'MDS_TIMER_10SECONDS';
     data: Object;
 }
+interface MDS60TimerResponse {
+    event: 'MDS_TIMER_60SECONDS';
+    data: Object;
+}
 
 interface NewBlockData {
     txpow: TxPOW;
@@ -105,10 +109,10 @@ let whenFail = (d: any) => {
 
 const initializeMinima = () => {
     /** to debug on dev server */
-    // MDS.DEBUG_HOST = "127.0.0.1";
+    // MDS.DEBUG_HOST = '127.0.0.1';
     // MDS.DEBUG_PORT = 9003;
     // MDS.DEBUG_MINIDAPPID =
-    //   "0x47AEF6D6B5DD843D9313925314C366DFB9200A34C8D647CB0738DFCAC75BFAAA524018C7A7A93577EF6F9AE1A94191125C49C4666A654E199F1CA7B508C763292989819B5538440C7496FA27D19E3505E3042E8BA8C4C642D2B0ADFB2A9F3B9AE9D8B141B7B506F6555778AA7793267713DE456FB77ECB90CCF1AB9C4B9413DF";
+    //     '0xAE7E77537B8CFDB8B66462D369C2A822FEA1139611EABDDE1F1B32AA751F2E40C926E525582C5549E52B2DAE643C7B23EA5F55B97C95A0105EB239296608D1E3AF27EB06F1F56465EFCAACEAAE9AA6CD4E4AFD2F6DECCAC1741DBD1ED1967DD71E0FD448A4D8E1F0EBB036469F83A63C436A0D7312CA97973087AC85ECE0B57E';
 
     MDS.init(
         (
@@ -120,6 +124,7 @@ const initializeMinima = () => {
                 | NewBalanceResponse
                 | MaximaResponse
                 | MDSTimerResponse
+                | MDS60TimerResponse
                 | MaximaHosts
                 | NewMDSFail
         ) => {
@@ -157,6 +162,8 @@ const initializeMinima = () => {
                 case 'MDS_TIMER_10SECONDS':
                     const mdstimerdata = nodeEvent.data;
                     whenMDSTimer(mdstimerdata);
+                    break;
+                case 'MDS_TIMER_60SECONDS':
                     break;
                 case 'MAXIMAHOSTS':
                     break;

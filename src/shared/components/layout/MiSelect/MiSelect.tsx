@@ -127,7 +127,7 @@ const DropDownList = styled('ul')`
 `;
 
 const Scroller = styled('div')`
-    overflow: scroll;
+    overflow: overlay;
     padding: 0 16px;
     flex-grow: 1;
 `;
@@ -334,11 +334,9 @@ const MiSelect = ({ value, tokens, error, setFieldValue, resetForm, coinSplitMod
                                                             )}
                                                             {t.tokenid !== '0x00' && (
                                                                 <MiTokenNameTicker>
-                                                                    {t.token.ticker && t.token.ticker.length ? (
-                                                                        t.token.ticker
-                                                                    ) : (
-                                                                        <MiSkeleton />
-                                                                    )}
+                                                                    {t.token.ticker &&
+                                                                        !!t.token.ticker.length &&
+                                                                        t.token.ticker}
                                                                 </MiTokenNameTicker>
                                                             )}
                                                             {!coinSplitMode && (
@@ -437,11 +435,9 @@ const MiSelect = ({ value, tokens, error, setFieldValue, resetForm, coinSplitMod
                                                             )}
                                                             {t.tokenid !== '0x00' && (
                                                                 <MiTokenNameTicker>
-                                                                    {t.token.ticker && t.token.ticker.length ? (
-                                                                        t.token.ticker
-                                                                    ) : (
-                                                                        <MiSkeleton />
-                                                                    )}
+                                                                    {t.token.ticker &&
+                                                                        !!t.token.ticker.length &&
+                                                                        t.token.ticker}
                                                                 </MiTokenNameTicker>
                                                             )}
                                                             {!coinSplitMode && (

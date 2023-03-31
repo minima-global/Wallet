@@ -95,6 +95,7 @@ const ValueTransfer = ({}: IProps) => {
             }
         },
         validationSchema: mySchema,
+        enableReinitialize: !!wallet,
     });
 
     const handleCloseQrScanner = () => {

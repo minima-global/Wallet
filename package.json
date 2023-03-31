@@ -1,6 +1,6 @@
 {
     "name": "wallet",
-    "version": "2.18.3",
+    "version": "2.19.0",
     "private": true,
     "scripts": {
         "start": "env-cmd -f .env.development react-scripts start",
@@ -9,7 +9,8 @@
         "build:dev": "env-cmd -f .env.development react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject",
-        "build-zip": "npm run build && rm minidapp/wallet-* && cd build && zip -r wallet-$npm_package_version.mds.zip . && mv wallet-$npm_package_version.mds.zip ../minidapp/"
+        "build-zip": "npm run build && rm minidapp/wallet-* && cd build && zip -r wallet-$npm_package_version.mds.zip . && mv wallet-$npm_package_version.mds.zip ../minidapp/",
+        "src:zip": "bash zip.sh"
     },
     "homepage": ".",
     "eslintConfig": {
