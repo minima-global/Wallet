@@ -13,15 +13,18 @@ const TransactionAmount = ({ address, amount }: IProps) => {
     const [type, setType] = useState<false | Transaction>(false);
 
     useEffect(() => {
-        checkAddress(address).then((res) => {
-            if (res.relevant) return setType('Receive');
-        });
+        checkAddress(address)
+            .then((res) => {
+                if (res.relevant) return setType('Receive');
+            })
+            .catch((err) => {});
+
         setType('Send');
     }, []);
 
     return (
         <p id="amount" className={styles[type === 'Receive' ? 'receive' : 'send']}>
-            {amount}
+            {amount === '0' ? 'Balance unchanged' : amount}
         </p>
     );
 };

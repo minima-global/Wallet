@@ -13,10 +13,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import { useAppSelector } from '../../minima/redux/hooks';
 import { selectHistory } from '../../minima/redux/slices/historySlice';
-import { TxPOW } from '../../types/minima';
 import { MiTransactionSummary } from '../components/history';
-import Decimal from 'decimal.js';
-import checkAddress from '../../minima/commands/checkAddress';
 import exportToCsv from '../../shared/utils/jsonToCsv';
 import DataObjectIcon from '@mui/icons-material/DataObject';
 import DisplayFullJson from '../components/DisplayFullJson';
@@ -25,11 +22,20 @@ import { NoResults } from '../../shared/components/layout/MiToken';
 import useIsUserRunningWebView from '../../hooks/useIsUserRunningWebView';
 import FeatureUnavailable from '../components/FeatureUnavailable';
 
+import * as types from '../../types/minima';
+import * as utils from '../../shared/utils';
+
 const HistoryTransactionDetailSimple = () => {
     const location = useLocation();
     const historyTransactions = useAppSelector(selectHistory);
-    const [viewTransaction, setTransaction] = useState<undefined | TxPOW>(undefined);
-    const [transactionType, setTransactionType] = useState<false | string>(false);
+    const [viewTransaction, setTransaction] = useState<{ detail: types.DetailsTxPOW; txpow: types.TxPOW } | undefined>(
+        undefined
+    );
+    const [transactionType, setTransactionType] = useState<'Receive' | 'Send' | 'Token Creation' | 'Custom' | false>(
+        false
+    );
+    const [transactionAmount, settransactionAmount] = useState('');
+
     const [transactionSummary, setTransactionSummary] = useState<any>();
     const [openAdvancedModal, setAdvanced] = useState(false);
     const navigate = useNavigate();
@@ -47,35 +53,38 @@ const HistoryTransactionDetailSimple = () => {
             navigate('/history');
         }
         if (location.state && 'txpowid' in location.state) {
-            setTransaction(historyTransactions.find((t) => t.txpowid === location.state.txpowid));
+            setTransaction(historyTransactions.get(location.state.txpowid));
         }
     }, [historyTransactions]);
 
     useEffect(() => {
         if (viewTransaction) {
-            if (viewTransaction?.body.txn.outputs[0].tokenid === '0xFF') {
-                return setTransactionType('Token');
+            const type = utils.getTxPOWDetailsType(viewTransaction.detail);
+            const difference = viewTransaction.detail.difference;
+            if (type === 'normal') {
+                const isOut = difference[Object.keys(difference)[0]].substring(0, 1) === '-';
+                setTransactionType(isOut ? 'Send' : 'Receive');
+                settransactionAmount(difference[Object.keys(difference)[0]]);
             }
-            checkAddress(viewTransaction?.body.txn.outputs[0].address).then((res) => {
-                if (res.relevant) {
-                    setTransactionType('Receive');
-                }
-
-                if (!res.relevant) {
-                    setTransactionType('Send');
-                }
-            });
+            if (type === 'custom') {
+                setTransactionType('Custom');
+                settransactionAmount('Custom Transaction');
+            }
+            if (type === 'tokencreate') {
+                setTransactionType('Token Creation');
+                settransactionAmount(difference[Object.keys(difference)[1]]);
+            }
 
             setTransactionSummary([
                 {
-                    id: viewTransaction?.txpowid,
-                    amount: viewTransaction?.body.txn.outputs[0].amount,
-                    tokenid: viewTransaction?.body.txn.outputs[0].amount,
-                    address: viewTransaction?.body.txn.outputs[0].miniaddress,
-                    date: viewTransaction?.header.date,
+                    id: viewTransaction?.txpow.txpowid,
+                    amount: transactionAmount,
+                    tokenid: viewTransaction?.txpow.body.txn.outputs[0].amount,
+                    address: viewTransaction?.txpow.body.txn.outputs[0].miniaddress,
+                    date: viewTransaction?.txpow.header.date,
                     type: transactionType,
-                    block: viewTransaction?.header.block,
-                    burn: viewTransaction?.burn,
+                    block: viewTransaction?.txpow.header.block,
+                    burn: viewTransaction?.txpow.burn,
                     json: JSON.stringify(viewTransaction),
                 },
             ]);
@@ -110,53 +119,68 @@ const HistoryTransactionDetailSimple = () => {
                                         <ul>
                                             <li>
                                                 <p>Transaction ID (TxPoW)</p>
-                                                <p>{viewTransaction.txpowid}</p>
+                                                <p>{viewTransaction.txpow.txpowid}</p>
                                             </li>
                                             <li>
                                                 <p>Amount</p>
-                                                <p>
-                                                    {viewTransaction.body.txn.outputs[0].tokenid === '0x00'
-                                                        ? viewTransaction.body.txn.outputs[0].amount
-                                                        : viewTransaction.body.txn.outputs[0].tokenamount}
-                                                </p>
+                                                {transactionAmount === '0' &&
+                                                    viewTransaction?.txpow.body.txn.outputs[0].tokenid === '0x00' && (
+                                                        <p>{viewTransaction.txpow.body.txn.outputs[0].amount}</p>
+                                                    )}
+                                                {transactionAmount === '0' &&
+                                                    viewTransaction?.txpow.body.txn.outputs[0].tokenid !== '0x00' && (
+                                                        <p>{viewTransaction.txpow.body.txn.outputs[0].tokenamount}</p>
+                                                    )}
+                                                {transactionAmount !== '0' && <p>{transactionAmount}</p>}
                                             </li>
                                             <li>
                                                 <p>Type</p>
 
-                                                {transactionType ? <p>{transactionType}</p> : <p>...</p>}
+                                                {!!transactionType && <p>{transactionType}</p>}
+                                                {!transactionType && <p>N/A</p>}
                                             </li>
                                             <li>
                                                 <p>Sent to</p>
 
-                                                <p>{viewTransaction.body.txn.outputs[0].miniaddress}</p>
+                                                <p>{viewTransaction.txpow.body.txn.outputs[0].miniaddress}</p>
                                             </li>
                                             <li>
                                                 <p>Token</p>
-
-                                                <p>
-                                                    {viewTransaction.body.txn.outputs[0].tokenid === '0x00'
-                                                        ? 'Minima'
-                                                        : viewTransaction.body.txn.outputs[0].token?.name.name}
-                                                </p>
+                                                {transactionType !== 'Custom' && (
+                                                    <p>
+                                                        {viewTransaction.txpow.body.txn.outputs[0].tokenid === '0x00'
+                                                            ? 'Minima'
+                                                            : viewTransaction.txpow.body.txn.outputs[0].token?.name
+                                                                  .name}
+                                                    </p>
+                                                )}
+                                                {transactionType === 'Custom' && <p>Custom Transaction</p>}
                                             </li>
                                             <li>
                                                 <p>Block:</p>
 
-                                                <p>{viewTransaction.header.block}</p>
+                                                <p>{viewTransaction.txpow.header.block}</p>
                                             </li>
                                             <li>
                                                 <p>Date:</p>
 
                                                 <p>
-                                                    {format(parseInt(viewTransaction.header.timemilli), 'hh:mm:s a')} •{' '}
-                                                    {format(parseInt(viewTransaction.header.timemilli), 'dd/MM/yy')}
+                                                    {format(
+                                                        parseInt(viewTransaction.txpow.header.timemilli),
+                                                        'hh:mm:s a'
+                                                    )}{' '}
+                                                    •{' '}
+                                                    {format(
+                                                        parseInt(viewTransaction.txpow.header.timemilli),
+                                                        'dd/MM/yy'
+                                                    )}
                                                 </p>
                                             </li>
 
                                             <li>
                                                 <p>Burn</p>
 
-                                                <p>{viewTransaction.burn}</p>
+                                                <p>{viewTransaction.txpow.burn}</p>
                                             </li>
                                         </ul>
                                     </MiTransactionSummary>
@@ -176,15 +200,15 @@ const HistoryTransactionDetailSimple = () => {
                         />
                     </Card>
 
-                    {viewTransaction.hasbody && viewTransaction.body.txn && (
+                    {viewTransaction.txpow.hasbody && viewTransaction.txpow.body.txn && (
                         <Stack spacing={1}>
-                            {!!viewTransaction.body.txn.inputs.length && (
+                            {!!viewTransaction.txpow.body.txn.inputs.length && (
                                 <Accordion sx={{ background: 'rgba(255, 255, 255, 0.5)', boxShadow: 'none' }}>
                                     <AccordionSummary expandIcon={<ExpandMoreOutlined />}>Inputs</AccordionSummary>
                                     <AccordionDetails>
                                         <MiTransactionSummary>
                                             <ul id="input">
-                                                {viewTransaction.body.txn.inputs.map((input, i) => (
+                                                {viewTransaction.txpow.body.txn.inputs.map((input, i) => (
                                                     <ul key={input.coinid} id="iterator">
                                                         <li id="list-subheader">{i + 1}.</li>
                                                         <li>
@@ -240,13 +264,13 @@ const HistoryTransactionDetailSimple = () => {
                                     </AccordionDetails>
                                 </Accordion>
                             )}
-                            {!!viewTransaction.body.txn.outputs.length && (
+                            {!!viewTransaction.txpow.body.txn.outputs.length && (
                                 <Accordion sx={{ background: 'rgba(255, 255, 255, 0.5)', boxShadow: 'none' }}>
                                     <AccordionSummary expandIcon={<ExpandMoreOutlined />}>Outputs</AccordionSummary>
                                     <AccordionDetails>
                                         <MiTransactionSummary>
                                             <ul id="input">
-                                                {viewTransaction.body.txn.outputs.map((input, i) => (
+                                                {viewTransaction.txpow.body.txn.outputs.map((input, i) => (
                                                     <ul key={input.coinid} id="iterator">
                                                         <li id="list-subheader">{i + 1}.</li>
                                                         <li>
@@ -302,7 +326,7 @@ const HistoryTransactionDetailSimple = () => {
                                     </AccordionDetails>
                                 </Accordion>
                             )}
-                            {!!viewTransaction.body.txn.state.length && (
+                            {!!viewTransaction.txpow.body.txn.state.length && (
                                 <Accordion sx={{ background: 'rgba(255, 255, 255, 0.5)', boxShadow: 'none' }}>
                                     <AccordionSummary expandIcon={<ExpandMoreOutlined />}>
                                         State Variables
@@ -310,14 +334,14 @@ const HistoryTransactionDetailSimple = () => {
                                     <AccordionDetails>
                                         <MiTransactionSummary>
                                             <ul id="input">
-                                                {!viewTransaction.body.txn.state.length && (
+                                                {!viewTransaction.txpow.body.txn.state.length && (
                                                     <NoResults>
                                                         <h6>None Available</h6>
                                                         <p>this transaction doesn't hold any state variables.</p>
                                                     </NoResults>
                                                 )}
-                                                {!!viewTransaction.body.txn.state.length &&
-                                                    viewTransaction.body.txn.state.map((input, i) => (
+                                                {!!viewTransaction.txpow.body.txn.state.length &&
+                                                    viewTransaction.txpow.body.txn.state.map((input, i) => (
                                                         <ul key={input.port} id="iterator">
                                                             <li id="list-subheader">{input.port}</li>
                                                             <li>
@@ -351,6 +375,7 @@ const HistoryTransactionDetailSimple = () => {
             )}
         </>
     );
+    return <div>hello</div>;
 };
 
 export default HistoryTransactionDetailSimple;

@@ -1,17 +1,18 @@
+import { DetailsTxPOW } from './../../../types/minima/index';
 import * as types from '../../../types/minima';
 import { format } from 'date-fns';
 
-export const extractByMonthAndDay = (txpows: types.TxPOW[]): Map<any, any> => {
+export const extractByMonthAndDay = (txpows: { detail: types.DetailsTxPOW; txpow: types.TxPOW }[]): Map<any, any> => {
     const map = new Map();
-    for (const txpow of txpows) {
-        const date = format(parseInt(txpow.header.timemilli), 'MMMM do yyyy');
+    for (const fullTxpow of txpows) {
+        const date = format(parseInt(fullTxpow.txpow.header.timemilli), 'MMMM do yyyy');
         const alreadyExists = map.has(date);
         if (alreadyExists) {
             const valueArr = map.get(date);
-            valueArr.push(txpow);
+            valueArr.push(fullTxpow);
         }
         if (!alreadyExists) {
-            map.set(date, [txpow]);
+            map.set(date, [fullTxpow]);
         }
     }
     return map;

@@ -1,6 +1,6 @@
 import { TxPOW } from '../../types/minima';
 
-////////////// response interfaces //////////
+// Minima Events
 interface InitResponse {
     event: 'inited';
 }
@@ -105,14 +105,12 @@ let whenFail = (d: any) => {
     // console.log("MINIMA MDS TIMER event ... please register custom callback", d);
 };
 
-///////////////////////////
-
 const initializeMinima = () => {
     /** to debug on dev server */
-    // MDS.DEBUG_HOST = '127.0.0.1';
-    // MDS.DEBUG_PORT = 9003;
-    // MDS.DEBUG_MINIDAPPID =
-    //     '0xAE7E77537B8CFDB8B66462D369C2A822FEA1139611EABDDE1F1B32AA751F2E40C926E525582C5549E52B2DAE643C7B23EA5F55B97C95A0105EB239296608D1E3AF27EB06F1F56465EFCAACEAAE9AA6CD4E4AFD2F6DECCAC1741DBD1ED1967DD71E0FD448A4D8E1F0EBB036469F83A63C436A0D7312CA97973087AC85ECE0B57E';
+    MDS.DEBUG_HOST = '127.0.0.1';
+    MDS.DEBUG_PORT = 9003;
+    MDS.DEBUG_MINIDAPPID =
+        '0xA268CB13191BFF9073D8E6F461150AE85EB2100220C390B619FD9ECFC5F2DD83ACA1D1C9C4B5FEC7EDBD19C47A77E2449583F92627E577419B9D930DC2BC374610A507A9A9A9C160E6A4C2DC77BB776CB81BFF9F8163713B2E002FCADEF408F4258AE27B9EC730C3DE9855776A11E5F74B80663926B3123DD1FCA716A4456783';
 
     MDS.init(
         (
@@ -173,9 +171,6 @@ const initializeMinima = () => {
         }
     );
 };
-
-// Do registration
-// initializeMinima();
 
 ///////////////////////// application registers custom callbacks ///////////////////////
 

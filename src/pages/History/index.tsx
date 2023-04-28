@@ -3,24 +3,17 @@ import { Card, CardHeader, Button, CardContent, Pagination } from '@mui/material
 import { Stack } from '@mui/system';
 import { Outlet, useMatch, useNavigate } from 'react-router-dom';
 import GridLayout from '../../layout/GridLayout';
-import {
-    MiSearchBarWithIcon,
-    MiSearchBar,
-    NoResults,
-    MiTokenAmount,
-    MiTokenNameAmountWrapper,
-    MiTimeWrapper,
-} from '../../shared/components/layout/MiToken';
+import { MiSearchBarWithIcon, MiSearchBar, NoResults, MiTimeWrapper } from '../../shared/components/layout/MiToken';
 
 import { useAppDispatch, useAppSelector } from '../../minima/redux/hooks';
-import { callAndStoreHistory, selectHistory } from '../../minima/redux/slices/historySlice';
+import { callAndStoreHistory, callAndStoreHistoryDetails, selectHistory } from '../../minima/redux/slices/historySlice';
 import { MiTransactionList } from '../components/history';
 import { format } from 'date-fns';
 import { containsText } from '../../shared/functions';
 import { extractByMonthAndDay } from '../../shared/utils/splitByMonth';
-import { TxPOW } from '../../types/minima';
-import TransactionImage from '../components/history/TransactionImage';
-import TransactionAmount from '../components/history/TransactionAmount';
+
+import * as types from '../../types/minima';
+import TransactionHistoryType from '../../shared/components/TransactionHistoryType';
 
 const History = () => {
     const dispatch = useAppDispatch();
@@ -28,7 +21,8 @@ const History = () => {
     const navigate = useNavigate();
     const historyTxpows = useAppSelector(selectHistory);
     const isViewingTransactionDetail = useMatch('/history/:transactionid');
-    const [splitByMonths, setSplitByMonth] = useState<Map<string, TxPOW[]>>();
+    const [splitByMonths, setSplitByMonth] =
+        useState<Map<string, { detail: types.DetailsTxPOW; txpow: types.TxPOW }[]>>();
 
     const [loading, setLoading] = useState(true);
 
@@ -40,71 +34,62 @@ const History = () => {
 
     useEffect(() => {
         dispatch(callAndStoreHistory());
+        dispatch(callAndStoreHistoryDetails());
     }, []);
 
     useEffect(() => {
+        // console.log(historyTxpows);
+        const extractTxPOWS = Array.from(historyTxpows.values());
+        // console.log('extracted txpows', extractTxPOWS);
+
         const split = extractByMonthAndDay(
-            historyTxpows
+            extractTxPOWS
                 .slice()
-                .sort((a, b) => b.header.timemilli.localeCompare(a.header.timemilli))
+                .sort((a, b) => b.txpow.header.timemilli.localeCompare(a.txpow.header.timemilli))
                 .slice((paginationPageNumber - 1) * paginationPageSize, paginationPageSize * paginationPageNumber)
         );
-
+        // console.log(split);
         setTimeout(() => setLoading(false), 1000);
         setSplitByMonth(split);
     }, [historyTxpows, paginationPageNumber]);
 
-    const createElements = (arr: Map<string, TxPOW[]>) => {
+    const createElements = (arr: Map<string, { detail: types.DetailsTxPOW; txpow: types.TxPOW }[]>) => {
         let elements = [];
 
-        for (let [key, value] of arr) {
+        for (const [key, value] of arr) {
             const txpow = arr.get(key);
-            const day = txpow && format(parseInt(txpow[0].header.timemilli), 'iiii do');
+            const day = txpow && format(parseInt(txpow[0].txpow.header.timemilli), 'iiii do');
 
             elements.push(
                 <React.Fragment key={key}>
                     <div className="month">{day}</div>
-                    {value.map((t: any) => (
+                    {value.map((t: { detail: types.DetailsTxPOW; txpow: types.TxPOW }) => (
                         <li
-                            key={t.txpowid + 'key'}
+                            key={t.txpow.txpowid + 'key'}
                             onClick={() =>
-                                navigate(t.txpowid, {
+                                navigate(t.txpow.txpowid, {
                                     state: {
-                                        txpowid: t.txpowid,
+                                        txpowid: t.txpow.txpowid,
                                     },
                                 })
                             }
                         >
                             <Stack flexDirection="row" gap={2} sx={{ minWidth: 0 }} alignItems="center">
-                                <TransactionImage
-                                    tokenid={t.body.txn.outputs[0].tokenid}
-                                    address={t.body.txn.outputs[0].address}
-                                />
-
-                                <MiTokenNameAmountWrapper>
-                                    <p>
-                                        {t.body.txn.outputs[0].tokenid === '0x00'
+                                <TransactionHistoryType
+                                    tokenName={
+                                        t.txpow.body.txn.outputs[0].tokenid === '0x00'
                                             ? 'Minima'
-                                            : t.body.txn.outputs[0].token.name.name}
-                                    </p>
-
-                                    {t.body.txn.outputs[0].tokenid === '0x00' && (
-                                        <TransactionAmount
-                                            address={t.body.txn.outputs[0].address}
-                                            amount={t.body.txn.outputs[0].amount}
-                                        />
-                                    )}
-                                    {t.body.txn.outputs[0].tokenid !== '0x00' && (
-                                        <TransactionAmount
-                                            address={t.body.txn.outputs[0].address}
-                                            amount={t.body.txn.outputs[0].tokenamount}
-                                        />
-                                    )}
-                                </MiTokenNameAmountWrapper>
+                                            : t.txpow.body.txn.outputs[0].token
+                                            ? t.txpow.body.txn.outputs[0].token.name.name
+                                            : 'N/A'
+                                    }
+                                    amount={t.detail}
+                                    address={t.txpow.body.txn.outputs[0].address}
+                                    tokenid={t.txpow.body.txn.outputs[0].tokenid}
+                                />
                             </Stack>
-
                             <MiTimeWrapper>
-                                <p id="time">{format(parseInt(t.header.timemilli), 'hh:mm aa')}</p>
+                                <p id="time">{format(parseInt(t.txpow.header.timemilli), 'hh:mm aa')}</p>
                             </MiTimeWrapper>
                         </li>
                     ))}
@@ -141,21 +126,19 @@ const History = () => {
                                             <MiTransactionList>
                                                 {!filterText.length && splitByMonths && createElements(splitByMonths)}
 
-                                                {!filterText.length && !historyTxpows.length && (
+                                                {!filterText.length && !historyTxpows.size && (
                                                     <NoResults>
                                                         <h6>No transactions in your history yet</h6>
                                                     </NoResults>
                                                 )}
 
-                                                {!filterText.length && historyTxpows.length > paginationPageSize && (
+                                                {!filterText.length && historyTxpows.size > paginationPageSize && (
                                                     <Stack mt={5} alignItems="center">
                                                         <Pagination
                                                             shape="rounded"
                                                             variant="outlined"
                                                             size="small"
-                                                            count={Math.floor(
-                                                                historyTxpows.length / paginationPageSize
-                                                            )}
+                                                            count={Math.floor(historyTxpows.size / paginationPageSize)}
                                                             page={paginationPageNumber}
                                                             onChange={handlePaginationChange}
                                                         />
@@ -163,16 +146,16 @@ const History = () => {
                                                 )}
 
                                                 {!!filterText.length &&
-                                                    historyTxpows
-                                                        .filter((t) => containsText(t.txpowid, filterText))
+                                                    [...historyTxpows.values()]
+                                                        .filter((t) => containsText(t.txpow.txpowid, filterText))
                                                         .map((t) => (
-                                                            <React.Fragment key={t.txpowid}>
+                                                            <React.Fragment key={t.txpow.txpowid}>
                                                                 <li
-                                                                    key={t.txpowid + 'key'}
+                                                                    key={t.txpow.txpowid + 'key'}
                                                                     onClick={() =>
-                                                                        navigate(t.txpowid, {
+                                                                        navigate(t.txpow.txpowid, {
                                                                             state: {
-                                                                                txpowid: t.txpowid,
+                                                                                txpowid: t.txpow.txpowid,
                                                                             },
                                                                         })
                                                                     }
@@ -183,52 +166,30 @@ const History = () => {
                                                                         sx={{ minWidth: 0 }}
                                                                         alignItems="center"
                                                                     >
-                                                                        <TransactionImage
-                                                                            tokenid={t.body.txn.outputs[0].tokenid}
-                                                                            address={t.body.txn.outputs[0].address}
-                                                                        />
-
-                                                                        <MiTokenNameAmountWrapper>
-                                                                            <p>
-                                                                                {t.body.txn.outputs[0].tokenid ===
+                                                                        <TransactionHistoryType
+                                                                            tokenName={
+                                                                                t.txpow.body.txn.outputs[0].tokenid ===
                                                                                 '0x00'
                                                                                     ? 'Minima'
-                                                                                    : t.body.txn.outputs[0].token
-                                                                                    ? t.body.txn.outputs[0].token.name
-                                                                                          .name
-                                                                                    : 'N/A'}
-                                                                            </p>
-
-                                                                            {t.body.txn.outputs[0].tokenid ===
-                                                                                '0x00' && (
-                                                                                <TransactionAmount
-                                                                                    address={
-                                                                                        t.body.txn.outputs[0].address
-                                                                                    }
-                                                                                    amount={
-                                                                                        t.body.txn.outputs[0].amount
-                                                                                    }
-                                                                                />
-                                                                            )}
-                                                                            {t.body.txn.outputs[0].tokenid !==
-                                                                                '0x00' && (
-                                                                                <TransactionAmount
-                                                                                    address={
-                                                                                        t.body.txn.outputs[0].address
-                                                                                    }
-                                                                                    amount={
-                                                                                        t.body.txn.outputs[0]
-                                                                                            .tokenamount
-                                                                                    }
-                                                                                />
-                                                                            )}
-                                                                        </MiTokenNameAmountWrapper>
+                                                                                    : t.txpow.body.txn.outputs[0].token
+                                                                                    ? t.txpow.body.txn.outputs[0].token
+                                                                                          .name.name
+                                                                                    : 'N/A'
+                                                                            }
+                                                                            amount={t.detail}
+                                                                            address={
+                                                                                t.txpow.body.txn.outputs[0].address
+                                                                            }
+                                                                            tokenid={
+                                                                                t.txpow.body.txn.outputs[0].tokenid
+                                                                            }
+                                                                        />
                                                                     </Stack>
 
                                                                     <MiTimeWrapper>
                                                                         <p id="time">
                                                                             {format(
-                                                                                parseInt(t.header.timemilli),
+                                                                                parseInt(t.txpow.header.timemilli),
                                                                                 'hh:mm aa'
                                                                             )}
                                                                         </p>
@@ -238,8 +199,9 @@ const History = () => {
                                                         ))}
 
                                                 {!!filterText.length &&
-                                                    historyTxpows.filter((t) => containsText(t.txpowid, filterText))
-                                                        .length === 0 && (
+                                                    [...historyTxpows.values()].filter((t) =>
+                                                        containsText(t.txpow.txpowid, filterText)
+                                                    ).length === 0 && (
                                                         <NoResults>
                                                             <h6>No results</h6>
                                                             <p>Please try your search again.</p>
@@ -258,6 +220,8 @@ const History = () => {
             }
         />
     );
+
+    return <div>hello</div>;
 };
 
 export default History;

@@ -25,7 +25,6 @@ import { NoResults } from '../shared/components/layout/MiToken';
 
 import styles from './Navigation.module.css';
 import History from '../pages/History';
-import HistoryTransactionDetail from '../pages/HistoryTransactionDetail';
 import HistoryTransactionDetailSimple from '../pages/HistoryTransactionDetailSimple';
 import useMinimaStatusCheck from '../hooks/useMinimaStatusCheck';
 import Unavailable from '../pages/components/Unavailable';
@@ -205,9 +204,9 @@ const AppNavigation = () => {
                             <Route path="/nfts" element={<NFTs />}></Route>
                             <Route path="nfts/:tokenid" element={<NFTDetail />} />
                             <Route path="/createnft" element={<CreateNFT />} />
-                            {/* <Route path="/history" element={<History />}>
+                            <Route path="/history" element={<History />}>
                                 <Route path=":transactionid" element={<HistoryTransactionDetailSimple />} />
-                            </Route> */}
+                            </Route>
                             <Route path="/offline" element={<Offline />} />
                             <Route path="*" element={<Navigate replace to="/balance" />} />
                         </Routes>

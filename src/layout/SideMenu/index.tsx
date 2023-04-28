@@ -71,11 +71,11 @@ const SideMenu = ({ handleDrawerClose, handleDrawerOpen }: IProps) => {
             name: 'NFTs',
             onClick: () => navigate('/nfts'),
         },
-        // {
-        //     pathname: '/history',
-        //     name: 'Transaction History',
-        //     onClick: () => navigate('/history'),
-        // },
+        {
+            pathname: '/history',
+            name: 'Transaction History',
+            onClick: () => navigate('/history'),
+        },
     ];
 
     return (

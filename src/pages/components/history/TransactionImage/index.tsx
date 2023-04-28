@@ -4,39 +4,22 @@ import checkAddress from '../../../../minima/commands/checkAddress';
 import styles from './TransactionImage.module.css';
 
 interface IProps {
-    address: string;
-    tokenid: string;
+    type: false | 'in' | 'out' | 'token' | 'custom';
 }
 
-type Transaction = 'Receive' | 'Send' | 'Token';
-const TransactionImage = ({ address, tokenid }: IProps) => {
-    const [type, setType] = useState<false | Transaction>(false);
-
-    useEffect(() => {
-        if (tokenid === '0xFF') {
-            return setType('Token');
-        }
-        checkAddress(address).then((res) => {
-            if (res.relevant) {
-                setType('Receive');
-            }
-
-            if (!res.relevant) {
-                setType('Send');
-            }
-        });
-    }, []);
-
+const TransactionImage = ({ type }: IProps) => {
     return (
         <>
             {type && (
                 <img
                     src={
-                        type === 'Receive'
+                        type === 'in'
                             ? './assets/in.svg'
-                            : type === 'Send'
+                            : type === 'out'
                             ? './assets/out.svg'
-                            : './assets/create.svg'
+                            : type === 'token'
+                            ? './assets/create.svg'
+                            : './assets/custom.svg'
                     }
                     className={styles['img']}
                 />

@@ -253,6 +253,11 @@ export interface TxPOW {
     body: BodyTxPOW;
     burn: number;
 }
+export interface DetailsTxPOW {
+    inputs?: { [key: string]: string };
+    outputs: { [key: string]: string };
+    difference: { [key: string]: string };
+}
 
 export interface MinimaToken {
     readonly token: any;
