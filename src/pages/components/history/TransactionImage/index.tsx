@@ -1,6 +1,3 @@
-import { useState, useEffect } from 'react';
-import checkAddress from '../../../../minima/commands/checkAddress';
-
 import styles from './TransactionImage.module.css';
 
 interface IProps {
@@ -24,7 +21,6 @@ const TransactionImage = ({ type }: IProps) => {
                     className={styles['img']}
                 />
             )}
-            {!type && <img />}
         </>
     );
 };

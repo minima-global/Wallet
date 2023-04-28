@@ -11,14 +11,7 @@ const DisplayFullJson = ({ json, open, closeModal }: IProps) => {
     return (
         <Modal open={open} className={styles['modal']}>
             <Stack className={styles['modal-wrapper']}>
-                <Stack
-                    sx={{ width: '100%' }}
-                    mb={2}
-                    gap={0.5}
-                    flexDirection="row"
-                    alignItems="center"
-                    justifyContent="space-between"
-                >
+                <Stack sx={{ width: '100%' }} flexDirection="row" alignItems="center" justifyContent="space-between">
                     <h6>Advanced Transaction View</h6>
                     <CloseOutlined onClick={closeModal} />
                 </Stack>

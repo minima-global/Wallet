@@ -16,6 +16,7 @@ export const MiTransactionList = styled('ul')`
         padding: 16px 16px;
         max-height: 78px;
         margin-bottom: 16px;
+        min-height: 74px;
     }
     li:last-child {
         margin-bottom: 0;
@@ -32,6 +33,7 @@ export const MiTransactionList = styled('ul')`
         font-family: Manrope-regular;
         font-size: 0.875rem;
         white-space: nowrap;
+        line-height: 21px !important;
     }
 
     > div.month {

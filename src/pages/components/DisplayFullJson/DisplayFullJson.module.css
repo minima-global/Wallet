@@ -2,12 +2,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-
+  margin-left: 240px;
 }
 .modal h6 {
   margin: 0;
   font-family: Manrope-regular;
   font-size: 1rem;
+  margin: 0;
+  padding: 0;
 }
 .modal-wrapper pre {
   background-color: #16181c;
@@ -15,7 +17,6 @@
   overflow-y: scroll;
   max-height: 50vh;
   max-width: 100%;
-
   display: grid;
   grid-template-columns: minmax(0, max-content);
 }
@@ -42,4 +43,10 @@
 }
 .modal-wrapper svg{
   cursor: pointer;
+}
+
+@media screen and (max-width: 599px) {
+  .modal {
+    margin-left: 0;
+  }
 }

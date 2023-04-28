@@ -16,9 +16,10 @@ const TransactionHistoryType = ({ tokenName, amount, address }: IProps) => {
     const [imageType, setImageType] = useState<'in' | 'out' | 'token' | 'custom' | false>(false);
 
     useEffect(() => {
-        setType(utils.getTxPOWDetailsType(amount));
+        const type = utils.getTxPOWDetailsType(amount);
+        setType(type);
 
-        if (transactionType === 'normal') {
+        if (type === 'normal') {
             if (amount.difference[Object.keys(amount.difference)[0]].substring(0, 1) === '-') {
                 setImageType('out');
             }
@@ -26,10 +27,10 @@ const TransactionHistoryType = ({ tokenName, amount, address }: IProps) => {
                 setImageType('in');
             }
         }
-        if (transactionType === 'tokencreate') {
+        if (type === 'tokencreate') {
             setImageType('token');
         }
-        if (transactionType === 'custom') {
+        if (type === 'custom') {
             setImageType('custom');
         }
     }, []);
