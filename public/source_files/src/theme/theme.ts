@@ -1,0 +1,267 @@
+import uiBackground from '../assets/images/LM.jpeg';
+import { createTheme } from '@mui/material/styles';
+
+let theme = createTheme({
+    palette: {
+        divider: '#EDEDED',
+        primary: {
+            main: '#317aff',
+        },
+        secondary: {
+            main: '#ff512f',
+        },
+        background: {
+            default: 'rgba(22, 24, 28, 0.05)',
+        },
+        text: {
+            primary: '#16181C',
+        },
+        warning: {
+            main: '#fdefbe',
+        },
+        success: {
+            main: '#4E8B7C',
+        },
+        neutral: {
+            main: '#64748B',
+            contrastText: '#fff',
+        },
+        error: {
+            main: 'rgb(211, 47, 47)',
+        },
+        darkBlack: { main: '#0D0E10' },
+        menu: { main: 'rgba(255, 255, 255, 0.95)' },
+    },
+    typography: {
+        fontFamily: ['Manrope-regular'].join(','),
+        h4: {
+            lineHeight: '27px',
+            letterSpacing: '0.02em',
+        },
+        h2: {
+            lineHeight: 1,
+        },
+        caption: {
+            fontFamily: 'Manrope-semibold',
+            color: 'rgb(118, 118, 130)',
+        },
+        subtitle1: {
+            fontSize: '0.9em',
+            fontFamily: 'Manrope-semibold',
+            color: '#363A3F',
+        },
+        body2: {
+            fontSize: '1em',
+            fontFamily: 'Manrope-semibold',
+            color: '#363A3F!important',
+        },
+    },
+    shape: {
+        borderRadius: 8,
+    },
+
+    spacing: 8,
+
+    components: {
+        MuiCssBaseline: {
+            styleOverrides: `
+            body {
+                background-image: url(${uiBackground});
+                background-size: cover;
+            }
+          `,
+        },
+    },
+});
+
+theme = createTheme(theme, {
+    components: {
+        MuiSelect: {
+            styleOverrides: {
+                root: {
+                    paddingTop: 14,
+                    paddingBottom: 14,
+                    backgroundColor: '#fff',
+                },
+            },
+        },
+        MuiFormHelperText: {
+            styleOverrides: {
+                root: {
+                    backgroundColor: 'rgb(254, 242, 242)',
+                    color: 'rgb(153, 27, 27)!important',
+                    padding: 8,
+                    margin: 0,
+                    fontSize: '0.875rem',
+                    fontFamily: 'Manrope-regular',
+                    letterSpacing: '0.00938em',
+                    borderTopLeftRadius: 0,
+                    borderTopRightRadius: 0,
+                    marginTop: 4,
+                    borderRadius: 4,
+                },
+                '&$error': {
+                    color: 'black',
+                },
+            },
+            root: {
+                '&$error': {
+                    color: 'black',
+                },
+            },
+        },
+        MuiButton: {
+            styleOverrides: {
+                // Name of the slot
+                root: {
+                    // Some CSS
+                    borderRadius: 8,
+                    textTransform: 'none',
+                    fontWeight: 800,
+                    lineHeight: '21px',
+                    minHeight: 44,
+                    fontSize: '0.875rem',
+
+                    '&:disabled': {
+                        backgroundColor: '#EDEDED',
+                        opacity: 0.5,
+                    },
+                },
+            },
+        },
+        MuiAppBar: {
+            styleOverrides: {
+                root: {
+                    backgroundColor: theme.palette.text.primary,
+                },
+            },
+        },
+
+        MuiDrawer: {
+            styleOverrides: {
+                paperAnchorLeft: {
+                    backgroundColor: theme.palette.menu.main,
+                },
+                paper: {
+                    borderRight: 'none',
+                },
+            },
+        },
+        MuiTextField: {
+            styleOverrides: {
+                root: {
+                    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                    borderRadius: 8,
+
+                    input: {
+                        paddingLeft: 16,
+                        borderRadius: 8,
+                        fontWeight: '400',
+                        // fontSize: '1rem',
+                        textOverflow: 'ellipsis',
+                        paddingRight: 16,
+
+                        '&::placeholder': {
+                            color: '#91919D',
+                            // fontSize: '1rem',
+                            fontWeight: '100',
+                        },
+                        '&:focus': {
+                            backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                        },
+                    },
+                },
+            },
+        },
+        MuiToolbar: {
+            styleOverrides: {
+                root: {
+                    zIndex: 0,
+                    borderBottom: 'none',
+                    backgroundColor: '#0D0E10',
+                    color: '#fff',
+                    padding: '0px 8px!important',
+                },
+            },
+        },
+        MuiList: {
+            styleOverrides: {
+                root: {
+                    '&& .Mui-selected, && .Mui-selected:hover': {
+                        color: '#317AFF',
+                    },
+                },
+            },
+        },
+        MuiListItemButton: {
+            styleOverrides: {
+                root: {
+                    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                    borderRadius: 8,
+                },
+            },
+        },
+        MuiListSubheader: {
+            styleOverrides: {
+                root: {
+                    backgroundColor: 'transparent',
+                },
+            },
+        },
+        MuiCard: {
+            styleOverrides: {
+                root: {
+                    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                },
+            },
+        },
+        MuiListItem: {
+            styleOverrides: {
+                root: {
+                    paddingLeft: 0,
+                    paddingRight: 0,
+                },
+            },
+        },
+        MuiAutocomplete: {
+            styleOverrides: {
+                root: {
+                    '&:focus': {
+                        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                    },
+                },
+            },
+        },
+    },
+});
+
+export default theme;
+
+declare module '@mui/material/styles' {
+    interface Theme {
+        status: {
+            danger: React.CSSProperties['color'];
+        };
+    }
+
+    interface Palette {
+        neutral: Palette['primary'];
+        darkBlack: Palette['primary'];
+        menu: Palette['primary'];
+    }
+    interface PaletteOptions {
+        neutral: PaletteOptions['primary'];
+    }
+
+    interface PaletteColor {
+        darker?: string;
+    }
+    interface SimplePaletteColorOptions {
+        darker?: string;
+    }
+
+    interface PaletteOptions {
+        darkBlack?: PaletteOptions['primary'];
+        menu?: PaletteOptions['primary'];
+    }
+}

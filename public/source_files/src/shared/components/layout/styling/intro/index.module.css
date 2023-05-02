@@ -1,0 +1,21 @@
+.root {
+  position: relative;
+}
+
+.root * {
+  margin: 0 2px;
+}
+
+.embla {
+  overflow: hidden;
+}
+.embla__container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+}
+.embla__slide {
+  background: rgba(247, 126, 102, 0.9)!important;
+  flex: 0 0 100%;
+  overflow: scroll;
+}

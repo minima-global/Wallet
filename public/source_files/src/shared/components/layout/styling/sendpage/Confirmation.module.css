@@ -1,0 +1,67 @@
+
+.confirmationDetailList div {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  border-bottom: 1px solid #D3D3D8;
+  margin-bottom: 12px;
+}
+.confirmationDetailList div:last-child {
+  border-bottom: none!important;
+  margin-bottom: 22px;
+}
+.confirmationDetailList div h5 {
+  margin: 0;
+  font-family: Manrope-regular;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 21px;
+  letter-spacing: 0.16px;
+  text-align: left;
+  padding-bottom: 8px!important;
+  padding-top: 0px!important;
+}
+.confirmationDetailList div p {
+  margin: 0;
+  font-family: Manrope-regular;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  letter-spacing: 0.01em;
+  text-align: left;
+  padding-bottom: 12px!important;
+  padding-top:0px!important;
+  text-overflow: ellipsis;
+  word-break: break-all;
+}
+.copyContainer {
+  display: flex!important;
+  flex-direction: row!important;
+  justify-content: space-between;
+  align-items: center!important;
+}
+.copyContainer h5, .copyContainer p {
+  display: inline;
+}
+
+.copyContainer div {
+  border-bottom: none!important; 
+}
+
+.copyContainer svg {
+  cursor: pointer;
+}
+
+.cancelBtn {
+  font-family: Manrope-regular;
+  font-size: 0.875rem;
+  font-weight: 800;
+  line-height: 21px;
+  letter-spacing: 2px;
+  text-align: center;
+
+  margin-top: 16px!important;
+}
+.cancelBtn:disabled {
+  background: none!important;
+}
