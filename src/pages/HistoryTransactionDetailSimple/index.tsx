@@ -61,28 +61,40 @@ const HistoryTransactionDetailSimple = () => {
         if (viewTransaction) {
             const type = utils.getTxPOWDetailsType(viewTransaction.detail);
             const difference = viewTransaction.detail.difference;
+            let amount: any = '';
+            let txnType: any = '';
             if (type === 'normal') {
                 const isOut = difference[Object.keys(difference)[0]].substring(0, 1) === '-';
-                setTransactionType(isOut ? 'Send' : 'Receive');
-                settransactionAmount(difference[Object.keys(difference)[0]]);
+                txnType = isOut ? 'Send' : 'Receive';
+                amount =
+                    difference[Object.keys(difference)[0]] && difference[Object.keys(difference)[0]].length > 0
+                        ? difference[Object.keys(difference)[0]]
+                        : 'Balance Unchanged';
+
+                setTransactionType(txnType);
+                settransactionAmount(amount);
             }
             if (type === 'custom') {
-                setTransactionType('Custom');
-                settransactionAmount('Multiple');
+                txnType = 'Custom';
+                amount = 'Multiple';
+                setTransactionType(txnType);
+                settransactionAmount(amount);
             }
             if (type === 'tokencreate') {
-                setTransactionType('Token Creation');
-                settransactionAmount(difference[Object.keys(difference)[1]]);
+                txnType = 'Token Creation';
+                amount = difference[Object.keys(difference)[1]];
+                setTransactionType(txnType);
+                settransactionAmount(amount);
             }
 
             setTransactionSummary([
                 {
                     id: viewTransaction?.txpow.txpowid,
-                    amount: transactionAmount,
-                    tokenid: viewTransaction?.txpow.body.txn.outputs[0].amount,
+                    amount: amount,
+                    tokenid: viewTransaction?.txpow.body.txn.outputs[0].tokenid,
                     address: viewTransaction?.txpow.body.txn.outputs[0].miniaddress,
                     date: viewTransaction?.txpow.header.date,
-                    type: transactionType,
+                    type: txnType,
                     block: viewTransaction?.txpow.header.block,
                     burn: viewTransaction?.txpow.burn,
                     json: JSON.stringify(viewTransaction),
