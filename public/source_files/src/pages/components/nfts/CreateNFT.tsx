@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, Typography } from '@mui/material';
 import useIsVaultLocked from '../../../hooks/useIsVaultLocked';
 import GridLayout from '../../../layout/GridLayout';
 import { NoResults } from '../../../shared/components/layout/MiToken';
-import CreateNFTForm from './CreateNFTForm';
+import CreateNFTForm from './CreateNFTForm/CreateNFTForm';
 
 const CreateNFT = () => {
     const userLockedVault = useIsVaultLocked();

@@ -46,6 +46,7 @@
   height: 100%;
   padding: 8px;
   min-height: 35vh;
+  width: inherit;
   overflow: overlay;
   word-wrap: break-word;
 

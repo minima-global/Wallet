@@ -10,7 +10,7 @@ import GridLayout from '../../layout/GridLayout';
 import { useAppSelector } from '../../minima/redux/hooks';
 import { selectBalance } from '../../minima/redux/slices/balanceSlice';
 
-import sharedStyles from '../theme/cssmodule/Components.module.css';
+import sharedStyles from '../../theme/cssmodule/Components.module.css';
 import styles from './TokenCreation.module.css';
 import FormFieldWrapper from '../../shared/components/FormFieldWrapper';
 import FormImageUrlSelect from '../../shared/components/forms/FormImageUrlSelect';
@@ -63,7 +63,7 @@ const TokenCreation = () => {
                 // send rpc
                 await buildCustomTokenCreation(cToken, formData.amount, false);
                 setDialog(false);
-                formik.setStatus(`This transaction has been submitted.  Should arrive shortly.`);
+                formik.setStatus(`Your token has been created.  It will arrive shortly.`);
             } catch (error: any) {
                 setDialog(false);
                 const isPending = error.message === 'pending';
@@ -77,7 +77,7 @@ const TokenCreation = () => {
     });
     React.useEffect(() => {
         formik.setFieldValue('funds', wallet[0]);
-    }, [formik, wallet]);
+    }, [wallet]);
 
     return (
         <GridLayout
@@ -303,32 +303,51 @@ const TokenCreation = () => {
 
                     <Dialog open={dialog && !formik.status}>
                         <Stack className={styles['modal__wrapper']}>
-                            <h6>Confirm Split?</h6>
+                            <h6>Confirm Token Creation?</h6>
                             <Stack
                                 className={styles['modal__content']}
                                 flexDirection="column"
                                 justifyContent="space-between"
                                 alignItems="space-between"
+                                gap={8}
                             >
                                 <ul>
                                     <li>
-                                        <Stack>
-                                            <Avatar src={formik.values.url}></Avatar>
+                                        <div className={styles['token__wrapper']}>
+                                            <Avatar variant="rounded">
+                                                <img alt="custom-token-image" src={formik.values.url} />
+                                            </Avatar>
                                             <div>
                                                 <h6>{formik.values.name}</h6>
                                                 <p>{formik.values.amount}</p>
                                             </div>
-                                        </Stack>
-                                    </li>
-                                    <li>
-                                        <h6></h6>
-                                        <p></p>
+                                        </div>
                                     </li>
 
-                                    <li>
-                                        <h6></h6>
-                                        <p></p>
-                                    </li>
+                                    {formik.values.description.length > 0 && (
+                                        <li>
+                                            <h6>Description</h6>
+                                            <p>{formik.values.description}</p>
+                                        </li>
+                                    )}
+                                    {formik.values.ticker.length > 0 && (
+                                        <li>
+                                            <h6>Ticker</h6>
+                                            <p>{formik.values.ticker}</p>
+                                        </li>
+                                    )}
+                                    {formik.values.webvalidate.length > 0 && (
+                                        <li>
+                                            <h6>Web Validation URL</h6>
+                                            <p>{formik.values.webvalidate}</p>
+                                        </li>
+                                    )}
+                                    {formik.values.burn.length > 0 && (
+                                        <li>
+                                            <h6>Burn Fee</h6>
+                                            <p>{formik.values.burn + ' Minima'}</p>
+                                        </li>
+                                    )}
                                 </ul>
                                 <Stack
                                     className={styles['modal__btn_wrapper']}
@@ -384,21 +403,6 @@ const TokenCreation = () => {
                             </Stack>
                         </Stack>
                     </Dialog>
-
-                    {/* <ModalManager
-                        formik={formik}
-                        modal={modalEmployee}
-                        closeFn={handleCloseModalManager}
-                        children={<TokenConfirmation formik={formik} />}
-                    />
-
-                    <MiniModal
-                        open={statusModal && statusModal.length > 0}
-                        handleClose={handleCloseStatusModal}
-                        header={statusModal && statusModal.length > 0 ? statusModal : ''}
-                        status="Transaction Status"
-                        subtitle={modalStatusMessage}
-                    /> */}
                 </>
             }
         />

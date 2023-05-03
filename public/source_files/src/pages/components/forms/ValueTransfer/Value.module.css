@@ -45,9 +45,10 @@
 .modal__content {
   height: 100%;
   padding: 8px;
-  min-height: 35vh;
   overflow: overlay;
   word-wrap: break-word;
+  /* min-width: 35vh; */
+  min-height: 35vh;
 
 }
 .modal__btn_wrapper button {
@@ -77,38 +78,9 @@
   padding: 8px 16px;
   border-radius: 4px;
 }
-.token__wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  flex-direction: row;
-  gap: 8px;
-  background-color: #f2f2f2;
-  border-radius: 4px;
-  padding: 8px;
-}
-.token__wrapper h6 {
-  font-size: 0.975rem;
-  font-family: Manrope-regular;
-  font-weight: 600;
-  color: #317AFF!important;
-  line-height: 21px;
-  letter-spacing: 0.03em;
-}
-.token__wrapper p {
-  line-height: 21px;
-  letter-spacing: 0.03em;
-  font-size: 0.875rem;
-  font-family: Manrope-regular;
-  font-weight: 500;
-}
-.token__wrapper img {
-  width: inherit;
-  height: inherit;
-}
 
 
-@media only screen and (max-width: 700px) {
+@media only screen and (max-width: 600px) {
   .modal__wrapper {
     max-width: 80vw;
   }

@@ -1,25 +1,21 @@
-import React from 'react';
-import { Box, Button, Stack, TextField, Typography } from '@mui/material';
+import React, { useState } from 'react';
+import { Avatar, Box, Button, Dialog, Stack, TextField, Typography } from '@mui/material';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
-import styles from '../../../theme/cssmodule/Components.module.css';
+import styles from './CreateNFT.module.css';
 
-import { buildCustomTokenCreation } from '../../../minima/libs/nft';
-import { isValidURLAll, isValidURLSecureOnly } from '../../../shared/functions';
-import { useAppSelector } from '../../../minima/redux/hooks';
-import ModalManager from '../managers/ModalManager';
-import NFTConfirmation from '../forms/common/NFTConfirmation';
-import MiniModal from '../../../shared/components/MiniModal';
-import FormImageUrlSelect from '../../../shared/components/forms/FormImageUrlSelect';
-import { MiNFT } from '../../../@types/nft';
-import Required from '../../../shared/components/forms/Required';
-import FormFieldWrapper from '../../../shared/components/FormFieldWrapper';
-import { selectBalance } from '../../../minima/redux/slices/balanceSlice';
+import { buildCustomTokenCreation } from '../../../../minima/libs/nft';
+import { isValidURLAll, isValidURLSecureOnly } from '../../../../shared/functions';
+import { useAppSelector } from '../../../../minima/redux/hooks';
+import FormImageUrlSelect from '../../../../shared/components/forms/FormImageUrlSelect';
+import { MiNFT } from '../../../../@types/nft';
+import Required from '../../../../shared/components/forms/Required';
+import FormFieldWrapper from '../../../../shared/components/FormFieldWrapper';
+import { selectBalance } from '../../../../minima/redux/slices/balanceSlice';
 
 import Decimal from 'decimal.js';
-import MiFunds from '../forms/MiFunds';
-import { useModalHandler } from '../../../hooks/useModalHandler';
+import MiFunds from '../../forms/MiFunds';
 
 /**
  * Minima scales up to 64 decimal places
@@ -32,17 +28,7 @@ Decimal.set({ toExpNeg: -36 });
 const CreateNFTForm = () => {
     const mySchema = useMySchema();
     const wallet = useAppSelector(selectBalance);
-    const {
-        statusModal,
-        modalStatusMessage,
-        handleSuccessState,
-        handleErrorState,
-        handleProceedButton,
-        modalEmployee,
-        handleCloseModalManager,
-        handleCloseStatusModal,
-        setModalEmployee,
-    } = useModalHandler();
+    const [dialog, setDialog] = useState(false);
 
     const formik = useFormik({
         initialValues: {
@@ -58,8 +44,6 @@ const CreateNFTForm = () => {
             burn: '',
         },
         onSubmit: async (data: any) => {
-            setModalEmployee('');
-
             const cNFT: MiNFT = {
                 name: data.name.replaceAll(`"`, `'`),
                 url: data.url,
@@ -72,15 +56,16 @@ const CreateNFTForm = () => {
             try {
                 // send rpc
                 await buildCustomTokenCreation(cNFT, data.amount, true);
-                // success..
-                handleSuccessState(`You have successfully created this token, it should arrive in your balance soon.`);
+                setDialog(false);
+                formik.setStatus(`Your NFT has been created.  It will arrive shortly.`);
             } catch (error: any) {
+                setDialog(false);
                 const isPending = error.message === 'pending';
                 if (isPending) {
-                    // time to reset
-                    formik.resetForm();
+                    formik.setStatus('Transaction is pending, you can confirm it in your pending actions.');
+                    return;
                 }
-                handleErrorState(isPending, error.message);
+                formik.setStatus('Failed, ' + error.message);
             }
         },
         validationSchema: mySchema,
@@ -88,7 +73,7 @@ const CreateNFTForm = () => {
 
     React.useEffect(() => {
         formik.setFieldValue('funds', wallet[0]);
-    }, [formik, wallet]);
+    }, [wallet]);
 
     return (
         <form onSubmit={formik.handleSubmit}>
@@ -307,29 +292,118 @@ const CreateNFTForm = () => {
 
                 <Button
                     disabled={formik.isSubmitting || !formik.isValid}
-                    onClick={handleProceedButton}
+                    onClick={() => setDialog(true)}
                     variant="contained"
                     fullWidth
                     disableElevation
                 >
-                    {formik.isSubmitting ? 'Please wait...' : 'Mint'}
+                    Review
                 </Button>
             </Stack>
 
-            <ModalManager
-                formik={formik}
-                modal={modalEmployee}
-                closeFn={handleCloseModalManager}
-                children={<NFTConfirmation formik={formik} />}
-            />
+            <Dialog open={dialog && !formik.status}>
+                <Stack className={styles['modal__wrapper']}>
+                    <h6>Confirm NFT Creation?</h6>
+                    <Stack
+                        className={styles['modal__content']}
+                        flexDirection="column"
+                        justifyContent="space-between"
+                        alignItems="space-between"
+                        gap={8}
+                    >
+                        <ul>
+                            <li>
+                                <div className={styles['token__wrapper']}>
+                                    <Avatar variant="rounded">
+                                        {formik.values.url && <img alt="custom-token-image" src={formik.values.url} />}
+                                        {!formik.values.url && (
+                                            <img
+                                                alt="custom-token-image"
+                                                src="https://robohash.org/0x00?gravatar=hashed"
+                                            />
+                                        )}
+                                    </Avatar>
+                                    <div>
+                                        <h6>{formik.values.name}</h6>
+                                        <p>{formik.values.amount}</p>
+                                    </div>
+                                </div>
+                            </li>
 
-            <MiniModal
-                open={statusModal && statusModal.length > 0}
-                handleClose={handleCloseStatusModal}
-                header={statusModal && statusModal.length > 0 ? statusModal : ''}
-                status="Transaction Status"
-                subtitle={modalStatusMessage}
-            />
+                            {formik.values.description.length > 0 && (
+                                <li>
+                                    <h6>Description</h6>
+                                    <p>{formik.values.description}</p>
+                                </li>
+                            )}
+                            {formik.values.owner.length > 0 && (
+                                <li>
+                                    <h6>Owner</h6>
+                                    <p>{formik.values.owner}</p>
+                                </li>
+                            )}
+
+                            {formik.values.webvalidate.length > 0 && (
+                                <li>
+                                    <h6>Web Validation URL</h6>
+                                    <p>{formik.values.webvalidate}</p>
+                                </li>
+                            )}
+                            {formik.values.external_url.length > 0 && (
+                                <li>
+                                    <h6>External URL</h6>
+                                    <p>{formik.values.external_url}</p>
+                                </li>
+                            )}
+                            {formik.values.burn.length > 0 && (
+                                <li>
+                                    <h6>Burn Fee</h6>
+                                    <p>{formik.values.burn + ' Minima'}</p>
+                                </li>
+                            )}
+                        </ul>
+                        <Stack
+                            className={styles['modal__btn_wrapper']}
+                            flexDirection="row"
+                            alignItems="flex-end"
+                            gap={1}
+                            justifyContent="flex-end"
+                        >
+                            <button disabled={formik.isSubmitting} type="button" onClick={() => setDialog(false)}>
+                                Cancel
+                            </button>
+                            <button disabled={formik.isSubmitting} type="submit" onClick={() => formik.handleSubmit()}>
+                                Confirm
+                            </button>
+                        </Stack>
+                    </Stack>
+                </Stack>
+            </Dialog>
+            <Dialog open={formik.status}>
+                <Stack className={styles['modal__wrapper']}>
+                    <h6>Transaction Status</h6>
+                    <Stack
+                        className={styles['modal__content']}
+                        flexDirection="column"
+                        justifyContent="space-between"
+                        alignItems="space-between"
+                    >
+                        <p>{formik.status}</p>
+
+                        <Stack
+                            className={styles['modal__btn_wrapper']}
+                            flexDirection="row"
+                            alignItems="flex-end"
+                            gap={1}
+                            justifyContent="flex-end"
+                        >
+                            <button disabled={formik.isSubmitting} type="button" onClick={() => formik.resetForm()}>
+                                Dismiss
+                            </button>
+                        </Stack>
+                    </Stack>
+                </Stack>
+            </Dialog>
         </form>
     );
 };
