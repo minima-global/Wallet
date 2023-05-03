@@ -3,28 +3,25 @@ import Decimal from 'decimal.js';
 import * as Yup from 'yup';
 import React, { useState } from 'react';
 
-import { Button, Stack, TextField } from '@mui/material';
-import { callSend } from '../../../minima/rpc-commands';
-import { MinimaToken } from '../../../@types/minima';
-import { useAppSelector } from '../../../minima/redux/hooks';
-import styles from '../../../theme/cssmodule/Components.module.css';
-import MiSelect from '../../../shared/components/layout/MiSelect/MiSelect';
-import { selectBalance } from '../../../minima/redux/slices/balanceSlice';
-import { MINIMA__DECIMAL_PRECISION, MINIMA__TOKEN_ID } from '../../../shared/constants';
-import ValueTransferConfirmation from './common/ValueTransferConfirmation';
+import { Button, Stack, TextField, Dialog } from '@mui/material';
+import { callSend } from '../../../../minima/rpc-commands';
+import { MinimaToken } from '../../../../@types/minima';
+import { useAppSelector } from '../../../../minima/redux/hooks';
+import sharedStyles from '../../../../theme/cssmodule/Components.module.css';
+import styles from './Value.module.css';
+import MiSelect from '../../../../shared/components/layout/MiSelect/MiSelect';
+import { selectBalance } from '../../../../minima/redux/slices/balanceSlice';
+import { MINIMA__DECIMAL_PRECISION, MINIMA__TOKEN_ID } from '../../../../shared/constants';
 
-import ModalManager from '../managers/ModalManager';
-import MiniModal from '../../../shared/components/MiniModal';
-import FormFieldWrapper from '../../../shared/components/FormFieldWrapper';
+import FormFieldWrapper from '../../../../shared/components/FormFieldWrapper';
 
-import QrScanner from '../../../shared/components/qrscanner/QrScanner';
-import validateMinimaAddress from '../../../minima/commands/validateMinimaAddress/validateMinimaAddress';
+import QrScanner from '../../../../shared/components/qrscanner/QrScanner';
+import validateMinimaAddress from '../../../../minima/commands/validateMinimaAddress/validateMinimaAddress';
 import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
-import { useModalHandler } from '../../../hooks/useModalHandler';
 import { useParams } from 'react-router-dom';
-import useIsUserRunningWebView from '../../../hooks/useIsUserRunningWebView';
-import FeatureUnavailable from '../FeatureUnavailable';
-import useIsVaultLocked from '../../../hooks/useIsVaultLocked';
+import useIsUserRunningWebView from '../../../../hooks/useIsUserRunningWebView';
+import FeatureUnavailable from '../../FeatureUnavailable';
+import useIsVaultLocked from '../../../../hooks/useIsVaultLocked';
 
 Decimal.set({ precision: MINIMA__DECIMAL_PRECISION });
 
@@ -40,6 +37,7 @@ const ValueTransfer = () => {
     const wallet = useAppSelector(selectBalance);
     const [openQrScanner, setOpenQrScanner] = React.useState(false);
     const [errorScannedMinimaAddress, setErrorScannedMinimaAddress] = React.useState<false | string>(false);
+    const [dialog, setDialog] = useState(false);
 
     const userLockedVault = useIsVaultLocked();
 
@@ -47,17 +45,6 @@ const ValueTransfer = () => {
     const isUserRunningWebView = useIsUserRunningWebView();
 
     const { tokenid } = useParams();
-
-    const {
-        statusModal,
-        modalStatusMessage,
-        handleSuccessState,
-        handleErrorState,
-        handleProceedButton,
-        modalEmployee,
-        handleCloseModalManager,
-        handleCloseStatusModal,
-    } = useModalHandler();
 
     const requestedToken =
         tokenid && wallet.find((i) => i.tokenid === tokenid)
@@ -75,20 +62,17 @@ const ValueTransfer = () => {
         onSubmit: async (formInputs: ISendForm) => {
             try {
                 // send rpc
-                const jsonResponse = await callSend({ ...formInputs });
-                // success..
-                handleSuccessState(
-                    `Your transaction has been posted on block height ${jsonResponse.postedHeight} and should arrive soon.`
-                );
-
-                formik.resetForm();
+                await callSend({ ...formInputs });
+                setDialog(false);
+                formik.setStatus(`This transaction has been submitted.  Should arrive shortly.`);
             } catch (error: any) {
+                setDialog(false);
                 const isPending = error.message === 'pending';
                 if (isPending) {
-                    // time to reset
-                    formik.resetForm();
+                    formik.setStatus('Transaction is pending, you can confirm it in your pending actions.');
+                    return;
                 }
-                handleErrorState(isPending, error.message);
+                formik.setStatus('Failed, ' + error.message);
             }
         },
         validationSchema: mySchema,
@@ -153,7 +137,7 @@ const ValueTransfer = () => {
                         onBlur={formik.handleBlur}
                         error={formik.touched.address && Boolean(formik.errors.address)}
                         helperText={formik.touched.address && formik.errors.address}
-                        FormHelperTextProps={{ className: styles['form-helper-text'] }}
+                        FormHelperTextProps={{ className: sharedStyles['form-helper-text'] }}
                         InputProps={{
                             style:
                                 formik.touched.address && Boolean(formik.errors.address)
@@ -168,7 +152,7 @@ const ValueTransfer = () => {
                             endAdornment: (
                                 <>
                                     <QrCodeScannerIcon
-                                        className={styles['qr-scanner']}
+                                        className={sharedStyles['qr-scanner']}
                                         color="inherit"
                                         onClick={
                                             !isUserRunningWebView
@@ -194,7 +178,7 @@ const ValueTransfer = () => {
                         error={formik.touched.amount && Boolean(formik.errors.amount)}
                         helperText={formik.touched.amount && formik.errors.amount}
                         FormHelperTextProps={{
-                            className: styles['form-helper-text'],
+                            className: sharedStyles['form-helper-text'],
                         }}
                         InputProps={{
                             autoComplete: 'off',
@@ -227,7 +211,7 @@ const ValueTransfer = () => {
                                 error={formik.touched.burn && Boolean(formik.errors.burn)}
                                 helperText={formik.touched.burn && formik.errors.burn}
                                 FormHelperTextProps={{
-                                    className: styles['form-helper-text'],
+                                    className: sharedStyles['form-helper-text'],
                                 }}
                                 InputProps={{
                                     autoComplete: 'off',
@@ -262,7 +246,7 @@ const ValueTransfer = () => {
                                     error={formik.touched.password && Boolean(formik.errors.password)}
                                     helperText={formik.touched.password && formik.errors.password}
                                     FormHelperTextProps={{
-                                        className: styles['form-helper-text'],
+                                        className: sharedStyles['form-helper-text'],
                                     }}
                                     InputProps={{
                                         autoComplete: 'vault-password',
@@ -283,31 +267,84 @@ const ValueTransfer = () => {
                     )}
 
                     <Button
-                        // type="submit"
-                        onClick={handleProceedButton}
+                        onClick={() => setDialog(true)}
                         color="primary"
                         variant="contained"
                         fullWidth
                         disableElevation
                         disabled={!(formik.isValid && formik.dirty && !formik.isSubmitting)}
                     >
-                        {formik.isSubmitting ? 'Building transaction...' : 'Continue'}
+                        Review
                     </Button>
                 </Stack>
             </form>
-            <ModalManager
-                formik={formik}
-                modal={modalEmployee}
-                closeFn={handleCloseModalManager}
-                children={<ValueTransferConfirmation formik={formik} />}
-            />
-            <MiniModal
-                open={statusModal && statusModal.length > 0}
-                handleClose={handleCloseStatusModal}
-                header={statusModal && statusModal.length > 0 ? statusModal : ''}
-                status="Transaction Status"
-                subtitle={modalStatusMessage}
-            />
+            <Dialog open={dialog && !formik.status}>
+                <Stack className={styles['modal__wrapper']}>
+                    <h6>Confirm Transfer?</h6>
+                    <Stack
+                        className={styles['modal__content']}
+                        flexDirection="column"
+                        justifyContent="space-between"
+                        alignItems="space-between"
+                    >
+                        <ul>
+                            <li>
+                                <h6>Recipient Address:</h6>
+                                <p>{formik.values.address}</p>
+                            </li>
+                            <li>
+                                <h6>Amount:</h6>
+                                <p>{formik.values.amount}</p>
+                            </li>
+                            {formik.values.burn && (
+                                <li>
+                                    <h6>Burn:</h6>
+                                    <p>{formik.values.burn}</p>
+                                </li>
+                            )}
+                        </ul>
+                        <Stack
+                            className={styles['modal__btn_wrapper']}
+                            flexDirection="row"
+                            alignItems="flex-end"
+                            gap={1}
+                            justifyContent="flex-end"
+                        >
+                            <button disabled={formik.isSubmitting} type="button" onClick={() => setDialog(false)}>
+                                Cancel
+                            </button>
+                            <button disabled={formik.isSubmitting} type="submit" onClick={() => formik.handleSubmit()}>
+                                Confirm
+                            </button>
+                        </Stack>
+                    </Stack>
+                </Stack>
+            </Dialog>
+            <Dialog open={formik.status}>
+                <Stack className={styles['modal__wrapper']}>
+                    <h6>Transaction Status</h6>
+                    <Stack
+                        className={styles['modal__content']}
+                        flexDirection="column"
+                        justifyContent="space-between"
+                        alignItems="space-between"
+                    >
+                        <p>{formik.status}</p>
+
+                        <Stack
+                            className={styles['modal__btn_wrapper']}
+                            flexDirection="row"
+                            alignItems="flex-end"
+                            gap={1}
+                            justifyContent="flex-end"
+                        >
+                            <button disabled={formik.isSubmitting} type="button" onClick={() => formik.resetForm()}>
+                                Dismiss
+                            </button>
+                        </Stack>
+                    </Stack>
+                </Stack>
+            </Dialog>
         </>
     );
 };

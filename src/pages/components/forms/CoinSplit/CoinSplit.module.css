@@ -1,0 +1,61 @@
+.modal__wrapper  {
+  width: 300px;
+  height: 40vh;
+  overflow-y: overlay;
+}
+.modal__wrapper h6 {
+  background-color: #16181c;
+  font-size: 1rem;
+  padding: 0;
+  margin: 0;
+  color: #fff;
+  padding: 8px;
+}
+.modal__content p {
+  font-family: Manrope-regular;
+  font-size: 0.975rem;
+  word-break: keep-all;
+  overflow: overlay;
+
+}
+.modal__content {
+  height: 100%;
+  padding: 8px;
+  overflow: hidden;
+  word-wrap: break-word;
+}
+.modal__btn_wrapper button {
+  min-height: 36px;
+}
+.modal__btn_wrapper button:hover {
+  cursor: pointer;
+  opacity: 0.8;
+}
+.modal__btn_wrapper button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+.modal__btn_wrapper button[type="submit"] {
+  background-color: #16181C;
+  border: 1px solid #16181C;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 4px;
+}
+.modal__btn_wrapper button[type="button"] {
+  color: #16181C;
+  background: none;
+  border: none;
+  font-family: Manrope-regular;
+  border: 1px solid #16181C;
+  padding: 8px 16px;
+  border-radius: 4px;
+}
+
+
+@media only screen and (max-width: 600px) {
+  .modal__wrapper {
+    width: auto;
+  }
+  
+}

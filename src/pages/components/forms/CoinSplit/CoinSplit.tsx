@@ -1,24 +1,21 @@
 import { useFormik } from 'formik';
 import Decimal from 'decimal.js';
 import * as Yup from 'yup';
+import { useState } from 'react';
 
-import { Button, Stack, TextField, Typography } from '@mui/material';
-import { MinimaToken } from '../../../@types/minima';
-import { useAppSelector } from '../../../minima/redux/hooks';
-import styles from '../../../theme/cssmodule/Components.module.css';
-import MiSelect from '../../../shared/components/layout/MiSelect/MiSelect';
-import { selectBalance } from '../../../minima/redux/slices/balanceSlice';
-import { MINIMA__DECIMAL_PRECISION } from '../../../shared/constants';
+import { Button, Dialog, Stack, TextField, Typography } from '@mui/material';
+import { MinimaToken } from '../../../../@types/minima';
+import { useAppSelector } from '../../../../minima/redux/hooks';
+import sharedStyles from '../../../../theme/cssmodule/Components.module.css';
+import styles from './CoinSplit.module.css';
+import MiSelect from '../../../../shared/components/layout/MiSelect/MiSelect';
+import { selectBalance } from '../../../../minima/redux/slices/balanceSlice';
+import { MINIMA__DECIMAL_PRECISION } from '../../../../shared/constants';
 
-import MiniModal from '../../../shared/components/MiniModal';
-import CoinSplitConfirmation from './common/CoinSplitConfirmation';
-
-import ModalManager from '../managers/ModalManager';
-import React from 'react';
-import { splitCoin } from '../../../minima/utils';
-import FormFieldWrapper from '../../../shared/components/FormFieldWrapper';
-import { useModalHandler } from '../../../hooks/useModalHandler';
-import useIsVaultLocked from '../../../hooks/useIsVaultLocked';
+import { splitCoin } from '../../../../minima/utils';
+import FormFieldWrapper from '../../../../shared/components/FormFieldWrapper';
+import { useModalHandler } from '../../../../hooks/useModalHandler';
+import useIsVaultLocked from '../../../../hooks/useIsVaultLocked';
 
 Decimal.set({ precision: MINIMA__DECIMAL_PRECISION });
 
@@ -31,16 +28,7 @@ interface ISendForm {
 const CoinSplit = () => {
     const mySchema = useFormSchema();
     const wallet = useAppSelector(selectBalance);
-    const {
-        statusModal,
-        modalStatusMessage,
-        handleSuccessState,
-        handleErrorState,
-        handleProceedButton,
-        modalEmployee,
-        handleCloseModalManager,
-        handleCloseStatusModal,
-    } = useModalHandler();
+    const [splitDialog, setSplitDialog] = useState(false);
 
     const userLockedVault = useIsVaultLocked();
 
@@ -52,27 +40,22 @@ const CoinSplit = () => {
         },
         onSubmit: async (formInputs: ISendForm) => {
             try {
-                // send rpc
-                const jsonResponse = await splitCoin(
+                await splitCoin(
                     formInputs.token.tokenid,
                     formInputs.token.sendable,
                     formInputs.burn,
                     formInputs.password
                 );
-                // success..
-                handleSuccessState(
-                    `Your transaction has been posted on block height ${jsonResponse.postedHeight} and should arrive soon.`
-                );
-                // time to reset
-                formik.resetForm();
+                setSplitDialog(false);
+                formik.setStatus(`This transaction has been submitted.  Should arrive shortly.`);
             } catch (error: any) {
+                setSplitDialog(false);
                 const isPending = error.message === 'pending';
-
                 if (isPending) {
-                    // time to reset
-                    formik.resetForm();
+                    formik.setStatus('Transaction is pending, you can confirm it in your pending actions.');
+                    return;
                 }
-                handleErrorState(isPending, error.message);
+                formik.setStatus('Failed, ' + error.message);
             }
         },
         validationSchema: mySchema,
@@ -107,7 +90,7 @@ const CoinSplit = () => {
                                 error={formik.touched.burn && Boolean(formik.errors.burn)}
                                 helperText={formik.touched.burn && formik.errors.burn}
                                 FormHelperTextProps={{
-                                    className: styles['form-helper-text'],
+                                    className: sharedStyles['form-helper-text'],
                                 }}
                                 InputProps={{
                                     style:
@@ -141,7 +124,7 @@ const CoinSplit = () => {
                                     error={formik.touched.password && Boolean(formik.errors.password)}
                                     helperText={formik.touched.password && formik.errors.password}
                                     FormHelperTextProps={{
-                                        className: styles['form-helper-text'],
+                                        className: sharedStyles['form-helper-text'],
                                     }}
                                     InputProps={{
                                         style:
@@ -160,33 +143,72 @@ const CoinSplit = () => {
                         />
                     )}
                     <Button
-                        onClick={handleProceedButton}
+                        onClick={() => setSplitDialog(true)}
                         color="primary"
                         variant="contained"
                         fullWidth
                         disableElevation
                         disabled={formik.isSubmitting || !formik.isValid}
                     >
-                        {formik.isSubmitting ? 'Please wait...' : 'Split Coin'}
+                        Review
                     </Button>
                     <Typography variant="caption">
                         Split your coins by two so you have more available UTXO to transact with
                     </Typography>
                 </Stack>
             </form>
-            <ModalManager
-                formik={formik}
-                modal={modalEmployee}
-                closeFn={handleCloseModalManager}
-                children={<CoinSplitConfirmation formik={formik} />}
-            />
-            <MiniModal
-                open={statusModal && statusModal.length > 0}
-                handleClose={handleCloseStatusModal}
-                header={statusModal && statusModal.length > 0 ? statusModal : ''}
-                status="Transaction Status"
-                subtitle={modalStatusMessage}
-            />
+            <Dialog open={splitDialog && !formik.status}>
+                <Stack className={styles['modal__wrapper']}>
+                    <h6>Confirm Split?</h6>
+                    <Stack
+                        className={styles['modal__content']}
+                        flexDirection="column"
+                        justifyContent="space-between"
+                        alignItems="space-between"
+                    >
+                        <p>You are about to split your sendable balance in two.</p>
+                        <Stack
+                            className={styles['modal__btn_wrapper']}
+                            flexDirection="row"
+                            alignItems="flex-end"
+                            gap={1}
+                            justifyContent="flex-end"
+                        >
+                            <button disabled={formik.isSubmitting} type="button" onClick={() => setSplitDialog(false)}>
+                                Cancel
+                            </button>
+                            <button disabled={formik.isSubmitting} type="submit" onClick={() => formik.handleSubmit()}>
+                                Confirm
+                            </button>
+                        </Stack>
+                    </Stack>
+                </Stack>
+            </Dialog>
+            <Dialog open={formik.status}>
+                <Stack className={styles['modal__wrapper']}>
+                    <h6>Transaction Status</h6>
+                    <Stack
+                        className={styles['modal__content']}
+                        flexDirection="column"
+                        justifyContent="space-between"
+                        alignItems="space-between"
+                    >
+                        <p>{formik.status}</p>
+
+                        <Stack
+                            className={styles['modal__btn_wrapper']}
+                            flexDirection="row"
+                            alignItems="flex-end"
+                            gap={1}
+                            justifyContent="flex-end"
+                        >
+                            <button disabled={formik.isSubmitting} type="button" onClick={() => formik.resetForm()}>
+                                Dismiss
+                            </button>
+                        </Stack>
+                    </Stack>
+                </Stack>
+            </Dialog>
         </>
     );
 };

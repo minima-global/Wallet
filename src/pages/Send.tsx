@@ -4,8 +4,8 @@ import { FC, useState } from 'react';
 import GridLayout from '../layout/GridLayout';
 
 import MiCard from '../shared/components/layout/MiCard/MiCard';
-import ValueTransfer from './components/forms/ValueTransfer';
-import CoinSplit from './components/forms/CoinSplit';
+import ValueTransfer from './components/forms/ValueTransfer/ValueTransfer';
+import CoinSplit from './components/forms/CoinSplit/CoinSplit';
 
 const Send: FC = () => {
     const [formUtility, setFormUtility] = useState('VALUETRANSFER');
