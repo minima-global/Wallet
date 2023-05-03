@@ -1,30 +1,27 @@
-import { FC } from 'react';
-import { Card, CardContent, TextField, Button, Stack } from '@mui/material';
-import MiniModal from '../shared/components/MiniModal';
+import { useState } from 'react';
+import { Card, CardContent, TextField, Button, Stack, Dialog, Avatar } from '@mui/material';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
-import { isValidURLAll, isValidURLSecureOnly } from '../shared/functions';
+import { isValidURLAll, isValidURLSecureOnly } from '../../shared/functions';
 
-import GridLayout from '../layout/GridLayout';
+import GridLayout from '../../layout/GridLayout';
 
-import { useAppSelector } from '../minima/redux/hooks';
-import { selectBalance } from '../minima/redux/slices/balanceSlice';
-import TokenConfirmation from './components/forms/common/TokenConfirmation';
-import ModalManager from './components/managers/ModalManager';
+import { useAppSelector } from '../../minima/redux/hooks';
+import { selectBalance } from '../../minima/redux/slices/balanceSlice';
 
-import styles from '../theme/cssmodule/Components.module.css';
-import FormFieldWrapper from '../shared/components/FormFieldWrapper';
-import FormImageUrlSelect from '../shared/components/forms/FormImageUrlSelect';
-import { buildCustomTokenCreation } from '../minima/libs/nft';
-import { MiCustomToken } from '../@types/nft';
-import Required from '../shared/components/forms/Required';
+import sharedStyles from '../../theme/cssmodule/Components.module.css';
+import styles from './TokenCreation.module.css';
+import FormFieldWrapper from '../../shared/components/FormFieldWrapper';
+import FormImageUrlSelect from '../../shared/components/forms/FormImageUrlSelect';
+import { buildCustomTokenCreation } from '../../minima/libs/nft';
+import { MiCustomToken } from '../../@types/nft';
+import Required from '../../shared/components/forms/Required';
 import Decimal from 'decimal.js';
-import MiFunds from './components/forms/MiFunds';
+import MiFunds from '../components/forms/MiFunds';
 import React from 'react';
-import { useModalHandler } from '../hooks/useModalHandler';
-import useIsVaultLocked from '../hooks/useIsVaultLocked';
-import { NoResults } from '../shared/components/layout/MiToken';
+import useIsVaultLocked from '../../hooks/useIsVaultLocked';
+import { NoResults } from '../../shared/components/layout/MiToken';
 
 /**
  * Minima scales up to 64 decimal places
@@ -34,23 +31,12 @@ import { NoResults } from '../shared/components/layout/MiToken';
 Decimal.set({ precision: 64 });
 Decimal.set({ toExpNeg: -36 });
 
-const TokenCreation: FC = () => {
+const TokenCreation = () => {
     const mySchema = useMySchema();
     const wallet = useAppSelector(selectBalance);
+    const [dialog, setDialog] = useState(false);
 
     const userLockedVault = useIsVaultLocked();
-
-    const {
-        statusModal,
-        modalStatusMessage,
-        handleSuccessState,
-        handleErrorState,
-        handleProceedButton,
-        modalEmployee,
-        handleCloseModalManager,
-        handleCloseStatusModal,
-        setModalEmployee,
-    } = useModalHandler();
 
     const formik = useFormik({
         initialValues: {
@@ -65,8 +51,6 @@ const TokenCreation: FC = () => {
         },
         validationSchema: mySchema,
         onSubmit: async (formData) => {
-            setModalEmployee('');
-
             const cToken: MiCustomToken = {
                 name: formData.name.replaceAll(`"`, `'`),
                 url: formData.url, // upload image or normal url
@@ -78,24 +62,22 @@ const TokenCreation: FC = () => {
             try {
                 // send rpc
                 await buildCustomTokenCreation(cToken, formData.amount, false);
-                // success..
-                handleSuccessState(`You have successfully created this token, it should arrive in your balance soon.`);
-                // time to reset
-                formik.resetForm();
+                setDialog(false);
+                formik.setStatus(`Your token has been created.  It will arrive shortly.`);
             } catch (error: any) {
+                setDialog(false);
                 const isPending = error.message === 'pending';
-
                 if (isPending) {
-                    // time to reset
-                    formik.resetForm();
+                    formik.setStatus('Transaction is pending, you can confirm it in your pending actions.');
+                    return;
                 }
-                handleErrorState(isPending, error.message);
+                formik.setStatus('Failed, ' + error.message);
             }
         },
     });
     React.useEffect(() => {
         formik.setFieldValue('funds', wallet[0]);
-    }, [formik, wallet]);
+    }, [wallet]);
 
     return (
         <GridLayout
@@ -139,7 +121,9 @@ const TokenCreation: FC = () => {
                                                     onBlur={formik.handleBlur}
                                                     error={formik.touched.name && Boolean(formik.errors.name)}
                                                     helperText={formik.touched.name && formik.errors.name}
-                                                    FormHelperTextProps={{ className: styles['form-helper-text'] }}
+                                                    FormHelperTextProps={{
+                                                        className: sharedStyles['form-helper-text'],
+                                                    }}
                                                     InputProps={{
                                                         style:
                                                             formik.touched.name && Boolean(formik.errors.name)
@@ -170,7 +154,9 @@ const TokenCreation: FC = () => {
                                                     onBlur={formik.handleBlur}
                                                     error={formik.touched.amount && Boolean(formik.errors.amount)}
                                                     helperText={formik.touched.amount && formik.errors.amount}
-                                                    FormHelperTextProps={{ className: styles['form-helper-text'] }}
+                                                    FormHelperTextProps={{
+                                                        className: sharedStyles['form-helper-text'],
+                                                    }}
                                                     InputProps={{
                                                         style:
                                                             formik.touched.amount && Boolean(formik.errors.amount)
@@ -281,7 +267,7 @@ const TokenCreation: FC = () => {
                                                     error={formik.touched.burn && Boolean(formik.errors.burn)}
                                                     helperText={formik.touched.burn && formik.errors.burn}
                                                     FormHelperTextProps={{
-                                                        className: styles['form-helper-text'],
+                                                        className: sharedStyles['form-helper-text'],
                                                     }}
                                                     InputProps={{
                                                         style:
@@ -300,14 +286,14 @@ const TokenCreation: FC = () => {
                                         />
 
                                         <Button
-                                            onClick={handleProceedButton}
+                                            onClick={() => setDialog(true)}
                                             disabled={formik.isSubmitting || !formik.isValid}
                                             disableElevation
                                             color="primary"
                                             variant="contained"
                                             fullWidth
                                         >
-                                            {formik.isSubmitting ? 'Please wait...' : 'Create'}
+                                            Review
                                         </Button>
                                     </Stack>
                                 </form>
@@ -315,20 +301,108 @@ const TokenCreation: FC = () => {
                         </Card>
                     )}
 
-                    <ModalManager
-                        formik={formik}
-                        modal={modalEmployee}
-                        closeFn={handleCloseModalManager}
-                        children={<TokenConfirmation formik={formik} />}
-                    />
+                    <Dialog open={dialog && !formik.status}>
+                        <Stack className={styles['modal__wrapper']}>
+                            <h6>Confirm Token Creation?</h6>
+                            <Stack
+                                className={styles['modal__content']}
+                                flexDirection="column"
+                                justifyContent="space-between"
+                                alignItems="space-between"
+                                gap={8}
+                            >
+                                <ul>
+                                    <li>
+                                        <div className={styles['token__wrapper']}>
+                                            <Avatar variant="rounded">
+                                                <img alt="custom-token-image" src={formik.values.url} />
+                                            </Avatar>
+                                            <div>
+                                                <h6>{formik.values.name}</h6>
+                                                <p>{formik.values.amount}</p>
+                                            </div>
+                                        </div>
+                                    </li>
 
-                    <MiniModal
-                        open={statusModal && statusModal.length > 0}
-                        handleClose={handleCloseStatusModal}
-                        header={statusModal && statusModal.length > 0 ? statusModal : ''}
-                        status="Transaction Status"
-                        subtitle={modalStatusMessage}
-                    />
+                                    {formik.values.description.length > 0 && (
+                                        <li>
+                                            <h6>Description</h6>
+                                            <p>{formik.values.description}</p>
+                                        </li>
+                                    )}
+                                    {formik.values.ticker.length > 0 && (
+                                        <li>
+                                            <h6>Ticker</h6>
+                                            <p>{formik.values.ticker}</p>
+                                        </li>
+                                    )}
+                                    {formik.values.webvalidate.length > 0 && (
+                                        <li>
+                                            <h6>Web Validation URL</h6>
+                                            <p>{formik.values.webvalidate}</p>
+                                        </li>
+                                    )}
+                                    {formik.values.burn.length > 0 && (
+                                        <li>
+                                            <h6>Burn Fee</h6>
+                                            <p>{formik.values.burn + ' Minima'}</p>
+                                        </li>
+                                    )}
+                                </ul>
+                                <Stack
+                                    className={styles['modal__btn_wrapper']}
+                                    flexDirection="row"
+                                    alignItems="flex-end"
+                                    gap={1}
+                                    justifyContent="flex-end"
+                                >
+                                    <button
+                                        disabled={formik.isSubmitting}
+                                        type="button"
+                                        onClick={() => setDialog(false)}
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        disabled={formik.isSubmitting}
+                                        type="submit"
+                                        onClick={() => formik.handleSubmit()}
+                                    >
+                                        Confirm
+                                    </button>
+                                </Stack>
+                            </Stack>
+                        </Stack>
+                    </Dialog>
+                    <Dialog open={formik.status}>
+                        <Stack className={styles['modal__wrapper']}>
+                            <h6>Transaction Status</h6>
+                            <Stack
+                                className={styles['modal__content']}
+                                flexDirection="column"
+                                justifyContent="space-between"
+                                alignItems="space-between"
+                            >
+                                <p>{formik.status}</p>
+
+                                <Stack
+                                    className={styles['modal__btn_wrapper']}
+                                    flexDirection="row"
+                                    alignItems="flex-end"
+                                    gap={1}
+                                    justifyContent="flex-end"
+                                >
+                                    <button
+                                        disabled={formik.isSubmitting}
+                                        type="button"
+                                        onClick={() => formik.resetForm()}
+                                    >
+                                        Dismiss
+                                    </button>
+                                </Stack>
+                            </Stack>
+                        </Stack>
+                    </Dialog>
                 </>
             }
         />

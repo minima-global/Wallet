@@ -47,7 +47,7 @@ const CoinSplit = () => {
                     formInputs.password
                 );
                 setSplitDialog(false);
-                formik.setStatus(`This transaction has been submitted.  Should arrive shortly.`);
+                formik.setStatus(`This transaction has been submitted.  It will arrive shortly.`);
             } catch (error: any) {
                 setSplitDialog(false);
                 const isPending = error.message === 'pending';
@@ -165,6 +165,7 @@ const CoinSplit = () => {
                         flexDirection="column"
                         justifyContent="space-between"
                         alignItems="space-between"
+                        gap={8}
                     >
                         <p>You are about to split your sendable balance in two.</p>
                         <Stack
@@ -192,6 +193,7 @@ const CoinSplit = () => {
                         flexDirection="column"
                         justifyContent="space-between"
                         alignItems="space-between"
+                        gap={8}
                     >
                         <p>{formik.status}</p>
 

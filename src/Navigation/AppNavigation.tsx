@@ -9,7 +9,7 @@ import Balance from '../pages/Balance';
 import Send from '../pages/Send';
 import Status from '../pages/Status';
 import Receive from '../pages/Receive';
-import TokenCreation from '../pages/TokenCreation';
+import TokenCreation from '../pages/TokenCreation/TokenCreation';
 import TokenDetail from '../pages/TokenDetail';
 import { DRAWERWIDTH } from '../shared/constants';
 import SideMenu from '../layout/SideMenu';

@@ -64,7 +64,7 @@ const ValueTransfer = () => {
                 // send rpc
                 await callSend({ ...formInputs });
                 setDialog(false);
-                formik.setStatus(`This transaction has been submitted.  Should arrive shortly.`);
+                formik.setStatus(`This transaction has been submitted.  It will arrive shortly.`);
             } catch (error: any) {
                 setDialog(false);
                 const isPending = error.message === 'pending';
@@ -286,6 +286,7 @@ const ValueTransfer = () => {
                         flexDirection="column"
                         justifyContent="space-between"
                         alignItems="space-between"
+                        gap={8}
                     >
                         <ul>
                             <li>
@@ -328,6 +329,7 @@ const ValueTransfer = () => {
                         flexDirection="column"
                         justifyContent="space-between"
                         alignItems="space-between"
+                        gap={8}
                     >
                         <p>{formik.status}</p>
 

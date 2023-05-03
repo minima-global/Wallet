@@ -1,9 +1,6 @@
 .modal__wrapper  {
-  width: auto;
-  height: auto;
-  max-height: 60vh;
-  max-width: 35vw;
-  min-width: 35vw;
+  width: 300px;
+  height: 40vh;
   overflow-y: overlay;
 }
 .modal__wrapper h6 {
@@ -19,17 +16,35 @@
   font-size: 0.975rem;
   word-break: keep-all;
   overflow: overlay;
+
+}
+.modal__content ul {
   padding: 0;
   margin: 0;
-
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  gap: 8px;
+}
+.modal__content li h6 {
+  padding: 0;
+  margin: 0;
+  background: none;
+  font-family: Manrope-regular;
+  color: #16181C; 
+}
+.modal__content li p {
+  padding: 0;
+  margin: 0;
+  font-family: Manrope-regular;
+  color: #16181C; 
 }
 .modal__content {
   height: 100%;
-  min-height: 35vh;
-  /* min-width: 35vh; */
   padding: 8px;
-  overflow: hidden;
+  overflow: overlay;
   word-wrap: break-word;
+
 }
 .modal__btn_wrapper button {
   min-height: 36px;
@@ -62,7 +77,7 @@
 
 @media only screen and (max-width: 600px) {
   .modal__wrapper {
-    max-width: 80vw;
+    width: auto;
   }
   
 }
