@@ -1,4 +1,4 @@
-import { configureStore, ThunkAction, Action, AnyAction } from '@reduxjs/toolkit';
+import { configureStore, ThunkAction, AnyAction } from '@reduxjs/toolkit';
 
 import { balanceMiddleware, BalanceState } from './slices/balanceSlice';
 import { MiningState } from './slices/miningSlice';

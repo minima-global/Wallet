@@ -1,13 +1,11 @@
 import {
     Avatar,
     Toolbar,
-    Typography,
     ListItemText,
     Divider,
     List,
     ListItemIcon,
     Radio,
-    Grid,
     ListItemButton,
     Stack,
 } from '@mui/material';
@@ -83,7 +81,12 @@ const SideMenu = ({ handleDrawerClose, handleDrawerOpen }: IProps) => {
             <Stack>
                 <Toolbar className={styles['header-toolbar']} variant="dense">
                     <Stack pl={1.5} alignItems="center" justifyContent="center" flexDirection="row" gap={0.8}>
-                        <Avatar sx={{ height: 32, width: 32 }} variant="rounded" src="./assets/wallet.svg"></Avatar>
+                        <Avatar
+                            alt="wallet-icon"
+                            sx={{ height: 32, width: 32 }}
+                            variant="rounded"
+                            src="./assets/wallet.svg"
+                        ></Avatar>
                         <h6>Wallet</h6>
                     </Stack>
                 </Toolbar>
@@ -111,7 +114,7 @@ const SideMenu = ({ handleDrawerClose, handleDrawerOpen }: IProps) => {
             </Stack>
 
             <Stack className={styles['landscape-icon-wrapper']} direction="row">
-                <img src="./assets/minima-landscape.png" />
+                <img alt="minima-landscape" src="./assets/minima-landscape.png" />
             </Stack>
         </Stack>
     );

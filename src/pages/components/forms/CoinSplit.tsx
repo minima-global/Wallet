@@ -11,7 +11,6 @@ import { selectBalance } from '../../../minima/redux/slices/balanceSlice';
 import { MINIMA__DECIMAL_PRECISION } from '../../../shared/constants';
 
 import MiniModal from '../../../shared/components/MiniModal';
-import Pending from './Pending';
 import CoinSplitConfirmation from './common/CoinSplitConfirmation';
 
 import ModalManager from '../managers/ModalManager';
@@ -28,10 +27,8 @@ interface ISendForm {
     burn: string;
     password: string;
 }
-interface IProps {}
-type IStatusModal = 'Success' | 'Failed' | 'Pending' | false;
 
-const CoinSplit = ({}: IProps) => {
+const CoinSplit = () => {
     const mySchema = useFormSchema();
     const wallet = useAppSelector(selectBalance);
     const {
@@ -202,7 +199,7 @@ const useFormSchema = () => {
         token: Yup.object()
             .required('Field Required')
             .test('check-my-tokensendable', 'Invalid token sendable', function (val: any) {
-                const { path, parent, createError } = this;
+                const { path, createError } = this;
                 // console.log(val);
                 if (val === undefined) {
                     return false;

@@ -1,6 +1,5 @@
-import React from 'react';
 import styled from '@emotion/styled';
-import { Button, CircularProgress, Grid, Stack } from '@mui/material';
+import { Button, Grid, Stack } from '@mui/material';
 import { QrReader } from 'react-qr-reader';
 import { DRAWERWIDTH } from '../../constants';
 import useIsCameraEnabledPermissions from '../../../hooks/useIsCameraEnabledPermissions';

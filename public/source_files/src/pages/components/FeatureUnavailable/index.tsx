@@ -1,4 +1,4 @@
-import { Box, Modal, Stack } from '@mui/material';
+import { Box, Modal } from '@mui/material';
 import { NoResults } from '../../../shared/components/layout/MiToken';
 
 import styles from './FeatureUnavailable.module.css';

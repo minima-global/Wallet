@@ -1,15 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-    Grid,
-    CardContent,
-    Typography,
-    Box,
-    List,
-    ListItem,
-    ListItemText,
-    CircularProgress,
-    Stack,
-} from '@mui/material';
+import { Grid, CircularProgress, Stack } from '@mui/material';
 import { callStatus } from '../minima/rpc-commands';
 
 import styled from '@emotion/styled';

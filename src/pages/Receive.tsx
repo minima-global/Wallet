@@ -12,7 +12,6 @@ import {
     Stack,
     TextField,
     Button,
-    Modal,
     CircularProgress,
 } from '@mui/material';
 import GridLayout from '../layout/GridLayout';
@@ -26,7 +25,6 @@ import { getScripts } from '../minima/commands';
 import { Scripts } from '../@types/minima';
 import FormFieldWrapper from '../shared/components/FormFieldWrapper';
 import checkAddress from '../minima/commands/checkAddress';
-import MiError from '../shared/components/layout/MiError/MiError';
 import CustomListItem from '../shared/components/CustomListItem';
 import getCurrentNodeVersion from '../minima/commands/getCurrentVersion';
 import { NoResults } from '../shared/components/layout/MiToken';

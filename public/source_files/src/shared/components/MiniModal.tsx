@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import Modal from '@mui/material/Modal';
-import { Box, Typography, Chip, Button, Stack } from '@mui/material';
+import { Box, Typography, Button, Stack } from '@mui/material';
 import { MiniModalProp } from '../../types/minima';
 
 import { ModalButtonWrapper } from './modals/ModalWrappers';
@@ -47,21 +47,6 @@ const MiniModal: FC<MiniModalProp> = ({ open, handleClose, executeName, customFn
 
 export default MiniModal;
 
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    bgcolor: 'rgba(255, 255, 255, 0.9)',
-    boxShadow: '0px 4px 15px rgba(0,0,0,0.1)',
-    p: 4,
-    minWidth: 370,
-    height: 303,
-    borderRadius: 1,
-    justifyContent: 'space-between',
-    display: 'flex',
-    flexDirection: 'column',
-};
 const statusCss = {
     borderBottom: 0.5,
     borderColor: '#D3D3D8',

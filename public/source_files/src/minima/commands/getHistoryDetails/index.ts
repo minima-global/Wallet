@@ -1,4 +1,3 @@
-import { Scripts } from '../../../@types/minima';
 import { DetailsTxPOW, TxPOW } from '../../../types/minima';
 
 export const getHistoryDetails = (): Promise<Map<string, { detail: DetailsTxPOW; txpow: TxPOW }>> => {

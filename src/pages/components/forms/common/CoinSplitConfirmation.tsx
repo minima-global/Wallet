@@ -1,5 +1,4 @@
 import { Typography } from '@mui/material';
-import CustomListItem from '../../../../shared/components/CustomListItem';
 import { ModalStackedCol } from '../../../../shared/components/modals/ModalWrappers';
 
 const CoinSplitConfirmation = ({ formik }: any) => {

@@ -1,23 +1,5 @@
 import styled from '@emotion/styled';
 
-export {
-    MiSearchBar,
-    MiSearchBarWithIcon,
-    MiTokenName,
-    MiTokenNameTicker,
-    MiTokenAmount,
-    MiSkeleton,
-    MiTokenListItem,
-    MiTokenContainer,
-    MiTokenError,
-    MiNoTokenSelected,
-    MiTestnet,
-    MiTokenNameWrapper,
-    NoResults,
-    MiTokenNameAmountWrapper,
-    MiTimeWrapper,
-};
-
 const MiTimeWrapper = styled('div')`
     min-width: 0;
     > p {
@@ -236,3 +218,21 @@ const MiSkeleton = styled('div')`
     letter-spacing: 0.02em;
     height: 15px;
 `;
+
+export {
+    MiSearchBar,
+    MiSearchBarWithIcon,
+    MiTokenName,
+    MiTokenNameTicker,
+    MiTokenAmount,
+    MiSkeleton,
+    MiTokenListItem,
+    MiTokenContainer,
+    MiTokenError,
+    MiNoTokenSelected,
+    MiTestnet,
+    MiTokenNameWrapper,
+    NoResults,
+    MiTokenNameAmountWrapper,
+    MiTimeWrapper,
+};

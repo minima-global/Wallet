@@ -1,4 +1,3 @@
-import { DetailsTxPOW } from './../../../types/minima/index';
 import * as types from '../../../types/minima';
 import { format } from 'date-fns';
 

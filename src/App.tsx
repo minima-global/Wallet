@@ -45,7 +45,7 @@ export default function App() {
                 dispatch(updateMiningState(false));
             }
         });
-    }, []);
+    }, [dispatch]);
 
     return (
         <ThemeProvider theme={theme}>

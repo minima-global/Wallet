@@ -1,5 +1,5 @@
 import { CloseOutlined } from '@mui/icons-material';
-import { Button, Modal, Stack } from '@mui/material';
+import { Modal, Stack } from '@mui/material';
 import styles from './DisplayFullJson.module.css';
 
 interface IProps {

@@ -7,14 +7,6 @@ import getSuitableImage from '../../shared/utils/imagehandler/getSuitableImage';
 import { createCustomToken } from '../rpc-commands';
 import { MiCustomToken, MiNFT } from '../../@types/nft';
 
-export {
-    buildCustomTokenCreation,
-    createFavoritesTable,
-    selectFavorites,
-    addTokenToFavoritesTable,
-    removeTokenFromFavoritesTable,
-    showTablesCount,
-};
 const buildCustomTokenCreation = async (tokenData: MiNFT | MiCustomToken, amount: string, nft: boolean) => {
     try {
         // if this is a data uri then compress it..
@@ -113,3 +105,12 @@ function removeTokenFromFavoritesTable(tokenid: string) {
         });
     });
 }
+
+export {
+    buildCustomTokenCreation,
+    createFavoritesTable,
+    selectFavorites,
+    addTokenToFavoritesTable,
+    removeTokenFromFavoritesTable,
+    showTablesCount,
+};

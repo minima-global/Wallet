@@ -1,7 +1,7 @@
 import { useFormik } from 'formik';
 import Decimal from 'decimal.js';
 import * as Yup from 'yup';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import { Button, Stack, TextField } from '@mui/material';
 import { callSend } from '../../../minima/rpc-commands';
@@ -15,9 +15,7 @@ import ValueTransferConfirmation from './common/ValueTransferConfirmation';
 
 import ModalManager from '../managers/ModalManager';
 import MiniModal from '../../../shared/components/MiniModal';
-import Pending from './Pending';
 import FormFieldWrapper from '../../../shared/components/FormFieldWrapper';
-import styled from '@emotion/styled';
 
 import QrScanner from '../../../shared/components/qrscanner/QrScanner';
 import validateMinimaAddress from '../../../minima/commands/validateMinimaAddress/validateMinimaAddress';
@@ -37,8 +35,7 @@ interface ISendForm {
     burn: string;
 }
 
-interface IProps {}
-const ValueTransfer = ({}: IProps) => {
+const ValueTransfer = () => {
     const mySchema = useFormSchema();
     const wallet = useAppSelector(selectBalance);
     const [openQrScanner, setOpenQrScanner] = React.useState(false);

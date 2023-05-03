@@ -11,17 +11,15 @@ import { useAppSelector } from '../../../minima/redux/hooks';
 import ModalManager from '../managers/ModalManager';
 import NFTConfirmation from '../forms/common/NFTConfirmation';
 import MiniModal from '../../../shared/components/MiniModal';
-import Pending from '../forms/Pending';
 import FormImageUrlSelect from '../../../shared/components/forms/FormImageUrlSelect';
 import { MiNFT } from '../../../@types/nft';
-import Required, { MiRequiredAsterisk } from '../../../shared/components/forms/Required';
+import Required from '../../../shared/components/forms/Required';
 import FormFieldWrapper from '../../../shared/components/FormFieldWrapper';
 import { selectBalance } from '../../../minima/redux/slices/balanceSlice';
 
 import Decimal from 'decimal.js';
 import MiFunds from '../forms/MiFunds';
 import { useModalHandler } from '../../../hooks/useModalHandler';
-import useIsVaultLocked from '../../../hooks/useIsVaultLocked';
 
 /**
  * Minima scales up to 64 decimal places
@@ -31,7 +29,6 @@ import useIsVaultLocked from '../../../hooks/useIsVaultLocked';
 Decimal.set({ precision: 64 });
 Decimal.set({ toExpNeg: -36 });
 
-type IStatusModal = 'success' | 'error' | 'pending' | '';
 const CreateNFTForm = () => {
     const mySchema = useMySchema();
     const wallet = useAppSelector(selectBalance);
@@ -46,10 +43,6 @@ const CreateNFTForm = () => {
         handleCloseStatusModal,
         setModalEmployee,
     } = useModalHandler();
-
-    React.useEffect(() => {
-        formik.setFieldValue('funds', wallet[0]);
-    }, [wallet]);
 
     const formik = useFormik({
         initialValues: {
@@ -92,6 +85,10 @@ const CreateNFTForm = () => {
         },
         validationSchema: mySchema,
     });
+
+    React.useEffect(() => {
+        formik.setFieldValue('funds', wallet[0]);
+    }, [wallet]);
 
     return (
         <form onSubmit={formik.handleSubmit}>
@@ -386,8 +383,8 @@ const useMySchema = () => {
             .required('This field is required')
             .matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters.')
             .test('check-my-amount', 'Invalid amount, NFTs cannot be divisible', function (val) {
-                const { path, createError, parent } = this;
-                if (val == undefined) {
+                const { path, createError } = this;
+                if (val === undefined) {
                     return false;
                 }
                 if (new Decimal(val).greaterThan(new Decimal(1000000000000))) {
@@ -417,7 +414,7 @@ const useMySchema = () => {
         burn: Yup.string()
             .matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters.')
             .test('check-my-burnamount', 'Invalid burn amount', function (val) {
-                const { path, createError, parent } = this;
+                const { path, createError } = this;
                 if (val === undefined) {
                     return true;
                 }
@@ -440,7 +437,7 @@ const useMySchema = () => {
             .matches(/^[^\\;]+$/, 'Invalid characters.'),
         webvalidate: Yup.string().test('check-my-webvalidator', 'Invalid Url, must be https', function (val) {
             const { path, createError, parent } = this;
-            if (val == undefined) {
+            if (val === undefined) {
                 return true;
             }
 
@@ -455,7 +452,7 @@ const useMySchema = () => {
         external_url: Yup.string().test('check-my-external-url', 'Invalid Url.', function (val) {
             const { path, createError, parent } = this;
 
-            if (val == undefined) {
+            if (val === undefined) {
                 return true;
             }
 

@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { AppThunk, RootState } from '../store';
-import { Coin, Token } from '../../../@types/minima';
+import { Token } from '../../../@types/minima';
 
 import * as RPC from '../../commands';
 

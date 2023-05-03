@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, CardHeader, Button, CardContent, Pagination } from '@mui/material';
+import { Card, CardHeader, CardContent, Pagination } from '@mui/material';
 import { Stack } from '@mui/system';
 import { Outlet, useMatch, useNavigate } from 'react-router-dom';
 import GridLayout from '../../layout/GridLayout';
@@ -26,7 +26,7 @@ const History = () => {
 
     const [loading, setLoading] = useState(true);
 
-    const [paginationPageSize, setPaginationSize] = useState(20);
+    const [paginationPageSize] = useState(20);
     const [paginationPageNumber, setPaginationNumber] = useState(1);
     const handlePaginationChange = (event: React.ChangeEvent<unknown>, value: number) => {
         setPaginationNumber(value);
@@ -35,7 +35,7 @@ const History = () => {
     useEffect(() => {
         dispatch(callAndStoreHistory());
         dispatch(callAndStoreHistoryDetails());
-    }, []);
+    }, [dispatch]);
 
     useEffect(() => {
         // console.log(historyTxpows);
@@ -51,7 +51,7 @@ const History = () => {
         // console.log(split);
         setTimeout(() => setLoading(false), 1000);
         setSplitByMonth(split);
-    }, [historyTxpows, paginationPageNumber]);
+    }, [historyTxpows, paginationPageNumber, paginationPageSize]);
 
     const createElements = (arr: Map<string, { detail: types.DetailsTxPOW; txpow: types.TxPOW }[]>) => {
         let elements = [];
@@ -226,8 +226,6 @@ const History = () => {
             }
         />
     );
-
-    return <div>hello</div>;
 };
 
 export default History;

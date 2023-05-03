@@ -1,4 +1,4 @@
-import { Box, ListItem, Stack, Typography, ListItemText } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 
 import styles from '../../theme/cssmodule/Components.module.css';
 

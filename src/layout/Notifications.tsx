@@ -8,10 +8,9 @@ import styles from '../theme/cssmodule/Components.module.css';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import BubbleChartIcon from '@mui/icons-material/BubbleChart';
 import BrokenImageIcon from '@mui/icons-material/BrokenImage';
-import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 
 const Notifications = () => {
-    const [openNotification, setOpenNotification] = useState(false);
+    const [, setOpenNotification] = useState(false);
     const notificationStatus = useAppSelector(selectNotificationState);
 
     // console.log(`NOTIFICATIONSTATUS`, notificationStatus);

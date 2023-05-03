@@ -1,4 +1,4 @@
-import { Grid, Typography, Box, Button, CardContent, Card, Stack, Link } from '@mui/material';
+import { Grid, Typography, Box, CardContent, Card, Stack, Link } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 const Offline = () => {

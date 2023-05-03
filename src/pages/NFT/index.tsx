@@ -10,7 +10,6 @@ import { useAppSelector } from '../../minima/redux/hooks';
 
 import { MiSearchBar, MiSearchBarWithIcon, NoResults } from '../../shared/components/layout/MiToken';
 import { selectTokensWithDecimalZero } from '../../minima/redux/slices/tokenSlice';
-import MiSearch from '../../shared/components/layout/svgs/MiSearch';
 import useTabs from '../../hooks/useTabs';
 import { selectFavouriteNFTs } from '../../minima/redux/slices/balanceSlice';
 

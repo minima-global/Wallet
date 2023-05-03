@@ -1,18 +1,16 @@
 /**
  * Select either an url or to upload an image for all token creation forms
  */
-import { Box, MenuItem, Select, SelectChangeEvent, TextField, Typography } from '@mui/material';
-import React, { useState } from 'react';
+import { Box, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
+import React from 'react';
 import AddImage from '../../../pages/components/forms/AddImage';
 import FormFieldWrapper from '../FormFieldWrapper';
 import styles from '../../../theme/cssmodule/Components.module.css';
 
 interface IProps {
-    // handleChange: (event: SelectChangeEvent) => void;
     formik: any;
 }
 
-type IFormSelection = 'URL' | 'CONTENTUPLOAD';
 const FormImageUrlSelect = ({ formik }: IProps) => {
     const [imageSelection, setMyImageSelection] = React.useState<any>('CONTENTUPLOAD');
 
@@ -21,8 +19,8 @@ const FormImageUrlSelect = ({ formik }: IProps) => {
         formik.setFieldValue('url', '');
     };
 
-    const [file, setFile] = React.useState<File | null>(null);
-    const [imageDataUrl, setImageDataUrl] = React.useState('');
+    const [, setFile] = React.useState<File | null>(null);
+    const [, setImageDataUrl] = React.useState('');
 
     /**
      * Handles the file input for when the user wants to select an image

@@ -20,7 +20,7 @@ const TransactionAmount = ({ address, amount }: IProps) => {
             .catch((err) => {});
 
         setType('Send');
-    }, []);
+    }, [address]);
 
     return (
         <p id="amount" className={styles[type === 'Receive' ? 'receive' : 'send']}>

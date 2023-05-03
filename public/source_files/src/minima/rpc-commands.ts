@@ -1,6 +1,4 @@
-import { MinimaToken, Status as NodeStatus } from '../@types/minima';
-
-export { callSend, callGetAddress, callStatus, createCustomToken, getWalletBalance };
+import { MinimaToken } from '../@types/minima';
 
 interface ISendPayload {
     token: MinimaToken;
@@ -122,3 +120,5 @@ export const rpc = (command: string): Promise<any> => {
         });
     });
 };
+
+export { callSend, callGetAddress, callStatus, createCustomToken, getWalletBalance };

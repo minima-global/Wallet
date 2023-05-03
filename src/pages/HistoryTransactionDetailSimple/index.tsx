@@ -55,7 +55,7 @@ const HistoryTransactionDetailSimple = () => {
         if (location.state && 'txpowid' in location.state) {
             setTransaction(historyTransactions.get(location.state.txpowid));
         }
-    }, [historyTransactions]);
+    }, [historyTransactions, location.state, navigate]);
 
     useEffect(() => {
         if (viewTransaction) {
@@ -387,7 +387,6 @@ const HistoryTransactionDetailSimple = () => {
             )}
         </>
     );
-    return <div>hello</div>;
 };
 
 export default HistoryTransactionDetailSimple;

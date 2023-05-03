@@ -14,7 +14,6 @@ import TokenConfirmation from './components/forms/common/TokenConfirmation';
 import ModalManager from './components/managers/ModalManager';
 
 import styles from '../theme/cssmodule/Components.module.css';
-import Pending from './components/forms/Pending';
 import FormFieldWrapper from '../shared/components/FormFieldWrapper';
 import FormImageUrlSelect from '../shared/components/forms/FormImageUrlSelect';
 import { buildCustomTokenCreation } from '../minima/libs/nft';
@@ -52,10 +51,6 @@ const TokenCreation: FC = () => {
         handleCloseStatusModal,
         setModalEmployee,
     } = useModalHandler();
-
-    React.useEffect(() => {
-        formik.setFieldValue('funds', wallet[0]);
-    }, [wallet]);
 
     const formik = useFormik({
         initialValues: {
@@ -98,6 +93,10 @@ const TokenCreation: FC = () => {
             }
         },
     });
+    React.useEffect(() => {
+        formik.setFieldValue('funds', wallet[0]);
+    }, [formik, wallet]);
+
     return (
         <GridLayout
             children={
@@ -344,7 +343,7 @@ const useMySchema = () => {
         funds: Yup.object().test('check-my-funds', 'Insufficient funds.', function (val: any) {
             const { createError } = this;
 
-            if (val == undefined) {
+            if (val === undefined) {
                 return false;
             }
 
@@ -364,8 +363,8 @@ const useMySchema = () => {
             .required('This field is required')
             .matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters.')
             .test('check-my-amount', 'Invalid amount', function (val) {
-                const { path, createError, parent } = this;
-                if (val == undefined) {
+                const { path, createError } = this;
+                if (val === undefined) {
                     return false;
                 }
 
@@ -396,7 +395,7 @@ const useMySchema = () => {
         burn: Yup.string()
             .matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters.')
             .test('check-my-burnamount', 'Invalid burn amount', function (val) {
-                const { path, createError, parent } = this;
+                const { path, createError } = this;
                 if (val === undefined) {
                     return true;
                 }
@@ -437,7 +436,7 @@ const useMySchema = () => {
         webvalidate: Yup.string().test('check-my-webvalidator', 'Invalid Url, must be https', function (val) {
             const { path, createError, parent } = this;
 
-            if (val == undefined) {
+            if (val === undefined) {
                 return true;
             }
 

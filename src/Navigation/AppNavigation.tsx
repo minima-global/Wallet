@@ -20,7 +20,6 @@ import { useAppSelector } from '../minima/redux/hooks';
 import { selectMiningState } from '../minima/redux/slices/miningSlice';
 import CreateNFT from '../pages/components/nfts/CreateNFT';
 import NFTDetail from '../pages/NFTDetail';
-import { selectBalance } from '../minima/redux/slices/balanceSlice';
 import { NoResults } from '../shared/components/layout/MiToken';
 
 import styles from './Navigation.module.css';
@@ -131,7 +130,7 @@ const AppNavigation = () => {
             {nodeStatus === 'online' && MDSStatus === 'offline' && (
                 <Unavailable>
                     <Stack spacing={1} alignItems="center">
-                        <img src="./assets/failed.svg" />
+                        <img alt="failed" src="./assets/failed.svg" />
                         <Stack>
                             <NoResults>
                                 <h6>MDS Unavailable</h6>

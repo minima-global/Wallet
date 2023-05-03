@@ -184,7 +184,7 @@ const MiSelect = ({ value, tokens, error, setFieldValue, resetForm, coinSplitMod
             tokens.filter(
                 (m: MinimaToken) =>
                     containsText(
-                        typeof m.token == 'string' ? m.token : typeof m.token.name == 'string' ? m.token.name : null,
+                        typeof m.token == 'string' ? m.token : typeof m.token.name === 'string' ? m.token.name : null,
                         filterText
                     ) || containsText(m.tokenid, filterText)
             )
@@ -226,7 +226,7 @@ const MiSelect = ({ value, tokens, error, setFieldValue, resetForm, coinSplitMod
                                         >
                                             <MiTokenNameWrapper>
                                                 <MiTokenName>
-                                                    {typeof value.token == 'string' ? value.token : value.token.name}
+                                                    {typeof value.token === 'string' ? value.token : value.token.name}
                                                 </MiTokenName>
 
                                                 {value.tokenid !== '0x00' ? <NFTAuthenticity token={value} /> : null}

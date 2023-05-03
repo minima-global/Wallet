@@ -1,6 +1,6 @@
 import { callAndStoreTokens } from './tokenSlice';
 import { toggleNotification } from './notificationSlice';
-import { isPropertyString, containsText, hexToString, makeTokenImage } from './../../../shared/functions';
+import { isPropertyString, containsText, makeTokenImage } from './../../../shared/functions';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { AppThunk, RootState } from '../store';
 

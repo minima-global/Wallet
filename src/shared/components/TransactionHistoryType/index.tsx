@@ -33,7 +33,7 @@ const TransactionHistoryType = ({ tokenName, amount, address }: IProps) => {
         if (type === 'custom') {
             setImageType('custom');
         }
-    }, []);
+    }, [amount]);
 
     return (
         <>

@@ -1,17 +1,6 @@
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import {
-    Card,
-    CardHeader,
-    CardContent,
-    Avatar,
-    Typography,
-    Grid,
-    CardMedia,
-    Stack,
-    Divider,
-    Badge,
-} from '@mui/material';
+import { Card, CardHeader, CardContent, Avatar, Typography, Grid, CardMedia, Stack, Divider } from '@mui/material';
 
 import {
     MiTokenName,
@@ -35,7 +24,7 @@ const TokenDetail = () => {
     const [enlargenCover, setEnlargenCover] = useState(false);
 
     const token = useAppSelector(selectTokenWithID(tokenid));
-    const loading = typeof token === undefined;
+    const loading = token === undefined;
 
     return (
         <>

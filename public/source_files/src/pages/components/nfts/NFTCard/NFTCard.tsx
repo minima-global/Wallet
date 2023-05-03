@@ -46,7 +46,7 @@ const NFTCard = ({ NFT }: IProps) => {
         RPC.tokenValidate(NFT.tokenid).then(() => {
             setTokenWebValidated(true);
         });
-    }, []);
+    }, [NFT.tokenid]);
 
     useEffect(() => {
         const userHasFavorited = myFavoritedNFTs.findIndex((t) => t.tokenid === NFT.tokenid);
@@ -56,7 +56,7 @@ const NFTCard = ({ NFT }: IProps) => {
         }
 
         setFavorited(false);
-    }, [myFavoritedNFTs]);
+    }, [myFavoritedNFTs, NFT.tokenid]);
 
     return (
         <NFTWrapper onClick={() => navigate(NFT.tokenid)}>

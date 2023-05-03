@@ -7,7 +7,7 @@ const exportToCsv = (e: any, transaction: any) => {
     // Convert users transaction data to a csv
     let usersCsv = transaction.reduce((acc: any, transaction: any) => {
         const { id, amount, tokenid, address, date, type, block, burn, json } = transaction;
-        acc.push([id, amount, tokenid, address, date, type, block, burn, json].join(','));
+        acc.push([id, amount, 'id:' + tokenid, address, date, type, block, burn, json].join(','));
         return acc;
     }, []);
 

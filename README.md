@@ -10,7 +10,13 @@ A wallet Minima decentralised application, features include viewing your balance
 ## Installation
 
 - Run `npm install` in the root of this project, this should install all the dependencies.
+
+### Mac Zip
 - Run `npm run build-zip` that should build you a `wallet.zip` minidapp in the minidapp folder of this project.
+### Windows Zip
+- Run `npm run build-zip-w` that should create you a build of which you can then:
+  - right-click the build folder and click zip
+  - rename it to minidapp-version.mds.zip
 
 Finally,
 

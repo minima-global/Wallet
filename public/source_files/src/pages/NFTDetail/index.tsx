@@ -1,19 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import {
-    Card,
-    Link,
-    CardMedia,
-    Typography,
-    CardContent,
-    Stack,
-    Button,
-    Grid,
-    styled,
-    Tooltip,
-    tooltipClasses,
-    TooltipProps,
-} from '@mui/material';
+import { Card, Link, Stack, Button, styled, Tooltip, tooltipClasses, TooltipProps } from '@mui/material';
 import GridLayout from '../../layout/GridLayout';
 import { useAppSelector } from '../../minima/redux/hooks';
 import VerifiedIcon from '@mui/icons-material/Verified';
@@ -52,12 +39,12 @@ const NFTDetail = () => {
                 setTokenWebValidated(true);
             });
         }
-    }, []);
+    }, [NFT]);
 
     useEffect(() => {
         const token = tokensWithDecimalsZero.find((t) => t.tokenid === tokenid);
         setNFT(token);
-    }, [tokenid]);
+    }, [tokenid, tokensWithDecimalsZero]);
 
     return (
         <GridLayout

@@ -1,6 +1,5 @@
 import React, { ReactNode, useState } from 'react';
 
-import ClearIcon from '@mui/icons-material/Clear';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import styles from '../../../theme/cssmodule/Components.module.css';
 import { Box, Stack, Typography } from '@mui/material';
@@ -63,7 +62,11 @@ const AddImage = ({ onImageChange = () => {}, formik }: IProps) => {
             />
             {formik.values.url && selectedFile && !formik.isSubmitting ? (
                 <>
-                    <img src={formik.values.url} className={styles['form-image-preview-box-img']} />
+                    <img
+                        alt="form-image-preview"
+                        src={formik.values.url}
+                        className={styles['form-image-preview-box-img']}
+                    />
                     {/* <ClearIcon
                         color="inherit"
                         className={styles['clear-icon']}
@@ -79,7 +82,11 @@ const AddImage = ({ onImageChange = () => {}, formik }: IProps) => {
                 </>
             ) : formik.values.url && selectedFile && formik.isSubmitting ? (
                 <>
-                    <img src={formik.values.url} className={styles['form-image-preview-box-img-disabled']} />
+                    <img
+                        alt="form-image-preview"
+                        src={formik.values.url}
+                        className={styles['form-image-preview-box-img-disabled']}
+                    />
                     {/* <ClearIcon color="inherit" className={styles['clear-icon-disabled']} /> */}
                     <Box className={styles['info-label-image-upload']}>
                         <Typography variant="caption">{selectedFile.name}</Typography>

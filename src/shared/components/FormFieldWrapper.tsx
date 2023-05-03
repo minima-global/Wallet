@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
-import { Tooltip, Stack, Typography } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import { ReactElement } from 'react';
-import HelpIcon from '@mui/icons-material/Help';
 import { MiRequiredAsterisk } from './forms/Required';
 
 const FieldWrapper = styled('div')`
