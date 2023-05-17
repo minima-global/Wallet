@@ -233,12 +233,12 @@ const Receive: FC = () => {
                                 />
                             )}
 
-                            {validBuild === undefined && (
+                            {!validBuild && (
                                 <Stack alignItems="center">
                                     <CircularProgress size={32} />
                                 </Stack>
                             )}
-                            {validBuild !== undefined && !validBuild && (
+                            {!!validBuild && (
                                 <FormFieldWrapper
                                     help="Check validity of a Minima address"
                                     children={
