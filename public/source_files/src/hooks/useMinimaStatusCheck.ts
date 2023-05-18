@@ -6,29 +6,43 @@ import { events } from '../minima/libs/events';
 import { createFavoritesTable } from '../minima/libs/nft';
 export const useMinimaStatusCheck = () => {
     const dispatch = useAppDispatch();
-
-    const [nodeStatus, setNodeStatus] = useState<'offline' | 'online' | 'checking'>('checking');
-    const [MDSStatus, setMDSStatus] = useState<'offline' | 'online' | 'checking'>('checking');
+    const [_minimaStatus, setStatus] = useState(false);
+    const [loadingStatusCheck, setStatusCheck] = useState(true);
 
     useEffect(() => {
-        events.onInit(() => {
-            setNodeStatus('online');
-            setMDSStatus('online');
+        if (loadingStatusCheck) {
+            events.onInit(() => {
+                MDS.cmd('balance', (r) => {
+                    if (r.status) {
+                        setStatus(true);
+                        setStatusCheck(false);
+                    }
+                });
 
-            dispatch(callAndStoreBalance());
-            dispatch(callAndStoreTokens());
-            createFavoritesTable();
-            dispatch(initFavoritesTableAndUpdate());
-        });
+                dispatch(callAndStoreBalance());
+                dispatch(callAndStoreTokens());
+                createFavoritesTable();
+                dispatch(initFavoritesTableAndUpdate());
+            });
+        }
 
+        if (!_minimaStatus && loadingStatusCheck) {
+            setTimeout(() => {
+                setStatusCheck(false);
+            }, 5000);
+        }
+    }, [dispatch, _minimaStatus, loadingStatusCheck]);
+
+    useEffect(() => {
         events.onFail(() => {
-            setMDSStatus('offline');
+            setStatus(false);
         });
-    }, [dispatch]);
+    }, [dispatch, _minimaStatus]);
 
     return {
-        nodeStatus,
-        MDSStatus,
+        _minimaStatus,
+
+        loadingStatusCheck,
     };
 };
 

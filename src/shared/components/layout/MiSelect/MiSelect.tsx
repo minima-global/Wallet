@@ -31,6 +31,7 @@ import Decimal from 'decimal.js';
 import NFTAuthenticity from '../../../../pages/components/tokens/NFTAuthenticity';
 
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
+import { useNavigate } from 'react-router-dom';
 
 const DropDownContainer = styled('div')`
     width: 100%;
@@ -171,11 +172,13 @@ const MiSelect = ({ value, tokens, error, setFieldValue, resetForm, coinSplitMod
     const mobileView = useMediaQuery(theme.breakpoints.down('sm'));
     const [filterWallet, setFilterWallet] = React.useState<MinimaToken[]>([]);
     const [filterText, setFilterText] = React.useState('');
+    const navigate = useNavigate();
 
     const toggling = () => setOpen(!isOpen);
     const onOptionClicked = (t: MinimaToken) => {
         resetForm();
         setFieldValue('token', t);
+        navigate(`/send/${t.tokenid}`, { replace: true });
         setOpen(false);
     };
 
@@ -279,7 +282,6 @@ const MiSelect = ({ value, tokens, error, setFieldValue, resetForm, coinSplitMod
                                             }}
                                             placeholder="Search by name or tokenid"
                                         />
-                                        {/* <MiSearch color="#fff" size={20} /> */}
                                     </MiSearchBarWithIcon>
                                 </Stack>
 

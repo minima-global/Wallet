@@ -49,16 +49,18 @@ const HistoryTransactionDetailSimple = () => {
     const handleFullJSONView = () => setAdvanced(true);
 
     useEffect(() => {
-        if (!(location.state && 'txpowid' in location.state)) {
-            navigate('/history');
-        }
-        if (location.state && 'txpowid' in location.state) {
-            setTransaction(historyTransactions.get(location.state.txpowid));
+        if (historyTransactions) {
+            if (!(location.state && 'txpowid' in location.state)) {
+                navigate('/history');
+            }
+            if (location.state && 'txpowid' in location.state) {
+                setTransaction(historyTransactions.get(location.state.txpowid));
+            }
         }
     }, [historyTransactions, location.state, navigate]);
 
     useEffect(() => {
-        if (viewTransaction) {
+        if (viewTransaction && historyTransactions) {
             const type = utils.getTxPOWDetailsType(viewTransaction.detail);
             const difference = viewTransaction.detail.difference;
             let amount: any = '';

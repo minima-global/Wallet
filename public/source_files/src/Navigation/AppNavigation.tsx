@@ -27,6 +27,7 @@ import History from '../pages/History';
 import HistoryTransactionDetailSimple from '../pages/HistoryTransactionDetailSimple';
 import useMinimaStatusCheck from '../hooks/useMinimaStatusCheck';
 import Unavailable from '../pages/components/Unavailable';
+import useIsMobileScreenSize from '../hooks/useIsMobileScreenSize';
 
 export interface RouteType {
     path: string;
@@ -38,7 +39,8 @@ const AppNavigation = () => {
     const [open, setOpen] = useState(false);
     const [pageTitle, setPageTitle] = useState('Balance');
     const isMining = useAppSelector(selectMiningState);
-    const { nodeStatus, MDSStatus } = useMinimaStatusCheck();
+    const { _minimaStatus, loadingStatusCheck } = useMinimaStatusCheck();
+    const isMobile = useIsMobileScreenSize();
 
     // Back Button
     const [onDetail, setOnDetail] = useState(false);
@@ -122,32 +124,43 @@ const AppNavigation = () => {
 
     return (
         <>
-            {nodeStatus === 'offline' && MDSStatus === 'offline' && (
+            {!!loadingStatusCheck && (
                 <Stack mt={2} alignItems="center" justifyContent="center">
                     <CircularProgress size={16} />
                 </Stack>
             )}
-            {nodeStatus === 'online' && MDSStatus === 'offline' && (
+            {!_minimaStatus && !loadingStatusCheck && (
                 <Unavailable>
                     <Stack spacing={1} alignItems="center">
                         <img alt="failed" src="./assets/failed.svg" />
                         <Stack>
                             <NoResults>
-                                <h6>MDS Unavailable</h6>
-                                <p>
-                                    Make sure you are logged into your Mini hub and your node is online. <br /> Once you
-                                    have logged in, close and re-open this minidapp.
-                                </p>
-                                <p>
-                                    If you are running the Mini hub on Safari make sure you accept security on{' '}
-                                    <a>https://127.0.0.1:9004</a>
-                                </p>
+                                <h6>Application can't connect to MDS.</h6>
+                                {isMobile && (
+                                    <p>
+                                        Check the node's health by navigating to "Health" in the menu of the APK. Make
+                                        sure it's active and in sync then refresh this page.
+                                    </p>
+                                )}
+                                {!isMobile && (
+                                    <>
+                                        <p>
+                                            Make sure you are logged into your Mini hub and your node is online. <br />{' '}
+                                            Once you have logged in, close and re-open this minidapp.
+                                        </p>
+                                        <p>
+                                            If you are running the Mini hub on Safari make sure you accept security on{' '}
+                                            <a>https://127.0.0.1:9004</a>
+                                        </p>
+                                    </>
+                                )}
                             </NoResults>
                         </Stack>
                     </Stack>
                 </Unavailable>
             )}
-            {nodeStatus === 'online' && MDSStatus === 'online' && (
+
+            {!!_minimaStatus && !loadingStatusCheck && (
                 <Stack>
                     <header className={styles['navigation']}>
                         <Grid container>

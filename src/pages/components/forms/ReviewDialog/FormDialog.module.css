@@ -1,0 +1,12 @@
+.dialog__ {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button__wrapper {
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: row;
+  gap: 8px;
+}

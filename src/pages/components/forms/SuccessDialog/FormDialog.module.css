@@ -1,0 +1,11 @@
+.dialog__ {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button__wrapper {
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+}
