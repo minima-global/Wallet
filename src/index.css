@@ -8,10 +8,15 @@ body {
     overflow: hidden;
 }
 
+body * {
+    letter-spacing: 0.05em;
+    line-height: 1.5;
+}
+
 
 @font-face {
     font-family: Manrope-regular;
-    src: url('./assets/fonts/Manrope/Manrope-Regular.ttf');
+    src: url('./assets/fonts/Manrope/Manrope-Medium.ttf');
 }
 @font-face {
     font-family: Manrope-bold;

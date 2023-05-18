@@ -26,8 +26,8 @@ const ReviewDialog = ({ open, transactionCreationStatus, hideReview, submitForm,
                             </li>
                         </ul>
                     )}
-                    {children && transactionCreationStatus === 'ongoing' && children}
-                    {children && transactionCreationStatus === 'failed' && (
+                    {!!children && transactionCreationStatus === 'ongoing' && children}
+                    {!!children && transactionCreationStatus === 'failed' && (
                         <ul id="list">
                             <li>
                                 <h6>Transaction Status</h6>

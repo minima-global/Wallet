@@ -42,7 +42,7 @@ const OngoingTransaction = styled('div')`
         list-style: none;
         row-gap: 8px;
         display: grid;
-        margin: 4px;
+        // margin: 4px;
     }
     #list * {
         padding: 0;
@@ -72,7 +72,6 @@ const OngoingTransaction = styled('div')`
     button:first-of-type {
         border: 1px solid #16181c;
         padding: 4px 16px;
-        max-height: 30px;
         background: none;
         font-size: 0.975rem;
     }
