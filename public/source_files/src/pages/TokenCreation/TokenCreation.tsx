@@ -22,6 +22,8 @@ import MiFunds from '../components/forms/MiFunds';
 import React from 'react';
 import useIsVaultLocked from '../../hooks/useIsVaultLocked';
 import { NoResults } from '../../shared/components/layout/MiToken';
+import ReviewDialog from '../components/forms/ReviewDialog';
+import SuccessDialog from '../components/forms/SuccessDialog';
 
 /**
  * Minima scales up to 64 decimal places
@@ -34,9 +36,12 @@ Decimal.set({ toExpNeg: -36 });
 const TokenCreation = () => {
     const mySchema = useMySchema();
     const wallet = useAppSelector(selectBalance);
-    const [dialog, setDialog] = useState(false);
 
     const userLockedVault = useIsVaultLocked();
+
+    const [error, setError] = useState('');
+    const [showReview, setReview] = useState(false);
+    const [showSuccess, setSuccess] = useState(false);
 
     const formik = useFormik({
         initialValues: {
@@ -51,6 +56,8 @@ const TokenCreation = () => {
         },
         validationSchema: mySchema,
         onSubmit: async (formData) => {
+            setSuccess(true);
+            formik.setStatus('ongoing');
             const cToken: MiCustomToken = {
                 name: formData.name.replaceAll(`"`, `'`),
                 url: formData.url, // upload image or normal url
@@ -62,16 +69,16 @@ const TokenCreation = () => {
             try {
                 // send rpc
                 await buildCustomTokenCreation(cToken, formData.amount, false);
-                setDialog(false);
-                formik.setStatus(`Your token has been created.  It will arrive shortly.`);
+                formik.setStatus('complete');
             } catch (error: any) {
-                setDialog(false);
                 const isPending = error.message === 'pending';
                 if (isPending) {
-                    formik.setStatus('Transaction is pending, you can confirm it in your pending actions.');
-                    return;
+                    formik.setStatus('pending');
                 }
-                formik.setStatus('Failed, ' + error.message);
+                if (!isPending) {
+                    formik.setStatus('failed');
+                    setError(error.message);
+                }
             }
         },
     });
@@ -286,8 +293,11 @@ const TokenCreation = () => {
                                         />
 
                                         <Button
-                                            onClick={() => setDialog(true)}
-                                            disabled={formik.isSubmitting || !formik.isValid}
+                                            onClick={() => {
+                                                setReview(true);
+                                                formik.setStatus('ongoing');
+                                            }}
+                                            disabled={!(formik.isValid && formik.dirty && !formik.isSubmitting)}
                                             disableElevation
                                             color="primary"
                                             variant="contained"
@@ -301,108 +311,68 @@ const TokenCreation = () => {
                         </Card>
                     )}
 
-                    <Dialog open={dialog && !formik.status}>
-                        <Stack className={styles['modal__wrapper']}>
-                            <h6>Confirm Token Creation?</h6>
-                            <Stack
-                                className={styles['modal__content']}
-                                flexDirection="column"
-                                justifyContent="space-between"
-                                alignItems="space-between"
-                                gap={8}
-                            >
-                                <ul>
-                                    <li>
-                                        <div className={styles['token__wrapper']}>
-                                            <Avatar variant="rounded">
+                    <SuccessDialog
+                        open={showSuccess}
+                        error={error}
+                        transactionCreationStatus={formik.status}
+                        hideSuccess={() => setSuccess(false)}
+                        clearForm={() => formik.resetForm()}
+                    />
+                    <ReviewDialog
+                        open={showReview}
+                        children={
+                            <ul id="list">
+                                <li>
+                                    <div className={styles['token__wrapper']}>
+                                        <Avatar variant="rounded">
+                                            {!!formik.values.url.length && (
                                                 <img alt="custom-token-image" src={formik.values.url} />
-                                            </Avatar>
-                                            <div>
-                                                <h6>{formik.values.name}</h6>
-                                                <p>{formik.values.amount}</p>
-                                            </div>
+                                            )}
+                                            {!formik.values.url.length && (
+                                                <img
+                                                    id="question"
+                                                    alt="custom-token-image"
+                                                    src="./assets/question.svg"
+                                                />
+                                            )}
+                                        </Avatar>
+                                        <div>
+                                            <h6>{formik.values.name}</h6>
+                                            <p>{formik.values.amount}</p>
                                         </div>
+                                    </div>
+                                </li>
+
+                                {formik.values.description.length > 0 && (
+                                    <li>
+                                        <h6>Description</h6>
+                                        <p>{formik.values.description}</p>
                                     </li>
-
-                                    {formik.values.description.length > 0 && (
-                                        <li>
-                                            <h6>Description</h6>
-                                            <p>{formik.values.description}</p>
-                                        </li>
-                                    )}
-                                    {formik.values.ticker.length > 0 && (
-                                        <li>
-                                            <h6>Ticker</h6>
-                                            <p>{formik.values.ticker}</p>
-                                        </li>
-                                    )}
-                                    {formik.values.webvalidate.length > 0 && (
-                                        <li>
-                                            <h6>Web Validation URL</h6>
-                                            <p>{formik.values.webvalidate}</p>
-                                        </li>
-                                    )}
-                                    {formik.values.burn.length > 0 && (
-                                        <li>
-                                            <h6>Burn Fee</h6>
-                                            <p>{formik.values.burn + ' Minima'}</p>
-                                        </li>
-                                    )}
-                                </ul>
-                                <Stack
-                                    className={styles['modal__btn_wrapper']}
-                                    flexDirection="row"
-                                    alignItems="flex-end"
-                                    gap={1}
-                                    justifyContent="flex-end"
-                                >
-                                    <button
-                                        disabled={formik.isSubmitting}
-                                        type="button"
-                                        onClick={() => setDialog(false)}
-                                    >
-                                        Cancel
-                                    </button>
-                                    <button
-                                        disabled={formik.isSubmitting}
-                                        type="submit"
-                                        onClick={() => formik.handleSubmit()}
-                                    >
-                                        Confirm
-                                    </button>
-                                </Stack>
-                            </Stack>
-                        </Stack>
-                    </Dialog>
-                    <Dialog open={formik.status}>
-                        <Stack className={styles['modal__wrapper']}>
-                            <h6>Transaction Status</h6>
-                            <Stack
-                                className={styles['modal__content']}
-                                flexDirection="column"
-                                justifyContent="space-between"
-                                alignItems="space-between"
-                            >
-                                <p>{formik.status}</p>
-
-                                <Stack
-                                    className={styles['modal__btn_wrapper']}
-                                    flexDirection="row"
-                                    alignItems="flex-end"
-                                    gap={1}
-                                    justifyContent="flex-end"
-                                >
-                                    <button
-                                        disabled={formik.isSubmitting}
-                                        type="button"
-                                        onClick={() => formik.resetForm()}
-                                    >
-                                        Dismiss
-                                    </button>
-                                </Stack>
-                            </Stack>
-                        </Stack>
-                    </Dialog>
+                                )}
+                                {formik.values.ticker.length > 0 && (
+                                    <li>
+                                        <h6>Ticker</h6>
+                                        <p>{formik.values.ticker}</p>
+                                    </li>
+                                )}
+                                {formik.values.webvalidate.length > 0 && (
+                                    <li>
+                                        <h6>Web Validation URL</h6>
+                                        <p>{formik.values.webvalidate}</p>
+                                    </li>
+                                )}
+                                {formik.values.burn.length > 0 && (
+                                    <li>
+                                        <h6>Burn Fee</h6>
+                                        <p>{formik.values.burn + ' Minima'}</p>
+                                    </li>
+                                )}
+                            </ul>
+                        }
+                        transactionCreationStatus={formik.status}
+                        hideReview={() => setReview(false)}
+                        submitForm={() => formik.submitForm()}
+                    />
                 </>
             }
         />

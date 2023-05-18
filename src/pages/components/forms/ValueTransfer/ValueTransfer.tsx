@@ -118,7 +118,6 @@ const ValueTransfer = () => {
             />
             <ReviewDialog
                 open={showReview}
-                error={error}
                 children={
                     <ul id="list">
                         <li>

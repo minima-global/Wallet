@@ -1,83 +1,4 @@
-.modal__wrapper  {
-  width: auto;
-  height: auto;
-  max-height: 60vh;
-  max-width: 35vw;
-  min-width: 35vw;
-  overflow-y: overlay;
-}
-.modal__wrapper h6 {
-  background-color: #16181c;
-  font-size: 1rem;
-  padding: 0;
-  margin: 0;
-  color: #fff;
-  padding: 8px;
-}
-.modal__content p {
-  font-family: Manrope-regular;
-  font-size: 0.975rem;
-  word-break: keep-all;
-  overflow: overlay;
 
-}
-.modal__content ul {
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  list-style: none;
-  gap: 8px;
-}
-.modal__content li h6 {
-  padding: 0;
-  margin: 0;
-  background: none;
-  font-family: Manrope-regular;
-  color: #16181C; 
-}
-.modal__content li p {
-  padding: 0;
-  margin: 0;
-  font-family: Manrope-regular;
-  color: #16181C; 
-}
-.modal__content {
-  height: 100%;
-  padding: 8px;
-  min-height: 35vh;
-  width: inherit;
-  overflow: overlay;
-  word-wrap: break-word;
-
-}
-.modal__btn_wrapper button {
-  min-height: 36px;
-}
-.modal__btn_wrapper button:hover {
-  cursor: pointer;
-  opacity: 0.8;
-}
-.modal__btn_wrapper button:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
-}
-.modal__btn_wrapper button[type="submit"] {
-  background-color: #16181C;
-  border: 1px solid #16181C;
-  color: #fff;
-  padding: 8px 16px;
-  border-radius: 4px;
-}
-.modal__btn_wrapper button[type="button"] {
-  color: #16181C;
-  background: none;
-  border: none;
-  font-family: Manrope-regular;
-  border: 1px solid #16181C;
-  padding: 8px 16px;
-  border-radius: 4px;
-}
 .token__wrapper {
   display: flex;
   align-items: center;
@@ -86,7 +7,7 @@
   gap: 8px;
   background-color: #f2f2f2;
   border-radius: 4px;
-  padding: 8px;
+  padding: 8px!important;
 }
 .token__wrapper h6 {
   font-size: 0.975rem;

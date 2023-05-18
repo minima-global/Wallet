@@ -1,14 +1,13 @@
 import { useFormik } from 'formik';
 import Decimal from 'decimal.js';
 import * as Yup from 'yup';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-import { Button, Stack, TextField, Dialog } from '@mui/material';
+import { Button, Stack, TextField } from '@mui/material';
 import { callSend } from '../../../../minima/rpc-commands';
 import { MinimaToken } from '../../../../@types/minima';
 import { useAppSelector } from '../../../../minima/redux/hooks';
 import sharedStyles from '../../../../theme/cssmodule/Components.module.css';
-import styles from './Value.module.css';
 import MiSelect from '../../../../shared/components/layout/MiSelect/MiSelect';
 import { selectBalance } from '../../../../minima/redux/slices/balanceSlice';
 import { MINIMA__DECIMAL_PRECISION, MINIMA__TOKEN_ID } from '../../../../shared/constants';
@@ -22,6 +21,8 @@ import { useParams } from 'react-router-dom';
 import useIsUserRunningWebView from '../../../../hooks/useIsUserRunningWebView';
 import FeatureUnavailable from '../../FeatureUnavailable';
 import useIsVaultLocked from '../../../../hooks/useIsVaultLocked';
+import SuccessDialog from '../SuccessDialog';
+import ReviewDialog from '../ReviewDialog';
 
 Decimal.set({ precision: MINIMA__DECIMAL_PRECISION });
 
@@ -33,50 +34,55 @@ interface ISendForm {
 }
 
 const ValueTransfer = () => {
-    const mySchema = useFormSchema();
     const wallet = useAppSelector(selectBalance);
+    const mySchema = useFormSchema();
     const [openQrScanner, setOpenQrScanner] = React.useState(false);
     const [errorScannedMinimaAddress, setErrorScannedMinimaAddress] = React.useState<false | string>(false);
-    const [dialog, setDialog] = useState(false);
-
     const userLockedVault = useIsVaultLocked();
-
     const [internalBrowserWarningModal, setInternalBrowserWarningModal] = useState(false);
     const isUserRunningWebView = useIsUserRunningWebView();
 
+    const [error, setError] = useState('');
+    const [showReview, setReview] = useState(false);
+    const [showSuccess, setSuccess] = useState(false);
     const { tokenid } = useParams();
 
-    const requestedToken =
-        tokenid && wallet.find((i) => i.tokenid === tokenid)
-            ? wallet.filter((i) => i.tokenid === tokenid)[0]
-            : wallet[0];
+    useEffect(() => {
+        formik.setFieldValue(
+            'token',
+            tokenid && wallet.find((i) => i.tokenid === tokenid)
+                ? wallet.filter((i) => i.tokenid === tokenid)[0]
+                : wallet[0]
+        );
+    }, [tokenid, wallet]);
 
     const formik = useFormik({
         initialValues: {
-            token: requestedToken,
+            token: wallet[0],
             amount: '',
             address: '',
             burn: '',
             password: '',
         },
         onSubmit: async (formInputs: ISendForm) => {
+            setSuccess(true);
+            formik.setStatus('ongoing');
             try {
                 // send rpc
                 await callSend({ ...formInputs });
-                setDialog(false);
-                formik.setStatus(`This transaction has been submitted.  It will arrive shortly.`);
+                formik.setStatus('complete');
             } catch (error: any) {
-                setDialog(false);
                 const isPending = error.message === 'pending';
                 if (isPending) {
-                    formik.setStatus('Transaction is pending, you can confirm it in your pending actions.');
-                    return;
+                    formik.setStatus('pending');
                 }
-                formik.setStatus('Failed, ' + error.message);
+                if (!isPending) {
+                    formik.setStatus('failed');
+                    setError(error.message);
+                }
             }
         },
         validationSchema: mySchema,
-        enableReinitialize: !!wallet,
     });
 
     const handleCloseQrScanner = () => {
@@ -103,6 +109,38 @@ const ValueTransfer = () => {
 
     return (
         <>
+            <SuccessDialog
+                open={showSuccess}
+                error={error}
+                transactionCreationStatus={formik.status}
+                hideSuccess={() => setSuccess(false)}
+                clearForm={() => formik.resetForm()}
+            />
+            <ReviewDialog
+                open={showReview}
+                children={
+                    <ul id="list">
+                        <li>
+                            <h6>Recipient Address</h6>
+                            <p>{formik.values.address}</p>
+                        </li>
+                        <li>
+                            <h6>Amount</h6>
+                            <p>{formik.values.amount}</p>
+                        </li>
+
+                        {!!formik.values.burn.length && (
+                            <li>
+                                <h6>Burn</h6>
+                                <p>{formik.values.burn}</p>
+                            </li>
+                        )}
+                    </ul>
+                }
+                transactionCreationStatus={formik.status}
+                hideReview={() => setReview(false)}
+                submitForm={() => formik.submitForm()}
+            />
             <FeatureUnavailable
                 open={internalBrowserWarningModal}
                 closeModal={() => setInternalBrowserWarningModal(false)}
@@ -267,7 +305,10 @@ const ValueTransfer = () => {
                     )}
 
                     <Button
-                        onClick={() => setDialog(true)}
+                        onClick={() => {
+                            setReview(true);
+                            formik.setStatus('ongoing');
+                        }}
                         color="primary"
                         variant="contained"
                         fullWidth
@@ -278,75 +319,6 @@ const ValueTransfer = () => {
                     </Button>
                 </Stack>
             </form>
-            <Dialog open={dialog && !formik.status}>
-                <Stack className={styles['modal__wrapper']}>
-                    <h6>Confirm Transfer?</h6>
-                    <Stack
-                        className={styles['modal__content']}
-                        flexDirection="column"
-                        justifyContent="space-between"
-                        alignItems="space-between"
-                        gap={8}
-                    >
-                        <ul>
-                            <li>
-                                <h6>Recipient Address:</h6>
-                                <p>{formik.values.address}</p>
-                            </li>
-                            <li>
-                                <h6>Amount:</h6>
-                                <p>{formik.values.amount}</p>
-                            </li>
-                            {formik.values.burn && (
-                                <li>
-                                    <h6>Burn:</h6>
-                                    <p>{formik.values.burn}</p>
-                                </li>
-                            )}
-                        </ul>
-                        <Stack
-                            className={styles['modal__btn_wrapper']}
-                            flexDirection="row"
-                            alignItems="flex-end"
-                            gap={1}
-                            justifyContent="flex-end"
-                        >
-                            <button disabled={formik.isSubmitting} type="button" onClick={() => setDialog(false)}>
-                                Cancel
-                            </button>
-                            <button disabled={formik.isSubmitting} type="submit" onClick={() => formik.handleSubmit()}>
-                                Confirm
-                            </button>
-                        </Stack>
-                    </Stack>
-                </Stack>
-            </Dialog>
-            <Dialog open={formik.status}>
-                <Stack className={styles['modal__wrapper']}>
-                    <h6>Transaction Status</h6>
-                    <Stack
-                        className={styles['modal__content']}
-                        flexDirection="column"
-                        justifyContent="space-between"
-                        alignItems="space-between"
-                        gap={8}
-                    >
-                        <p>{formik.status}</p>
-
-                        <Stack
-                            className={styles['modal__btn_wrapper']}
-                            flexDirection="row"
-                            alignItems="flex-end"
-                            gap={1}
-                            justifyContent="flex-end"
-                        >
-                            <button disabled={formik.isSubmitting} type="button" onClick={() => formik.resetForm()}>
-                                Dismiss
-                            </button>
-                        </Stack>
-                    </Stack>
-                </Stack>
-            </Dialog>
         </>
     );
 };

@@ -14,8 +14,9 @@ import { MINIMA__DECIMAL_PRECISION } from '../../../../shared/constants';
 
 import { splitCoin } from '../../../../minima/utils';
 import FormFieldWrapper from '../../../../shared/components/FormFieldWrapper';
-import { useModalHandler } from '../../../../hooks/useModalHandler';
 import useIsVaultLocked from '../../../../hooks/useIsVaultLocked';
+import ReviewDialog from '../ReviewDialog';
+import SuccessDialog from '../SuccessDialog';
 
 Decimal.set({ precision: MINIMA__DECIMAL_PRECISION });
 
@@ -28,9 +29,11 @@ interface ISendForm {
 const CoinSplit = () => {
     const mySchema = useFormSchema();
     const wallet = useAppSelector(selectBalance);
-    const [splitDialog, setSplitDialog] = useState(false);
-
     const userLockedVault = useIsVaultLocked();
+
+    const [error, setError] = useState('');
+    const [showReview, setReview] = useState(false);
+    const [showSuccess, setSuccess] = useState(false);
 
     const formik = useFormik({
         initialValues: {
@@ -39,6 +42,8 @@ const CoinSplit = () => {
             password: '',
         },
         onSubmit: async (formInputs: ISendForm) => {
+            setSuccess(true);
+            formik.setStatus('ongoing');
             try {
                 await splitCoin(
                     formInputs.token.tokenid,
@@ -46,16 +51,16 @@ const CoinSplit = () => {
                     formInputs.burn,
                     formInputs.password
                 );
-                setSplitDialog(false);
-                formik.setStatus(`This transaction has been submitted.  It will arrive shortly.`);
+                formik.setStatus('complete');
             } catch (error: any) {
-                setSplitDialog(false);
                 const isPending = error.message === 'pending';
                 if (isPending) {
-                    formik.setStatus('Transaction is pending, you can confirm it in your pending actions.');
-                    return;
+                    formik.setStatus('pending');
                 }
-                formik.setStatus('Failed, ' + error.message);
+                if (!isPending) {
+                    formik.setStatus('failed');
+                    setError(error.message);
+                }
             }
         },
         validationSchema: mySchema,
@@ -63,6 +68,33 @@ const CoinSplit = () => {
 
     return (
         <>
+            <SuccessDialog
+                open={showSuccess}
+                error={error}
+                transactionCreationStatus={formik.status}
+                hideSuccess={() => setSuccess(false)}
+                clearForm={() => formik.resetForm()}
+            />
+            <ReviewDialog
+                open={showReview}
+                children={
+                    <ul id="list">
+                        <li>
+                            <h6>Splitting your sendable balance in two</h6>
+                            <p>{formik.values.token.sendable}</p>
+                        </li>
+                        {!!formik.values.burn.length && (
+                            <li>
+                                <h6>Burn</h6>
+                                <p>{formik.values.burn}</p>
+                            </li>
+                        )}
+                    </ul>
+                }
+                transactionCreationStatus={formik.status}
+                hideReview={() => setReview(false)}
+                submitForm={() => formik.submitForm()}
+            />
             <form onSubmit={formik.handleSubmit}>
                 <Stack spacing={2}>
                     {/* Select a token */}
@@ -143,7 +175,10 @@ const CoinSplit = () => {
                         />
                     )}
                     <Button
-                        onClick={() => setSplitDialog(true)}
+                        onClick={() => {
+                            setReview(true);
+                            formik.setStatus('ongoing');
+                        }}
                         color="primary"
                         variant="contained"
                         fullWidth
@@ -157,60 +192,6 @@ const CoinSplit = () => {
                     </Typography>
                 </Stack>
             </form>
-            <Dialog open={splitDialog && !formik.status}>
-                <Stack className={styles['modal__wrapper']}>
-                    <h6>Confirm Split?</h6>
-                    <Stack
-                        className={styles['modal__content']}
-                        flexDirection="column"
-                        justifyContent="space-between"
-                        alignItems="space-between"
-                        gap={8}
-                    >
-                        <p>You are about to split your sendable balance in two.</p>
-                        <Stack
-                            className={styles['modal__btn_wrapper']}
-                            flexDirection="row"
-                            alignItems="flex-end"
-                            gap={1}
-                            justifyContent="flex-end"
-                        >
-                            <button disabled={formik.isSubmitting} type="button" onClick={() => setSplitDialog(false)}>
-                                Cancel
-                            </button>
-                            <button disabled={formik.isSubmitting} type="submit" onClick={() => formik.handleSubmit()}>
-                                Confirm
-                            </button>
-                        </Stack>
-                    </Stack>
-                </Stack>
-            </Dialog>
-            <Dialog open={formik.status}>
-                <Stack className={styles['modal__wrapper']}>
-                    <h6>Transaction Status</h6>
-                    <Stack
-                        className={styles['modal__content']}
-                        flexDirection="column"
-                        justifyContent="space-between"
-                        alignItems="space-between"
-                        gap={8}
-                    >
-                        <p>{formik.status}</p>
-
-                        <Stack
-                            className={styles['modal__btn_wrapper']}
-                            flexDirection="row"
-                            alignItems="flex-end"
-                            gap={1}
-                            justifyContent="flex-end"
-                        >
-                            <button disabled={formik.isSubmitting} type="button" onClick={() => formik.resetForm()}>
-                                Dismiss
-                            </button>
-                        </Stack>
-                    </Stack>
-                </Stack>
-            </Dialog>
         </>
     );
 };
