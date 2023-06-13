@@ -28,6 +28,7 @@ import HistoryTransactionDetailSimple from '../pages/HistoryTransactionDetailSim
 import useMinimaStatusCheck from '../hooks/useMinimaStatusCheck';
 import Unavailable from '../pages/components/Unavailable';
 import useIsMobileScreenSize from '../hooks/useIsMobileScreenSize';
+import useIsMinimaBrowser from '../hooks/useIsMinimaBrowser';
 
 export interface RouteType {
     path: string;
@@ -41,6 +42,7 @@ const AppNavigation = () => {
     const isMining = useAppSelector(selectMiningState);
     const { _minimaStatus, loadingStatusCheck } = useMinimaStatusCheck();
     const isMobile = useIsMobileScreenSize();
+    const openTitleBar = useIsMinimaBrowser();
 
     // Back Button
     const [onDetail, setOnDetail] = useState(false);
@@ -162,7 +164,7 @@ const AppNavigation = () => {
 
             {!!_minimaStatus && !loadingStatusCheck && (
                 <Stack>
-                    <header className={styles['navigation']}>
+                    <header onClick={openTitleBar} className={styles['navigation']}>
                         <Grid container>
                             <Grid xs={0} md={2} item />
                             <Grid
@@ -174,10 +176,18 @@ const AppNavigation = () => {
                                 <Stack direction="row">
                                     {onDetail ? null : (
                                         <IconButton
-                                            sx={{ display: { xs: 'flex', sm: 'none' }, padding: 0, marginRight: 0.5 }}
+                                            sx={{
+                                                zIndex: 50,
+                                                display: { xs: 'flex', sm: 'none' },
+                                                padding: 0,
+                                                marginRight: 0.5,
+                                            }}
                                             color="inherit"
                                             aria-label="menu"
-                                            onClick={handleDrawerOpen}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleDrawerOpen();
+                                            }}
                                         >
                                             <MenuIcon />
                                         </IconButton>
