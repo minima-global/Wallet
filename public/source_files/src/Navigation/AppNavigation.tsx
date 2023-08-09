@@ -218,8 +218,7 @@ const AppNavigation = () => {
                             <Route path="/" element={<Navigate replace to="/balance" />} />
                             <Route path="/balance" element={<Balance />} />
                             <Route path="balance/:tokenid" element={<TokenDetail />} />
-                            <Route path="/send" element={<Send />} />
-                            <Route path="send/:tokenid" element={<Send />} />
+                            <Route path="/send/:tokenid?/:amount?/:address?/:burn?" element={<Send />} />
                             <Route path="/receive" element={<Receive />} />
                             <Route path="/status" element={<Status />} />
                             <Route path="/tokencreate" element={<TokenCreation />} />

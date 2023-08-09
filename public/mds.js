@@ -13,6 +13,9 @@ var MDS_MAIN_CALLBACK = null;
  * Main MINIMA Object for all interaction
  */
 var MDS = {
+    //Main File host
+    filehost: '',
+
     //RPC Host for Minima
     mainhost: '',
 
@@ -48,6 +51,13 @@ var MDS = {
         //Get ther MiniDAPP UID
         MDS.minidappuid = MDS.form.getParams('uid');
 
+        // env overrides
+        if (window.DEBUG) {
+            host = window.DEBUG_HOST;
+            port = Math.floor(window.DEBUG_PORT);
+            MDS.minidappuid = window.DEBUG_UID;
+        }
+
         //HARD SET if debug mode - running from a file
         if (MDS.DEBUG_HOST != null) {
             MDS.log('DEBUG Settings Found..');
@@ -68,7 +78,8 @@ var MDS = {
         //The ports..
         var mainport = port + 1;
 
-        MDS.log('MDS FILEHOST  : https://' + host + ':' + port + '/');
+        MDS.filehost = 'https://' + host + ':' + port + '/';
+        MDS.log('MDS FILEHOST  : ' + MDS.filehost);
 
         MDS.mainhost = 'https://' + host + ':' + mainport + '/';
         MDS.log('MDS MAINHOST : ' + MDS.mainhost);
@@ -123,6 +134,29 @@ var MDS = {
     },
 
     /**
+     * Get a link to a different Dapp. READ dapps can only get READ DAPPS. WRITE can get all dapps.
+     */
+    dapplink: function (dappname, callback) {
+        //Send via POST
+        httpPostAsync(MDS.mainhost + 'dapplink?' + 'uid=' + MDS.minidappuid, dappname, function (result) {
+            var linkdata = {};
+            linkdata.status = result.status;
+
+            //Create the link..
+            if (result.status) {
+                linkdata.uid = result.response.uid;
+                linkdata.sessionid = result.response.sessionid;
+                linkdata.base = MDS.filehost + linkdata.uid + '/index.html?uid=' + result.response.sessionid;
+            } else {
+                //Not found..
+                linkdata.error = result.error;
+            }
+
+            callback(linkdata);
+        });
+    },
+
+    /**
      * Network Commands
      */
     net: {
@@ -143,6 +177,33 @@ var MDS = {
 
             //Send via POST
             httpPostAsync(MDS.mainhost + 'netpost?' + 'uid=' + MDS.minidappuid, postline, callback);
+        },
+    },
+
+    /**
+     *  Simple GET and SET key value pairs that are saved persistently
+     */
+    keypair: {
+        /**
+         * GET a value
+         */
+        get: function (key, callback) {
+            //Create the single line
+            var commsline = 'get&' + key;
+
+            //Send via POST
+            httpPostAsync(MDS.mainhost + 'keypair?' + 'uid=' + MDS.minidappuid, commsline, callback);
+        },
+
+        /**
+         * SET a value
+         */
+        set: function (key, value, callback) {
+            //Create the single line
+            var commsline = 'set&' + key + '&' + value;
+
+            //Send via POST
+            httpPostAsync(MDS.mainhost + 'keypair?' + 'uid=' + MDS.minidappuid, commsline, callback);
         },
     },
 
@@ -282,6 +343,47 @@ var MDS = {
         move: function (filename, newfilename, callback) {
             //Create the single line
             var commsline = 'move&' + filename + '&' + newfilename;
+
+            //Send via POST
+            httpPostAsync(MDS.mainhost + 'file?' + 'uid=' + MDS.minidappuid, commsline, callback);
+        },
+
+        /**
+         * Download a File from the InterWeb - Will be put in Downloads folder
+         */
+        download: function (url, callback) {
+            //Create the single line
+            var commsline = 'download&' + url;
+
+            //Send via POST
+            httpPostAsync(MDS.mainhost + 'file?' + 'uid=' + MDS.minidappuid, commsline, callback);
+        },
+
+        /**
+         * Upload a file in chunks to the /fileupload folder
+         */
+        upload: function (file, callback) {
+            //Start the file recursion..
+            _recurseUploadMDS(file, 0, callback);
+        },
+
+        /**
+         * Copy a file to your web folder
+         */
+        copytoweb: function (file, webfile, callback) {
+            //Create the single line
+            var commsline = 'copytoweb&' + file + '&' + webfile;
+
+            //Send via POST
+            httpPostAsync(MDS.mainhost + 'file?' + 'uid=' + MDS.minidappuid, commsline, callback);
+        },
+
+        /**
+         * Delete a file or folder from web folder
+         */
+        deletefromweb: function (file, callback) {
+            //Create the single line
+            var commsline = 'deletefromweb&' + file;
 
             //Send via POST
             httpPostAsync(MDS.mainhost + 'file?' + 'uid=' + MDS.minidappuid, commsline, callback);
@@ -478,7 +580,6 @@ function httpPostAsyncPoll(theUrl, params, callback) {
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.onreadystatechange = function () {
         var status = xmlHttp.status;
-
         if (xmlHttp.readyState == XMLHttpRequest.DONE) {
             if (status === 0 || (status >= 200 && status < 400)) {
                 //Do we log it..
@@ -505,4 +606,92 @@ function httpPostAsyncPoll(theUrl, params, callback) {
     xmlHttp.open('POST', theUrl, true); // true for asynchronous
     xmlHttp.overrideMimeType('text/plain; charset=UTF-8');
     xmlHttp.send(encodeURIComponent(params));
+}
+
+/**
+ * Internal recursive function for file upload
+ */
+function _recurseUploadMDS(thefullfile, chunk, callback) {
+    //Get some details
+    var filename = thefullfile.name;
+    var filesize = thefullfile.size;
+
+    //1MB MAX Chunk size..
+    var chunk_size = 1024 * 1024;
+    var allchunks = Math.ceil(filesize / chunk_size);
+
+    //Have we finished..
+    if (chunk > allchunks - 1) {
+        return;
+    }
+
+    var startbyte = chunk_size * chunk;
+    var endbyte = startbyte + chunk_size;
+    if (endbyte > filesize) {
+        endbyte = filesize;
+    }
+
+    //Get a piece of the file
+    var filepiece = thefullfile.slice(startbyte, endbyte);
+
+    //Create a form..
+    var formdata = new FormData();
+    formdata.append('uid', MDS.minidappuid);
+
+    //Filedata handled a little differently
+    formdata.append('filename', filename);
+    formdata.append('filesize', filesize);
+    formdata.append('allchunks', allchunks);
+    formdata.append('chunknum', chunk);
+    formdata.append('fileupload', filepiece);
+
+    var request = new XMLHttpRequest();
+    request.open('POST', MDS.filehost + 'fileuploadchunk.html');
+    request.onreadystatechange = function () {
+        var status = request.status;
+        if (request.readyState == XMLHttpRequest.DONE) {
+            if (status === 0 || (status >= 200 && status < 400)) {
+                //Send it to the callback function..
+                if (callback) {
+                    var resp = {};
+                    resp.status = true;
+                    resp.filename = filename;
+                    resp.size = filesize;
+                    resp.allchunks = allchunks;
+                    resp.chunk = chunk + 1;
+                    resp.start = startbyte;
+                    resp.end = endbyte;
+
+                    callback(resp);
+                }
+
+                //And now continue uploading..
+                if (callback) {
+                    _recurseUploadMDS(thefullfile, chunk + 1, callback);
+                } else {
+                    _recurseUploadMDS(thefullfile, chunk + 1);
+                }
+            } else {
+                if (callback) {
+                    var resp = {};
+                    resp.status = false;
+                    resp.error = request.responseText;
+                    resp.filename = filename;
+                    resp.size = filesize;
+                    resp.allchunks = allchunks;
+                    resp.chunk = chunk;
+                    resp.start = startbyte;
+                    resp.end = endbyte;
+
+                    callback(resp);
+                }
+
+                //Some error..
+                MDS.log('MDS FILEUPLOAD CHUNK ERROR: ' + request.responseText);
+            }
+        }
+    };
+
+    //And finally send the POST request
+    request.send(formdata);
 }

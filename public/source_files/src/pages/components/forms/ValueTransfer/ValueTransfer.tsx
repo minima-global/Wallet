@@ -45,16 +45,28 @@ const ValueTransfer = () => {
     const [error, setError] = useState('');
     const [showReview, setReview] = useState(false);
     const [showSuccess, setSuccess] = useState(false);
-    const { tokenid } = useParams();
+    const { tokenid, amount, address, burn } = useParams();
 
     useEffect(() => {
-        formik.setFieldValue(
-            'token',
-            tokenid && wallet.find((i) => i.tokenid === tokenid)
-                ? wallet.filter((i) => i.tokenid === tokenid)[0]
-                : wallet[0]
-        );
-    }, [tokenid, wallet]);
+        if (tokenid) {
+            formik.setFieldValue(
+                'token',
+                tokenid && wallet.find((i) => i.tokenid === tokenid)
+                    ? wallet.filter((i) => i.tokenid === tokenid)[0]
+                    : wallet[0]
+            );
+        }
+
+        if (amount) {
+            formik.setFieldValue('amount', amount);
+        }
+        if (address) {
+            formik.setFieldValue('address', address);
+        }
+        if (burn) {
+            formik.setFieldValue('burn', burn);
+        }
+    }, [tokenid, address, amount, burn, wallet]);
 
     const formik = useFormik({
         initialValues: {
