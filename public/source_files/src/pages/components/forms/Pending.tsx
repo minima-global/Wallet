@@ -53,9 +53,7 @@ const PendingHelp = () => {
             {value == 0 ? (
                 <Stack mt={1}>
                     <Typography variant="body1">
-                        You can accept/deny pending transactions from the
-                        <UpdateIcon className={styles['pending-icon']} />
-                        icon on the Home Page in the app.
+                        This action is now pending and can be accepted on the Pending minidapp.
                     </Typography>
                 </Stack>
             ) : (

@@ -27,18 +27,7 @@ const SuccessDialog = ({ open, error, transactionCreationStatus, hideSuccess, cl
                                 <p>{error.split('java.lang.IllegalArgumentException: ')}</p>
                             )}
                             {transactionCreationStatus === 'pending' && (
-                                <>
-                                    {!!isMobile && (
-                                        <p>
-                                            Your action is now pending, please accept the action by clicking the pending
-                                            icon <img id="pending" alt="pending" src="assets/pendingTransaction.svg" />{' '}
-                                            in the top-right of your apk.
-                                        </p>
-                                    )}
-                                    {!isMobile && (
-                                        <p>Click the Pending Actions button in the header of your MDS hub.</p>
-                                    )}
-                                </>
+                                <p>This action is now pending and can be accepted on the Pending minidapp.</p>
                             )}
                         </li>
                     </ul>
