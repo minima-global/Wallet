@@ -17,7 +17,7 @@ import FormFieldWrapper from '../../../../shared/components/FormFieldWrapper';
 import QrScanner from '../../../../shared/components/qrscanner/QrScanner';
 import validateMinimaAddress from '../../../../minima/commands/validateMinimaAddress/validateMinimaAddress';
 import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import useIsUserRunningWebView from '../../../../hooks/useIsUserRunningWebView';
 import FeatureUnavailable from '../../FeatureUnavailable';
 import useIsVaultLocked from '../../../../hooks/useIsVaultLocked';
@@ -31,6 +31,7 @@ interface ISendForm {
     amount: string;
     address: string;
     burn: string;
+    password: string;
 }
 
 const ValueTransfer = () => {
@@ -45,9 +46,15 @@ const ValueTransfer = () => {
     const [error, setError] = useState('');
     const [showReview, setReview] = useState(false);
     const [showSuccess, setSuccess] = useState(false);
-    const { tokenid, amount, address, burn } = useParams();
+
+    const [searchParams] = useSearchParams();
 
     useEffect(() => {
+        const tokenid = searchParams.get('tokenid');
+        const amount = searchParams.get('amount');
+        const address = searchParams.get('address');
+        const burn = searchParams.get('burn');
+
         if (tokenid) {
             formik.setFieldValue(
                 'token',
@@ -66,7 +73,7 @@ const ValueTransfer = () => {
         if (burn) {
             formik.setFieldValue('burn', burn);
         }
-    }, [tokenid, address, amount, burn, wallet]);
+    }, [wallet]);
 
     const formik = useFormik({
         initialValues: {

@@ -1,4 +1,3 @@
-import { Android } from '@mui/icons-material';
 import { format } from 'date-fns';
 
 const exportToCsv = (e: any, transaction: any) => {
@@ -36,19 +35,32 @@ const downloadFile = async (data: string, fileName: string) => {
                     return Android.fileDownload(MDS.minidappuid, `/myTransactions/${fileName}`);
                 }
 
-                const origFilePath = `/myTransactions/${fileName}`;
-                const newFilePath = `/my_downloads/${fileName}_minima_download_as_file_`;
-                //Copy the original file to webfolder - WITH the special name
-                (window as any).MDS.file.copytoweb(origFilePath, newFilePath, function () {
-                    const url = `my_downloads/${fileName}` + '_minima_download_as_file_';
-                    // Now create a normal link - that when clicked downloads it..
-                    const link = document.createElement('a');
-                    link.href = url;
-                    document.body.appendChild(link);
-                    link.click();
-                    link.remove();
-                    resolve(true);
+                const blob = new Blob([data], { type: 'text/csv' });
+
+                const a = document.createElement('a');
+                a.download = fileName;
+                a.href = window.URL.createObjectURL(blob);
+                const clickEvt = new MouseEvent('click', {
+                    view: window,
+                    bubbles: true,
+                    cancelable: true,
                 });
+                a.dispatchEvent(clickEvt);
+                a.remove();
+
+                // const origFilePath = `/myTransactions/${fileName}`;
+                // const newFilePath = `/my_downloads/${fileName}_minima_download_as_file_`;
+                // //Copy the original file to webfolder - WITH the special name
+                // (window as any).MDS.file.copytoweb(origFilePath, newFilePath, function () {
+                //     const url = `my_downloads/${fileName}` + '_minima_download_as_file_';
+                //     // Now create a normal link - that when clicked downloads it..
+                //     const link = document.createElement('a');
+                //     link.href = url;
+                //     document.body.appendChild(link);
+                //     link.click();
+                //     link.remove();
+                //     resolve(true);
+                // });
             }
         });
     });
