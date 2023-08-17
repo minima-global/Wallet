@@ -50,10 +50,7 @@ const Receive: FC = () => {
     const [error, setError] = useState<boolean | string>(false);
     const [addressValidity, setAddressValid] = useState<false | any>(false);
     const [formAddress, setFormAddress] = useState('');
-
     const [validBuild, setValidBuild] = useState<boolean | undefined>(undefined);
-    const [internalBrowserWarningModal, setInternalBrowserWarningModal] = useState(false);
-    const isUserRunningWebView = useIsUserRunningWebView();
 
     useEffect(() => {
         getCurrentNodeVersion().then((v) => {
@@ -112,16 +109,6 @@ const Receive: FC = () => {
             // loading={loading}
             children={
                 <Stack spacing={1}>
-                    <FeatureUnavailable
-                        open={internalBrowserWarningModal}
-                        closeModal={() => setInternalBrowserWarningModal(false)}
-                        children={
-                            <Stack alignItems="center">
-                                <p>Or, just hold and copy below...</p>
-                                <input readOnly defaultValue={address} />
-                            </Stack>
-                        }
-                    />
                     <Card variant="outlined">
                         <CardContent sx={{ display: 'flex', flexDirection: 'column' }}>
                             {address && address.length > 0 ? (
@@ -152,11 +139,7 @@ const Receive: FC = () => {
                                             title={!isCopied ? 'Copy Address' : 'Copied!'}
                                         >
                                             <ListItemIcon
-                                                onClick={
-                                                    !isUserRunningWebView
-                                                        ? handleCopyClick
-                                                        : () => setInternalBrowserWarningModal(true)
-                                                }
+                                                onClick={handleCopyClick}
                                                 sx={[copyBtn, { backgroundColor: isCopied ? '#00B74A' : null }]}
                                             >
                                                 {!isCopied ? (
