@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Card, CardContent, TextField, Button, Stack, Dialog, Avatar } from '@mui/material';
-import { useFormik } from 'formik';
+import { Formik, useFormik } from 'formik';
 import * as Yup from 'yup';
 
 import { isValidURLAll, isValidURLSecureOnly } from '../../shared/functions';
@@ -43,339 +43,331 @@ const TokenCreation = () => {
     const [showReview, setReview] = useState(false);
     const [showSuccess, setSuccess] = useState(false);
 
-    const formik = useFormik({
-        initialValues: {
-            funds: wallet[0],
-            name: '',
-            amount: '',
-            url: '',
-            description: '',
-            burn: '',
-            webvalidate: '',
-            ticker: '',
-        },
-        validationSchema: mySchema,
-        onSubmit: async (formData) => {
-            setSuccess(true);
-            formik.setStatus('ongoing');
-            const cToken: MiCustomToken = {
-                name: formData.name.replaceAll(`"`, `'`),
-                url: formData.url, // upload image or normal url
-                description: formData.description.replaceAll(`"`, `'`) || '',
-                ticker: formData.ticker.replaceAll(`"`, `'`) || '',
-                webvalidate: formData.webvalidate || '',
-            };
-
-            try {
-                // send rpc
-                await buildCustomTokenCreation(cToken, formData.amount, false);
-                formik.setStatus('complete');
-            } catch (error: any) {
-                const isPending = error.message === 'pending';
-                if (isPending) {
-                    formik.setStatus('pending');
-                }
-                if (!isPending) {
-                    formik.setStatus('failed');
-                    setError(error.message);
-                }
-            }
-        },
-    });
-    React.useEffect(() => {
-        formik.setFieldValue('funds', wallet[0]);
-    }, [wallet]);
-
     return (
-        <GridLayout
-            children={
-                <>
-                    {userLockedVault && (
-                        <NoResults>
-                            <h6>You have locked your vault with a password.</h6>
-                            <p>Unlock it so you can access this form.</p>
-                        </NoResults>
-                    )}
-                    {!userLockedVault && (
-                        <Card variant="outlined">
-                            <CardContent>
-                                <form onSubmit={formik.handleSubmit}>
-                                    <Stack spacing={2}>
-                                        <FormFieldWrapper
-                                            help="Your current Minima balance:"
-                                            children={<MiFunds formik={formik} funds={formik.values.funds} />}
-                                        />
-                                        {/* Asterisk required  */}
-                                        <Required />
-                                        <FormFieldWrapper
-                                            required={false}
-                                            help="Use a public image URL ending in .png .jpg or .jpeg or upload your own content"
-                                            children={<FormImageUrlSelect formik={formik} />} // selector for url or upload
-                                        />
+        <Formik
+            initialValues={{
+                funds: wallet[0],
+                name: '',
+                amount: '',
+                url: '',
+                description: '',
+                burn: '',
+                webvalidate: '',
+                ticker: '',
+            }}
+            onSubmit={async (formData, { setStatus }) => {
+                setSuccess(true);
+                setStatus('ongoing');
+                const cToken: MiCustomToken = {
+                    name: formData.name.replaceAll(`"`, `'`),
+                    url: formData.url, // upload image or normal url
+                    description: formData.description.replaceAll(`"`, `'`) || '',
+                    ticker: formData.ticker.replaceAll(`"`, `'`) || '',
+                    webvalidate: formData.webvalidate || '',
+                };
 
-                                        <FormFieldWrapper
-                                            required={true}
-                                            help="Enter a name for your custom token"
-                                            children={
-                                                <TextField
-                                                    disabled={formik.isSubmitting}
-                                                    fullWidth
-                                                    id="name"
-                                                    name="name"
-                                                    placeholder="name"
-                                                    value={formik.values.name}
-                                                    onChange={formik.handleChange}
-                                                    onBlur={formik.handleBlur}
-                                                    error={formik.touched.name && Boolean(formik.errors.name)}
-                                                    helperText={formik.touched.name && formik.errors.name}
-                                                    FormHelperTextProps={{
-                                                        className: sharedStyles['form-helper-text'],
-                                                    }}
-                                                    InputProps={{
-                                                        style:
-                                                            formik.touched.name && Boolean(formik.errors.name)
-                                                                ? {
-                                                                      borderBottomLeftRadius: 0,
-                                                                      borderBottomRightRadius: 0,
-                                                                  }
-                                                                : {
-                                                                      borderBottomLeftRadius: 8,
-                                                                      borderBottomRightRadius: 8,
-                                                                  },
-                                                    }}
+                try {
+                    // send rpc
+                    await buildCustomTokenCreation(cToken, formData.amount, false);
+                    setStatus('complete');
+                } catch (error: any) {
+                    const isPending = error.message === 'pending';
+                    if (isPending) {
+                        setStatus('pending');
+                    }
+                    if (!isPending) {
+                        setStatus('failed');
+                        setError(error.message);
+                    }
+                }
+            }}
+            validationSchema={mySchema}
+        >
+            {({
+                handleSubmit,
+                getFieldProps,
+                status,
+                setStatus,
+                errors,
+                isValid,
+                isSubmitting,
+                submitForm,
+                values,
+                resetForm,
+                touched,
+                dirty,
+            }) => (
+                <GridLayout
+                    children={
+                        <>
+                            {userLockedVault && (
+                                <NoResults>
+                                    <h6>You have locked your vault with a password.</h6>
+                                    <p>Unlock it so you can access this form.</p>
+                                </NoResults>
+                            )}
+                            {!userLockedVault && (
+                                <Card variant="outlined">
+                                    <CardContent>
+                                        <form onSubmit={handleSubmit}>
+                                            <Stack spacing={2}>
+                                                <FormFieldWrapper
+                                                    help="Your current Minima balance:"
+                                                    children={<MiFunds />}
                                                 />
-                                            }
-                                        />
-                                        <FormFieldWrapper
-                                            required={true}
-                                            help="Enter the total supply to create. By default 1 token will have 8 decimal places and use a small fraction of Minima (1e-36) from your balance"
-                                            children={
-                                                <TextField
-                                                    disabled={formik.isSubmitting}
-                                                    fullWidth
-                                                    id="amount"
-                                                    name="amount"
-                                                    placeholder="amount"
-                                                    value={formik.values.amount}
-                                                    onChange={formik.handleChange}
-                                                    onBlur={formik.handleBlur}
-                                                    error={formik.touched.amount && Boolean(formik.errors.amount)}
-                                                    helperText={formik.touched.amount && formik.errors.amount}
-                                                    FormHelperTextProps={{
-                                                        className: sharedStyles['form-helper-text'],
-                                                    }}
-                                                    InputProps={{
-                                                        style:
-                                                            formik.touched.amount && Boolean(formik.errors.amount)
-                                                                ? {
-                                                                      borderBottomLeftRadius: 0,
-                                                                      borderBottomRightRadius: 0,
-                                                                  }
-                                                                : {
-                                                                      borderBottomLeftRadius: 8,
-                                                                      borderBottomRightRadius: 8,
-                                                                  },
-                                                    }}
+                                                {/* Asterisk required  */}
+                                                <Required />
+                                                <FormFieldWrapper
+                                                    required={false}
+                                                    help="Use a public icon URL ending in .png .jpg or .jpeg or upload your own content"
+                                                    children={<FormImageUrlSelect />} // selector for url or upload
                                                 />
-                                            }
-                                        />
 
-                                        <FormFieldWrapper
-                                            help="Enter a description about your token"
-                                            children={
-                                                <TextField
-                                                    disabled={formik.isSubmitting}
-                                                    fullWidth
-                                                    id="description"
-                                                    name="description"
-                                                    placeholder="description"
-                                                    value={formik.values.description}
-                                                    onChange={formik.handleChange}
-                                                    onBlur={formik.handleBlur}
-                                                    error={
-                                                        formik.touched.description && Boolean(formik.errors.description)
+                                                <FormFieldWrapper
+                                                    required={true}
+                                                    help="Enter a name for your custom token"
+                                                    children={
+                                                        <TextField
+                                                            disabled={isSubmitting}
+                                                            fullWidth
+                                                            placeholder="name"
+                                                            {...getFieldProps('name')}
+                                                            error={touched.name && Boolean(errors.name)}
+                                                            helperText={touched.name && errors.name}
+                                                            FormHelperTextProps={{
+                                                                className: sharedStyles['form-helper-text'],
+                                                            }}
+                                                            InputProps={{
+                                                                style:
+                                                                    touched.name && Boolean(errors.name)
+                                                                        ? {
+                                                                              borderBottomLeftRadius: 0,
+                                                                              borderBottomRightRadius: 0,
+                                                                          }
+                                                                        : {
+                                                                              borderBottomLeftRadius: 8,
+                                                                              borderBottomRightRadius: 8,
+                                                                          },
+                                                            }}
+                                                        />
                                                     }
-                                                    helperText={
-                                                        formik.values.description.length === 255
-                                                            ? formik.values.description.length + '/255'
-                                                            : null
+                                                />
+                                                <FormFieldWrapper
+                                                    required={true}
+                                                    help="Enter the total supply to create. By default 1 token will have 8 decimal places and use a small fraction of Minima (1e-36) from your balance"
+                                                    children={
+                                                        <TextField
+                                                            disabled={isSubmitting}
+                                                            fullWidth
+                                                            {...getFieldProps('amount')}
+                                                            placeholder="amount"
+                                                            error={touched.amount && Boolean(errors.amount)}
+                                                            helperText={touched.amount && errors.amount}
+                                                            FormHelperTextProps={{
+                                                                className: sharedStyles['form-helper-text'],
+                                                            }}
+                                                            InputProps={{
+                                                                style:
+                                                                    touched.amount && Boolean(errors.amount)
+                                                                        ? {
+                                                                              borderBottomLeftRadius: 0,
+                                                                              borderBottomRightRadius: 0,
+                                                                          }
+                                                                        : {
+                                                                              borderBottomLeftRadius: 8,
+                                                                              borderBottomRightRadius: 8,
+                                                                          },
+                                                            }}
+                                                        />
                                                     }
-                                                    FormHelperTextProps={{
-                                                        style: { display: 'flex', justifyContent: 'flex-end' },
-                                                    }}
-                                                    multiline
-                                                    rows={4}
-                                                    inputProps={{ maxLength: 255 }}
                                                 />
-                                            }
-                                        />
 
-                                        <FormFieldWrapper
-                                            help="Enter a ticker symbol (eg. MINIMA, BTC, ETH)"
-                                            children={
-                                                <TextField
-                                                    disabled={formik.isSubmitting}
-                                                    fullWidth
-                                                    id="ticker"
-                                                    name="ticker"
-                                                    placeholder="ticker"
-                                                    value={formik.values.ticker}
-                                                    onChange={formik.handleChange}
-                                                    onBlur={formik.handleBlur}
-                                                    error={formik.touched.ticker && Boolean(formik.errors.ticker)}
-                                                    FormHelperTextProps={{
-                                                        style: { display: 'flex', justifyContent: 'flex-end' },
-                                                    }}
-                                                    inputProps={{
-                                                        maxLength: 5,
-                                                        style: {
-                                                            textTransform:
-                                                                formik.values.ticker.length > 0
-                                                                    ? 'uppercase'
-                                                                    : 'lowercase',
-                                                        },
-                                                    }}
-                                                />
-                                            }
-                                        />
-
-                                        <FormFieldWrapper
-                                            help="Validate your token by hosting a public .txt file containing the tokenid on your own server or website. Create the link to the .txt file in advance and add the tokenid after creating the token."
-                                            children={
-                                                <TextField
-                                                    disabled={formik.isSubmitting}
-                                                    fullWidth
-                                                    id="webvalidate"
-                                                    name="webvalidate"
-                                                    placeholder="web validation url"
-                                                    value={formik.values.webvalidate}
-                                                    onChange={formik.handleChange}
-                                                    onBlur={formik.handleBlur}
-                                                    error={
-                                                        formik.touched.webvalidate && Boolean(formik.errors.webvalidate)
+                                                <FormFieldWrapper
+                                                    help="Enter a description about your token"
+                                                    children={
+                                                        <TextField
+                                                            disabled={isSubmitting}
+                                                            fullWidth
+                                                            placeholder="description"
+                                                            {...getFieldProps('description')}
+                                                            error={touched.description && Boolean(errors.description)}
+                                                            helperText={
+                                                                values.description.length === 255
+                                                                    ? values.description.length + '/255'
+                                                                    : null
+                                                            }
+                                                            FormHelperTextProps={{
+                                                                style: { display: 'flex', justifyContent: 'flex-end' },
+                                                            }}
+                                                            multiline
+                                                            rows={4}
+                                                            inputProps={{ maxLength: 255 }}
+                                                        />
                                                     }
-                                                    helperText={formik.touched.webvalidate && formik.errors.webvalidate}
                                                 />
-                                            }
-                                        />
-                                        {/* Choose a burn amount */}
-                                        <FormFieldWrapper
-                                            help="Prioritize your transaction by adding a burn. Burn amounts are denominated in Minima only."
-                                            children={
-                                                <TextField
-                                                    disabled={formik.isSubmitting}
+
+                                                <FormFieldWrapper
+                                                    help="Enter a ticker symbol (eg. MINIMA, BTC, ETH)"
+                                                    children={
+                                                        <TextField
+                                                            disabled={isSubmitting}
+                                                            fullWidth
+                                                            placeholder="ticker"
+                                                            {...getFieldProps('ticker')}
+                                                            error={touched.ticker && Boolean(errors.ticker)}
+                                                            FormHelperTextProps={{
+                                                                style: { display: 'flex', justifyContent: 'flex-end' },
+                                                            }}
+                                                            inputProps={{
+                                                                maxLength: 5,
+                                                                style: {
+                                                                    textTransform:
+                                                                        values.ticker.length > 0
+                                                                            ? 'uppercase'
+                                                                            : 'lowercase',
+                                                                },
+                                                            }}
+                                                        />
+                                                    }
+                                                />
+
+                                                <FormFieldWrapper
+                                                    help="Validate your token by hosting a public .txt file containing the tokenid on your own server or website. Create the link to the .txt file in advance and add the tokenid after creating the token."
+                                                    children={
+                                                        <TextField
+                                                            disabled={isSubmitting}
+                                                            fullWidth
+                                                            placeholder="web validation url"
+                                                            {...getFieldProps('webvalidate')}
+                                                            error={touched.webvalidate && Boolean(errors.webvalidate)}
+                                                            helperText={touched.webvalidate && errors.webvalidate}
+                                                        />
+                                                    }
+                                                />
+                                                {/* Choose a burn amount */}
+                                                <FormFieldWrapper
+                                                    help="Prioritize your transaction by adding a burn. Burn amounts are denominated in Minima only."
+                                                    children={
+                                                        <TextField
+                                                            disabled={isSubmitting}
+                                                            fullWidth
+                                                            placeholder="burn fee"
+                                                            {...getFieldProps('burn')}
+                                                            error={touched.burn && Boolean(errors.burn)}
+                                                            helperText={touched.burn && errors.burn}
+                                                            FormHelperTextProps={{
+                                                                className: sharedStyles['form-helper-text'],
+                                                            }}
+                                                            InputProps={{
+                                                                style:
+                                                                    touched.burn && Boolean(errors.burn)
+                                                                        ? {
+                                                                              borderBottomLeftRadius: 0,
+                                                                              borderBottomRightRadius: 0,
+                                                                          }
+                                                                        : {
+                                                                              borderBottomLeftRadius: 8,
+                                                                              borderBottomRightRadius: 8,
+                                                                          },
+                                                            }}
+                                                        />
+                                                    }
+                                                />
+
+                                                <Button
+                                                    onClick={() => {
+                                                        setReview(true);
+                                                        setStatus('ongoing');
+                                                    }}
+                                                    disabled={!(isValid && dirty && !isSubmitting)}
+                                                    disableElevation
+                                                    color="primary"
+                                                    variant="contained"
                                                     fullWidth
-                                                    id="burn"
-                                                    name="burn"
-                                                    placeholder="burn fee"
-                                                    value={formik.values.burn}
-                                                    onChange={formik.handleChange}
-                                                    onBlur={formik.handleBlur}
-                                                    error={formik.touched.burn && Boolean(formik.errors.burn)}
-                                                    helperText={formik.touched.burn && formik.errors.burn}
-                                                    FormHelperTextProps={{
-                                                        className: sharedStyles['form-helper-text'],
-                                                    }}
-                                                    InputProps={{
-                                                        style:
-                                                            formik.touched.burn && Boolean(formik.errors.burn)
-                                                                ? {
-                                                                      borderBottomLeftRadius: 0,
-                                                                      borderBottomRightRadius: 0,
-                                                                  }
-                                                                : {
-                                                                      borderBottomLeftRadius: 8,
-                                                                      borderBottomRightRadius: 8,
-                                                                  },
-                                                    }}
-                                                />
-                                            }
-                                        />
+                                                >
+                                                    Review
+                                                </Button>
+                                            </Stack>
+                                        </form>
+                                    </CardContent>
+                                </Card>
+                            )}
 
-                                        <Button
-                                            onClick={() => {
-                                                setReview(true);
-                                                formik.setStatus('ongoing');
-                                            }}
-                                            disabled={!(formik.isValid && formik.dirty && !formik.isSubmitting)}
-                                            disableElevation
-                                            color="primary"
-                                            variant="contained"
-                                            fullWidth
-                                        >
-                                            Review
-                                        </Button>
-                                    </Stack>
-                                </form>
-                            </CardContent>
-                        </Card>
-                    )}
+                            <SuccessDialog
+                                open={showSuccess}
+                                error={error}
+                                transactionCreationStatus={status}
+                                hideSuccess={() => setSuccess(false)}
+                                clearForm={() => resetForm()}
+                            />
 
-                    <SuccessDialog
-                        open={showSuccess}
-                        error={error}
-                        transactionCreationStatus={formik.status}
-                        hideSuccess={() => setSuccess(false)}
-                        clearForm={() => formik.resetForm()}
-                    />
-                    <ReviewDialog
-                        open={showReview}
-                        children={
-                            <ul id="list">
-                                <li>
-                                    <div className={styles['token__wrapper']}>
-                                        <Avatar variant="rounded">
-                                            {!!formik.values.url.length && (
-                                                <img alt="custom-token-image" src={formik.values.url} />
-                                            )}
-                                            {!formik.values.url.length && (
+                            <ReviewDialog
+                                open={showReview}
+                                children={
+                                    <ul id="list">
+                                        <li className="flex gap-4 bg-core-grey-10 rounded-lg">
+                                            {!!values.url.length && (
                                                 <img
-                                                    id="question"
                                                     alt="custom-token-image"
-                                                    src="./assets/question.svg"
+                                                    src={values.url}
+                                                    className="w-[80px] h-[80px] rounded-l-lg"
                                                 />
                                             )}
-                                        </Avatar>
-                                        <div>
-                                            <h6>{formik.values.name}</h6>
-                                            <p>{formik.values.amount}</p>
-                                        </div>
-                                    </div>
-                                </li>
+                                            {!values.url.length && (
+                                                <svg
+                                                    className="w-[80px] h-[80px] rounded-l-lg bg-slate-200"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    height="24"
+                                                    viewBox="0 -960 960 960"
+                                                    width="24"
+                                                >
+                                                    <path
+                                                        fill="white"
+                                                        d="M480-240q21 0 35.5-14.5T530-290q0-21-14.5-35.5T480-340q-21 0-35.5 14.5T430-290q0 21 14.5 35.5T480-240Zm-36-154h74q0-36 8-53t34-43q35-35 49.5-58.5T624-602q0-53-36-85.5T491-720q-55 0-93.5 27T344-618l66 26q7-27 28-43.5t49-16.5q27 0 45 14.5t18 38.5q0 17-11 36t-37 42q-33 29-45.5 55.5T444-394ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z"
+                                                    />
+                                                </svg>
+                                            )}
+                                            <div className="my-auto flex justify-center flex-col">
+                                                <h6 className="truncate font-bold text-base">{values.name}</h6>
+                                                <p className="truncate  text-base"> {values.amount}</p>
+                                            </div>
+                                        </li>
 
-                                {formik.values.description.length > 0 && (
-                                    <li>
-                                        <h6>Description</h6>
-                                        <p>{formik.values.description}</p>
-                                    </li>
-                                )}
-                                {formik.values.ticker.length > 0 && (
-                                    <li>
-                                        <h6>Ticker</h6>
-                                        <p>{formik.values.ticker}</p>
-                                    </li>
-                                )}
-                                {formik.values.webvalidate.length > 0 && (
-                                    <li>
-                                        <h6>Web Validation URL</h6>
-                                        <p>{formik.values.webvalidate}</p>
-                                    </li>
-                                )}
-                                {formik.values.burn.length > 0 && (
-                                    <li>
-                                        <h6>Burn Fee</h6>
-                                        <p>{formik.values.burn + ' Minima'}</p>
-                                    </li>
-                                )}
-                            </ul>
-                        }
-                        transactionCreationStatus={formik.status}
-                        hideReview={() => setReview(false)}
-                        submitForm={() => formik.submitForm()}
-                    />
-                </>
-            }
-        />
+                                        {values.description.length > 0 && (
+                                            <li>
+                                                <h6>Description</h6>
+                                                <p>{values.description}</p>
+                                            </li>
+                                        )}
+                                        {values.ticker.length > 0 && (
+                                            <li>
+                                                <h6>Ticker</h6>
+                                                <p>{values.ticker}</p>
+                                            </li>
+                                        )}
+                                        {values.webvalidate.length > 0 && (
+                                            <li>
+                                                <h6>Web Validation URL</h6>
+                                                <p>{values.webvalidate}</p>
+                                            </li>
+                                        )}
+                                        {values.burn.length > 0 && (
+                                            <li>
+                                                <h6>Burn Fee</h6>
+                                                <p>{values.burn + ' Minima'}</p>
+                                            </li>
+                                        )}
+                                    </ul>
+                                }
+                                transactionCreationStatus={status}
+                                hideReview={() => setReview(false)}
+                                submitForm={() => submitForm()}
+                            />
+                        </>
+                    }
+                />
+            )}
+        </Formik>
     );
 };
 

@@ -8,127 +8,125 @@ import { selectBalance } from '../../../minima/redux/slices/balanceSlice';
 import { containsText } from '../../../shared/functions';
 import MiCard from '../../../shared/components/layout/MiCard/MiCard';
 
-import styles from './Wallet.module.css';
-import {
-    MiSearchBar,
-    MiSearchBarWithIcon,
-    MiSkeleton,
-    MiTokenAmount,
-    MiTokenContainer,
-    MiTokenListItem,
-    MiTokenName,
-    MiTokenNameTicker,
-    MiTokenNameWrapper,
-    NoResults,
-} from '../../../shared/components/layout/MiToken';
-import { MINIMA__TOKEN_ID } from '../../../shared/constants';
-
 import { useNavigate } from 'react-router-dom';
+import Input from '../../../components/UI/Input';
 import NFTAuthenticity from '../tokens/NFTAuthenticity';
-
-import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
-
-const Scroller = styled('div')`
-    overflow: auto;
-    flex-grow: 1;
-`;
 
 const Wallet = () => {
     const navigate = useNavigate();
     const walletTokens = useAppSelector(selectBalance);
     const [filterText, setFilterText] = React.useState('');
-    const [filterWallet, setFilterWallet] = React.useState<MinimaToken[]>([]);
-
-    React.useEffect(() => {
-        setFilterWallet(
-            walletTokens.filter(
-                (m: MinimaToken) =>
-                    containsText(
-                        typeof m.token == 'string' ? m.token : typeof m.token.name == 'string' ? m.token.name : null,
-                        filterText
-                    ) || containsText(m.tokenid, filterText)
-            )
-        );
-    }, [walletTokens, filterText]);
 
     return (
         <MiCard>
-            <MiSearchBarWithIcon>
-                <MiSearchBar
-                    value={filterText}
-                    onChange={(v: any) => {
-                        setFilterText(v.target.value);
-                    }}
-                    placeholder="Search by name or tokenid"
-                />
-                {/* <MiSearch color="#fff" size={20} /> */}
-            </MiSearchBarWithIcon>
-            <Scroller>
+            <Input
+                extraClass={`w-full mt-2`}
+                id="search"
+                name="search"
+                disabled={false}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilterText(e.target.value)}
+                type="search"
+                placeholder="Search token"
+            />
+            <div>
                 {!walletTokens.length && (
                     <Stack mt={2} alignItems="center" justifyContent="center">
                         <CircularProgress size={16} />
                         <p>Fetching your tokens...</p>
                     </Stack>
                 )}
-                {walletTokens.length && filterWallet.length === 0 ? (
-                    <NoResults>
-                        <h6>No results</h6>
-                        <p>Please try your search again.</p>
-                    </NoResults>
-                ) : null}
-                <MiTokenContainer>
-                    {filterWallet.map((t: MinimaToken) => (
-                        <MiTokenListItem onClick={() => navigate(t.tokenid)} key={t.tokenid}>
-                            <Stack width="100%" flexDirection="row" justifyContent="space-between">
-                                <Stack flexDirection="row" gap={1}>
-                                    {t.tokenid === '0x00' && (
-                                        <Avatar
-                                            className={styles['avatar']}
-                                            variant="rounded"
-                                            src="./assets/minimaLogoSquare.png"
-                                        />
-                                    )}
-                                    {t.tokenid !== '0x00' && (
-                                        <Avatar
-                                            className={styles['avatar']}
-                                            variant="rounded"
+
+                <ul className="mt-6">
+                    {walletTokens
+                        .filter(
+                            (t: MinimaToken) =>
+                                containsText(
+                                    t.tokenid === '0x00' ? t.token : 'name' in t.token ? t.token.name : '',
+                                    filterText
+                                ) || containsText(t.tokenid, filterText)
+                        )
+                        .map((t: MinimaToken) => (
+                            <li
+                                onClick={() => navigate(t.tokenid)}
+                                className="hover:bg-slate-200 hover:cursor-pointer bg-white flex rounded-lg gap-4 truncate mb-4"
+                                key={t.tokenid}
+                            >
+                                {t.tokenid === '0x00' && (
+                                    <div className="relative">
+                                        <svg
+                                            className="absolute right-0 bottom-0"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            height="24"
+                                            viewBox="0 -960 960 960"
+                                            width="24"
+                                        >
+                                            <path
+                                                fill="#3DA2FF"
+                                                d="m344-60-76-128-144-32 14-148-98-112 98-112-14-148 144-32 76-128 136 58 136-58 76 128 144 32-14 148 98 112-98 112 14 148-144 32-76 128-136-58-136 58Zm94-278 226-226-56-58-170 170-86-84-56 56 142 142Z"
+                                            />
+                                        </svg>
+                                        <svg
+                                            className="rounded-l-lg min-h-[80px] min-w-[80px]"
+                                            width="80"
+                                            height="80"
+                                            viewBox="0 0 80 81"
+                                            fill="none"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                            <rect
+                                                width="80"
+                                                height="80"
+                                                transform="translate(0 0.550781)"
+                                                fill="#08090B"
+                                            />
+                                            <path
+                                                d="M52.3627 30.187L50.5506 37.9909L48.2331 28.5753L40.1133 25.3689L37.9178 34.8015L35.9836 23.7402L27.8638 20.5508L19.5 56.5508H28.3691L30.9305 45.4895L32.8646 56.5508H41.7512L43.9292 47.1182L46.2467 56.5508H55.1158L60.5 33.3764L52.3627 30.187Z"
+                                                fill="white"
+                                            />
+                                        </svg>
+                                    </div>
+                                )}
+
+                                {t.tokenid !== '0x00' && (
+                                    <div className="relative">
+                                        <img
+                                            className="rounded-l-lg w-[80px] h-[80px]"
+                                            alt="token-icon"
                                             src={
-                                                t.token.url && t.token.url.length
+                                                'url' in t.token && t.token.url.length
                                                     ? t.token.url
                                                     : `https://robohash.org/${t.tokenid}`
                                             }
                                         />
+                                        <NFTAuthenticity token={t} />
+                                    </div>
+                                )}
+
+                                <div className="my-auto truncate max-w-[180px]">
+                                    {t.tokenid === '0x00' && <h6 className="font-bold truncate">Minima</h6>}
+                                    {t.tokenid !== '0x00' && (
+                                        <h6 className="font-bold">
+                                            {t.token && 'name' in t?.token ? t?.token.name : 'Name not available'}
+                                        </h6>
                                     )}
 
-                                    <Stack spacing={0.3} flexDirection="column" alignItems="flex-start">
-                                        <MiTokenNameWrapper>
-                                            <MiTokenName>
-                                                {typeof t.token == 'string' ? t.token : t.token.name}
-                                            </MiTokenName>
-
-                                            {t.tokenid !== MINIMA__TOKEN_ID ? <NFTAuthenticity token={t} /> : null}
-                                        </MiTokenNameWrapper>
-
-                                        {t.tokenid === '0x00' && <MiTokenNameTicker>MINIMA</MiTokenNameTicker>}
-                                        {t.tokenid !== '0x00' && 'ticker' in t.token && !!t.token.ticker.length && (
-                                            <MiTokenNameTicker>{t.token.ticker}</MiTokenNameTicker>
-                                        )}
-                                        {t.tokenid !== '0x00' && 'ticker' in t.token && t.token.ticker.length === 0 && (
-                                            <MiSkeleton></MiSkeleton>
-                                        )}
-                                        {t.tokenid !== '0x00' && 'ticker' in t.token === false && (
-                                            <MiSkeleton></MiSkeleton>
-                                        )}
-
-                                        <MiTokenAmount>{t.sendable}</MiTokenAmount>
-                                    </Stack>
-                                </Stack>
-                                {t.tokenid === '0x00' && <VerifiedUserIcon sx={{ fontSize: 16 }} color="primary" />}
-                            </Stack>
-                        </MiTokenListItem>
-                    ))}
-                </MiTokenContainer>
-            </Scroller>
+                                    <p className="font-normal truncate">{t.sendable}</p>
+                                </div>
+                            </li>
+                        ))}
+                    {!walletTokens.filter(
+                        (t: MinimaToken) =>
+                            containsText(
+                                t.tokenid === '0x00' ? t.token : 'name' in t.token ? t.token.name : '',
+                                filterText
+                            ) || containsText(t.tokenid, filterText)
+                    ).length && (
+                        <li>
+                            <h1 className="text-sm text-center">No results found</h1>
+                        </li>
+                    )}
+                </ul>
+            </div>
         </MiCard>
     );
 };

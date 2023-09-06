@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Avatar, Box, Button, Dialog, Stack, TextField, Typography } from '@mui/material';
-import { useFormik } from 'formik';
+import { Formik } from 'formik';
 import * as Yup from 'yup';
 
 import styles from './CreateNFT.module.css';
@@ -35,346 +35,353 @@ const CreateNFTForm = () => {
     const [showReview, setReview] = useState(false);
     const [showSuccess, setSuccess] = useState(false);
 
-    const formik = useFormik({
-        initialValues: {
-            funds: wallet[0],
-            url: '',
-            amount: '',
-            name: '',
-            description: '',
-            external_url: '',
-            owner: '',
-            creation_date: '',
-            webvalidate: '',
-            burn: '',
-        },
-        onSubmit: async (data: any) => {
-            setSuccess(true);
-            formik.setStatus('ongoing');
-
-            const cNFT: MiNFT = {
-                name: data.name.replaceAll(`"`, `'`),
-                url: data.url,
-                description: data.description.replaceAll(`"`, `'`) || '',
-                webvalidate: data.webvalidate.replaceAll(`"`, `'`) || '',
-                owner: data.owner.replaceAll(`"`, `'`) || '',
-                external_url: data.external_url.replaceAll(`"`, `'`) || '',
-            };
-
-            try {
-                // send rpc
-                await buildCustomTokenCreation(cNFT, data.amount, true);
-                formik.setStatus('complete');
-            } catch (error: any) {
-                const isPending = error.message === 'pending';
-                if (isPending) {
-                    formik.setStatus('pending');
-                }
-                if (!isPending) {
-                    formik.setStatus('failed');
-                    setError(error.message);
-                }
-            }
-        },
-        validationSchema: mySchema,
-    });
-
-    React.useEffect(() => {
-        formik.setFieldValue('funds', wallet[0]);
-    }, [wallet]);
-
     return (
-        <>
-            <form onSubmit={formik.handleSubmit}>
-                <Stack spacing={2}>
-                    <FormFieldWrapper
-                        help="Your current Minima balance:"
-                        children={<MiFunds formik={formik} funds={formik.values.funds} />}
-                    />
-                    {/* Required field helper */}
-                    <Required />
+        <Formik
+            initialValues={{
+                funds: wallet[0],
+                url: '',
+                amount: '',
+                name: '',
+                description: '',
+                external_url: '',
+                owner: '',
+                creation_date: '',
+                webvalidate: '',
+                burn: '',
+            }}
+            onSubmit={async (data, { setStatus }) => {
+                setSuccess(true);
+                setStatus('ongoing');
 
-                    <Typography variant="h6" className={styles['form-image-title']}>
-                        Image
-                    </Typography>
-                    <FormFieldWrapper
-                        required={false}
-                        help="Use a public image URL ending in .png .jpg or .jpeg or upload your own content"
-                        children={<FormImageUrlSelect formik={formik} />}
-                    />
+                const cNFT: MiNFT = {
+                    name: data.name.replaceAll(`"`, `'`),
+                    url: data.url,
+                    description: data.description.replaceAll(`"`, `'`) || '',
+                    webvalidate: data.webvalidate.replaceAll(`"`, `'`) || '',
+                    owner: data.owner.replaceAll(`"`, `'`) || '',
+                    external_url: data.external_url.replaceAll(`"`, `'`) || '',
+                };
 
-                    <FormFieldWrapper
-                        required={true}
-                        help="Enter a name for your custom NFT"
-                        children={
-                            <TextField
-                                disabled={formik.isSubmitting}
-                                fullWidth
-                                id="name"
-                                name="name"
-                                placeholder="name *"
-                                value={formik.values.name}
-                                onBlur={formik.handleBlur}
-                                onChange={formik.handleChange}
-                                error={formik.touched.name && Boolean(formik.errors.name)}
-                                helperText={formik.touched.name && formik.errors.name}
-                                FormHelperTextProps={{ className: styles['form-helper-text'] }}
-                                InputProps={{
-                                    style:
-                                        formik.touched.name && Boolean(formik.errors.name)
-                                            ? { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }
-                                            : { borderBottomLeftRadius: 8, borderBottomRightRadius: 8 },
-                                }}
-                            />
-                        }
-                    />
-
-                    <FormFieldWrapper
-                        required={true}
-                        help="NFT's are non-fungible tokens, and can only be sent or received as whole coins, never fractions"
-                        children={
-                            <TextField
-                                disabled={formik.isSubmitting}
-                                fullWidth
-                                id="amount"
-                                name="amount"
-                                placeholder="amount *"
-                                onBlur={formik.handleBlur}
-                                value={formik.values.amount}
-                                onChange={formik.handleChange}
-                                error={formik.touched.amount && Boolean(formik.errors.amount)}
-                                helperText={formik.touched.amount && formik.errors.amount}
-                                FormHelperTextProps={{ className: styles['form-helper-text'] }}
-                                InputProps={{
-                                    style:
-                                        formik.touched.amount && Boolean(formik.errors.amount)
-                                            ? { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }
-                                            : { borderBottomLeftRadius: 8, borderBottomRightRadius: 8 },
-                                }}
-                            />
-                        }
-                    />
-
-                    <Typography className={styles['form-help-caption']} variant="caption">
-                        An external link can be provided so users can learn more about the NFT.
-                    </Typography>
-                    <TextField
-                        disabled={formik.isSubmitting}
-                        fullWidth
-                        id="external_url"
-                        name="external_url"
-                        placeholder="external url"
-                        onBlur={formik.handleBlur}
-                        value={formik.values.external_url}
-                        onChange={formik.handleChange}
-                        error={formik.touched.external_url && Boolean(formik.errors.external_url)}
-                        helperText={formik.touched.external_url && formik.errors.external_url}
-                        FormHelperTextProps={{ className: styles['form-helper-text'] }}
-                        InputProps={{
-                            style:
-                                formik.touched.external_url && Boolean(formik.errors.external_url)
-                                    ? { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }
-                                    : { borderBottomLeftRadius: 8, borderBottomRightRadius: 8 },
-                        }}
-                    />
-                    <FormFieldWrapper
-                        help="Enter a description about your NFT"
-                        children={
-                            <TextField
-                                disabled={formik.isSubmitting}
-                                fullWidth
-                                id="description"
-                                name="description"
-                                placeholder="description"
-                                onBlur={formik.handleBlur}
-                                value={formik.values.description}
-                                onChange={formik.handleChange}
-                                error={formik.touched.description && Boolean(formik.errors.description)}
-                                helperText={
-                                    formik.values.description.length === 255
-                                        ? formik.values.description.length + '/255'
-                                        : null
-                                }
-                                FormHelperTextProps={{
-                                    style: { display: 'flex', justifyContent: 'flex-end' },
-                                }}
-                                InputProps={{
-                                    style:
-                                        formik.touched.description && Boolean(formik.errors.description)
-                                            ? { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }
-                                            : { borderBottomLeftRadius: 8, borderBottomRightRadius: 8 },
-                                }}
-                                rows={4}
-                                multiline
-                                inputProps={{ maxLength: 255 }}
-                            >
-                                <Box
-                                    component="div"
-                                    sx={{ position: 'absolute', right: '0', bottom: '0', color: '#fff' }}
-                                >{`'${formik.values.description.length} / 255'`}</Box>
-                            </TextField>
-                        }
-                    />
-
-                    <FormFieldWrapper
-                        help="Enter a creator's address or name"
-                        children={
-                            <TextField
-                                disabled={formik.isSubmitting}
-                                fullWidth
-                                id="owner"
-                                name="owner"
-                                placeholder="creator id/name"
-                                value={formik.values.owner}
-                                onBlur={formik.handleBlur}
-                                onChange={formik.handleChange}
-                                error={formik.touched.owner && Boolean(formik.errors.owner)}
-                                helperText={formik.touched.owner && formik.errors.owner}
-                                FormHelperTextProps={{ className: styles['form-helper-text'] }}
-                                InputProps={{
-                                    style:
-                                        formik.touched.owner && Boolean(formik.errors.owner)
-                                            ? { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }
-                                            : { borderBottomLeftRadius: 8, borderBottomRightRadius: 8 },
-                                }}
-                            />
-                        }
-                    />
-
-                    <FormFieldWrapper
-                        help="Validate your token by hosting a public .txt file containing the tokenid on your own server or website. Create the link to the .txt file in advance and add the tokenid after creating the token."
-                        children={
-                            <TextField
-                                disabled={formik.isSubmitting}
-                                fullWidth
-                                id="webvalidate"
-                                name="webvalidate"
-                                placeholder="web validation url"
-                                value={formik.values.webvalidate}
-                                onBlur={formik.handleBlur}
-                                onChange={formik.handleChange}
-                                error={formik.touched.webvalidate && Boolean(formik.errors.webvalidate)}
-                                helperText={formik.touched.webvalidate && formik.errors.webvalidate}
-                                FormHelperTextProps={{ className: styles['form-helper-text'] }}
-                                InputProps={{
-                                    style:
-                                        formik.touched.webvalidate && Boolean(formik.errors.webvalidate)
-                                            ? { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }
-                                            : { borderBottomLeftRadius: 8, borderBottomRightRadius: 8 },
-                                }}
-                            />
-                        }
-                    />
-                    {/* Choose a burn amount */}
-                    <FormFieldWrapper
-                        help="Prioritize your transaction by adding a burn. Burn amounts are denominated in Minima only."
-                        children={
-                            <TextField
-                                disabled={formik.isSubmitting}
-                                fullWidth
-                                id="burn"
-                                name="burn"
-                                placeholder="burn fee"
-                                value={formik.values.burn}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                error={formik.touched.burn && Boolean(formik.errors.burn)}
-                                helperText={formik.touched.burn && formik.errors.burn}
-                                FormHelperTextProps={{
-                                    className: styles['form-helper-text'],
-                                }}
-                                InputProps={{
-                                    style:
-                                        formik.touched.burn && Boolean(formik.errors.burn)
-                                            ? {
-                                                  borderBottomLeftRadius: 0,
-                                                  borderBottomRightRadius: 0,
-                                              }
-                                            : {
-                                                  borderBottomLeftRadius: 8,
-                                                  borderBottomRightRadius: 8,
-                                              },
-                                }}
-                            />
-                        }
-                    />
-
-                    <Button
-                        disabled={!(formik.isValid && formik.dirty && !formik.isSubmitting)}
-                        onClick={() => {
-                            setReview(true);
-                            formik.setStatus('ongoing');
-                        }}
-                        variant="contained"
-                        fullWidth
-                        disableElevation
-                    >
-                        Review
-                    </Button>
-                </Stack>
-            </form>
-            <SuccessDialog
-                open={showSuccess}
-                error={error}
-                transactionCreationStatus={formik.status}
-                hideSuccess={() => setSuccess(false)}
-                clearForm={() => formik.resetForm()}
-            />
-            <ReviewDialog
-                open={showReview}
-                children={
-                    <ul id="list">
-                        <li>
-                            <div className={styles['token__wrapper']}>
-                                <Avatar variant="rounded">
-                                    {!!formik.values.url && <img alt="custom-token-image" src={formik.values.url} />}
-                                    {!formik.values.url && <img alt="custom-token-image" src="./assets/question.svg" />}
-                                </Avatar>
-                                <div>
-                                    <h6>{formik.values.name}</h6>
-                                    <p>{formik.values.amount}</p>
-                                </div>
-                            </div>
-                        </li>
-
-                        {formik.values.description.length > 0 && (
-                            <li>
-                                <h6>Description</h6>
-                                <p>{formik.values.description}</p>
-                            </li>
-                        )}
-                        {formik.values.owner.length > 0 && (
-                            <li>
-                                <h6>Owner</h6>
-                                <p>{formik.values.owner}</p>
-                            </li>
-                        )}
-
-                        {formik.values.webvalidate.length > 0 && (
-                            <li>
-                                <h6>Web Validation URL</h6>
-                                <p>{formik.values.webvalidate}</p>
-                            </li>
-                        )}
-                        {formik.values.external_url.length > 0 && (
-                            <li>
-                                <h6>External URL</h6>
-                                <p>{formik.values.external_url}</p>
-                            </li>
-                        )}
-                        {formik.values.burn.length > 0 && (
-                            <li>
-                                <h6>Burn Fee</h6>
-                                <p>{formik.values.burn + ' Minima'}</p>
-                            </li>
-                        )}
-                    </ul>
+                try {
+                    // send rpc
+                    await buildCustomTokenCreation(cNFT, data.amount, true);
+                    setStatus('complete');
+                } catch (error: any) {
+                    const isPending = error.message === 'pending';
+                    if (isPending) {
+                        setStatus('pending');
+                    }
+                    if (!isPending) {
+                        setStatus('failed');
+                        setError(error.message);
+                    }
                 }
-                transactionCreationStatus={formik.status}
-                hideReview={() => setReview(false)}
-                submitForm={() => formik.submitForm()}
-            />
-        </>
+            }}
+            validationSchema={mySchema}
+        >
+            {({
+                handleSubmit,
+                getFieldProps,
+                status,
+                setStatus,
+                errors,
+                isValid,
+                isSubmitting,
+                submitForm,
+
+                values,
+
+                resetForm,
+                touched,
+                dirty,
+            }) => (
+                <>
+                    <form onSubmit={handleSubmit}>
+                        <Stack spacing={2}>
+                            <FormFieldWrapper help="Your current Minima balance:" children={<MiFunds />} />
+                            {/* Required field helper */}
+                            <Required />
+
+                            <Typography variant="h6" className={styles['form-image-title']}>
+                                Image
+                            </Typography>
+                            <FormFieldWrapper
+                                help="Enter your NFT's image URL"
+                                children={
+                                    <TextField
+                                        disabled={isSubmitting}
+                                        fullWidth
+                                        placeholder="image url"
+                                        {...getFieldProps('url')}
+                                        error={touched.description && Boolean(errors.description)}
+                                        FormHelperTextProps={{
+                                            style: { display: 'flex', justifyContent: 'flex-end' },
+                                        }}
+                                    />
+                                }
+                            />
+
+                            <FormFieldWrapper
+                                required={true}
+                                help="Enter a name for your custom NFT"
+                                children={
+                                    <TextField
+                                        disabled={isSubmitting}
+                                        fullWidth
+                                        {...getFieldProps('name')}
+                                        placeholder="name *"
+                                        error={touched.name && Boolean(errors.name)}
+                                        helperText={touched.name && errors.name}
+                                        FormHelperTextProps={{ className: styles['form-helper-text'] }}
+                                        InputProps={{
+                                            style:
+                                                touched.name && Boolean(errors.name)
+                                                    ? { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }
+                                                    : { borderBottomLeftRadius: 8, borderBottomRightRadius: 8 },
+                                        }}
+                                    />
+                                }
+                            />
+
+                            <FormFieldWrapper
+                                required={true}
+                                help="NFT's are non-fungible tokens, and can only be sent or received as whole coins, never fractions"
+                                children={
+                                    <TextField
+                                        disabled={isSubmitting}
+                                        fullWidth
+                                        placeholder="amount *"
+                                        {...getFieldProps('amount')}
+                                        error={touched.amount && Boolean(errors.amount)}
+                                        helperText={touched.amount && errors.amount}
+                                        FormHelperTextProps={{ className: styles['form-helper-text'] }}
+                                        InputProps={{
+                                            style:
+                                                touched.amount && Boolean(errors.amount)
+                                                    ? { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }
+                                                    : { borderBottomLeftRadius: 8, borderBottomRightRadius: 8 },
+                                        }}
+                                    />
+                                }
+                            />
+
+                            <Typography className={styles['form-help-caption']} variant="caption">
+                                An external link can be provided so users can learn more about the NFT.
+                            </Typography>
+                            <TextField
+                                disabled={isSubmitting}
+                                fullWidth
+                                placeholder="external url"
+                                {...getFieldProps('external_url')}
+                                error={touched.external_url && Boolean(errors.external_url)}
+                                helperText={touched.external_url && errors.external_url}
+                                FormHelperTextProps={{ className: styles['form-helper-text'] }}
+                                InputProps={{
+                                    style:
+                                        touched.external_url && Boolean(errors.external_url)
+                                            ? { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }
+                                            : { borderBottomLeftRadius: 8, borderBottomRightRadius: 8 },
+                                }}
+                            />
+                            <FormFieldWrapper
+                                help="Enter a description about your NFT"
+                                children={
+                                    <TextField
+                                        disabled={isSubmitting}
+                                        fullWidth
+                                        placeholder="description"
+                                        {...getFieldProps('description')}
+                                        error={touched.description && Boolean(errors.description)}
+                                        helperText={
+                                            values.description.length === 255
+                                                ? values.description.length + '/255'
+                                                : null
+                                        }
+                                        FormHelperTextProps={{
+                                            style: { display: 'flex', justifyContent: 'flex-end' },
+                                        }}
+                                        InputProps={{
+                                            style:
+                                                touched.description && Boolean(errors.description)
+                                                    ? { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }
+                                                    : { borderBottomLeftRadius: 8, borderBottomRightRadius: 8 },
+                                        }}
+                                        rows={4}
+                                        multiline
+                                        inputProps={{ maxLength: 255 }}
+                                    >
+                                        <Box
+                                            component="div"
+                                            sx={{ position: 'absolute', right: '0', bottom: '0', color: '#fff' }}
+                                        >{`'${values.description.length} / 255'`}</Box>
+                                    </TextField>
+                                }
+                            />
+
+                            <FormFieldWrapper
+                                help="Enter a creator's address or name"
+                                children={
+                                    <TextField
+                                        disabled={isSubmitting}
+                                        fullWidth
+                                        {...getFieldProps('owner')}
+                                        placeholder="creator id/name"
+                                        error={touched.owner && Boolean(errors.owner)}
+                                        helperText={touched.owner && errors.owner}
+                                        FormHelperTextProps={{ className: styles['form-helper-text'] }}
+                                        InputProps={{
+                                            style:
+                                                touched.owner && Boolean(errors.owner)
+                                                    ? { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }
+                                                    : { borderBottomLeftRadius: 8, borderBottomRightRadius: 8 },
+                                        }}
+                                    />
+                                }
+                            />
+
+                            <FormFieldWrapper
+                                help="Validate your token by hosting a public .txt file containing the tokenid on your own server or website. Create the link to the .txt file in advance and add the tokenid after creating the token."
+                                children={
+                                    <TextField
+                                        disabled={isSubmitting}
+                                        fullWidth
+                                        placeholder="web validation url"
+                                        {...getFieldProps('webvalidate')}
+                                        error={touched.webvalidate && Boolean(errors.webvalidate)}
+                                        helperText={touched.webvalidate && errors.webvalidate}
+                                        FormHelperTextProps={{ className: styles['form-helper-text'] }}
+                                        InputProps={{
+                                            style:
+                                                touched.webvalidate && Boolean(errors.webvalidate)
+                                                    ? { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }
+                                                    : { borderBottomLeftRadius: 8, borderBottomRightRadius: 8 },
+                                        }}
+                                    />
+                                }
+                            />
+                            {/* Choose a burn amount */}
+                            <FormFieldWrapper
+                                help="Prioritize your transaction by adding a burn. Burn amounts are denominated in Minima only."
+                                children={
+                                    <TextField
+                                        disabled={isSubmitting}
+                                        fullWidth
+                                        placeholder="burn fee"
+                                        {...getFieldProps('burn')}
+                                        error={touched.burn && Boolean(errors.burn)}
+                                        helperText={touched.burn && errors.burn}
+                                        FormHelperTextProps={{
+                                            className: styles['form-helper-text'],
+                                        }}
+                                        InputProps={{
+                                            style:
+                                                touched.burn && Boolean(errors.burn)
+                                                    ? {
+                                                          borderBottomLeftRadius: 0,
+                                                          borderBottomRightRadius: 0,
+                                                      }
+                                                    : {
+                                                          borderBottomLeftRadius: 8,
+                                                          borderBottomRightRadius: 8,
+                                                      },
+                                        }}
+                                    />
+                                }
+                            />
+
+                            <Button
+                                disabled={!(isValid && dirty && !isSubmitting)}
+                                onClick={() => {
+                                    setReview(true);
+                                    setStatus('ongoing');
+                                }}
+                                variant="contained"
+                                fullWidth
+                                disableElevation
+                            >
+                                Review
+                            </Button>
+                        </Stack>
+                    </form>
+                    <SuccessDialog
+                        open={showSuccess}
+                        error={error}
+                        transactionCreationStatus={status}
+                        hideSuccess={() => setSuccess(false)}
+                        clearForm={() => resetForm()}
+                    />
+                    <ReviewDialog
+                        open={showReview}
+                        children={
+                            <ul id="list">
+                                <li className="flex gap-4 bg-core-grey-10 rounded-lg">
+                                    {!!values.url.length && (
+                                        <img
+                                            alt="custom-token-image"
+                                            src={values.url}
+                                            className="w-[80px] h-[80px] rounded-l-lg"
+                                        />
+                                    )}
+                                    {!values.url.length && (
+                                        <svg
+                                            className="w-[80px] h-[80px] rounded-l-lg bg-slate-200"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            height="24"
+                                            viewBox="0 -960 960 960"
+                                            width="24"
+                                        >
+                                            <path
+                                                fill="white"
+                                                d="M480-240q21 0 35.5-14.5T530-290q0-21-14.5-35.5T480-340q-21 0-35.5 14.5T430-290q0 21 14.5 35.5T480-240Zm-36-154h74q0-36 8-53t34-43q35-35 49.5-58.5T624-602q0-53-36-85.5T491-720q-55 0-93.5 27T344-618l66 26q7-27 28-43.5t49-16.5q27 0 45 14.5t18 38.5q0 17-11 36t-37 42q-33 29-45.5 55.5T444-394ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z"
+                                            />
+                                        </svg>
+                                    )}
+                                    <div className="my-auto flex justify-center flex-col">
+                                        <h6 className="truncate font-bold text-base">{values.name}</h6>
+                                        <p className="truncate  text-base"> {values.amount}</p>
+                                    </div>
+                                </li>
+
+                                {values.description.length > 0 && (
+                                    <li>
+                                        <h6>Description</h6>
+                                        <p>{values.description}</p>
+                                    </li>
+                                )}
+                                {values.owner.length > 0 && (
+                                    <li>
+                                        <h6>Owner</h6>
+                                        <p>{values.owner}</p>
+                                    </li>
+                                )}
+
+                                {values.webvalidate.length > 0 && (
+                                    <li>
+                                        <h6>Web Validation URL</h6>
+                                        <p>{values.webvalidate}</p>
+                                    </li>
+                                )}
+                                {values.external_url.length > 0 && (
+                                    <li>
+                                        <h6>External URL</h6>
+                                        <p>{values.external_url}</p>
+                                    </li>
+                                )}
+                                {values.burn.length > 0 && (
+                                    <li>
+                                        <h6>Burn Fee</h6>
+                                        <p>{values.burn + ' Minima'}</p>
+                                    </li>
+                                )}
+                            </ul>
+                        }
+                        transactionCreationStatus={status}
+                        hideReview={() => setReview(false)}
+                        submitForm={() => submitForm()}
+                    />
+                </>
+            )}
+        </Formik>
     );
 };
 

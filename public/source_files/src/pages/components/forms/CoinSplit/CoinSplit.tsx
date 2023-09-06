@@ -1,4 +1,4 @@
-import { useFormik } from 'formik';
+import { Formik, useFormik } from 'formik';
 import Decimal from 'decimal.js';
 import * as Yup from 'yup';
 import { useState } from 'react';
@@ -17,6 +17,7 @@ import FormFieldWrapper from '../../../../shared/components/FormFieldWrapper';
 import useIsVaultLocked from '../../../../hooks/useIsVaultLocked';
 import ReviewDialog from '../ReviewDialog';
 import SuccessDialog from '../SuccessDialog';
+import WalletSelect from '../../WalletSelect';
 
 Decimal.set({ precision: MINIMA__DECIMAL_PRECISION });
 
@@ -35,164 +36,162 @@ const CoinSplit = () => {
     const [showReview, setReview] = useState(false);
     const [showSuccess, setSuccess] = useState(false);
 
-    const formik = useFormik({
-        initialValues: {
-            token: wallet[0],
-            burn: '',
-            password: '',
-        },
-        onSubmit: async (formInputs: ISendForm) => {
-            setSuccess(true);
-            formik.setStatus('ongoing');
-            try {
-                await splitCoin(
-                    formInputs.token.tokenid,
-                    formInputs.token.sendable,
-                    formInputs.burn,
-                    formInputs.password
-                );
-                formik.setStatus('complete');
-            } catch (error: any) {
-                const isPending = error.message === 'pending';
-                if (isPending) {
-                    formik.setStatus('pending');
-                }
-                if (!isPending) {
-                    formik.setStatus('failed');
-                    setError(error.message);
-                }
-            }
-        },
-        validationSchema: mySchema,
-    });
-
     return (
-        <>
-            <SuccessDialog
-                open={showSuccess}
-                error={error}
-                transactionCreationStatus={formik.status}
-                hideSuccess={() => setSuccess(false)}
-                clearForm={() => formik.resetForm()}
-            />
-            <ReviewDialog
-                open={showReview}
-                children={
-                    <ul id="list">
-                        <li>
-                            <h6>Splitting your sendable balance in two</h6>
-                            <p>{formik.values.token.sendable}</p>
-                        </li>
-                        {!!formik.values.burn.length && (
-                            <li>
-                                <h6>Burn</h6>
-                                <p>{formik.values.burn}</p>
-                            </li>
-                        )}
-                    </ul>
+        <Formik
+            initialValues={{ token: wallet[0], burn: '', password: '', coinSplit: true }}
+            onSubmit={async (formInputs: ISendForm, { setStatus }) => {
+                setSuccess(true);
+                setStatus('ongoing');
+                try {
+                    await splitCoin(
+                        formInputs.token.tokenid,
+                        formInputs.token.sendable,
+                        formInputs.burn,
+                        formInputs.password
+                    );
+                    setStatus('complete');
+                } catch (error: any) {
+                    const isPending = error.message === 'pending';
+                    if (isPending) {
+                        setStatus('pending');
+                    }
+                    if (!isPending) {
+                        setStatus('failed');
+                        setError(error.message);
+                    }
                 }
-                transactionCreationStatus={formik.status}
-                hideReview={() => setReview(false)}
-                submitForm={() => formik.submitForm()}
-            />
-            <form onSubmit={formik.handleSubmit}>
-                <Stack spacing={2}>
-                    {/* Select a token */}
-                    <MiSelect
-                        value={formik.values.token}
-                        tokens={wallet}
-                        error={Boolean(formik.errors.token) ? formik.errors.token : undefined}
-                        setFieldValue={formik.setFieldValue}
-                        resetForm={formik.resetForm}
-                        coinSplitMode={true}
+            }}
+            validationSchema={mySchema}
+        >
+            {({
+                handleSubmit,
+                getFieldProps,
+                status,
+                setStatus,
+                errors,
+                isValid,
+                isSubmitting,
+                submitForm,
+                setFieldValue,
+                values,
+                handleBlur,
+                resetForm,
+                touched,
+                dirty,
+            }) => (
+                <>
+                    <SuccessDialog
+                        open={showSuccess}
+                        error={error}
+                        transactionCreationStatus={status}
+                        hideSuccess={() => setSuccess(false)}
+                        clearForm={() => resetForm()}
                     />
-                    {/* Choose a burn amount */}
-                    <FormFieldWrapper
-                        help="Prioritize your transaction by adding a burn. Burn amounts are denominated in Minima only."
+                    <ReviewDialog
+                        open={showReview}
                         children={
-                            <TextField
-                                disabled={formik.isSubmitting}
-                                fullWidth
-                                id="burn"
-                                name="burn"
-                                placeholder="burn fee"
-                                value={formik.values.burn}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                error={formik.touched.burn && Boolean(formik.errors.burn)}
-                                helperText={formik.touched.burn && formik.errors.burn}
-                                FormHelperTextProps={{
-                                    className: sharedStyles['form-helper-text'],
-                                }}
-                                InputProps={{
-                                    style:
-                                        formik.touched.burn && Boolean(formik.errors.burn)
-                                            ? {
-                                                  borderBottomLeftRadius: 0,
-                                                  borderBottomRightRadius: 0,
-                                              }
-                                            : {
-                                                  borderBottomLeftRadius: 8,
-                                                  borderBottomRightRadius: 8,
-                                              },
-                                }}
-                            />
+                            <ul id="list">
+                                <li>
+                                    <h6>Splitting your sendable balance in two</h6>
+                                    <p>{values.token.sendable}</p>
+                                </li>
+                                {!!values.burn.length && (
+                                    <li>
+                                        <h6>Burn</h6>
+                                        <p>{values.burn}</p>
+                                    </li>
+                                )}
+                            </ul>
                         }
+                        transactionCreationStatus={status}
+                        hideReview={() => setReview(false)}
+                        submitForm={() => submitForm()}
                     />
-                    {userLockedVault && (
-                        <FormFieldWrapper
-                            help="Your vault is locked.  Use your password so you can process this transaction."
-                            children={
-                                <TextField
-                                    type="password"
-                                    disabled={formik.isSubmitting}
-                                    fullWidth
-                                    id="password"
-                                    name="password"
-                                    placeholder="vault password"
-                                    value={formik.values.password}
-                                    onChange={formik.handleChange}
-                                    onBlur={formik.handleBlur}
-                                    error={formik.touched.password && Boolean(formik.errors.password)}
-                                    helperText={formik.touched.password && formik.errors.password}
-                                    FormHelperTextProps={{
-                                        className: sharedStyles['form-helper-text'],
-                                    }}
-                                    InputProps={{
-                                        style:
-                                            formik.touched.password && Boolean(formik.errors.password)
-                                                ? {
-                                                      borderBottomLeftRadius: 0,
-                                                      borderBottomRightRadius: 0,
-                                                  }
-                                                : {
-                                                      borderBottomLeftRadius: 8,
-                                                      borderBottomRightRadius: 8,
-                                                  },
-                                    }}
+                    <form onSubmit={handleSubmit}>
+                        <Stack spacing={2}>
+                            {/* Select a token */}
+                            <WalletSelect />
+                            {/* Choose a burn amount */}
+                            <FormFieldWrapper
+                                help="Prioritize your transaction by adding a burn. Burn amounts are denominated in Minima only."
+                                children={
+                                    <TextField
+                                        disabled={isSubmitting}
+                                        fullWidth
+                                        {...getFieldProps('burn')}
+                                        placeholder="burn fee"
+                                        error={touched.burn && Boolean(errors.burn)}
+                                        helperText={touched.burn && errors.burn}
+                                        FormHelperTextProps={{
+                                            className: sharedStyles['form-helper-text'],
+                                        }}
+                                        InputProps={{
+                                            style:
+                                                touched.burn && Boolean(errors.burn)
+                                                    ? {
+                                                          borderBottomLeftRadius: 0,
+                                                          borderBottomRightRadius: 0,
+                                                      }
+                                                    : {
+                                                          borderBottomLeftRadius: 8,
+                                                          borderBottomRightRadius: 8,
+                                                      },
+                                        }}
+                                    />
+                                }
+                            />
+                            {userLockedVault && (
+                                <FormFieldWrapper
+                                    help="Your vault is locked.  Use your password so you can process this transaction."
+                                    children={
+                                        <TextField
+                                            type="password"
+                                            disabled={isSubmitting}
+                                            fullWidth
+                                            {...getFieldProps('password')}
+                                            placeholder="vault password"
+                                            error={touched.password && Boolean(errors.password)}
+                                            helperText={touched.password && errors.password}
+                                            FormHelperTextProps={{
+                                                className: sharedStyles['form-helper-text'],
+                                            }}
+                                            InputProps={{
+                                                style:
+                                                    touched.password && Boolean(errors.password)
+                                                        ? {
+                                                              borderBottomLeftRadius: 0,
+                                                              borderBottomRightRadius: 0,
+                                                          }
+                                                        : {
+                                                              borderBottomLeftRadius: 8,
+                                                              borderBottomRightRadius: 8,
+                                                          },
+                                            }}
+                                        />
+                                    }
                                 />
-                            }
-                        />
-                    )}
-                    <Button
-                        onClick={() => {
-                            setReview(true);
-                            formik.setStatus('ongoing');
-                        }}
-                        color="primary"
-                        variant="contained"
-                        fullWidth
-                        disableElevation
-                        disabled={formik.isSubmitting || !formik.isValid}
-                    >
-                        Review
-                    </Button>
-                    <Typography variant="caption">
-                        Split your coins by two so you have more available UTXO to transact with
-                    </Typography>
-                </Stack>
-            </form>
-        </>
+                            )}
+                            <Button
+                                onClick={() => {
+                                    setReview(true);
+                                    setStatus('ongoing');
+                                }}
+                                color="primary"
+                                variant="contained"
+                                fullWidth
+                                disableElevation
+                                disabled={isSubmitting || !isValid}
+                            >
+                                Review
+                            </Button>
+                            <Typography variant="caption">
+                                Split your coins by two so you have more available UTXO to transact with
+                            </Typography>
+                        </Stack>
+                    </form>
+                </>
+            )}
+        </Formik>
     );
 };
 

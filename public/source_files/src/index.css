@@ -1,18 +1,65 @@
-html, body {
-    margin: 0 auto;
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Roboto+Mono:wght@400&display=swap');
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background-color: #0D0E10; 
+  --globalnav-background: rgba(22, 22, 23, .2);
+  --inset: rgba(255,255,255,0.2);
+  --globalnav-backdrop-filter: saturate(180%) blur(10px);
+  --globalnav-backdrop-filter-level-two: saturate(180%) blur(20px);
+
+  --status-red: #FF627E;
+  --status-green: #00CBB6;
+  --status-green-5: #E1FFF1;
+  --core-grey: #91919D;
+  --core-grey-5: #F9F9FA;
+  --core-grey-10: #F4F4F5;
+  --core-grey-20: #E9E9EB;
+  --core-grey-60: #BDBDC4;
+  --core-grey-80: #A7A7B0;
+  --core-grey-100: #D9D9D9;
+  --core-grey-150: #D3D3D8;
+  --core-black-100: #08090B;
+  --core-black-150: #363A3F;
+  --core-black-contrast: #17191C;
+  --core-black-contrast-2: #282B2E;
+  --core-black-contrast-3: #464C4F;
+
+  --brand-color: #3DA2FF;
 }
+
+.bg-black {
+  background-color: var(--background-color)
+}
+.bg-core-grey-10 {
+  background-color: var(--core-grey-10);
+}
+
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
-    'Droid Sans', 'Helvetica Neue', sans-serif;
+    margin: 0;
+    color: #E9E9EB;
+    height: 100%; 
+    min-height: -webkit-fill-available;
+    font-weight: 500!important;
+    letter-spacing: 0.3px;
+    font-family: 'Manrope', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background-color: var(--background-color);
+    background-size: cover;
+    background-repeat: no-repeat;
     overflow: hidden;
-}
+    -webkit-tap-highlight-color: transparent;
+  }
 
 @font-face {
     font-family: Manrope-regular;
     src: url('./assets/fonts/Manrope/Manrope-Medium.ttf');
-}
+  }
 @font-face {
     font-family: Manrope-bold;
     src: url('./assets/fonts/Manrope/Manrope-Bold.ttf');
@@ -26,3 +73,7 @@ body {
     src: url('./assets/fonts/Manrope/Manrope-SemiBold.ttf');
 }
 
+select {
+  -webkit-appearance: none;
+  appearance: none;
+}

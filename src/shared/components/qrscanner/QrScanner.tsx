@@ -5,6 +5,9 @@ import { DRAWERWIDTH } from '../../constants';
 import useIsCameraEnabledPermissions from '../../../hooks/useIsCameraEnabledPermissions';
 import { NoResults } from '../layout/MiToken';
 import MiError from '../layout/MiError/MiError';
+import { useFormikContext } from 'formik';
+import validateMinimaAddress from '../../../minima/commands/validateMinimaAddress/validateMinimaAddress';
+import { useState } from 'react';
 
 const BackDrop = styled('div')`
     position: fixed;
@@ -39,8 +42,26 @@ const QrContainer = styled('div')`
 
     position: relative;
 `;
-const QrScanner = ({ setScannedResult, open, closeModal, error }: any) => {
+const QrScanner = ({ open, closeModal }: any) => {
     const { cameraStatus } = useIsCameraEnabledPermissions();
+    const formik: any = useFormikContext();
+
+    const [error, setError] = useState<false | string>(false);
+
+    const setAddressFieldValue = async (scannedMinimaAddress: string) => {
+        setError(false);
+        try {
+            await validateMinimaAddress(scannedMinimaAddress);
+            // it's valid so set input field
+            formik.setFieldValue('address', scannedMinimaAddress);
+            // close Modal
+            closeModal();
+        } catch (error: any) {
+            console.error(error);
+            // set error
+            setError(error.message);
+        }
+    };
 
     return (
         open && (
@@ -66,7 +87,7 @@ const QrScanner = ({ setScannedResult, open, closeModal, error }: any) => {
                                         scanDelay={500}
                                         onResult={(data: any) => {
                                             if (data) {
-                                                setScannedResult(data.text);
+                                                setAddressFieldValue(data.text);
                                             }
                                         }}
                                         constraints={{ facingMode: 'environment' }}

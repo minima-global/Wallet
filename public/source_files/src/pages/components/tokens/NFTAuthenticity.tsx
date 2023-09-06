@@ -9,7 +9,7 @@ interface IProps {
     token: MinimaToken;
 }
 const NFTAuthenticity = ({ token }: IProps) => {
-    const [isTokenValidated, setIsTokenValidated] = React.useState(false);
+    const [isTokenValidated, setIsTokenValidated] = React.useState<boolean | null>(false);
 
     React.useEffect(() => {
         RPC.tokenValidate(token.tokenid).then(() => {
@@ -17,10 +17,13 @@ const NFTAuthenticity = ({ token }: IProps) => {
             setIsTokenValidated(true);
         });
     }, [token]);
-    return isTokenValidated && token.token.webvalidate ? (
-        <BootstrapTooltip placement="top-end" title={'NFT has been validated, ' + token.token.webvalidate}>
-            <VerifiedIcon fontSize="inherit" color="primary" />
-        </BootstrapTooltip>
+
+    return isTokenValidated && token.token.webvalidate.length ? (
+        <div className="absolute bottom-0 right-0">
+            <BootstrapTooltip placement="top-end" title={'NFT has been validated, ' + token.token.webvalidate}>
+                <VerifiedIcon fontSize="medium" color="primary" />
+            </BootstrapTooltip>
+        </div>
     ) : null;
 };
 
