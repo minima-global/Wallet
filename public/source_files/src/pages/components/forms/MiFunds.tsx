@@ -67,12 +67,12 @@ const MiFunds = () => {
                     hidden
                     id="funds"
                     name="funds"
-                    value={formik.values.funds.sendable}
+                    value={formik.values.funds ? formik.values.funds.sendable : '0'}
                 />
                 <div className="my-auto overflow-hidden">
                     <h6 className="text-base pb-0 font-semibold truncate">Minima</h6>
 
-                    <p className="text-base truncate">{formik.values.funds.sendable}</p>
+                    <p className="text-base truncate">{formik.values.funds ? formik.values.funds.sendable : '0'}</p>
                 </div>
             </MiFundsWrapper>
         </Stack>

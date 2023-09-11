@@ -21,8 +21,7 @@ import imageSize from '../getImageSize';
 
 //     return canvas.toDataURL('image/jpeg', quality);
 // }
-async function createImage(file: any, resize = 1, quality = 0.7) {
-    // console.log("creating image...")
+async function createImage(file: any, quality: number) {
     const image = await imageSize(file);
     let imageWidth = image.width;
     let imageHeight = image.height;
@@ -33,7 +32,7 @@ async function createImage(file: any, resize = 1, quality = 0.7) {
     const ctx: any = canvas.getContext('2d');
 
     //Set a Maximum size..
-    const MAX_IMAGE_SIZE = 128;
+    const MAX_IMAGE_SIZE = 80;
 
     //Do we need to resize
     if (imageWidth > MAX_IMAGE_SIZE || imageHeight > MAX_IMAGE_SIZE) {
