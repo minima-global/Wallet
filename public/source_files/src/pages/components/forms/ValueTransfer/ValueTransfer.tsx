@@ -60,6 +60,7 @@ const ValueTransfer = () => {
                 onSubmit={async (formInputs: ISendForm, { setStatus }) => {
                     setSuccess(true);
                     setStatus('ongoing');
+
                     try {
                         // send rpc
                         await callSend({ ...formInputs });

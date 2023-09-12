@@ -19,6 +19,17 @@ const WalletSelect = () => {
     const formik: any = useFormikContext();
 
     const [searchParams] = useSearchParams();
+
+    // Update token on balance update in form
+    useEffect(() => {
+        if (balance.length) {
+            const currentToken = balance.find((t: MinimaToken) => t.tokenid === formik.values.token.tokenid);
+            if (currentToken) {
+                formik.setFieldValue('token', currentToken);
+            }
+        }
+    }, [balance]);
+
     useEffect(() => {
         const requestingTokenID = searchParams.get('tokenid');
         const requestingAmount = searchParams.get('amount');
@@ -30,12 +41,6 @@ const WalletSelect = () => {
                 if (fetchToken) {
                     formik.setFieldValue('token', fetchToken);
                 }
-                if (!fetchToken) {
-                    formik.setFieldValue('token', balance[0]);
-                }
-            }
-            if (requestingTokenID === null) {
-                formik.setFieldValue('token', balance[0]);
             }
         }
 
