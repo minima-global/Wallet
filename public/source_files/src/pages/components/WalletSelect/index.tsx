@@ -22,13 +22,13 @@ const WalletSelect = () => {
 
     // Update token on balance update in form
     useEffect(() => {
-        if (balance.length) {
+        if (balance.length && formik.values.token) {
             const currentToken = balance.find((t: MinimaToken) => t.tokenid === formik.values.token.tokenid);
             if (currentToken) {
                 formik.setFieldValue('token', currentToken);
             }
         }
-    }, [balance]);
+    }, [balance, formik.values]);
 
     useEffect(() => {
         const requestingTokenID = searchParams.get('tokenid');
