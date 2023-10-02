@@ -1,5 +1,5 @@
 import { IconButton, Grid, Drawer, Box, Typography, Stack, CircularProgress } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Routes, Route, useLocation, Navigate, useNavigate } from 'react-router-dom';
 
 import MenuIcon from '@mui/icons-material/Menu';
@@ -56,47 +56,54 @@ const AppNavigation = () => {
         return open === true ? setOpen(false) : null;
     };
 
-    const DrawerItems = [
-        {
-            pathname: '/balance',
-            name: 'Balance',
-        },
-        {
-            pathname: '/send',
-            name: 'Send',
-        },
-        {
-            pathname: '/receive',
-            name: 'Receive',
-        },
-        {
-            pathname: '/status',
-            name: 'Status',
-        },
-        {
-            pathname: '/tokencreate',
-            name: 'Create Token',
-        },
-        {
-            pathname: '/nfts',
-            name: 'NFTs',
-        },
-        {
-            pathname: '/createnft',
-            name: 'Create NFT',
-        },
-        {
-            pathname: '/history',
-            name: 'Transaction History',
-        },
-        {
-            pathname: '/offline',
-            name: 'Node Status',
-        },
-    ];
+    const DrawerItems = useMemo(
+        () => [
+            {
+                pathname: '/balance',
+                name: 'Balance',
+            },
+            {
+                pathname: '/send',
+                name: 'Send',
+            },
+            {
+                pathname: '/receive',
+                name: 'Receive',
+            },
+            {
+                pathname: '/status',
+                name: 'Status',
+            },
+            {
+                pathname: '/tokencreate',
+                name: 'Create Token',
+            },
+            {
+                pathname: '/nfts',
+                name: 'NFTs',
+            },
+            {
+                pathname: '/createnft',
+                name: 'Create NFT',
+            },
+            {
+                pathname: '/history',
+                name: 'Transaction History',
+            },
+            {
+                pathname: '/offline',
+                name: 'Node Status',
+            },
+        ],
+        []
+    );
 
     useEffect(() => {
-        getPageTitle();
+        DrawerItems.forEach((p) => {
+            if (p.pathname === location.pathname) {
+                setPageTitle(p.name);
+            }
+        });
         setOnDetail(false);
         if (location.pathname.substring(0, 9) === '/balance/') {
             setOnDetail(true);
@@ -114,15 +121,7 @@ const AppNavigation = () => {
             setPageTitle('Transaction Details');
             setOnDetail(true);
         }
-    }, [location]);
-
-    const getPageTitle = () => {
-        DrawerItems.forEach((p) => {
-            if (p.pathname === location.pathname) {
-                setPageTitle(p.name);
-            }
-        });
-    };
+    }, [location, DrawerItems]);
 
     return (
         <>
