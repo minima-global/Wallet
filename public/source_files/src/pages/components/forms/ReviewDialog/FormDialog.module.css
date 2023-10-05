@@ -1,9 +1,0 @@
-
-
-.button__wrapper {
-  display: flex;
-  justify-content: flex-end;
-  flex-direction: row;
-  gap: 8px;
-  padding-bottom: 16px;
-}

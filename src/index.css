@@ -11,6 +11,7 @@
   --inset: rgba(255,255,255,0.2);
   --globalnav-backdrop-filter: saturate(180%) blur(10px);
   --globalnav-backdrop-filter-level-two: saturate(180%) blur(20px);
+  --background-image: url(./assets/images/LM.jpeg);
 
   --status-red: #FF627E;
   --status-green: #00CBB6;
@@ -32,9 +33,52 @@
   --brand-color: #3DA2FF;
 }
 
-.bg-black {
-  background-color: var(--background-color)
+main#navigation {
+  background-image: var(--background-image);
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  overflow-y: overlay;
 }
+
+.green-good {
+  color: var(--status-green);
+}
+.bg-green-good {
+  background-color: var(--status-green-5);
+}
+.red-bad {
+  color: var(--status-red);
+}
+
+.bg-bad {
+  background: var(--status-red);
+}
+
+
+.text-disabled {
+  color: var(--core-black-contrast-3);
+}
+
+.text-error {
+  color: var(--status-red);
+}
+
+.form-error-message {
+  color: var(--status-red);
+  font-weight: 600;
+}
+
+.form-success-message {
+  color: var(--status-green);
+  font-weight: 600;
+}
+.form-error-border {
+  border: 1px solid var(--status-red);
+  border-radius: 4px;
+}
+
+
 .bg-core-grey-10 {
   background-color: var(--core-grey-10);
 }
@@ -44,7 +88,7 @@ body {
     color: #E9E9EB;
     height: 100%; 
     min-height: -webkit-fill-available;
-    font-weight: 500!important;
+    font-weight: 500;
     letter-spacing: 0.3px;
     font-family: 'Manrope', sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -56,24 +100,41 @@ body {
     -webkit-tap-highlight-color: transparent;
   }
 
-@font-face {
-    font-family: Manrope-regular;
-    src: url('./assets/fonts/Manrope/Manrope-Medium.ttf');
-  }
-@font-face {
-    font-family: Manrope-bold;
-    src: url('./assets/fonts/Manrope/Manrope-Bold.ttf');
-}
-@font-face {
-    font-family: Manrope-light;
-    src: url('./assets/fonts/Manrope/Manrope-Light.ttf');
-}
-@font-face {
-    font-family: Manrope-semibold;
-    src: url('./assets/fonts/Manrope/Manrope-SemiBold.ttf');
-}
 
 select {
   -webkit-appearance: none;
   appearance: none;
+}
+
+.active {
+  background-color: var(--background-color);
+  border-radius: 4px;
+  color: #FFFFFF;
+  fill: #FFA010;
+  padding: 8px; 
+}
+
+.temporary-pulse {
+  -webkit-animation-iteration-count: 3;
+  animation-iteration-count: 3;
+}
+
+.arrow-active {
+  transform: rotate(180deg);
+  transition: transform 0.2s ease-in;
+}
+.arrow-passive {
+  transform: rotate(0deg);
+  transition: transform 0.2s ease-in;
+}
+
+.accordion-content {
+  overflow: hidden;
+  max-height: 1000px;
+  transition: max-height 1s ease-in-out;
+}
+
+.accordion-content[aria-expanded="true"] {
+  max-height: 0px;
+  transition: max-height 0.5s cubic-bezier(0, 1, 0, 1);
 }

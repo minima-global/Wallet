@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Avatar, Box, Button, Dialog, Stack, TextField, Typography } from '@mui/material';
+import { useState } from 'react';
+import { Box, Button, Stack, TextField, Typography } from '@mui/material';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
@@ -8,15 +8,14 @@ import styles from './CreateNFT.module.css';
 import { buildCustomTokenCreation } from '../../../../minima/libs/nft';
 import { isValidURLAll, isValidURLSecureOnly } from '../../../../shared/functions';
 import { useAppSelector } from '../../../../minima/redux/hooks';
-import FormImageUrlSelect from '../../../../shared/components/forms/FormImageUrlSelect';
 import { MiNFT } from '../../../../@types/nft';
-import Required from '../../../../shared/components/forms/Required';
+// import Required from '../../../../shared/components/forms/Required';
 import FormFieldWrapper from '../../../../shared/components/FormFieldWrapper';
 import { selectBalance } from '../../../../minima/redux/slices/balanceSlice';
 
 import Decimal from 'decimal.js';
 import MiFunds from '../../forms/MiFunds';
-import ReviewDialog from '../../forms/ReviewDialog';
+// import ReviewDialog from '../../forms/ReviewDialog';
 import SuccessDialog from '../../forms/SuccessDialog';
 
 /**
@@ -100,7 +99,7 @@ const CreateNFTForm = () => {
                         <Stack spacing={2}>
                             <FormFieldWrapper help="Your current Minima balance:" children={<MiFunds />} />
                             {/* Required field helper */}
-                            <Required />
+                            {/* <Required /> */}
 
                             <Typography variant="h6" className={styles['form-image-title']}>
                                 Image
@@ -310,17 +309,13 @@ const CreateNFTForm = () => {
                         hideSuccess={() => setSuccess(false)}
                         clearForm={() => resetForm()}
                     />
-                    <ReviewDialog
+                    {/* <ReviewDialog
                         open={showReview}
                         children={
                             <ul id="list">
                                 <li className="flex gap-4 bg-core-grey-10 rounded-lg">
                                     {!!values.url.length && (
-                                        <img
-                                            alt="custom-token-image"
-                                            src={values.url}
-                                            className="w-[80px] h-[80px] rounded-l-lg"
-                                        />
+                                        <img alt="" src={values.url} className="w-[80px] h-[80px] rounded-l-lg" />
                                     )}
                                     {!values.url.length && (
                                         <svg
@@ -378,7 +373,7 @@ const CreateNFTForm = () => {
                         transactionCreationStatus={status}
                         hideReview={() => setReview(false)}
                         submitForm={() => submitForm()}
-                    />
+                    /> */}
                 </>
             )}
         </Formik>

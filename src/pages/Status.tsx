@@ -3,7 +3,7 @@ import { Grid, CircularProgress, Stack } from '@mui/material';
 import { callStatus } from '../minima/rpc-commands';
 
 import styled from '@emotion/styled';
-import MiCard from '../shared/components/layout/MiCard/MiCard';
+// import MiCard from '../shared/components/layout/MiCard/MiCard';
 import { Status as NodeStatus } from '../@types/minima';
 
 const MiStatusWrapper = styled('div')`
@@ -83,7 +83,7 @@ const Status = () => {
                 ) : (
                     <>
                         <Grid item xs={12} md={6}>
-                            <MiCard>
+                            <div>
                                 <Stack justifyContent="space-between" alignItems="center" flexDirection="row">
                                     <MiStatusTitle>Overview</MiStatusTitle>
                                     {status?.version ? <MiStatusOnline /> : 'offline'}
@@ -123,43 +123,43 @@ const Status = () => {
                                         <p>{status?.network.rpc.enabled ? 'activated' : 'deactivated'}</p>
                                     </MiStatusItem>
                                 </MiStatusWrapper>
-                            </MiCard>
+                            </div>
                         </Grid>
 
                         {status.memory && (
                             <Grid item xs={12} md={6}>
-                                <MiCard>
+                                <div>
                                     <CardMemory {...status} />
-                                </MiCard>
+                                </div>
                             </Grid>
                         )}
                         {status.chain && (
                             <Grid item xs={12} md={6}>
-                                <MiCard>
+                                <div>
                                     <CardChain {...status} />
-                                </MiCard>
+                                </div>
                             </Grid>
                         )}
                         {status.txpow && (
                             <Grid item xs={12} md={6}>
-                                <MiCard>
+                                <div>
                                     <CardTxPoW {...status} />
-                                </MiCard>
+                                </div>
                             </Grid>
                         )}
                         {status.network && (
                             <Grid item xs={12} md={6}>
-                                <MiCard>
+                                <div>
                                     {' '}
                                     <CardNetwork {...status} />{' '}
-                                </MiCard>
+                                </div>
                             </Grid>
                         )}
                         {status.network.p2p && status.network.p2p !== 'disabled' && (
                             <Grid item xs={12} md={12}>
-                                <MiCard>
+                                <div>
                                     <CardP2P {...status} />{' '}
-                                </MiCard>
+                                </div>
                             </Grid>
                         )}
                     </>

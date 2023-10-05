@@ -13,7 +13,7 @@ import NFTImage from '../components/nfts/NFTImage';
 import NFTImageWrapper from '../components/nfts/NFTImageWrapper';
 import NFTDescription from '../components/nfts/NFTDescription';
 import CustomListItem from '../../shared/components/CustomListItem';
-import styles from './NFTDetail.module.css';
+// import styles from './NFTDetail.module.css';
 
 const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
     <Tooltip {...props} arrow classes={{ popper: className }} />
@@ -131,7 +131,7 @@ const NFTDetail = () => {
                                         variant="contained"
                                         onClick={() => navigate(`/send/${NFT.tokenid}`, { replace: true })}
                                         fullWidth
-                                        className={styles['transfer']}
+                                        // className={styles['transfer']}
                                     >
                                         Transfer
                                     </Button>

@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import styles from '../../../theme/cssmodule/Components.module.css';
+// import styles from '../../../theme/cssmodule/Components.module.css';
 import { Box, Stack, Typography } from '@mui/material';
 
 function isString(myString: string | ArrayBuffer | null): myString is string {
@@ -54,29 +54,29 @@ const AddImage = ({ onImageChange = () => {}, formik }: IProps) => {
             {formik.values.url && selectedFile && !formik.isSubmitting ? (
                 <>
                     <img
-                        alt="form-image-preview"
+                        alt=""
                         src={formik.values.url}
-                        className={styles['form-image-preview-box-img']}
+                        // className={styles['form-image-preview-box-img']}
                     />
 
-                    <Box className={styles['info-label-image-upload']}>
+                    <Box>
                         <Typography variant="caption">{selectedFile.name}</Typography>
                     </Box>
                 </>
             ) : formik.values.url && selectedFile && formik.isSubmitting ? (
                 <>
                     <img
-                        alt="form-image-preview"
+                        alt=""
                         src={formik.values.url}
-                        className={styles['form-image-preview-box-img-disabled']}
+                        // className={styles['form-image-preview-box-img-disabled']}
                     />
                     {/* <ClearIcon color="inherit" className={styles['clear-icon-disabled']} /> */}
-                    <Box className={styles['info-label-image-upload']}>
+                    <Box>
                         <Typography variant="caption">{selectedFile.name}</Typography>
                     </Box>
                 </>
             ) : (
-                <Stack className={styles['info-upload-overlay']} justifyContent="center" alignItems="center">
+                <Stack justifyContent="center" alignItems="center">
                     <CloudUploadIcon fontSize="large" color="inherit" />
                     <Typography variant="caption">Click here to upload</Typography>
                 </Stack>

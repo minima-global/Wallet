@@ -5,7 +5,7 @@ import { Box, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/materi
 import React from 'react';
 import AddImage from '../../../pages/components/forms/AddImage';
 import FormFieldWrapper from '../FormFieldWrapper';
-import styles from '../../../theme/cssmodule/Components.module.css';
+// import styles from '../../../theme/cssmodule/Components.module.css';
 import { useFormikContext } from 'formik';
 
 const FormImageUrlSelect = () => {
@@ -97,7 +97,7 @@ const FormImageUrlSelect = () => {
                                     marginTop: '0.5px',
                                 },
                             }}
-                            className={styles['form-image-preview-box']}
+                            // className={styles['form-image-preview-box']}
                         >
                             <AddImage formik={formik} onImageChange={onImageChange} />
                         </Box>

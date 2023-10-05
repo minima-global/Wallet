@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 
 import styles from './WalletSelect.module.css';
 import { MinimaToken } from '../../../@types/minima';
@@ -8,12 +8,12 @@ import { containsText } from '../../../shared/functions';
 import { useFormikContext } from 'formik';
 import Input from '../../../components/UI/Input';
 import { useSearchParams } from 'react-router-dom';
-import { useAppSelector } from '../../../minima/redux/hooks';
-import { selectBalance } from '../../../minima/redux/slices/balanceSlice';
 import NFTAuthenticity from '../tokens/NFTAuthenticity';
+import { appContext } from '../../../AppContext';
 
 const WalletSelect = () => {
-    const balance = useAppSelector(selectBalance);
+    const { balance } = useContext(appContext);
+
     const [searchText, setSearchText] = useState('');
     const [active, setActive] = useState(false);
     const formik: any = useFormikContext();
@@ -72,11 +72,11 @@ const WalletSelect = () => {
                         {formik.values.token.tokenid === '0x00' && (
                             <div className="relative">
                                 <svg
-                                    className="absolute right-0 bottom-0"
+                                    className="absolute right-1 bottom-2"
                                     xmlns="http://www.w3.org/2000/svg"
-                                    height="24"
+                                    height="16"
                                     viewBox="0 -960 960 960"
-                                    width="24"
+                                    width="16"
                                 >
                                     <path
                                         fill="#3DA2FF"
@@ -130,7 +130,7 @@ const WalletSelect = () => {
                         </div>
 
                         <svg
-                            className={`${active ? styles.active : ''} my-auto`}
+                            className={`${active ? styles.active : ''} my-auto fill-gray-500`}
                             width="32"
                             height="33"
                             viewBox="0 0 32 33"
@@ -230,11 +230,11 @@ const WalletSelect = () => {
                                                 {t.tokenid === '0x00' && (
                                                     <div className="relative">
                                                         <svg
-                                                            className="absolute right-0 bottom-0"
+                                                            className="absolute right-1 bottom-2"
                                                             xmlns="http://www.w3.org/2000/svg"
-                                                            height="24"
+                                                            height="16"
                                                             viewBox="0 -960 960 960"
-                                                            width="24"
+                                                            width="16"
                                                         >
                                                             <path
                                                                 fill="#3DA2FF"

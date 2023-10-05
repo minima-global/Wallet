@@ -3,7 +3,7 @@ import { Snackbar, Alert, Portal, Typography, Stack } from '@mui/material';
 import { useAppSelector } from '../minima/redux/hooks';
 import { selectNotificationState } from '../minima/redux/slices/notificationSlice';
 
-import styles from '../theme/cssmodule/Components.module.css';
+// import styles from '../theme/cssmodule/Components.module.css';
 
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import BubbleChartIcon from '@mui/icons-material/BubbleChart';
@@ -34,7 +34,7 @@ const Notifications = () => {
                                 ? notificationStatus.props.severity
                                 : 'info'
                         }
-                        className={styles['alert-toast']}
+                        // className={styles['alert-toast']}
                     >
                         <Stack direction="row" spacing={1}>
                             {notificationStatus.props !== undefined &&
@@ -51,7 +51,7 @@ const Notifications = () => {
                             ) : (
                                 'success'
                             )}
-                            <Typography variant="body2" className={styles['message-toast']}>
+                            <Typography variant="body2">
                                 {notificationStatus.props !== undefined &&
                                 notificationStatus.props.hasOwnProperty('message')
                                     ? notificationStatus.props.message

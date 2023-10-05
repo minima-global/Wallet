@@ -17,11 +17,9 @@ import { Provider } from 'react-redux';
 const Main = () => {
     return (
         <React.StrictMode>
-            <Provider store={store}>
-                <HashRouter>
-                    <App />
-                </HashRouter>
-            </Provider>
+            <HashRouter>
+                <App />
+            </HashRouter>
         </React.StrictMode>
     );
 };

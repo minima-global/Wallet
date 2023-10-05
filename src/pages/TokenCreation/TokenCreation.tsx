@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Card, CardContent, TextField, Button, Stack, Dialog, Avatar } from '@mui/material';
-import { Formik, useFormik } from 'formik';
+import { Card, CardContent, TextField, Button, Stack } from '@mui/material';
+import { Formik } from 'formik';
 import * as Yup from 'yup';
 
 import { isValidURLAll, isValidURLSecureOnly } from '../../shared/functions';
@@ -10,20 +10,16 @@ import GridLayout from '../../layout/GridLayout';
 import { useAppSelector } from '../../minima/redux/hooks';
 import { selectBalance } from '../../minima/redux/slices/balanceSlice';
 
-import sharedStyles from '../../theme/cssmodule/Components.module.css';
-import styles from './TokenCreation.module.css';
 import FormFieldWrapper from '../../shared/components/FormFieldWrapper';
-import FormImageUrlSelect from '../../shared/components/forms/FormImageUrlSelect';
 import { buildCustomTokenCreation } from '../../minima/libs/nft';
 import { MiCustomToken } from '../../@types/nft';
-import Required from '../../shared/components/forms/Required';
 import Decimal from 'decimal.js';
 import MiFunds from '../components/forms/MiFunds';
-import React from 'react';
 import useIsVaultLocked from '../../hooks/useIsVaultLocked';
 import { NoResults } from '../../shared/components/layout/MiToken';
-import ReviewDialog from '../components/forms/ReviewDialog';
+// import ReviewDialog from '../components/forms/ReviewDialog';
 import SuccessDialog from '../components/forms/SuccessDialog';
+import FormImageUrlSelect from '../../shared/components/forms/FormImageUrlSelect';
 
 /**
  * Minima scales up to 64 decimal places
@@ -116,7 +112,7 @@ const TokenCreation = () => {
                                                     children={<MiFunds />}
                                                 />
                                                 {/* Asterisk required  */}
-                                                <Required />
+                                                <div>*</div>
                                                 <FormFieldWrapper
                                                     required={false}
                                                     help="Use a public icon URL ending in .png .jpg or .jpeg or upload your own content"
@@ -134,9 +130,9 @@ const TokenCreation = () => {
                                                             {...getFieldProps('name')}
                                                             error={touched.name && Boolean(errors.name)}
                                                             helperText={touched.name && errors.name}
-                                                            FormHelperTextProps={{
-                                                                className: sharedStyles['form-helper-text'],
-                                                            }}
+                                                            // FormHelperTextProps={{
+                                                            //     className: sharedStyles['form-helper-text'],
+                                                            // }}
                                                             InputProps={{
                                                                 style:
                                                                     touched.name && Boolean(errors.name)
@@ -163,9 +159,9 @@ const TokenCreation = () => {
                                                             placeholder="amount"
                                                             error={touched.amount && Boolean(errors.amount)}
                                                             helperText={touched.amount && errors.amount}
-                                                            FormHelperTextProps={{
-                                                                className: sharedStyles['form-helper-text'],
-                                                            }}
+                                                            // FormHelperTextProps={{
+                                                            //     className: sharedStyles['form-helper-text'],
+                                                            // }}
                                                             InputProps={{
                                                                 style:
                                                                     touched.amount && Boolean(errors.amount)
@@ -255,9 +251,9 @@ const TokenCreation = () => {
                                                             {...getFieldProps('burn')}
                                                             error={touched.burn && Boolean(errors.burn)}
                                                             helperText={touched.burn && errors.burn}
-                                                            FormHelperTextProps={{
-                                                                className: sharedStyles['form-helper-text'],
-                                                            }}
+                                                            // FormHelperTextProps={{
+                                                            //     className: sharedStyles['form-helper-text'],
+                                                            // }}
                                                             InputProps={{
                                                                 style:
                                                                     touched.burn && Boolean(errors.burn)
@@ -301,7 +297,7 @@ const TokenCreation = () => {
                                 clearForm={() => resetForm()}
                             />
 
-                            <ReviewDialog
+                            {/* <ReviewDialog
                                 open={showReview}
                                 children={
                                     <ul id="list">
@@ -362,7 +358,7 @@ const TokenCreation = () => {
                                 transactionCreationStatus={status}
                                 hideReview={() => setReview(false)}
                                 submitForm={() => submitForm()}
-                            />
+                            /> */}
                         </>
                     }
                 />
