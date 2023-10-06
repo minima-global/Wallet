@@ -109,7 +109,7 @@ const WalletSelect = () => {
                                             : `https://robohash.org/${formik.values.token.tokenid}`
                                     }
                                 />
-                                <NFTAuthenticity token={formik.values.token} />
+                                <NFTAuthenticity tokenid={formik.values.token.tokenid} />
                             </div>
                         )}
                         <div>
@@ -272,7 +272,7 @@ const WalletSelect = () => {
                                                                     : `https://robohash.org/${t.tokenid}`
                                                             }
                                                         />
-                                                        <NFTAuthenticity token={t} />
+                                                        <NFTAuthenticity tokenid={t.tokenid} />
                                                     </div>
                                                 )}
 

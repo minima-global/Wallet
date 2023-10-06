@@ -19,6 +19,7 @@ interface IProps {
     formikProps?: any;
     disabled: boolean;
     ref?: any;
+    max?: number;
 }
 const Input = ({
     accept,
@@ -38,6 +39,7 @@ const Input = ({
     formikProps,
     disabled,
     ref,
+    max,
 }: IProps) => {
     let base =
         'w-full p-4  bg-white text-base text-black color-typing placeholder-core-grey-60 rounded disabled:opacity-40 disabled:cursor-not-allowed focus:outline-[#3DA2FF]';
@@ -53,6 +55,7 @@ const Input = ({
         <div className={`flex flex-col`}>
             <div className="relative w-full">
                 <input
+                    max={max}
                     ref={ref}
                     disabled={disabled}
                     autoComplete={autoComplete ? autoComplete : ''}

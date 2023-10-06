@@ -1,9 +1,9 @@
 import styled from '@emotion/styled';
 import { Stack } from '@mui/material';
 import { useFormikContext } from 'formik';
-import { useAppSelector } from '../../../minima/redux/hooks';
-import { selectBalance } from '../../../minima/redux/slices/balanceSlice';
-import { useEffect } from 'react';
+
+import { useContext, useEffect } from 'react';
+import { appContext } from '../../../AppContext';
 
 const MiFundsWrapper = styled('div')`
     background: #fff;
@@ -25,7 +25,7 @@ const MiFundsWrapper = styled('div')`
 
 const MiFunds = () => {
     const formik: any = useFormikContext();
-    const wallet = useAppSelector(selectBalance);
+    const { balance: wallet } = useContext(appContext);
 
     useEffect(() => {
         formik.setFieldValue('funds', wallet[0]);
@@ -35,11 +35,11 @@ const MiFunds = () => {
             <MiFundsWrapper>
                 <div className="relative">
                     <svg
-                        className="absolute right-0 bottom-0"
+                        className="absolute right-1 bottom-2"
                         xmlns="http://www.w3.org/2000/svg"
-                        height="24"
+                        height="16"
                         viewBox="0 -960 960 960"
-                        width="24"
+                        width="16"
                     >
                         <path
                             fill="#3DA2FF"
@@ -70,9 +70,11 @@ const MiFunds = () => {
                     value={formik.values.funds ? formik.values.funds.sendable : '0'}
                 />
                 <div className="my-auto overflow-hidden">
-                    <h6 className="text-base pb-0 font-semibold truncate">Minima</h6>
+                    <h6 className="text-base text-black pb-0 font-semibold truncate">Minima</h6>
 
-                    <p className="text-base truncate">{formik.values.funds ? formik.values.funds.sendable : '0'}</p>
+                    <p className="text-base text-black truncate">
+                        {formik.values.funds ? formik.values.funds.sendable : '0'}
+                    </p>
                 </div>
             </MiFundsWrapper>
         </Stack>

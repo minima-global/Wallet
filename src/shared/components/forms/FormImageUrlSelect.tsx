@@ -7,6 +7,7 @@ import AddImage from '../../../pages/components/forms/AddImage';
 import FormFieldWrapper from '../FormFieldWrapper';
 // import styles from '../../../theme/cssmodule/Components.module.css';
 import { useFormikContext } from 'formik';
+import Input from '../../../components/UI/Input';
 
 const FormImageUrlSelect = () => {
     const [imageSelection, setMyImageSelection] = React.useState<any>('CONTENTUPLOAD');
@@ -39,7 +40,7 @@ const FormImageUrlSelect = () => {
                 <select
                     defaultValue={imageSelection}
                     onChange={handleChange}
-                    className="p-4 hover:opacity-80 hover:cursor-pointer rounded-lg w-full hover:bg-slate-200"
+                    className="p-4 text-black hover:opacity-80 hover:cursor-pointer rounded-lg w-full hover:bg-slate-200"
                 >
                     <option id="value" value="CONTENTUPLOAD">
                         Upload an icon
@@ -75,29 +76,11 @@ const FormImageUrlSelect = () => {
                             sx={{
                                 borderColor:
                                     formik.touched.url && Boolean(formik.errors.url) ? '#FCBEBD!important' : 'none',
-                                padding: formik.touched.url && Boolean(formik.errors.url) ? '0!important' : '8px',
+
                                 marginBottom:
                                     formik.touched.url && Boolean(formik.errors.url) ? '30px!important' : '8px',
-
-                                '::after': {
-                                    display: formik.touched.url && Boolean(formik.errors.url) ? 'flex' : 'none',
-                                    content:
-                                        formik.touched.url && Boolean(formik.errors.url)
-                                            ? `"${formik.errors.url}"`
-                                            : '" "',
-                                    color: 'rgb(211, 47, 47)',
-                                    backgroundColor: '#FCBEBD',
-                                    width: '100%',
-                                    textAlign: 'center',
-                                    fontSize: '0.8rem',
-                                    fontFamily: 'Manrope-semibold',
-                                    padding: '5px',
-                                    borderBottomLeftRadius: '8px',
-                                    borderBottomRightRadius: '8px',
-                                    marginTop: '0.5px',
-                                },
+                                maxWidth: 'max-content',
                             }}
-                            // className={styles['form-image-preview-box']}
                         >
                             <AddImage formik={formik} onImageChange={onImageChange} />
                         </Box>
@@ -105,22 +88,13 @@ const FormImageUrlSelect = () => {
                     help=""
                 />
             ) : (
-                <FormFieldWrapper
-                    children={
-                        <TextField
-                            disabled={formik.isSubmitting}
-                            fullWidth
-                            id="url"
-                            name="url"
-                            placeholder="url *"
-                            value={formik.values.url}
-                            onBlur={formik.handleBlur}
-                            onChange={formik.handleChange}
-                            error={formik.touched.url && Boolean(formik.errors.url)}
-                            helperText={formik.touched.url && formik.errors.url}
-                        />
-                    }
-                    help=""
+                <Input
+                    id="url"
+                    type="text"
+                    placeholder="Icon URL"
+                    disabled={formik.isSubmitting}
+                    {...formik.getFieldProps('url')}
+                    error={formik.touched.url && formik.errors.url ? formik.errors.url : false}
                 />
             )}
         </>

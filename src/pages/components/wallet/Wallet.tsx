@@ -103,7 +103,7 @@ const Wallet = () => {
                                                             : `https://robohash.org/${t.tokenid}`
                                                     }
                                                 />
-                                                <NFTAuthenticity token={t} />
+                                                <NFTAuthenticity tokenid={t.tokenid} />
                                             </div>
                                         )}
 

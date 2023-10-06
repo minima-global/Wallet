@@ -72,7 +72,7 @@ const TokenDetail = () => {
                                                                 : `https://robohash.org/${viewingToken.tokenid}`
                                                         }
                                                     />
-                                                    <NFTAuthenticity token={viewingToken} />
+                                                    <NFTAuthenticity tokenid={viewingToken.tokenid} />
                                                 </div>
                                             )}
                                         </div>
@@ -146,7 +146,7 @@ const TokenDetail = () => {
                                                     : `https://robohash.org/${viewingToken.tokenid}`
                                             }
                                         />
-                                        <NFTAuthenticity token={viewingToken} />
+                                        <NFTAuthenticity tokenid={viewingToken.tokenid} />
                                     </div>
                                 )}
 

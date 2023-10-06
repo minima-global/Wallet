@@ -1,6 +1,6 @@
 export const getTokens = (): Promise<any[]> => {
     return new Promise((resolve, reject) => {
-        MDS.cmd('tokens', (res) => {
+        MDS.cmd('coins relevant:true', (res) => {
             if (!res.status) reject('RPC Unavailable');
 
             resolve(res.response);

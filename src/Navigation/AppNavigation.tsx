@@ -6,8 +6,7 @@ import Balance from '../pages/Balance';
 import Send from '../pages/Send';
 import Status from '../pages/Status';
 import Receive from '../pages/Receive';
-import TokenCreation from '../pages/TokenCreation/TokenCreation';
-import TokenDetail from '../pages/TokenDetail';
+import TokenDetail from '../pages/Tokendetail';
 import SideMenu from '../layout/SideMenu';
 import Offline from '../pages/Offline';
 import NFTs from '../pages/NFT';
@@ -19,6 +18,7 @@ import HistoryTransactionDetailSimple from '../pages/HistoryTransactionDetailSim
 import Notification from '../components/UI/Notification';
 import { appContext } from '../AppContext';
 import ValidateAddress from '../pages/ValidateAddress';
+import TokenCreation from '../pages/TokenCreation/TokenCreation';
 
 export interface RouteType {
     path: string;
@@ -42,8 +42,7 @@ const AppNavigation = () => {
                     <Route path="/status" element={<Status />} />
                     <Route path="/tokencreate" element={<TokenCreation />} />
                     <Route path="/nfts" element={<NFTs />}></Route>
-                    <Route path="nfts/:tokenid" element={<NFTDetail />} />
-                    <Route path="/createnft" element={<CreateNFT />} />
+                    <Route path="/nfts/createnft" element={<CreateNFT />}></Route>
                     <Route path="/history" element={<History />}>
                         <Route path=":transactionid" element={<HistoryTransactionDetailSimple />} />
                     </Route>

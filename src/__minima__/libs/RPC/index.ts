@@ -4,3 +4,4 @@ export * from './getMinimaBalance';
 export * from './getTokens';
 export * from './getScripts';
 export * from './checkAddress';
+export * from './createToken';

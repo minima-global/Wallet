@@ -21,7 +21,7 @@ const AppProvider = ({ children }: IProps) => {
     const [shuttingDown, setShuttingDown] = useState<boolean | null>(null);
 
     // RPC DATA
-    const [NFTs, setNFTs] = useState<Token[]>([]);
+    const [NFTs, setNFTs] = useState<any[]>([]);
     const [balance, setBalance] = useState<MinimaToken[]>([]);
     const [simpleAddresses, setSimpleAddresses] = useState<Scripts[]>([]);
     const [avgBurn, setAvgBurn] = useState(0);
@@ -92,16 +92,9 @@ const AppProvider = ({ children }: IProps) => {
 
     const getTokens = async () => {
         await rpc.getTokens().then((tokens) => {
-            const _NFTs = tokens
-                .filter((token) => token.tokenid === '0x00' || token.decimals !== 0)
-                .map((t) => {
-                    const imageUrl = t.name.url;
-                    if (imageUrl && imageUrl.startsWith('<artimage>', 0)) {
-                        t.name.url = makeTokenImage(imageUrl, t.tokenid);
-                    }
-                });
-
-            setNFTs(_NFTs as any);
+            const _NFTs: any = tokens.filter((token) => token.tokenid !== '0x00' && token.token.decimals === 0);
+            console.log(_NFTs);
+            setNFTs(_NFTs);
         });
     };
 

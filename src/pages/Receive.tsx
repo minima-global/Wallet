@@ -141,6 +141,7 @@ const Receive = () => {
                             >
                                 {(simpleAddresses as Scripts[]).map((a) => (
                                     <li
+                                        key={a.address}
                                         onClick={() => {
                                             setAddress(a);
                                             setShowFullList(false);
