@@ -34,7 +34,7 @@ const AppProvider = ({ children }: IProps) => {
     // SQL DATA
     const [showEditNickname, setShowEditNickname] = useState<string | false>(false);
     const [_nicknameAddress, setDefaultAddressesWithName] = useState<{ name: string; script: Scripts }[]>([]);
-    const [_favoriteTokens, setFavoriteTokens] = useState<{ name: string; script: Scripts }[]>([]);
+    const [_favoriteTokens, setFavoriteTokens] = useState<string[]>([]);
 
     useEffect(() => {
         if (!loaded.current) {
@@ -110,9 +110,10 @@ const AppProvider = ({ children }: IProps) => {
                             setDefaultAddressesWithName(JSON.parse(nicknameAddresses.DATA));
                         }
 
-                        // if (favoriteTokens) {
-
-                        // }
+                        console.log('fav', favoriteTokens);
+                        if (favoriteTokens) {
+                            setFavoriteTokens(JSON.parse(favoriteTokens.DATA));
+                        }
                     })();
 
                     // callAndStoreBalance
@@ -199,7 +200,7 @@ const AppProvider = ({ children }: IProps) => {
             [address]: nickname,
         };
 
-        // update favourites
+        // update nicknames
         setDefaultAddressesWithName(updatedNicknames);
 
         const nicknames = await sql(`SELECT * FROM cache WHERE name = 'NICKNAME_ADDRESSES'`);
@@ -214,6 +215,25 @@ const AppProvider = ({ children }: IProps) => {
                 `UPDATE cache SET data = '${JSON.stringify(updatedNicknames)}' WHERE name = 'NICKNAME_ADDRESSES'`
             );
             setShowEditNickname(false);
+        }
+    };
+
+    const toggleFavourite = async (tokenid: string) => {
+        const updatedFavourites = _favoriteTokens.includes(tokenid)
+            ? _favoriteTokens.filter((i: any) => i !== tokenid)
+            : [..._favoriteTokens, tokenid];
+
+        // update favourites
+        setFavoriteTokens(updatedFavourites);
+
+        const favourites = await sql(`SELECT * FROM cache WHERE name = 'FAVORITE_TOKENS'`);
+
+        if (!favourites) {
+            await sql(
+                `INSERT INTO cache (name, data) VALUES ('FAVORITE_TOKENS', '${JSON.stringify(updatedFavourites)}')`
+            );
+        } else {
+            await sql(`UPDATE cache SET data = '${JSON.stringify(updatedFavourites)}' WHERE name = 'FAVORITE_TOKENS'`);
         }
     };
 
@@ -241,6 +261,9 @@ const AppProvider = ({ children }: IProps) => {
 
                 avgBurn,
 
+                // Cache
+                _favoriteTokens,
+                toggleFavourite,
                 _nicknameAddress,
                 editNickname,
                 setShowEditNickname,
