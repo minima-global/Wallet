@@ -58,7 +58,7 @@ const QrScanner = ({ open, closeModal }: any) => {
             <div className="z-20 absolute left-0 md:left-[240px] right-0 bottom-0 top-0 bg-black bg-opacity-80">
                 <Grid variant="lg" title={<></>}>
                     <>
-                        <div className="relative rounded bg-white mx-6">
+                        <div className="relative rounded bg-white mx-6 h-max">
                             {cameraStatus === 'granted' && open && (
                                 <div>
                                     <QrReader
