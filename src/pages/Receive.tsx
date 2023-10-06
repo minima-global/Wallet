@@ -6,12 +6,19 @@ import Card from '../components/UI/Card';
 import { Scripts } from '../@types/minima';
 import Grid from '../components/UI/Grid';
 import { appContext } from '../AppContext';
+import { createPortal } from 'react-dom';
+import Input from '../components/UI/Input';
+import Button from '../components/UI/Button';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
 
 const Receive = () => {
-    const { simpleAddresses, setOpenDrawer } = useContext(appContext);
-    const [address, setAddress] = useState<Scripts>();
+    const { simpleAddresses, setOpenDrawer, _nicknameAddress, editNickname, showEditNickname, setShowEditNickname } =
+        useContext(appContext);
+    const [address, setAddress] = useState<Scripts | null>(null);
     const [showFullList, setShowFullList] = useState(false);
     const [copyState, setCopy] = useState(false);
+    const [filterText, setFilterText] = useState('');
 
     // const [validBuild, setValidBuild] = useState<boolean | undefined>(undefined);
 
@@ -29,6 +36,8 @@ const Receive = () => {
     //         }
     //     });
     // }, []);
+
+    console.log('simpleADdress', simpleAddresses);
 
     useEffect(() => {
         if (simpleAddresses.length) {
@@ -65,6 +74,84 @@ const Receive = () => {
                 }
             >
                 <div>
+                    {showEditNickname &&
+                        createPortal(
+                            <div className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn">
+                                <Grid variant="sm" title={<></>}>
+                                    <div className="mx-4 rounded bg-white bg-opacity-90 p-4">
+                                        <h1 className="text-black font-semibold mb-8">Enter a nickname</h1>
+                                        <div className="divide-y-2 mb-8">
+                                            <Formik
+                                                initialValues={{ nickname: '' }}
+                                                onSubmit={(data) => {
+                                                    const { nickname } = data;
+                                                    editNickname(address?.miniaddress, nickname);
+                                                }}
+                                                validationSchema={Yup.object().shape({
+                                                    nickname: Yup.string()
+                                                        .required('Field is required')
+                                                        .max(255, "A nickname can't be longer than 255 characters"),
+                                                })}
+                                            >
+                                                {({
+                                                    getFieldProps,
+                                                    errors,
+                                                    isSubmitting,
+                                                    values,
+                                                    touched,
+                                                    isValid,
+                                                    handleSubmit,
+                                                }) => (
+                                                    <form onSubmit={handleSubmit}>
+                                                        <Input
+                                                            id="nickname"
+                                                            type="text"
+                                                            disabled={isSubmitting}
+                                                            placeholder="Enter a nickname"
+                                                            {...getFieldProps('nickname')}
+                                                            error={
+                                                                errors.nickname && touched.nickname
+                                                                    ? errors.nickname
+                                                                    : false
+                                                            }
+                                                            extraClass={`${errors.nickname ? 'pr-20 truncate' : ''}`}
+                                                            endIcon={
+                                                                <>
+                                                                    {values.nickname.length >= 255 && (
+                                                                        <div className="m-auto text-sm flex items-center justify-center red-bad font-semibold">
+                                                                            {values.nickname.length + '/255'}
+                                                                        </div>
+                                                                    )}
+                                                                </>
+                                                            }
+                                                        />
+                                                        <div className="flex flex-col gap-2 mt-4">
+                                                            <Button
+                                                                disabled={isSubmitting || !isValid}
+                                                                type="submit"
+                                                                variant="primary"
+                                                            >
+                                                                Update
+                                                            </Button>
+                                                            {!isSubmitting && (
+                                                                <Button
+                                                                    onClick={() => setShowEditNickname(false)}
+                                                                    variant="secondary"
+                                                                >
+                                                                    Cancel
+                                                                </Button>
+                                                            )}
+                                                        </div>
+                                                    </form>
+                                                )}
+                                            </Formik>
+                                        </div>
+                                    </div>
+                                </Grid>
+                            </div>,
+
+                            document.body
+                        )}
                     <Card className="!p-0">
                         <div>
                             <div className="flex justify-center">
@@ -78,17 +165,22 @@ const Receive = () => {
                             <div className="bg-white p-4 mt-8">
                                 <div className="grid grid-cols-[auto_1fr] grid-rows-1 gap-2 w-full">
                                     <h1 className="text-black font-semibold truncate">
-                                        UnnamedUnnamedUnnamedUnnamedUnnamedUnnamedUnnamed
+                                        {address && _nicknameAddress && _nicknameAddress[address.miniaddress]
+                                            ? _nicknameAddress[address.miniaddress]
+                                            : 'N/A'}
                                     </h1>
-                                    <svg
-                                        className="hover:cursor-pointer hover:scale-105 fill-purple-400"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        height="20"
-                                        viewBox="0 -960 960 960"
-                                        width="20"
-                                    >
-                                        <path d="M200-200h56l345-345-56-56-345 345v56Zm572-403L602-771l56-56q23-23 56.5-23t56.5 23l56 56q23 23 24 55.5T829-660l-57 57Zm-58 59L290-120H120v-170l424-424 170 170Zm-141-29-28-28 56 56-28-28Z" />
-                                    </svg>
+                                    {address && (
+                                        <svg
+                                            onClick={() => setShowEditNickname(address.miniaddress)}
+                                            className="hover:cursor-pointer hover:scale-105 fill-purple-400"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            height="20"
+                                            viewBox="0 -960 960 960"
+                                            width="20"
+                                        >
+                                            <path d="M200-200h56l345-345-56-56-345 345v56Zm572-403L602-771l56-56q23-23 56.5-23t56.5 23l56 56q23 23 24 55.5T829-660l-57 57Zm-58 59L290-120H120v-170l424-424 170 170Zm-141-29-28-28 56 56-28-28Z" />
+                                        </svg>
+                                    )}
                                 </div>
 
                                 <div className="grid grid-cols-[auto_1fr] grid-rows-1 gap-1 items-center">
@@ -137,23 +229,49 @@ const Receive = () => {
 
                             <ul
                                 aria-expanded={!showFullList}
-                                className="accordion-content rounded bg-white max-h-[560px] divide-y-1"
+                                className="accordion-content rounded bg-white h-[250px] divide-y-1"
                             >
-                                {(simpleAddresses as Scripts[]).map((a) => (
-                                    <li
-                                        key={a.address}
-                                        onClick={() => {
-                                            setAddress(a);
-                                            setShowFullList(false);
-                                        }}
-                                        className="truncate mb-2 px-4 p-4 first:mt-2 text-black hover:bg-slate-50 hover:cursor-pointer"
-                                    >
-                                        <h1 className="text-black font-semibold truncate">
-                                            UnnamedUnnamedUnnamedUnnamedUnnamedUnnamedUnnamed
-                                        </h1>
-                                        <p className="text-black truncate text-sm">{a.miniaddress}</p>
-                                    </li>
-                                ))}
+                                <li className="mx-4 my-2">
+                                    <Input
+                                        id="search"
+                                        name="search"
+                                        disabled={false}
+                                        value={filterText}
+                                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                                            setFilterText(e.target.value)
+                                        }
+                                        type="search"
+                                        placeholder="Search nickname/address"
+                                    />
+                                </li>
+                                {(simpleAddresses as Scripts[])
+                                    .filter(
+                                        (a) =>
+                                            a.miniaddress.includes(filterText) ||
+                                            (_nicknameAddress &&
+                                                _nicknameAddress[a.miniaddress] &&
+                                                _nicknameAddress[a.miniaddress].includes(filterText))
+                                    )
+                                    .map((a) => (
+                                        <li
+                                            key={a.address}
+                                            onClick={() => {
+                                                setAddress(a);
+                                                if (filterText.length) {
+                                                    setFilterText('');
+                                                }
+                                                setShowFullList(false);
+                                            }}
+                                            className="truncate mb-2 px-4 p-4 first:mt-2 text-black hover:bg-slate-50 hover:cursor-pointer"
+                                        >
+                                            <h1 className="text-black font-semibold truncate">
+                                                {_nicknameAddress && _nicknameAddress[a.miniaddress]
+                                                    ? _nicknameAddress[a.miniaddress]
+                                                    : 'N/A'}
+                                            </h1>
+                                            <p className="text-black truncate text-sm">{a.miniaddress}</p>
+                                        </li>
+                                    ))}
                             </ul>
                         </div>
                     </Card>

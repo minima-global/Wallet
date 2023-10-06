@@ -124,6 +124,7 @@ select {
 
 .accordion-content {
   overflow: hidden;
+  overflow-y: overlay;
   max-height: 1000px;
   transition: max-height 1s ease-in-out;
 }

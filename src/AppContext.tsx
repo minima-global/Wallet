@@ -32,71 +32,9 @@ const AppProvider = ({ children }: IProps) => {
     const [openDrawer, setOpenDrawer] = useState(false);
 
     // SQL DATA
-    const [defaultAddressesWithName, setDefaultAddressesWithName] = useState<{ name: string; script: Scripts }[]>([]);
-    const [favoriteTokens, setFavoriteTokens] = useState<{ name: string; script: Scripts }[]>([]);
-
-    useEffect(() => {
-        if (window.innerWidth < 568) {
-            setMode('mobile');
-        }
-    }, []);
-
-    const checkVaultLocked = () => {
-        rpc.isVaultLocked().then((r) => {
-            setVaultLocked(r);
-        });
-    };
-
-    const get50BlockBurnAvg = async () => {
-        window.MDS.cmd('burn', (resp: any) => {
-            console.log(resp.response['50block']);
-            if (resp.status) {
-                setAvgBurn(resp.response['50block'].avg);
-            }
-        });
-    };
-
-    const getSimpleAddresses = async () => {
-        rpc.getScripts().then((scripts) => {
-            const allSimpleAddresses = scripts.filter((s) => s.simple && s.default);
-            setSimpleAddresses(allSimpleAddresses);
-        });
-    };
-
-    const getBalance = async () => {
-        await rpc.getMinimaBalance().then((b) => {
-            b.map((t) => {
-                if (t.token.url && t.token.url.startsWith('<artimage>', 0)) {
-                    t.token.url = makeTokenImage(t.token.url, t.tokenid);
-                }
-            });
-
-            const walletNeedsUpdating = !!b.find((t) => t.unconfirmed !== '0');
-
-            if (!walletNeedsUpdating) {
-                window.clearInterval(balanceInterval);
-            }
-
-            if (walletNeedsUpdating) {
-                setBalance(b);
-                if (!balanceInterval) {
-                    balanceInterval = setInterval(() => {
-                        getBalance();
-                    }, 10000);
-                }
-            }
-
-            setBalance(b);
-        });
-    };
-
-    const getTokens = async () => {
-        await rpc.getTokens().then((tokens) => {
-            const _NFTs: any = tokens.filter((token) => token.tokenid !== '0x00' && token.token.decimals === 0);
-            console.log(_NFTs);
-            setNFTs(_NFTs);
-        });
-    };
+    const [showEditNickname, setShowEditNickname] = useState<string | false>(false);
+    const [_nicknameAddress, setDefaultAddressesWithName] = useState<{ name: string; script: Scripts }[]>([]);
+    const [_favoriteTokens, setFavoriteTokens] = useState<{ name: string; script: Scripts }[]>([]);
 
     useEffect(() => {
         if (!loaded.current) {
@@ -192,6 +130,93 @@ const AppProvider = ({ children }: IProps) => {
         }
     }, [loaded]);
 
+    useEffect(() => {
+        if (window.innerWidth < 568) {
+            setMode('mobile');
+        }
+    }, []);
+
+    const checkVaultLocked = () => {
+        rpc.isVaultLocked().then((r) => {
+            setVaultLocked(r);
+        });
+    };
+
+    const get50BlockBurnAvg = async () => {
+        window.MDS.cmd('burn', (resp: any) => {
+            console.log(resp.response['50block']);
+            if (resp.status) {
+                setAvgBurn(resp.response['50block'].avg);
+            }
+        });
+    };
+
+    const getSimpleAddresses = async () => {
+        rpc.getScripts().then((scripts) => {
+            const allSimpleAddresses = scripts.filter((s) => s.simple && s.default);
+            setSimpleAddresses(allSimpleAddresses);
+        });
+    };
+
+    const getBalance = async () => {
+        await rpc.getMinimaBalance().then((b) => {
+            b.map((t) => {
+                if (t.token.url && t.token.url.startsWith('<artimage>', 0)) {
+                    t.token.url = makeTokenImage(t.token.url, t.tokenid);
+                }
+            });
+
+            const walletNeedsUpdating = !!b.find((t) => t.unconfirmed !== '0');
+
+            if (!walletNeedsUpdating) {
+                window.clearInterval(balanceInterval);
+            }
+
+            if (walletNeedsUpdating) {
+                setBalance(b);
+                if (!balanceInterval) {
+                    balanceInterval = setInterval(() => {
+                        getBalance();
+                    }, 10000);
+                }
+            }
+
+            setBalance(b);
+        });
+    };
+
+    const getTokens = async () => {
+        await rpc.getTokens().then((tokens) => {
+            const _NFTs: any = tokens.filter((token) => token.tokenid !== '0x00' && token.token.decimals === 0);
+            console.log(_NFTs);
+            setNFTs(_NFTs);
+        });
+    };
+
+    const editNickname = async (address: string, nickname: string) => {
+        const updatedNicknames = {
+            ..._nicknameAddress,
+            [address]: nickname,
+        };
+
+        // update favourites
+        setDefaultAddressesWithName(updatedNicknames);
+
+        const nicknames = await sql(`SELECT * FROM cache WHERE name = 'NICKNAME_ADDRESSES'`);
+
+        if (!nicknames) {
+            await sql(
+                `INSERT INTO cache (name, data) VALUES ('NICKNAME_ADDRESSES', '${JSON.stringify(updatedNicknames)}')`
+            );
+            setShowEditNickname(false);
+        } else {
+            await sql(
+                `UPDATE cache SET data = '${JSON.stringify(updatedNicknames)}' WHERE name = 'NICKNAME_ADDRESSES'`
+            );
+            setShowEditNickname(false);
+        }
+    };
+
     return (
         <appContext.Provider
             value={{
@@ -215,6 +240,11 @@ const AppProvider = ({ children }: IProps) => {
                 setOpenDrawer,
 
                 avgBurn,
+
+                _nicknameAddress,
+                editNickname,
+                setShowEditNickname,
+                showEditNickname,
             }}
         >
             {children}
