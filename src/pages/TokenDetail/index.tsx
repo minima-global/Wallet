@@ -72,7 +72,6 @@ const TokenDetail = () => {
                                                                 : `https://robohash.org/${viewingToken.tokenid}`
                                                         }
                                                     />
-                                                    <NFTAuthenticity tokenid={viewingToken.tokenid} />
                                                 </div>
                                             )}
                                         </div>
@@ -146,7 +145,12 @@ const TokenDetail = () => {
                                                     : `https://robohash.org/${viewingToken.tokenid}`
                                             }
                                         />
-                                        <NFTAuthenticity tokenid={viewingToken.tokenid} />
+
+                                        {viewingToken.tokenid !== '0x00' &&
+                                            viewingToken.token.webvalidate &&
+                                            viewingToken.token.webvalidate.length && (
+                                                <NFTAuthenticity tokenid={viewingToken.tokenid} />
+                                            )}
                                     </div>
                                 )}
 
@@ -212,9 +216,21 @@ const TokenDetail = () => {
                                         <KeyValue
                                             title="Web Validation"
                                             value={
-                                                viewingToken.token.webvalidate && viewingToken.token.webvalidate.length
-                                                    ? viewingToken.token.webvalidate
-                                                    : 'N/A'
+                                                <>
+                                                    {viewingToken.token.tokenid !== '0x00' &&
+                                                    viewingToken.token.webvalidate &&
+                                                    !!viewingToken.token.webvalidate.length ? (
+                                                        <a
+                                                            className="hover:cursor-pointer text-blue-400 hover:underline"
+                                                            href={viewingToken.token.webvalidate}
+                                                            target="_blank"
+                                                        >
+                                                            {viewingToken.token.webvalidate}
+                                                        </a>
+                                                    ) : (
+                                                        'N/A'
+                                                    )}
+                                                </>
                                             }
                                         />
                                     )}

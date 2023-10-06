@@ -20,7 +20,6 @@ const WalletSelect = () => {
 
     const [searchParams] = useSearchParams();
 
-    // Update token on balance update in form
     useEffect(() => {
         if (balance.length && formik.values.token) {
             const currentToken = balance.find((t: MinimaToken) => t.tokenid === formik.values.token.tokenid);
@@ -109,7 +108,6 @@ const WalletSelect = () => {
                                             : `https://robohash.org/${formik.values.token.tokenid}`
                                     }
                                 />
-                                <NFTAuthenticity tokenid={formik.values.token.tokenid} />
                             </div>
                         )}
                         <div>
@@ -272,7 +270,11 @@ const WalletSelect = () => {
                                                                     : `https://robohash.org/${t.tokenid}`
                                                             }
                                                         />
-                                                        <NFTAuthenticity tokenid={t.tokenid} />
+                                                        {t.tokenid !== '0x00' &&
+                                                            t.token.name.webvalidate &&
+                                                            !!t.token.name.webvalidate.length && (
+                                                                <NFTAuthenticity tokenid={t.tokenid} />
+                                                            )}
                                                     </div>
                                                 )}
 

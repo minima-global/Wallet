@@ -12,7 +12,6 @@ const Wallet = () => {
     const navigate = useNavigate();
     const { balance } = useContext(appContext);
     const [filterText, setFilterText] = React.useState('');
-
     return (
         <>
             {balance.length === 0 && (
@@ -103,7 +102,11 @@ const Wallet = () => {
                                                             : `https://robohash.org/${t.tokenid}`
                                                     }
                                                 />
-                                                <NFTAuthenticity tokenid={t.tokenid} />
+                                                {t.tokenid !== '0x00' &&
+                                                    t.token.webvalidate &&
+                                                    !!t.token.webvalidate.length && (
+                                                        <NFTAuthenticity tokenid={t.tokenid} />
+                                                    )}
                                             </div>
                                         )}
 
