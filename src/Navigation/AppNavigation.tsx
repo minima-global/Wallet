@@ -31,7 +31,7 @@ const AppNavigation = () => {
     return (
         <>
             <Notification />
-            <main id="navigation" className="md:ml-[240px] h-screen">
+            <main id="navigation" className="md:ml-[240px]">
                 <Routes>
                     <Route path="/" element={<Navigate replace to="/balance" />} />
                     <Route path="/balance" element={<Balance />} />

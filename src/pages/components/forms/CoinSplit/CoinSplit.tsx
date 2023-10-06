@@ -20,12 +20,15 @@ import Loading from '../../../../assets/lottie/Loading.json';
 import { createPortal } from 'react-dom';
 import KeyValue from '../../../../components/UI/KeyValue';
 
+import TogglePasswordIcon from '../../../../components/UI/TogglePasswordIcon/TogglePasswordIcon';
+
 const CoinSplit = () => {
     const mySchema = useFormSchema();
     const { balance: wallet, avgBurn } = useContext(appContext);
 
     const userLockedVault = useIsVaultLocked();
 
+    const [hidePassword, togglePasswordVisibility] = useState(false);
     const [error, setError] = useState<false | string>(false);
     const [loading, setLoading] = useState(false);
     const [step, setStep] = useState(0);
@@ -36,6 +39,11 @@ const CoinSplit = () => {
             onSubmit={async (formInputs) => {
                 setStep(0);
                 setLoading(true);
+
+                if (!formInputs.password.length && userLockedVault) {
+                    setLoading(false);
+                    return setStep(5);
+                }
 
                 try {
                     const resp = await splitCoin(
@@ -227,6 +235,51 @@ const CoinSplit = () => {
                             document.body
                         )}
 
+                    {step === 5 &&
+                        createPortal(
+                            <div className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn">
+                                <Grid variant="sm" title={<></>}>
+                                    <div className="mx-4 rounded bg-white bg-opacity-90 p-4">
+                                        <h1 className="text-black font-semibold mb-8">Enter vault password</h1>
+                                        <div className="divide-y-2 mb-8">
+                                            <Input
+                                                id="password"
+                                                autoComplete="new-password"
+                                                disabled={isSubmitting}
+                                                {...getFieldProps('password')}
+                                                type={!hidePassword ? 'password' : 'text'}
+                                                placeholder="Enter password"
+                                                error={touched.password && errors.password ? errors.password : false}
+                                                endIcon={<TogglePasswordIcon toggle={hidePassword} />}
+                                                handleEndIconClick={() =>
+                                                    togglePasswordVisibility((prevState) => !prevState)
+                                                }
+                                                extraClass="pr-16 truncate"
+                                            />
+                                        </div>
+                                        <div className="flex flex-col gap-2">
+                                            <Button
+                                                disabled={isSubmitting}
+                                                onClick={() => {
+                                                    submitForm();
+                                                }}
+                                                variant="primary"
+                                            >
+                                                Submit
+                                            </Button>
+                                            {!isSubmitting && (
+                                                <Button onClick={() => setStep(0)} variant="secondary">
+                                                    Cancel
+                                                </Button>
+                                            )}
+                                        </div>
+                                    </div>
+                                </Grid>
+                            </div>,
+
+                            document.body
+                        )}
+
                     {error &&
                         createPortal(
                             <div className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn">
@@ -259,6 +312,10 @@ const CoinSplit = () => {
                                                 <Button
                                                     onClick={() => {
                                                         setError(false);
+
+                                                        if (values.password.length) {
+                                                            setFieldValue('password', '');
+                                                        }
                                                     }}
                                                     variant="secondary"
                                                 >
@@ -274,7 +331,18 @@ const CoinSplit = () => {
                         )}
 
                     <form onSubmit={handleSubmit}>
-                        <Stack spacing={2}>
+                        <div className="flex flex-col gap-2">
+                            <h1 className="text-black text-sm mb-1">
+                                Splitting your coins allows you to have more UTXOs which means less waiting time in
+                                between transactions. Learn more about transactions on Minima on our{' '}
+                                <a
+                                    className="font-semibold"
+                                    href="https://docs.minima.global/docs/learn/minima/transactions"
+                                    target="_blank"
+                                >
+                                    docs.
+                                </a>
+                            </h1>
                             <WalletSelect />
 
                             <Input
@@ -284,43 +352,16 @@ const CoinSplit = () => {
                                 placeholder="Burn"
                                 {...getFieldProps('burn')}
                                 error={touched.burn && errors.burn ? errors.burn : false}
+                                extraClass="mt-2"
                             />
-                            <p className="text-slate-500 text-sm mb-4">Prioritize your transaction by adding a burn.</p>
-                            {userLockedVault && (
-                                <FormFieldWrapper
-                                    help="Your vault is locked.  Use your password so you can process this transaction."
-                                    children={
-                                        <TextField
-                                            type="password"
-                                            disabled={isSubmitting}
-                                            fullWidth
-                                            {...getFieldProps('password')}
-                                            placeholder="vault password"
-                                            error={touched.password && Boolean(errors.password)}
-                                            helperText={touched.password && errors.password}
-                                            InputProps={{
-                                                style:
-                                                    touched.password && Boolean(errors.password)
-                                                        ? {
-                                                              borderBottomLeftRadius: 0,
-                                                              borderBottomRightRadius: 0,
-                                                          }
-                                                        : {
-                                                              borderBottomLeftRadius: 8,
-                                                              borderBottomRightRadius: 8,
-                                                          },
-                                            }}
-                                        />
-                                    }
-                                />
-                            )}
+                            <p className="text-slate-500 text-sm mb-2 mt-2">
+                                Prioritize your transaction by adding a burn.
+                            </p>
+
                             <Button onClick={() => setStep(1)} variant="primary" disabled={!isValid}>
                                 Review
                             </Button>
-                            <Typography variant="caption">
-                                Split your coins by two so you have more available UTXO to transact with
-                            </Typography>
-                        </Stack>
+                        </div>
                     </form>
                 </>
             )}

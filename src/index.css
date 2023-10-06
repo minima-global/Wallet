@@ -33,14 +33,6 @@
   --brand-color: #3DA2FF;
 }
 
-main#navigation {
-  background-image: var(--background-image);
-  background-repeat: no-repeat;
-  background-size: cover;
-
-  overflow-y: overlay;
-}
-
 .green-good {
   color: var(--status-green);
 }
@@ -93,11 +85,13 @@ body {
     font-family: 'Manrope', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background-color: var(--background-color);
-    background-size: cover;
-    background-repeat: no-repeat;
-    overflow: hidden;
     -webkit-tap-highlight-color: transparent;
+    background-color: var(--background-color);
+    background-image: var(--background-image);
+    background-repeat: no-repeat;
+    background-size: cover;
+    overflow: hidden;
+
   }
 
 
@@ -138,3 +132,4 @@ select {
   max-height: 0px;
   transition: max-height 0.5s cubic-bezier(0, 1, 0, 1);
 }
+
