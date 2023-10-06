@@ -110,7 +110,6 @@ const AppProvider = ({ children }: IProps) => {
                             setDefaultAddressesWithName(JSON.parse(nicknameAddresses.DATA));
                         }
 
-                        console.log('fav', favoriteTokens);
                         if (favoriteTokens) {
                             setFavoriteTokens(JSON.parse(favoriteTokens.DATA));
                         }
@@ -145,7 +144,6 @@ const AppProvider = ({ children }: IProps) => {
 
     const get50BlockBurnAvg = async () => {
         window.MDS.cmd('burn', (resp: any) => {
-            console.log(resp.response['50block']);
             if (resp.status) {
                 setAvgBurn(resp.response['50block'].avg);
             }
@@ -189,7 +187,6 @@ const AppProvider = ({ children }: IProps) => {
     const getTokens = async () => {
         await rpc.getTokens().then((tokens) => {
             const _NFTs: any = tokens.filter((token) => token.tokenid !== '0x00' && token.token.decimals === 0);
-            console.log(_NFTs);
             setNFTs(_NFTs);
         });
     };

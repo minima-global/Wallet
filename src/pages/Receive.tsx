@@ -20,25 +20,6 @@ const Receive = () => {
     const [copyState, setCopy] = useState(false);
     const [filterText, setFilterText] = useState('');
 
-    // const [validBuild, setValidBuild] = useState<boolean | undefined>(undefined);
-
-    // useEffect(() => {
-    //     getCurrentNodeVersion().then((v) => {
-    //         const versionCheckAddressWasIntroduced = '1.0.21';
-    //         const comparison = v.localeCompare(versionCheckAddressWasIntroduced);
-    //         const isRunningSufficientVersion = comparison === 0 || comparison === 1;
-
-    //         if (isRunningSufficientVersion) {
-    //             setValidBuild(true);
-    //         }
-    //         if (!isRunningSufficientVersion) {
-    //             setValidBuild(false);
-    //         }
-    //     });
-    // }, []);
-
-    console.log('simpleADdress', simpleAddresses);
-
     useEffect(() => {
         if (simpleAddresses.length) {
             setAddress(simpleAddresses[Math.floor(Math.random() * simpleAddresses.length)]);

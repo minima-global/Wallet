@@ -16,7 +16,6 @@ export const splitCoin = (tokenid: string, sendable: string, burn: string, passw
                         hasBurn ? 'burn:' + burn : ''
                     } ${hasPassword ? 'password:' + hasPassword : ''}`,
                     (resp: any) => {
-                        console.log(resp);
                         if (!resp.status && !resp.pending)
                             reject(
                                 resp.error

@@ -26,10 +26,12 @@ import Loading from '../../assets/lottie/Loading.json';
 
 import { createPortal } from 'react-dom';
 import useIsVaultLocked from '../../hooks/useIsVaultLocked';
+import { useNavigate } from 'react-router-dom';
 
 const TokenCreation = () => {
     const mySchema = useMySchema();
-    const { balance: wallet, setOpenDrawer, avgBurn } = useContext(appContext);
+    const navigate = useNavigate();
+    const { balance: wallet, setOpenDrawer, avgBurn, checkVaultLocked } = useContext(appContext);
     const userLockedVault = useIsVaultLocked();
 
     const [error, setError] = useState<false | string>(false);
@@ -102,12 +104,37 @@ const TokenCreation = () => {
                     submitForm,
                 }) => (
                     <>
-                        {userLockedVault && (
-                            <NoResults>
-                                <h6>You have locked your vault with a password.</h6>
-                                <p>Unlock it so you can access this form.</p>
-                            </NoResults>
-                        )}
+                        {userLockedVault &&
+                            createPortal(
+                                <div className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn">
+                                    <Grid variant="sm" title={<></>}>
+                                        <div className="mx-4 rounded bg-white bg-opacity-90 p-4 items-center">
+                                            <div className="grid grid-cols-1 grid-rows-1 pb-4">
+                                                <div className="flex flex-col items-center">
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        height="80"
+                                                        viewBox="0 -960 960 960"
+                                                        width="80"
+                                                    >
+                                                        <path d="M240-80q-33 0-56.5-23.5T160-160v-400q0-33 23.5-56.5T240-640h40v-80q0-83 58.5-141.5T480-920q83 0 141.5 58.5T680-720v80h40q33 0 56.5 23.5T800-560v400q0 33-23.5 56.5T720-80H240Zm0-80h480v-400H240v400Zm240-120q33 0 56.5-23.5T560-360q0-33-23.5-56.5T480-440q-33 0-56.5 23.5T400-360q0 33 23.5 56.5T480-280ZM360-640h240v-80q0-50-35-85t-85-35q-50 0-85 35t-35 85v80ZM240-160v-400 400Z" />
+                                                    </svg>
+                                                    <h1 className="text-black text-xl font-semibold mt-4">
+                                                        Your node is locked
+                                                    </h1>
+                                                    <p className="text-black text-center">
+                                                        Please unlock your node and refresh this page to access token
+                                                        creation.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div />
+                                        </div>
+                                    </Grid>
+                                </div>,
+
+                                document.body
+                            )}
 
                         {step === 1 &&
                             createPortal(
@@ -342,106 +369,100 @@ const TokenCreation = () => {
                                 document.body
                             )}
 
-                        {!userLockedVault && (
-                            <Card>
-                                <form onSubmit={handleSubmit}>
-                                    <Stack spacing={2}>
-                                        <FormImageUrlSelect />
+                        <Card>
+                            <form onSubmit={handleSubmit}>
+                                <Stack spacing={2}>
+                                    <FormImageUrlSelect />
 
-                                        <Input
-                                            id="name"
-                                            type="text"
-                                            disabled={isSubmitting}
-                                            placeholder="Name"
-                                            {...getFieldProps('name')}
-                                            error={touched.name && errors.name ? errors.name : false}
-                                        />
-                                        <p className="text-slate-500 text-sm mb-4">
-                                            Enter a name for your token <span className="red-bad">*</span>
-                                        </p>
+                                    <Input
+                                        id="name"
+                                        type="text"
+                                        disabled={isSubmitting}
+                                        placeholder="Name"
+                                        {...getFieldProps('name')}
+                                        error={touched.name && errors.name ? errors.name : false}
+                                    />
+                                    <p className="text-slate-500 text-sm mb-4">
+                                        Enter a name for your token <span className="red-bad">*</span>
+                                    </p>
 
-                                        <Input
-                                            id="amount"
-                                            type="text"
-                                            disabled={isSubmitting}
-                                            placeholder="Amount"
-                                            {...getFieldProps('amount')}
-                                            error={touched.amount && errors.amount ? errors.amount : false}
-                                        />
-                                        <p className="text-slate-500 text-sm mb-4">
-                                            Enter a total supply for your token <span className="red-bad">*</span>
-                                        </p>
+                                    <Input
+                                        id="amount"
+                                        type="text"
+                                        disabled={isSubmitting}
+                                        placeholder="Amount"
+                                        {...getFieldProps('amount')}
+                                        error={touched.amount && errors.amount ? errors.amount : false}
+                                    />
+                                    <p className="text-slate-500 text-sm mb-4">
+                                        Enter a total supply for your token <span className="red-bad">*</span>
+                                    </p>
 
-                                        <Input
-                                            id="description"
-                                            type="text"
-                                            disabled={isSubmitting}
-                                            placeholder="Description"
-                                            {...getFieldProps('description')}
-                                            max={255}
-                                            extraClass="pr-20 truncate"
-                                            error={
-                                                touched.description && errors.description ? errors.description : false
-                                            }
-                                            endIcon={
-                                                <>
-                                                    {values.description.length >= 255 && (
-                                                        <div className="m-auto text-sm flex items-center justify-center text-black font-semibold">
-                                                            {values.description.length + '/255'}
-                                                        </div>
-                                                    )}
-                                                </>
-                                            }
-                                        />
-                                        <p className="text-slate-500 text-sm mb-4">A description about your NFT.</p>
+                                    <Input
+                                        id="description"
+                                        type="text"
+                                        disabled={isSubmitting}
+                                        placeholder="Description"
+                                        {...getFieldProps('description')}
+                                        max={255}
+                                        extraClass="pr-20 truncate"
+                                        error={touched.description && errors.description ? errors.description : false}
+                                        endIcon={
+                                            <>
+                                                {values.description.length >= 255 && (
+                                                    <div className="m-auto text-sm flex items-center justify-center text-black font-semibold">
+                                                        {values.description.length + '/255'}
+                                                    </div>
+                                                )}
+                                            </>
+                                        }
+                                    />
+                                    <p className="text-slate-500 text-sm mb-4">A description about your NFT.</p>
 
-                                        <Input
-                                            id="ticker"
-                                            type="text"
-                                            disabled={isSubmitting}
-                                            placeholder="Web validation URL"
-                                            {...getFieldProps('ticker')}
-                                            error={touched.ticker && errors.ticker ? errors.ticker : false}
-                                        />
-                                        <p className="text-slate-500 text-sm mb-4">
-                                            Enter a ticker symbol (eg. MINIMA, BTC, ETH)
-                                        </p>
+                                    <Input
+                                        id="ticker"
+                                        type="text"
+                                        disabled={isSubmitting}
+                                        placeholder="Web validation URL"
+                                        {...getFieldProps('ticker')}
+                                        error={touched.ticker && errors.ticker ? errors.ticker : false}
+                                    />
+                                    <p className="text-slate-500 text-sm mb-4">
+                                        Enter a ticker symbol (eg. MINIMA, BTC, ETH)
+                                    </p>
 
-                                        <Input
-                                            id="webvalidate"
-                                            type="text"
-                                            disabled={isSubmitting}
-                                            placeholder="Web validation URL"
-                                            {...getFieldProps('webvalidate')}
-                                            error={
-                                                touched.webvalidate && errors.webvalidate ? errors.webvalidate : false
-                                            }
-                                        />
-                                        <p className="text-slate-500 text-sm mb-4">
-                                            Validate your token by hosting a public .txt file containing the tokenid on
-                                            your own server or website. Create the link to the .txt file in advance and
-                                            add the tokenid after creating the token.
-                                        </p>
+                                    <Input
+                                        id="webvalidate"
+                                        type="text"
+                                        disabled={isSubmitting}
+                                        placeholder="Web validation URL"
+                                        {...getFieldProps('webvalidate')}
+                                        error={touched.webvalidate && errors.webvalidate ? errors.webvalidate : false}
+                                    />
+                                    <p className="text-slate-500 text-sm mb-4">
+                                        Validate your token by hosting a public .txt file containing the tokenid on your
+                                        own server or website. Create the link to the .txt file in advance and add the
+                                        tokenid after creating the token.
+                                    </p>
 
-                                        <Input
-                                            id="burn"
-                                            type="number"
-                                            disabled={isSubmitting}
-                                            placeholder="Burn"
-                                            {...getFieldProps('burn')}
-                                            error={touched.burn && errors.burn ? errors.burn : false}
-                                        />
-                                        <p className="text-slate-500 text-sm mb-4">
-                                            Prioritize your transaction by adding a burn.
-                                        </p>
+                                    <Input
+                                        id="burn"
+                                        type="number"
+                                        disabled={isSubmitting}
+                                        placeholder="Burn"
+                                        {...getFieldProps('burn')}
+                                        error={touched.burn && errors.burn ? errors.burn : false}
+                                    />
+                                    <p className="text-slate-500 text-sm mb-4">
+                                        Prioritize your transaction by adding a burn.
+                                    </p>
 
-                                        <Button onClick={() => setStep(1)} variant="primary" disabled={!isValid}>
-                                            Review
-                                        </Button>
-                                    </Stack>
-                                </form>
-                            </Card>
-                        )}
+                                    <Button onClick={() => setStep(1)} variant="primary" disabled={!isValid}>
+                                        Review
+                                    </Button>
+                                </Stack>
+                            </form>
+                        </Card>
                     </>
                 )}
             </Formik>
