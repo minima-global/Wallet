@@ -8,6 +8,7 @@ import { appContext } from '../AppContext';
 import KeyValue from '../components/UI/KeyValue';
 import { createPortal } from 'react-dom';
 import Button from '../components/UI/Button';
+import CardContent from '../components/UI/CardContent';
 
 const Status = () => {
     const { setOpenDrawer } = useContext(appContext);
@@ -25,18 +26,23 @@ const Status = () => {
             {showFullStatus &&
                 createPortal(
                     <div className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn">
-                        <Grid variant="lg" title={<></>}>
-                            <div className="mx-4 rounded bg-white bg-opacity-90 p-4 h-max">
-                                <div className="max-h-[65vh] overflow-scroll">
-                                    <h1 className="text-black font-semibold mb-4">Full status</h1>
-
+                        <Grid variant="lg" title={<>Full Status</>}>
+                            <div className="flex flex-col gap-4 mx-4 rounded bg-white bg-opacity-90 p-4 mb-4 shadow-sm">
+                                <svg
+                                    onClick={() => setShowFullStatus(false)}
+                                    className="hover:cursor-pointer"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    height="24"
+                                    viewBox="0 -960 960 960"
+                                    width="24"
+                                >
+                                    <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+                                </svg>
+                                <div className="overflow-scroll">
                                     <pre className="text-black text-sm break-all max-h-[calc(100vh_-_56px)]">
                                         {JSON.stringify(status, null, 2)}
                                     </pre>
                                 </div>
-                                <Button extraClass="mt-8" variant="secondary" onClick={() => setShowFullStatus(false)}>
-                                    Done
-                                </Button>
                             </div>
                         </Grid>
                     </div>,
@@ -61,9 +67,9 @@ const Status = () => {
                 }
                 variant="lg"
             >
-                <Card>
-                    <>
-                        <div className="flex  justify-between items-center mb-4">
+                <CardContent
+                    header={
+                        <div className="flex justify-between items-center">
                             <h1 className="text-black font-semibold">Overview</h1>
                             <button
                                 className="flex text-sm text-black font-semibold hover:cursor-pointer hover:opacity-90 border-2 border-black rounded-lg py-2 px-4 hover:bg-black hover:text-white hover:fill-[#363AFF] group"
@@ -81,20 +87,24 @@ const Status = () => {
                                 </svg>
                             </button>
                         </div>
-                        <div className="divide-y-2 mb-4">
-                            <KeyValue title="Node version" value={status?.version!} />
-                            <KeyValue title="Uptime" value={status?.uptime!} />
-                            <KeyValue title="Vault locked" value={status?.locked! ? 'True' : 'False'} />
-                            <KeyValue title="Length" value={status?.length.toString()!} />
-                            <KeyValue title="Chain weight" value={status?.weight.toString()!} />
-                            <KeyValue title="Total Minima (global)" value={status?.minima.toString()!} />
-                            <KeyValue title="Total Coins (global)" value={status?.coins.toString()!} />
-                            <KeyValue title="Your data path" value={status?.data!} />
-                            <KeyValue title="RAM usage" value={status?.memory.ram!} />
-                            <KeyValue title="Disk usage" value={status?.memory.disk!} />
-                        </div>
-                    </>
-                </Card>
+                    }
+                    content={
+                        <>
+                            <div className="divide-y-2 mb-4">
+                                <KeyValue title="Node version" value={status?.version!} />
+                                <KeyValue title="Uptime" value={status?.uptime!} />
+                                <KeyValue title="Vault locked" value={status?.locked! ? 'True' : 'False'} />
+                                <KeyValue title="Length" value={status?.length.toString()!} />
+                                <KeyValue title="Chain weight" value={status?.weight.toString()!} />
+                                <KeyValue title="Total Minima (global)" value={status?.minima.toString()!} />
+                                <KeyValue title="Total Coins (global)" value={status?.coins.toString()!} />
+                                <KeyValue title="Your data path" value={status?.data!} />
+                                <KeyValue title="RAM usage" value={status?.memory.ram!} />
+                                <KeyValue title="Disk usage" value={status?.memory.disk!} />
+                            </div>
+                        </>
+                    }
+                />
             </Grid>
         </>
     );

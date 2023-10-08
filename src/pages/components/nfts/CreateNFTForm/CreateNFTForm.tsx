@@ -23,6 +23,7 @@ import { appContext } from '../../../../AppContext';
 import { createPortal } from 'react-dom';
 import useIsVaultLocked from '../../../../hooks/useIsVaultLocked';
 import { useNavigate } from 'react-router-dom';
+import CardContent from '../../../../components/UI/CardContent';
 
 const CreateNFTForm = () => {
     const mySchema = useMySchema();
@@ -59,7 +60,7 @@ const CreateNFTForm = () => {
                     createPortal(
                         <div className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn">
                             <Grid variant="sm" title={<></>}>
-                                <div className="mx-4 rounded bg-white bg-opacity-90 p-4 items-center">
+                                <div className="mx-4 rounded bg-white bg-opacity-90 p-4 items-center h-max overflow-y-scroll">
                                     <div className="grid grid-cols-1 grid-rows-1 pb-4">
                                         <div className="flex flex-col items-center">
                                             <svg
@@ -133,13 +134,14 @@ const CreateNFTForm = () => {
                         values,
                         resetForm,
                         touched,
+                        dirty,
                     }) => (
                         <>
                             {step === 1 &&
                                 createPortal(
                                     <div className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn">
                                         <Grid variant="lg" title={<></>}>
-                                            <div className="mx-4 rounded bg-white bg-opacity-90 p-4 h-max">
+                                            <div className="mx-4 rounded bg-white bg-opacity-90 p-4 h-max max-h-[calc(100%_-_16px)] overflow-y-scroll">
                                                 <h1 className="text-black font-semibold mb-8 rounded-l">
                                                     Token creation review
                                                 </h1>
@@ -225,7 +227,7 @@ const CreateNFTForm = () => {
                                                         value={avgBurn.toString()}
                                                     />
                                                 </div>
-                                                <div className="flex flex-col gap-2">
+                                                <div className="flex flex-col gap-2 mt-8 md:mt-16">
                                                     <Button
                                                         disabled={isSubmitting}
                                                         onClick={() => submitForm()}
@@ -250,7 +252,7 @@ const CreateNFTForm = () => {
                                 createPortal(
                                     <div className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn">
                                         <Grid variant="sm" title={<></>}>
-                                            <div className="mx-4 rounded bg-white bg-opacity-90 p-4 items-center grid grid-cols-1 grid-rows-[1fr_0.5fr]">
+                                            <div className="mx-4 rounded bg-white bg-opacity-90 p-4 items-center h-max overflow-y-scroll">
                                                 <div className="grid">
                                                     <Lottie
                                                         className="w-[128px] h-[128px] self-center place-self-center justify-self-center"
@@ -272,7 +274,7 @@ const CreateNFTForm = () => {
                                 createPortal(
                                     <div className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn">
                                         <Grid variant="sm" title={<></>}>
-                                            <div className="mx-4 rounded bg-white bg-opacity-90 p-4 items-center grid grid-cols-1 grid-rows-[1fr_1fr]">
+                                            <div className="mx-4 rounded bg-white bg-opacity-90 p-4 items-center h-max overflow-y-scroll">
                                                 <div className="grid">
                                                     <Lottie
                                                         className="w-[128px] h-[128px] self-center place-self-center justify-self-center"
@@ -287,7 +289,7 @@ const CreateNFTForm = () => {
                                                         The transaction has been posted and should arrive shortly.
                                                     </p>
                                                 </div>
-                                                <div className="flex flex-col gap-2 w-full mt-4 self-end">
+                                                <div className="flex flex-col gap-2 w-full mt-8 md:mt-16 self-end">
                                                     {!isSubmitting && (
                                                         <Button
                                                             onClick={() => {
@@ -311,7 +313,7 @@ const CreateNFTForm = () => {
                                 createPortal(
                                     <div className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn">
                                         <Grid variant="sm" title={<></>}>
-                                            <div className="mx-4 rounded bg-white bg-opacity-90 p-4 items-center grid grid-cols-1 grid-rows-[1fr_1fr]">
+                                            <div className="mx-4 rounded bg-white bg-opacity-90 p-4 items-center h-max overflow-y-scroll">
                                                 <div>
                                                     <svg
                                                         className="animate-pulse temporary-pulse fill-[rgb(78,227,193)] mb-4 mx-auto mt-8"
@@ -331,7 +333,7 @@ const CreateNFTForm = () => {
                                                         this pending action in the Pending minidapp.
                                                     </p>
                                                 </div>
-                                                <div className="flex flex-col gap-2 w-full mt-4 self-end">
+                                                <div className="flex flex-col gap-2 w-full mt-8 md:mt-16 self-end">
                                                     {!isSubmitting && (
                                                         <Button
                                                             onClick={() => {
@@ -355,7 +357,7 @@ const CreateNFTForm = () => {
                                 createPortal(
                                     <div className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn">
                                         <Grid variant="sm" title={<></>}>
-                                            <div className="mx-4 rounded bg-white bg-opacity-90 p-4 items-center grid grid-cols-1 grid-rows-[1fr_1fr]">
+                                            <div className="mx-4 rounded bg-white bg-opacity-90 p-4 items-center h-max overflow-y-scroll">
                                                 <div>
                                                     <svg
                                                         className="animate-pulse temporary-pulse fill-[var(--status-red)] mb-4
@@ -372,7 +374,7 @@ const CreateNFTForm = () => {
                                                     </h1>
                                                     <p className="text-black text-center break-all">{error}</p>
                                                 </div>
-                                                <div className="flex flex-col gap-2 w-full mt-4 self-end">
+                                                <div className="flex flex-col gap-2 w-full mt-8 md:mt-16 self-end">
                                                     {!isSubmitting && (
                                                         <Button
                                                             onClick={() => {
@@ -392,130 +394,143 @@ const CreateNFTForm = () => {
                                     document.body
                                 )}
 
-                            <Card>
-                                <form onSubmit={handleSubmit}>
-                                    <Stack spacing={2}>
-                                        <Input
-                                            id="url"
-                                            type="text"
-                                            disabled={isSubmitting}
-                                            placeholder="Image URL"
-                                            {...getFieldProps('url')}
-                                            error={touched.url && errors.url ? errors.url : false}
-                                        />
-                                        <p className="text-slate-500 text-sm mb-4">Enter an image URL for your token</p>
+                            <CardContent
+                                header={<></>}
+                                content={
+                                    <form onSubmit={handleSubmit}>
+                                        <Stack spacing={2}>
+                                            <Input
+                                                id="url"
+                                                type="text"
+                                                disabled={isSubmitting}
+                                                placeholder="Image URL"
+                                                {...getFieldProps('url')}
+                                                error={touched.url && errors.url ? errors.url : false}
+                                            />
+                                            <p className="text-slate-500 text-sm mb-4">
+                                                Enter an image URL for your token
+                                            </p>
 
-                                        <Input
-                                            id="name"
-                                            type="text"
-                                            disabled={isSubmitting}
-                                            placeholder="Name"
-                                            {...getFieldProps('name')}
-                                            error={touched.name && errors.name ? errors.name : false}
-                                        />
-                                        <p className="text-slate-500 text-sm mb-4">
-                                            Enter a name for your token <span className="red-bad">*</span>
-                                        </p>
+                                            <Input
+                                                id="name"
+                                                type="text"
+                                                disabled={isSubmitting}
+                                                placeholder="Name"
+                                                {...getFieldProps('name')}
+                                                error={touched.name && errors.name ? errors.name : false}
+                                            />
+                                            <p className="text-slate-500 text-sm mb-4">
+                                                Enter a name for your token <span className="red-bad">*</span>
+                                            </p>
 
-                                        <Input
-                                            id="amount"
-                                            type="text"
-                                            disabled={isSubmitting}
-                                            placeholder="Amount"
-                                            {...getFieldProps('amount')}
-                                            error={touched.amount && errors.amount ? errors.amount : false}
-                                        />
-                                        <p className="text-slate-500 text-sm mb-4">
-                                            Non-fungible tokens can only be sent as whole numbers and not fractions.{' '}
-                                            <span className="red-bad">*</span>
-                                        </p>
+                                            <Input
+                                                id="amount"
+                                                type="text"
+                                                disabled={isSubmitting}
+                                                placeholder="Amount"
+                                                {...getFieldProps('amount')}
+                                                error={touched.amount && errors.amount ? errors.amount : false}
+                                            />
+                                            <p className="text-slate-500 text-sm mb-4">
+                                                Non-fungible tokens can only be sent as whole numbers and not fractions.{' '}
+                                                <span className="red-bad">*</span>
+                                            </p>
 
-                                        <Input
-                                            id="owner"
-                                            type="text"
-                                            disabled={isSubmitting}
-                                            placeholder="Creator's name"
-                                            {...getFieldProps('owner')}
-                                            error={touched.owner && errors.owner ? errors.owner : false}
-                                        />
-                                        <p className="text-slate-500 text-sm mb-4">
-                                            A creator name can optionally be added
-                                        </p>
+                                            <Input
+                                                id="owner"
+                                                type="text"
+                                                disabled={isSubmitting}
+                                                placeholder="Creator's name"
+                                                {...getFieldProps('owner')}
+                                                error={touched.owner && errors.owner ? errors.owner : false}
+                                            />
+                                            <p className="text-slate-500 text-sm mb-4">
+                                                A creator name can optionally be added
+                                            </p>
 
-                                        <Input
-                                            id="external_url"
-                                            type="text"
-                                            disabled={isSubmitting}
-                                            placeholder="External URL"
-                                            {...getFieldProps('external_url')}
-                                            error={
-                                                touched.external_url && errors.external_url
-                                                    ? errors.external_url
-                                                    : false
-                                            }
-                                        />
-                                        <p className="text-slate-500 text-sm mb-4">
-                                            An external link can optionally be provided so users can learn more about
-                                            your NFT.
-                                        </p>
+                                            <Input
+                                                id="external_url"
+                                                type="text"
+                                                disabled={isSubmitting}
+                                                placeholder="External URL"
+                                                {...getFieldProps('external_url')}
+                                                error={
+                                                    touched.external_url && errors.external_url
+                                                        ? errors.external_url
+                                                        : false
+                                                }
+                                            />
+                                            <p className="text-slate-500 text-sm mb-4">
+                                                An external link can optionally be provided so users can learn more
+                                                about your NFT.
+                                            </p>
 
-                                        <Input
-                                            id="description"
-                                            type="text"
-                                            disabled={isSubmitting}
-                                            placeholder="Description"
-                                            {...getFieldProps('description')}
-                                            max={255}
-                                            extraClass="pr-20 truncate"
-                                            error={
-                                                touched.description && errors.description ? errors.description : false
-                                            }
-                                            endIcon={
-                                                <>
-                                                    {values.description.length >= 255 && (
-                                                        <div className="m-auto text-sm flex items-center justify-center text-black font-semibold">
-                                                            {values.description.length + '/255'}
-                                                        </div>
-                                                    )}
-                                                </>
-                                            }
-                                        />
-                                        <p className="text-slate-500 text-sm mb-4">A description about your NFT.</p>
+                                            <Input
+                                                id="description"
+                                                type="text"
+                                                disabled={isSubmitting}
+                                                placeholder="Description"
+                                                {...getFieldProps('description')}
+                                                max={255}
+                                                extraClass="pr-20 truncate"
+                                                error={
+                                                    touched.description && errors.description
+                                                        ? errors.description
+                                                        : false
+                                                }
+                                                endIcon={
+                                                    <>
+                                                        {values.description.length >= 255 && (
+                                                            <div className="m-auto text-sm flex items-center justify-center text-black font-semibold">
+                                                                {values.description.length + '/255'}
+                                                            </div>
+                                                        )}
+                                                    </>
+                                                }
+                                            />
+                                            <p className="text-slate-500 text-sm mb-4">A description about your NFT.</p>
 
-                                        <Input
-                                            id="webvalidate"
-                                            type="text"
-                                            disabled={isSubmitting}
-                                            placeholder="Web validation URL"
-                                            {...getFieldProps('webvalidate')}
-                                            error={
-                                                touched.webvalidate && errors.webvalidate ? errors.webvalidate : false
-                                            }
-                                        />
-                                        <p className="text-slate-500 text-sm mb-4">
-                                            Validate your token by hosting a public .txt file containing the tokenid on
-                                            your own server or website. Create the link to the .txt file in advance and
-                                            add the tokenid after creating the token.
-                                        </p>
+                                            <Input
+                                                id="webvalidate"
+                                                type="text"
+                                                disabled={isSubmitting}
+                                                placeholder="Web validation URL"
+                                                {...getFieldProps('webvalidate')}
+                                                error={
+                                                    touched.webvalidate && errors.webvalidate
+                                                        ? errors.webvalidate
+                                                        : false
+                                                }
+                                            />
+                                            <p className="text-slate-500 text-sm mb-4">
+                                                Validate your token by hosting a public .txt file containing the tokenid
+                                                on your own server or website. Create the link to the .txt file in
+                                                advance and add the tokenid after creating the token.
+                                            </p>
 
-                                        <Input
-                                            id="burn"
-                                            type="number"
-                                            disabled={isSubmitting}
-                                            placeholder="Burn"
-                                            {...getFieldProps('burn')}
-                                            error={touched.burn && errors.burn ? errors.burn : false}
-                                        />
-                                        <p className="text-slate-500 text-sm mb-4">
-                                            Prioritize your transaction by adding a burn.
-                                        </p>
+                                            <Input
+                                                id="burn"
+                                                type="number"
+                                                disabled={isSubmitting}
+                                                placeholder="Burn"
+                                                {...getFieldProps('burn')}
+                                                error={touched.burn && errors.burn ? errors.burn : false}
+                                            />
+                                            <p className="text-slate-500 text-sm mb-4">
+                                                Prioritize your transaction by adding a burn.
+                                            </p>
 
-                                        <Button onClick={() => setStep(1)} variant="primary" disabled={!isValid}>
-                                            Review
-                                        </Button>
-                                    </Stack>
-                                </form>
-                            </Card>
+                                            <Button
+                                                onClick={() => setStep(1)}
+                                                variant="primary"
+                                                disabled={!dirty || !isValid}
+                                            >
+                                                Review
+                                            </Button>
+                                        </Stack>
+                                    </form>
+                                }
+                            />
                         </>
                     )}
                 </Formik>

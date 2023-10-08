@@ -85,13 +85,14 @@ const ValueTransfer = () => {
                     resetForm,
                     touched,
                     setFieldValue,
+                    dirty,
                 }) => (
                     <>
                         {step === 1 &&
                             createPortal(
                                 <div className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn">
                                     <Grid variant="lg" title={<></>}>
-                                        <div className="mx-4 rounded bg-white bg-opacity-90 p-4">
+                                        <div className="mx-4 rounded bg-white bg-opacity-90 p-4 h-max max-h-[calc(100%_-_16px)] overflow-y-scroll">
                                             <h1 className="text-black font-semibold mb-8">Transaction review</h1>
                                             <div className="divide-y-2 mb-8">
                                                 {values.token.tokenid !== '0x00' && (
@@ -118,7 +119,7 @@ const ValueTransfer = () => {
                                                     value={values.message.length > 0 ? values.message : 'N/A'}
                                                 />
                                             </div>
-                                            <div className="flex flex-col gap-2">
+                                            <div className="flex flex-col gap-2 mt-8 md:mt-16">
                                                 <Button
                                                     disabled={isSubmitting}
                                                     onClick={() => submitForm()}
@@ -143,7 +144,7 @@ const ValueTransfer = () => {
                             createPortal(
                                 <div className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn">
                                     <Grid variant="sm" title={<></>}>
-                                        <div className="mx-4 rounded bg-white bg-opacity-90 p-4 items-center grid grid-cols-1 grid-rows-[1fr_0.5fr]">
+                                        <div className="mx-4 rounded bg-white bg-opacity-90 p-4 items-center h-max overflow-y-scroll">
                                             <div className="grid">
                                                 <Lottie
                                                     className="w-[128px] h-[128px] self-center place-self-center justify-self-center"
@@ -165,7 +166,7 @@ const ValueTransfer = () => {
                             createPortal(
                                 <div className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn">
                                     <Grid variant="sm" title={<></>}>
-                                        <div className="mx-4 rounded bg-white bg-opacity-90 p-4 items-center grid grid-cols-1 grid-rows-[1fr_1fr]">
+                                        <div className="mx-4 rounded bg-white bg-opacity-90 p-4 items-center h-max overflow-y-scroll">
                                             <div className="grid">
                                                 <Lottie
                                                     className="w-[128px] h-[128px] self-center place-self-center justify-self-center"
@@ -180,7 +181,7 @@ const ValueTransfer = () => {
                                                     The transaction has been posted and should arrive shortly.
                                                 </p>
                                             </div>
-                                            <div className="flex flex-col gap-2 w-full mt-4 self-end">
+                                            <div className="w-full mt-8 md:mt-16 self-end">
                                                 {!isSubmitting && (
                                                     <Button
                                                         onClick={() => {
@@ -204,7 +205,7 @@ const ValueTransfer = () => {
                             createPortal(
                                 <div className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn">
                                     <Grid variant="sm" title={<></>}>
-                                        <div className="mx-4 rounded bg-white bg-opacity-90 p-4 items-center grid grid-cols-1 grid-rows-[1fr_1fr]">
+                                        <div className="mx-4 rounded bg-white bg-opacity-90 p-4 items-center h-max overflow-y-scroll">
                                             <div>
                                                 <svg
                                                     className="animate-pulse temporary-pulse fill-[rgb(78,227,193)] mb-4 mx-auto mt-8"
@@ -224,7 +225,7 @@ const ValueTransfer = () => {
                                                     pending action in the Pending minidapp.
                                                 </p>
                                             </div>
-                                            <div className="flex flex-col gap-2 w-full mt-4 self-end">
+                                            <div className="flex flex-col gap-2 w-full mt-8 md:mt-16 self-end">
                                                 {!isSubmitting && (
                                                     <Button
                                                         onClick={() => {
@@ -247,7 +248,7 @@ const ValueTransfer = () => {
                             createPortal(
                                 <div className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn">
                                     <Grid variant="sm" title={<></>}>
-                                        <div className="mx-4 rounded bg-white bg-opacity-90 p-4">
+                                        <div className="mx-4 rounded bg-white bg-opacity-90 p-4 h-max overflow-y-scroll">
                                             <h1 className="text-black font-semibold mb-8">Enter vault password</h1>
                                             <div className="divide-y-2 mb-8">
                                                 <Input
@@ -267,7 +268,7 @@ const ValueTransfer = () => {
                                                     extraClass="pr-16 truncate"
                                                 />
                                             </div>
-                                            <div className="flex flex-col gap-2">
+                                            <div className="flex flex-col gap-2 mt-8 md:mt-16">
                                                 <Button
                                                     disabled={isSubmitting}
                                                     onClick={() => {
@@ -294,7 +295,7 @@ const ValueTransfer = () => {
                             createPortal(
                                 <div className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn">
                                     <Grid variant="sm" title={<></>}>
-                                        <div className="mx-4 rounded bg-white bg-opacity-90 p-4 items-center grid grid-cols-1 grid-rows-[1fr_1fr]">
+                                        <div className="mx-4 rounded bg-white bg-opacity-90 p-4 items-center">
                                             <div>
                                                 <svg
                                                     className="animate-pulse temporary-pulse fill-[var(--status-red)] mb-4
@@ -311,7 +312,7 @@ const ValueTransfer = () => {
                                                 </h1>
                                                 <p className="text-black text-center break-all">{error}</p>
                                             </div>
-                                            <div className="flex flex-col gap-2 w-full mt-4 self-end">
+                                            <div className="flex flex-col gap-2 w-full mt-8 md:mt-16 self-end">
                                                 {!isSubmitting && (
                                                     <Button
                                                         onClick={() => {
@@ -402,7 +403,12 @@ const ValueTransfer = () => {
                                     </p>
                                 </div>
 
-                                <Button onClick={() => setStep(1)} variant="primary" disabled={!isValid}>
+                                <Button
+                                    extraClass="mt-8 md:mt-16"
+                                    onClick={() => setStep(1)}
+                                    variant="primary"
+                                    disabled={!dirty || !isValid}
+                                >
                                     Review
                                 </Button>
                             </div>

@@ -9,6 +9,7 @@ import NFTAuthenticity from '../components/tokens/NFTAuthenticity';
 import { appContext } from '../../AppContext';
 import { MinimaToken } from '../../@types/minima';
 import KeyValue from '../../components/UI/KeyValue';
+import CardContent from '../../components/UI/CardContent';
 
 const TokenDetail = () => {
     const navigate = useNavigate();
@@ -83,8 +84,8 @@ const TokenDetail = () => {
                         document.body
                     )}
                 {viewingToken && (
-                    <Card>
-                        <>
+                    <CardContent
+                        header={
                             <div className="bg-white flex gap-4 rounded-lg">
                                 {viewingToken.tokenid === '0x00' && (
                                     <div className="relative">
@@ -182,77 +183,83 @@ const TokenDetail = () => {
                                     )}
                                 </div>
                             </div>
-                            <div className="mt-4 divide-solid divide-y-4">
-                                <div className="flex flex-col divide-solid divide-y-2">
-                                    {viewingToken.tokenid === '0x00' && (
-                                        <KeyValue title="Name" value={viewingToken.token} />
-                                    )}
-                                    {viewingToken.tokenid !== '0x00' && (
+                        }
+                        content={
+                            <>
+                                <div className="mt-4 divide-solid divide-y-4">
+                                    <div className="flex flex-col divide-solid divide-y-2">
+                                        {viewingToken.tokenid === '0x00' && (
+                                            <KeyValue title="Name" value={viewingToken.token} />
+                                        )}
+                                        {viewingToken.tokenid !== '0x00' && (
+                                            <KeyValue
+                                                title="Name"
+                                                value={viewingToken.token.name ? viewingToken.token.name : 'N/A'}
+                                            />
+                                        )}
+
+                                        {viewingToken.tokenid === '0x00' && (
+                                            <KeyValue title="Description" value="Minima's Official Token" />
+                                        )}
+                                        {viewingToken.tokenid !== '0x00' && (
+                                            <KeyValue
+                                                title="Description"
+                                                value={
+                                                    viewingToken.token.description
+                                                        ? viewingToken.token.description
+                                                        : 'N/A'
+                                                }
+                                            />
+                                        )}
+
+                                        <KeyValue title="Token ID" value={viewingToken.tokenid} />
+
+                                        <KeyValue title="Total Minted" value={viewingToken.total} />
+
+                                        <KeyValue title="Total Coins" value={viewingToken.coins} />
+
+                                        {viewingToken.tokenid !== '0x00' && (
+                                            <KeyValue
+                                                title="Web Validation"
+                                                value={
+                                                    <>
+                                                        {viewingToken.token.tokenid !== '0x00' &&
+                                                        viewingToken.token.webvalidate &&
+                                                        !!viewingToken.token.webvalidate.length ? (
+                                                            <a
+                                                                className="hover:cursor-pointer text-blue-400 hover:underline"
+                                                                href={viewingToken.token.webvalidate}
+                                                                target="_blank"
+                                                            >
+                                                                {viewingToken.token.webvalidate}
+                                                            </a>
+                                                        ) : (
+                                                            'N/A'
+                                                        )}
+                                                    </>
+                                                }
+                                            />
+                                        )}
+                                    </div>
+
+                                    <div className="flex flex-col divide-solid divide-y-2">
                                         <KeyValue
-                                            title="Name"
-                                            value={viewingToken.token.name ? viewingToken.token.name : 'N/A'}
+                                            title="Sendable"
+                                            value={viewingToken.sendable ? viewingToken.sendable : 'N/A'}
                                         />
-                                    )}
-
-                                    {viewingToken.tokenid === '0x00' && (
-                                        <KeyValue title="Description" value="Minima's Official Token" />
-                                    )}
-                                    {viewingToken.tokenid !== '0x00' && (
                                         <KeyValue
-                                            title="Description"
-                                            value={
-                                                viewingToken.token.description ? viewingToken.token.description : 'N/A'
-                                            }
+                                            title="Confirmed"
+                                            value={viewingToken.confirmed ? viewingToken.confirmed : 'N/A'}
                                         />
-                                    )}
-
-                                    <KeyValue title="Token ID" value={viewingToken.tokenid} />
-
-                                    <KeyValue title="Total Minted" value={viewingToken.total} />
-
-                                    <KeyValue title="Total Coins" value={viewingToken.coins} />
-
-                                    {viewingToken.tokenid !== '0x00' && (
                                         <KeyValue
-                                            title="Web Validation"
-                                            value={
-                                                <>
-                                                    {viewingToken.token.tokenid !== '0x00' &&
-                                                    viewingToken.token.webvalidate &&
-                                                    !!viewingToken.token.webvalidate.length ? (
-                                                        <a
-                                                            className="hover:cursor-pointer text-blue-400 hover:underline"
-                                                            href={viewingToken.token.webvalidate}
-                                                            target="_blank"
-                                                        >
-                                                            {viewingToken.token.webvalidate}
-                                                        </a>
-                                                    ) : (
-                                                        'N/A'
-                                                    )}
-                                                </>
-                                            }
+                                            title="Unconfirmed"
+                                            value={viewingToken.unconfirmed ? viewingToken.unconfirmed : 'N/A'}
                                         />
-                                    )}
+                                    </div>
                                 </div>
-
-                                <div className="flex flex-col divide-solid divide-y-2">
-                                    <KeyValue
-                                        title="Sendable"
-                                        value={viewingToken.sendable ? viewingToken.sendable : 'N/A'}
-                                    />
-                                    <KeyValue
-                                        title="Confirmed"
-                                        value={viewingToken.confirmed ? viewingToken.confirmed : 'N/A'}
-                                    />
-                                    <KeyValue
-                                        title="Unconfirmed"
-                                        value={viewingToken.unconfirmed ? viewingToken.unconfirmed : 'N/A'}
-                                    />
-                                </div>
-                            </div>
-                        </>
-                    </Card>
+                            </>
+                        }
+                    />
                 )}
             </>
         </Grid>

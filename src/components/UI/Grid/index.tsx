@@ -6,7 +6,7 @@ interface IProps {
     variant: 'sm' | 'lg';
 }
 const Grid = ({ title, children, variant }: IProps) => {
-    let base = `grid grid-cols-[1fr_minmax(0,760px)_1fr] grid-rows-1 pt-4 h-[calc(100vh_-_56px)] overflow-y-scroll`;
+    let base = `grid grid-cols-[1fr_minmax(0,760px)_1fr] grid-rows-1 pt-4 h-[calc(100vh_-_56px)]`;
     if (variant === 'sm') {
         base = 'grid grid-cols-[1fr_minmax(0,560px)_1fr] grid-rows-1 pt-4';
     }
