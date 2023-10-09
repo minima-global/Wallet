@@ -101,11 +101,10 @@ select {
 }
 
 .active {
-  background-color: var(--background-color);
-  border-radius: 4px;
   color: #FFFFFF;
   fill: #FFA010;
   padding: 8px; 
+  background-color: var(--core-black-100);
 }
 
 .temporary-pulse {

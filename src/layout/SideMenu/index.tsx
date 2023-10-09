@@ -20,11 +20,11 @@ const SideMenu = () => {
                 <h1 className="text-white text-lg">Wallet</h1>
             </header>
 
-            <main className="flex flex-col gap-4 mt-4 px-2">
+            <main className="flex flex-col gap-2 mt-4">
                 <NavLink
                     onClick={() => setOpenDrawer(false)}
                     to="/balance"
-                    className={`${({ isActive }: any) => (isActive ? 'active' : '')} flex items-center gap-2 px-2`}
+                    className={`flex items-center gap-2 px-3 py-2`}
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
                         <path d="M240-160q-66 0-113-47T80-320v-320q0-66 47-113t113-47h480q66 0 113 47t47 113v320q0 66-47 113t-113 47H240Zm0-480h480q22 0 42 5t38 16v-21q0-33-23.5-56.5T720-720H240q-33 0-56.5 23.5T160-640v21q18-11 38-16t42-5Zm-74 130 445 108q9 2 18 0t17-8l139-116q-11-15-28-24.5t-37-9.5H240q-26 0-45.5 13.5T166-510Z" />
@@ -34,7 +34,7 @@ const SideMenu = () => {
                 <NavLink
                     onClick={() => setOpenDrawer(false)}
                     to="/send"
-                    className={`${({ isActive }: any) => (isActive ? 'active' : '')} flex items-center gap-2 px-2`}
+                    className={`${({ isActive }: any) => (isActive ? 'active' : '')} flex items-center gap-2 px-3 py-2`}
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
                         <path d="M320-160q-117 0-198.5-81.5T40-440q0-107 70.5-186.5T287-718l-63-66 56-56 160 160-160 160-56-57 59-59q-71 14-117 69t-46 127q0 83 58.5 141.5T320-240h120v80H320Zm200-360v-280h360v280H520Zm0 360v-280h360v280H520Zm80-80h200v-120H600v120Z" />
@@ -44,7 +44,7 @@ const SideMenu = () => {
                 <NavLink
                     onClick={() => setOpenDrawer(false)}
                     to="/receive"
-                    className={`${({ isActive }: any) => (isActive ? 'active' : '')} flex items-center gap-2 px-2`}
+                    className={`${({ isActive }: any) => (isActive ? 'active' : '')} flex items-center gap-2 px-3 py-2`}
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
                         <path d="m280-120-56-56 63-66q-106-12-176.5-91.5T40-520q0-117 81.5-198.5T320-800h120v80H320q-83 0-141.5 58.5T120-520q0 72 46 127t117 69l-59-59 56-57 160 160-160 160Zm240-40v-280h360v280H520Zm0-360v-280h360v280H520Zm80-80h200v-120H600v120Z" />
@@ -54,7 +54,7 @@ const SideMenu = () => {
                 <NavLink
                     onClick={() => setOpenDrawer(false)}
                     to="/validate"
-                    className={`${({ isActive }: any) => (isActive ? 'active' : '')} flex items-center gap-2 px-2`}
+                    className={`${({ isActive }: any) => (isActive ? 'active' : '')} flex items-center gap-2 px-3 py-2`}
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
                         <path d="M517-518 347-688l57-56 113 113 227-226 56 56-283 283Zm43 458-280-78v58H40v-440h318l248 92q33 12 53.5 42t20.5 66h80q50 0 85 33t35 87v40L560-60ZM120-160h80v-280h-80v280Zm438 16 238-74q-3-11-13.5-16.5T760-240H568q-31 0-56-4t-54-14l-69-24 23-76 80 26q18 6 42 9t66 3q0-11-6.5-21T578-354l-234-86h-64v220l278 76ZM200-300Zm400-20Zm-400 20Zm80 0Z" />
@@ -64,7 +64,7 @@ const SideMenu = () => {
                 <NavLink
                     onClick={() => setOpenDrawer(false)}
                     to="/status"
-                    className={`${({ isActive }: any) => (isActive ? 'active' : '')} flex items-center gap-2 px-2`}
+                    className={`${({ isActive }: any) => (isActive ? 'active' : '')} flex items-center gap-2 px-3 py-2`}
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
                         <path d="M438-120 296-262l57-56 85 85 169-170 57 57-226 226ZM200-760v40h560v-40H200Zm124 120 12 40h288l12-40H324Zm12 120q-26 0-47-15.5T260-576l-20-64h-40q-33 0-56.5-23.5T120-720v-120h720v120q0 33-23.5 56.5T760-640h-40l-26 68q-9 23-29 37.5T620-520H336ZM200-760v40-40Z" />
@@ -74,7 +74,7 @@ const SideMenu = () => {
                 <NavLink
                     onClick={() => setOpenDrawer(false)}
                     to="/tokencreate"
-                    className={`${({ isActive }: any) => (isActive ? 'active' : '')} flex items-center gap-2 px-2`}
+                    className={`${({ isActive }: any) => (isActive ? 'active' : '')} flex items-center gap-2 px-3 py-2`}
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
                         <path d="M167-120q-21 5-36.5-10.5T120-167l40-191 198 198-191 40Zm191-40L160-358l458-458q23-23 57-23t57 23l84 84q23 23 23 57t-23 57L358-160Zm317-600L261-346l85 85 414-414-85-85Z" />
@@ -84,7 +84,7 @@ const SideMenu = () => {
                 <NavLink
                     onClick={() => setOpenDrawer(false)}
                     to="/nfts"
-                    className={`${({ isActive }: any) => (isActive ? 'active' : '')} flex items-center gap-2 px-2`}
+                    className={`${({ isActive }: any) => (isActive ? 'active' : '')} flex items-center gap-2 px-3 py-2`}
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
                         <path d="M560-120q-17 0-28.5-11.5T520-160q0-17 11.5-28.5T560-200q47 0 83.5-18.5T680-260q0-14-13-26t-36-22l59-59q32 19 51 45t19 62q0 66-63 103t-137 37ZM183-426q-29-17-46-39.5T120-520q0-42 31-70.5T262-654q63-29 80.5-40.5T360-720q0-16-19.5-28T280-760q-25 0-42 6t-31 20q-11 11-27 13t-29-9q-13-10-15-26t9-29q19-23 54.5-39t80.5-16q72 0 116 32.5t44 87.5q0 39-29 70t-117 69q-58 25-76 37t-18 24q0 9 11.5 17.5T243-486l-60 60Zm571-118L584-714l42-42q24-24 57.5-24t56.5 24l56 56q24 23 24 56.5T796-586l-42 42ZM240-200h56l288-288-56-56-288 288v56Zm-80 80v-170l368-368 170 170-368 368H160Zm368-424 56 56-56-56Z" />
@@ -94,7 +94,7 @@ const SideMenu = () => {
                 <NavLink
                     onClick={() => setOpenDrawer(false)}
                     to="/history"
-                    className={`${({ isActive }: any) => (isActive ? 'active' : '')} flex items-center gap-2 px-2`}
+                    className={`${({ isActive }: any) => (isActive ? 'active' : '')} flex items-center gap-2 px-3 py-2`}
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
                         <path d="M240-80q-50 0-85-35t-35-85v-120h120v-560l60 60 60-60 60 60 60-60 60 60 60-60 60 60 60-60 60 60 60-60v680q0 50-35 85t-85 35H240Zm480-80q17 0 28.5-11.5T760-200v-560H320v440h360v120q0 17 11.5 28.5T720-160ZM360-600v-80h240v80H360Zm0 120v-80h240v80H360Zm320-120q-17 0-28.5-11.5T640-640q0-17 11.5-28.5T680-680q17 0 28.5 11.5T720-640q0 17-11.5 28.5T680-600Zm0 120q-17 0-28.5-11.5T640-520q0-17 11.5-28.5T680-560q17 0 28.5 11.5T720-520q0 17-11.5 28.5T680-480ZM240-160h360v-80H200v40q0 17 11.5 28.5T240-160Zm-40 0v-80 80Z" />
@@ -103,44 +103,8 @@ const SideMenu = () => {
                 </NavLink>
             </main>
 
-            <footer className="bg-black flex items-center p-4">
-                <svg width="142" height="26" viewBox="0 0 142 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <g clipPath="url(#clip0_603_1930)">
-                        <path
-                            d="M23.1551 6.95947L21.8783 12.5957L20.2454 5.79548L14.5241 3.47974L12.9772 10.2922L11.6144 2.30349L5.89313 0L0 26H6.24918L8.05395 18.0113L9.41674 26H15.6782L17.2129 19.1876L18.8458 26H25.0949L28.8886 9.26296L23.1551 6.95947Z"
-                            fill="#F9F9FA"
-                        />
-                        <path
-                            d="M66.1999 11.9953C66.1999 11.5351 65.8262 11.1621 65.3651 11.1621C64.904 11.1621 64.5302 11.5351 64.5302 11.9953V25.1668C64.5302 25.627 64.904 26 65.3651 26C65.8262 26 66.1999 25.627 66.1999 25.1668V11.9953Z"
-                            fill="#F9F9FA"
-                        />
-                        <path
-                            d="M97.703 11.9953C97.703 11.5351 97.3293 11.1621 96.8682 11.1621C96.4071 11.1621 96.0333 11.5351 96.0333 11.9953V25.1668C96.0333 25.627 96.4071 26 96.8682 26C97.3293 26 97.703 25.627 97.703 25.1668V11.9953Z"
-                            fill="#F9F9FA"
-                        />
-                        <path
-                            d="M48.9007 19.5184L43.5846 11.5542C43.425 11.3091 43.1549 11.1621 42.8603 11.1621H42.6638C42.2096 11.1621 41.829 11.5419 41.829 11.9953V25.1668C41.829 25.6202 42.2096 26 42.6638 26C43.1181 26 43.4987 25.6202 43.4987 25.1668V14.1395L48.2255 21.0622C48.4342 21.3685 48.6675 21.4788 48.9007 21.4788C49.134 21.4788 49.3673 21.3808 49.576 21.0622L54.3028 14.1395V25.1668C54.3028 25.6202 54.6834 26 55.1376 26C55.5919 26 55.9725 25.6202 55.9725 25.1668V11.9953C55.9725 11.5419 55.5919 11.1621 55.1376 11.1621H54.9412C54.6465 11.1621 54.3764 11.3091 54.2168 11.5542L48.9007 19.5184Z"
-                            fill="#F9F9FA"
-                        />
-                        <path
-                            d="M113.332 19.5184L108.016 11.5542C107.857 11.3091 107.587 11.1621 107.292 11.1621H107.095C106.641 11.1621 106.261 11.5419 106.261 11.9953V25.1668C106.261 25.6202 106.641 26 107.095 26C107.55 26 107.93 25.6202 107.93 25.1668V14.1395L112.657 21.0622C112.866 21.3685 113.099 21.4788 113.332 21.4788C113.566 21.4788 113.799 21.3808 114.008 21.0622L118.734 14.1395V25.1668C118.734 25.6202 119.115 26 119.569 26C120.024 26 120.404 25.6202 120.404 25.1668V11.9953C120.404 11.5419 120.024 11.1621 119.569 11.1621H119.373C119.078 11.1621 118.808 11.3091 118.648 11.5542L113.332 19.5184Z"
-                            fill="#F9F9FA"
-                        />
-                        <path
-                            d="M85.8061 23.2799L76.549 11.4929C76.3894 11.2846 76.1316 11.1621 75.8615 11.1621H75.6037C75.1494 11.1621 74.7688 11.5419 74.7688 11.9953V25.1668C74.7688 25.6202 75.1494 26 75.6037 26C76.0579 26 76.4385 25.6202 76.4385 25.1668V13.8822L85.5729 25.5099L85.6957 25.6692C85.8553 25.8775 86.1131 26 86.3832 26H86.641C87.0953 26 87.4759 25.6202 87.4759 25.1668V11.9953C87.4759 11.5419 87.0953 11.1621 86.641 11.1621C86.1867 11.1621 85.8061 11.5419 85.8061 11.9953V23.2799Z"
-                            fill="#F9F9FA"
-                        />
-                        <path
-                            d="M141.938 24.885C141.938 24.885 136.094 12.1301 135.935 11.7992C135.775 11.4684 135.431 11.1621 134.879 11.1621C134.326 11.1621 133.983 11.4562 133.823 11.7992C133.663 12.1423 127.819 24.885 127.819 24.885C127.635 25.2771 127.819 25.7427 128.212 25.9265C128.605 26.1103 129.072 25.9265 129.256 25.5344L130.815 22.0669H138.967L140.526 25.5344C140.711 25.9265 141.177 26.098 141.57 25.9265C141.963 25.7427 142.135 25.2771 141.963 24.885H141.938ZM134.879 20.5353H131.49L134.879 13.0123L138.267 20.5353H134.879Z"
-                            fill="#F9F9FA"
-                        />
-                    </g>
-                    <defs>
-                        <clipPath id="clip0_603_1930">
-                            <rect width="142" height="26" fill="white" />
-                        </clipPath>
-                    </defs>
-                </svg>
+            <footer className="flex items-center p-4">
+                <img className="w-[128px]" alt="" src="./assets/minima-landscape.png" />
             </footer>
         </div>
     );

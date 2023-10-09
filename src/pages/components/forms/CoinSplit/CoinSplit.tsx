@@ -32,7 +32,7 @@ const CoinSplit = () => {
 
     return (
         <Formik
-            initialValues={{ token: wallet[0], burn: '', password: '' }}
+            initialValues={{ token: wallet[0], burn: '', password: '', coinSplit: true }}
             onSubmit={async (formInputs) => {
                 setStep(0);
                 setLoading(true);
@@ -345,14 +345,19 @@ const CoinSplit = () => {
                                 disabled={isSubmitting}
                                 placeholder="Burn"
                                 {...getFieldProps('burn')}
-                                error={touched.burn && errors.burn ? errors.burn : false}
+                                error={touched.burn && errors.burn ? errors.burn.toString() : false}
                                 extraClass="mt-2"
                             />
                             <p className="text-slate-500 text-sm mb-2 mt-2">
                                 Prioritize your transaction by adding a burn.
                             </p>
 
-                            <Button onClick={() => setStep(1)} variant="primary" disabled={!dirty || !isValid}>
+                            <Button
+                                extraClass="mt-8 md:mt-16"
+                                onClick={() => setStep(1)}
+                                variant="primary"
+                                disabled={!dirty || !isValid}
+                            >
                                 Review
                             </Button>
                         </div>

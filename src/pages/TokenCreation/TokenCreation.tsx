@@ -457,7 +457,12 @@ const TokenCreation = () => {
                                             Prioritize your transaction by adding a burn.
                                         </p>
 
-                                        <Button onClick={() => setStep(1)} variant="primary" disabled={!isValid}>
+                                        <Button
+                                            extraClass="mt-8 md:mt-16"
+                                            onClick={() => setStep(1)}
+                                            variant="primary"
+                                            disabled={!isValid}
+                                        >
                                             Review
                                         </Button>
                                     </div>
