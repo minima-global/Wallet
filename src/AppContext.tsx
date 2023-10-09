@@ -1,12 +1,12 @@
 import { createContext, useRef, useState, useEffect, ReactElement } from 'react';
 
 import * as rpc from './__minima__/libs/RPC';
-import * as fileManager from './__minima__/libs/fileManager';
 import { makeTokenImage } from './shared/functions';
-import { MinimaToken, Scripts, Token } from './@types/minima';
+import { MinimaToken, Scripts } from './@types/minima';
 import { sql } from './__minima__/libs/SQL';
-import { DetailsTxPOW, TxPOW } from './types/minima';
-import { getTxPOWDetailsType } from './shared/utils';
+import { TxPOW } from './types/minima';
+import splitDataByDate from './shared/utils/_txpowHelperFunctions/splitDataByDate';
+import extractHistoryDetails from './shared/utils/_txpowHelperFunctions/extractHistoryDetails';
 
 export const appContext = createContext({} as any);
 
@@ -27,17 +27,32 @@ const AppProvider = ({ children }: IProps) => {
     const [balance, setBalance] = useState<MinimaToken[]>([]);
     const [history, setHistory] = useState<TxPOW[]>([]);
 
-    const [historyFacade, setHistoryFacade] = useState<
-        | {
-              txpowid: string;
-              tokenName: string;
-              amount: string;
-              address: string;
-              tokenid: string;
-              timeMilli: string;
-          }[]
-        | null
-    >();
+    const [historyFacade, setHistoryFacade] = useState<{
+        [key: string]: {
+            txpowid: string;
+            tokenName: string;
+            amount: string;
+            tokenid: string;
+            timeMilli: string;
+        }[];
+    }>();
+    const [historyDetails, setHistoryDetails] = useState<
+        {
+            txpowid: string;
+            amount: string;
+            type: string;
+            sentTo0x: string;
+            sentToMx: string;
+            tokenName: string;
+            blockPosted: number;
+            date: string;
+            timemilli: string;
+            burn: number;
+            inputs: any[];
+            outputs: any[];
+            stateVars: any[];
+        }[]
+    >([]);
     const [simpleAddresses, setSimpleAddresses] = useState<Scripts[]>([]);
     const [avgBurn, setAvgBurn] = useState(0);
     const [vaultLocked, setVaultLocked] = useState<null | boolean>(null);
@@ -171,47 +186,13 @@ const AppProvider = ({ children }: IProps) => {
             setSimpleAddresses(allSimpleAddresses);
         });
     };
-    /**
-     * {
-	txpowid: string;
-	tokenName: string;
-	amount: string;
-	address: string;
-	tokenid: string;
-	timeMilli: string;
-}
-     */
 
     const getHistory = () => {
         MDS.cmd('history', (resp: any) => {
             if (resp.status) {
-                const txpowDetail = resp.response.details;
-                setHistoryFacade(
-                    resp.response.txpows.map((_t: any, i: number) => {
-                        const transactionType = getTxPOWDetailsType(txpowDetail[i]);
-                        const valueTransfer = transactionType === 'normal';
-                        const custom = transactionType === 'custom';
-                        const amount = custom
-                            ? ''
-                            : valueTransfer
-                            ? txpowDetail[i].difference[Object.keys(txpowDetail[i].difference)[0]]
-                            : txpowDetail[i].difference['0xFF'];
-
-                        return {
-                            txpowid: _t.txpowid,
-                            tokenName:
-                                _t.body.txn.outputs[0].tokenid === '0x00'
-                                    ? 'Minima'
-                                    : _t.body.txn.outputs[0].token
-                                    ? _t.body.txn.outputs[0].token.name.name
-                                    : 'N/A',
-                            amount: amount,
-                            tokenid: _t.body.txn.outputs[0].tokenid,
-                            timeMilli: _t.header.timemilli,
-                        };
-                    })
-                );
-                setHistory(resp.response);
+                setHistoryFacade(splitDataByDate(resp.response.txpows, resp.response.details));
+                setHistoryDetails(extractHistoryDetails(resp.response.txpows, resp.response.details));
+                setHistory(resp.response.txpows);
             }
         });
     };
@@ -310,6 +291,7 @@ const AppProvider = ({ children }: IProps) => {
                 simpleAddresses,
                 history,
                 historyFacade,
+                historyDetails,
                 getHistory,
 
                 notificationMessage,

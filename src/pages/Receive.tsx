@@ -133,7 +133,7 @@ const Receive = () => {
                             document.body
                         )}
                     <CardContent
-                        className="p-0"
+                        className="!p-0"
                         header={
                             <>
                                 <div className="flex justify-center">

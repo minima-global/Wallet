@@ -1,13 +1,11 @@
-import React, { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { callStatus } from '../minima/rpc-commands';
 
 import Grid from '../components/UI/Grid';
-import Card from '../components/UI/Card';
 import { Status as NodeStatus } from '../@types/minima';
 import { appContext } from '../AppContext';
 import KeyValue from '../components/UI/KeyValue';
 import { createPortal } from 'react-dom';
-import Button from '../components/UI/Button';
 import CardContent from '../components/UI/CardContent';
 
 const Status = () => {
@@ -26,18 +24,25 @@ const Status = () => {
             {showFullStatus &&
                 createPortal(
                     <div className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn">
-                        <Grid variant="lg" title={<>Full Status</>}>
+                        <Grid
+                            variant="lg"
+                            title={
+                                <>
+                                    <svg
+                                        className="fill-white hover:cursor-pointer"
+                                        onClick={() => setShowFullStatus(false)}
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        height="24"
+                                        viewBox="0 -960 960 960"
+                                        width="24"
+                                    >
+                                        <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+                                    </svg>
+                                    Full Status
+                                </>
+                            }
+                        >
                             <div className="flex flex-col gap-4 mx-4 rounded bg-white bg-opacity-90 p-4 mb-4 shadow-sm">
-                                <svg
-                                    onClick={() => setShowFullStatus(false)}
-                                    className="hover:cursor-pointer"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    height="24"
-                                    viewBox="0 -960 960 960"
-                                    width="24"
-                                >
-                                    <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
-                                </svg>
                                 <div className="overflow-scroll">
                                     <pre className="text-black text-sm break-all max-h-[calc(100vh_-_56px)]">
                                         {JSON.stringify(status, null, 2)}

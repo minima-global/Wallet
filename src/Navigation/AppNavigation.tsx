@@ -11,7 +11,7 @@ import SideMenu from '../layout/SideMenu';
 import Offline from '../pages/Offline';
 import NFTs from '../pages/NFT';
 
-import CreateNFT from '../pages/components/nfts/CreateNFT';
+import CreateNFT from '../pages/NFT/CreateNFT';
 import History from '../pages/History';
 import HistoryTransactionDetailSimple from '../pages/HistoryTransactionDetailSimple';
 import Notification from '../components/UI/Notification';

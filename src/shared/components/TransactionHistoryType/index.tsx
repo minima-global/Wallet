@@ -1,10 +1,7 @@
 import { useEffect, useState } from 'react';
-import { MiTokenNameAmountWrapper } from '../layout/MiToken';
-import TransactionAmount from '../../../pages/components/history/TransactionAmount';
 
 import * as types from '../../../types/minima';
 import * as utils from '../../../shared/utils';
-import TransactionImage from '../../../pages/components/history/TransactionImage';
 interface IProps {
     tokenName: string;
     amount: types.DetailsTxPOW;
@@ -37,7 +34,7 @@ const TransactionHistoryType = ({ tokenName, amount, address }: IProps) => {
 
     return (
         <>
-            <TransactionImage type={imageType} />
+            {/* <TransactionImage type={imageType} />
             <MiTokenNameAmountWrapper>
                 {transactionType && transactionType === 'custom' && (
                     <>
@@ -63,7 +60,7 @@ const TransactionHistoryType = ({ tokenName, amount, address }: IProps) => {
                         <TransactionAmount address={address} amount={amount.difference['0xFF']} />
                     </>
                 )}
-            </MiTokenNameAmountWrapper>
+            </MiTokenNameAmountWrapper> */}
         </>
     );
 };

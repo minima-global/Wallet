@@ -3,27 +3,27 @@ import { Stack } from '@mui/material';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
-import { isValidURLAll, isValidURLSecureOnly } from '../../../../shared/functions';
+import { isValidURLAll, isValidURLSecureOnly } from '../../../shared/functions';
 
 import Decimal from 'decimal.js';
 
-import * as rpc from '../../../../__minima__/libs/RPC';
+import * as rpc from '../../../__minima__/libs/RPC';
 
-import Card from '../../../../components/UI/Card';
-import Input from '../../../../components/UI/Input';
-import Button from '../../../../components/UI/Button';
-import Grid from '../../../../components/UI/Grid';
-import KeyValue from '../../../../components/UI/KeyValue';
+import Card from '../../../components/UI/Card';
+import Input from '../../../components/UI/Input';
+import Button from '../../../components/UI/Button';
+import Grid from '../../../components/UI/Grid';
+import KeyValue from '../../../components/UI/KeyValue';
 
 import Lottie from 'lottie-react';
-import Success from '../../../../assets/lottie/Success.json';
-import Loading from '../../../../assets/lottie/Loading.json';
+import Success from '../../../assets/lottie/Success.json';
+import Loading from '../../../assets/lottie/Loading.json';
 
-import { appContext } from '../../../../AppContext';
+import { appContext } from '../../../AppContext';
 import { createPortal } from 'react-dom';
-import useIsVaultLocked from '../../../../hooks/useIsVaultLocked';
+import useIsVaultLocked from '../../../hooks/useIsVaultLocked';
 import { useNavigate } from 'react-router-dom';
-import CardContent from '../../../../components/UI/CardContent';
+import CardContent from '../../../components/UI/CardContent';
 
 const CreateNFTForm = () => {
     const mySchema = useMySchema();

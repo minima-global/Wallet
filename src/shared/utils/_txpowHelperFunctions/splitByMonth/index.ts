@@ -1,4 +1,4 @@
-import * as types from '../../../types/minima';
+import * as types from '../../../../types/minima';
 import { format } from 'date-fns';
 
 export const extractByMonthAndDay = (txpows: { detail: types.DetailsTxPOW; txpow: types.TxPOW }[]): Map<any, any> => {

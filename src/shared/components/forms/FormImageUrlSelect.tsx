@@ -1,11 +1,10 @@
 /**
  * Select either an url or to upload an image for all token creation forms
  */
-import { Box, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
+import { Box } from '@mui/material';
 import React from 'react';
 import AddImage from '../../../pages/components/forms/AddImage';
 import FormFieldWrapper from '../FormFieldWrapper';
-// import styles from '../../../theme/cssmodule/Components.module.css';
 import { useFormikContext } from 'formik';
 import Input from '../../../components/UI/Input';
 

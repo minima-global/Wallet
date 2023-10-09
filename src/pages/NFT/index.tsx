@@ -148,7 +148,7 @@ const NFTs = () => {
                             <div className="flex justify-between items-center">
                                 <div className="flex gap-2">
                                     <div className="bg-opacity-50 bg-white px-4 py-2">
-                                        <h6 className="text-black opacity-60 text-sm">Total collected</h6>
+                                        <h6 className="text-black opacity-60 text-sm">Total Collected</h6>
                                         <p className="text-black">{NFTs.length}</p>
                                     </div>
                                     <div className="bg-opacity-50 bg-white px-4 py-2">

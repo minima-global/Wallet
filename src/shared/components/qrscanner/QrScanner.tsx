@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 
 import Button from '../../../components/UI/Button';
 import Grid from '../../../components/UI/Grid';
-import MiError from '../layout/MiError/MiError';
 import { useFormikContext } from 'formik';
 import validateMinimaAddress from '../../../minima/commands/validateMinimaAddress/validateMinimaAddress';
 import { QrReader } from 'react-qr-reader';
@@ -83,10 +82,10 @@ const QrScanner = ({ open, closeModal }: any) => {
                                         constraints={{ facingMode: 'environment' }}
                                     />
                                     {error && (
-                                        <MiError>
+                                        <div className="text-center">
                                             <h6>Invalid Minima Address</h6>
                                             <p>{error}</p>
-                                        </MiError>
+                                        </div>
                                     )}
                                 </div>
                             )}
