@@ -11,7 +11,7 @@ const callSend = async (
     return new Promise((resolve, reject) => {
         const hasPassword = password && password.length ? password : false;
         const hasBurn = burn && parseInt(burn) > 0 ? burn : false;
-        window.MDS.cmd(
+        (window as any).MDS.cmd(
             `send amount:${amount} address:${address} tokenid:${token.tokenid} ${hasBurn ? 'burn:' + hasBurn : ''} ${
                 hasPassword ? 'password:' + hasPassword : ''
             } ${message.length > 0 ? `state:{"44":"[${message}]"}` : ''}`,
@@ -82,7 +82,7 @@ const getWalletBalance = (): Promise<MinimaToken[]> => {
 
 export const rpc = (command: string): Promise<any> => {
     return new Promise((resolve, reject) => {
-        MDS.cmd(command, (resp: any) => {
+        (window as any).MDS.cmd(command, (resp: any) => {
             if (resp.length > 0) {
                 //console.log(`multi command activity.`);
                 let success = true;

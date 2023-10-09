@@ -2,7 +2,7 @@ import Decimal from 'decimal.js';
 
 export const splitCoin = (tokenid: string, sendable: string, burn: string, password: string): Promise<2 | 3> => {
     return new Promise((resolve, reject) => {
-        window.MDS.cmd('getaddress', (resp: any) => {
+        (window as any).MDS.cmd('getaddress', (resp: any) => {
             if (resp.status) {
                 const mxAddress = resp.response.miniaddress;
 
@@ -11,7 +11,7 @@ export const splitCoin = (tokenid: string, sendable: string, burn: string, passw
                 const amountMinusBurn =
                     hasBurn && tokenid === '0x00' ? new Decimal(sendable).minus(burn).toString() : sendable;
 
-                window.MDS.cmd(
+                (window as any).MDS.cmd(
                     `send address:${mxAddress} tokenid:${tokenid} amount:${amountMinusBurn} split:${10} ${
                         hasBurn ? 'burn:' + burn : ''
                     } ${hasPassword ? 'password:' + hasPassword : ''}`,

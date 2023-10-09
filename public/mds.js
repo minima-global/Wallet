@@ -26,12 +26,11 @@ var MDS = {
     logging: false,
 
     //When debuggin you can hard set the Host and port
-    DEBUG_HOST: '127.0.0.1',
-    DEBUG_PORT: 9003,
+    DEBUG_HOST: null,
+    DEBUG_PORT: -1,
 
     //An allowed TEST Minidapp ID for SQL - can be overridden
-    DEBUG_MINIDAPPID:
-        '0x123D8114F287A5480973A5C0356A74E086EC61F765825808418560E777FCC795394BA1A9D5D96D5E9BE0835BE32D6F8FADBE82416C29D643450106352C517E2861BDD9561A41C576130AB511B410EC7986BBB77B55CADE9717841D5A0080D949E67EE6BE0358131435DAD3FD5905B51603137A9DE16FE2549753A663CCD9B231',
+    DEBUG_MINIDAPPID: '0x00',
 
     /**
      * Minima Startup - with the callback function used for all Minima messages
@@ -58,6 +57,13 @@ var MDS = {
 
             host = MDS.DEBUG_HOST;
             port = MDS.DEBUG_PORT;
+        }
+
+        // env overrides
+        if (window.DEBUG) {
+            host = window.DEBUG_HOST;
+            port = Math.floor(window.DEBUG_PORT);
+            MDS.minidappuid = window.DEBUG_UID;
         }
 
         if (MDS.minidappuid == null) {

@@ -178,7 +178,7 @@ const AppProvider = ({ children }: IProps) => {
     };
 
     const get50BlockBurnAvg = async () => {
-        window.MDS.cmd('burn', (resp: any) => {
+        (window as any).MDS.cmd('burn', (resp: any) => {
             if (resp.status) {
                 setAvgBurn(resp.response['50block'].avg);
             }
@@ -193,7 +193,7 @@ const AppProvider = ({ children }: IProps) => {
     };
 
     const getHistory = () => {
-        MDS.cmd('history', (resp: any) => {
+        (window as any).MDS.cmd('history', (resp: any) => {
             if (resp.status) {
                 setHistoryFacade(splitDataByDate(resp.response.txpows, resp.response.details));
                 setHistoryDetails(extractHistoryDetails(resp.response.txpows, resp.response.details));

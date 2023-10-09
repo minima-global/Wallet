@@ -1,13 +1,13 @@
 /**
  * Select either an url or to upload an image for all token creation forms
  */
-import { Box } from '@mui/material';
 import React from 'react';
 import AddImage from '../../../pages/components/forms/AddImage';
 import FormFieldWrapper from '../FormFieldWrapper';
 import { useFormikContext } from 'formik';
 import Input from '../../../components/UI/Input';
-
+import { Box } from '@mui/material';
+import styles from './FormImage.module.css';
 const FormImageUrlSelect = () => {
     const [imageSelection, setMyImageSelection] = React.useState<any>('CONTENTUPLOAD');
 
@@ -78,7 +78,24 @@ const FormImageUrlSelect = () => {
 
                                 marginBottom:
                                     formik.touched.url && Boolean(formik.errors.url) ? '30px!important' : '8px',
-                                maxWidth: 'max-content',
+
+                                '::after': {
+                                    display: formik.touched.url && Boolean(formik.errors.url) ? 'flex' : 'none',
+                                    content:
+                                        formik.touched.url && Boolean(formik.errors.url)
+                                            ? `"${formik.errors.url}"`
+                                            : '" "',
+                                    color: 'rgb(211, 47, 47)',
+                                    backgroundColor: '#FCBEBD',
+                                    width: '100%',
+                                    textAlign: 'center',
+                                    fontSize: '0.8rem',
+                                    fontFamily: 'Manrope-semibold',
+                                    padding: '5px',
+                                    borderBottomLeftRadius: '8px',
+                                    borderBottomRightRadius: '8px',
+                                    marginTop: '0.5px',
+                                },
                             }}
                         >
                             <AddImage formik={formik} onImageChange={onImageChange} />

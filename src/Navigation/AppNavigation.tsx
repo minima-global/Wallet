@@ -8,7 +8,6 @@ import Status from '../pages/Status';
 import Receive from '../pages/Receive';
 import TokenDetail from '../pages/Tokendetail';
 import SideMenu from '../layout/SideMenu';
-import Offline from '../pages/Offline';
 import NFTs from '../pages/NFT';
 
 import CreateNFT from '../pages/NFT/CreateNFT';

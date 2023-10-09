@@ -17,5 +17,7 @@
         "jsx": "react-jsx",
         "downlevelIteration": true
     },
-    "include": ["src", "public/mds.js"]
+    "include": ["src"],
+    "references": [{ "path": "./tsconfig.node.json" }]
+    
 }

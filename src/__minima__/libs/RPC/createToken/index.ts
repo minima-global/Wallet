@@ -14,7 +14,7 @@ export const createToken = async (data: any, amount: string, decimals: number): 
             data.url = serializer.serializeToString(xmlDoc);
         }
 
-        window.MDS.cmd(
+        (window as any).MDS.cmd(
             `tokencreate name:"${JSON.stringify(data)}" amount:"${amount}" decimals:"${decimals}`,
             (resp: any) => {
                 if (!resp.status && !resp.pending)

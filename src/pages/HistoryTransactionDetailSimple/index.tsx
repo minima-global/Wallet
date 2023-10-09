@@ -1,12 +1,7 @@
-import { Button } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import exportToCsv from '../../shared/utils/jsonToCsv';
-
-import useIsUserRunningWebView from '../../hooks/useIsUserRunningWebView';
-
-import * as types from '../../types/minima';
 
 import { appContext } from '../../AppContext';
 import { createPortal } from 'react-dom';
@@ -181,7 +176,7 @@ const HistoryTransactionDetailSimple = () => {
                                             <KeyValue title="Burn" value={_transaction ? _transaction.burn : 'N/A'} />
                                         </div>
 
-                                        {_transaction && _transaction.inputs.length && (
+                                        {_transaction && !!_transaction.inputs.length && (
                                             <div>
                                                 <div
                                                     onClick={() => setShowInputs((prevState) => !prevState)}
@@ -244,7 +239,7 @@ const HistoryTransactionDetailSimple = () => {
                                             </div>
                                         )}
 
-                                        {_transaction && _transaction.outputs.length && (
+                                        {_transaction && !!_transaction.outputs.length && (
                                             <div>
                                                 <div
                                                     onClick={() => setShowOutputs((prevState) => !prevState)}
@@ -307,7 +302,7 @@ const HistoryTransactionDetailSimple = () => {
                                             </div>
                                         )}
 
-                                        {_transaction && _transaction.stateVars.length && (
+                                        {_transaction && !!_transaction.stateVars.length && (
                                             <div>
                                                 <div
                                                     onClick={() => setShowStates((prevState) => !prevState)}

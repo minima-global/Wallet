@@ -1,9 +1,5 @@
 import React, { ReactNode } from 'react';
 
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-// import styles from '../../../theme/cssmodule/Components.module.css';
-import { Box, Stack, Typography } from '@mui/material';
-
 function isString(myString: string | ArrayBuffer | null): myString is string {
     return (myString as string).length !== undefined; // ArrayBuffer has byteLength property not length
 }

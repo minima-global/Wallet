@@ -3,7 +3,7 @@ export const consolidate = (tokenid: string, burn: string, password: string): Pr
         const hasBurn = burn && burn.length ? burn : false;
         const hasPassword = password && password.length ? password : false;
 
-        window.MDS.cmd(
+        (window as any).MDS.cmd(
             `consolidate tokenid:${tokenid} ${hasBurn ? 'burn:' + burn : ''} ${
                 hasPassword ? 'password:' + hasPassword : ''
             }`,
