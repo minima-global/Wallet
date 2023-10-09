@@ -14,7 +14,6 @@ const HistoryTransactionDetailSimple = () => {
     const navigate = useNavigate();
     const params = useParams();
     const { historyDetails, history } = useContext(appContext);
-
     const [_viewFullJson, setViewJson] = useState(false);
     const [_showInputs, setShowInputs] = useState(false);
     const [_showOutputs, setShowOutputs] = useState(false);
@@ -174,6 +173,21 @@ const HistoryTransactionDetailSimple = () => {
                                             />
                                             <KeyValue title="Date" value={_transaction ? _transaction.date : 'N/A'} />
                                             <KeyValue title="Burn" value={_transaction ? _transaction.burn : 'N/A'} />
+                                            {_transaction &&
+                                                !!_transaction.stateVars.length &&
+                                                !!_transaction.stateVars.filter((t) => t.port === 44).length &&
+                                                _transaction &&
+                                                _transaction.stateVars.length &&
+                                                _transaction.stateVars
+                                                    .filter((t) => t.port === 44)
+                                                    .map((t: any) => (
+                                                        <KeyValue
+                                                            className="!break-all !whitespace-normal"
+                                                            title="Message"
+                                                            // value={t.data.replace(/[\[\]]+/gi, ' ')}
+                                                            value="LOng messageLOng messageLOng messageLOng messageLOng messageLOng messageLOng messageLOng messageLOng messageLOng messageLOng messageLOng messageLOng messageLOng messageLOng messageLOng messageLOng messageLOng messageLOng message"
+                                                        />
+                                                    ))}
                                         </div>
 
                                         {_transaction && !!_transaction.inputs.length && (
@@ -327,11 +341,10 @@ const HistoryTransactionDetailSimple = () => {
                                                     aria-expanded={!_showStates}
                                                     className="accordion-content rounded bg-white bg-opacity-50 h-[auto] border-t-0"
                                                 >
-                                                    <li>State Variables</li>
                                                     {_transaction &&
                                                         _transaction.stateVars.map((i, index) => (
                                                             <li key={i + index} className="divide-y-2">
-                                                                <h3 className="text-black font-semibold text-sm pb-2 mx-4 underline">
+                                                                <h3 className="text-black font-semibold text-sm pb-2 mx-4 underline pt-2">
                                                                     Port{' '}
                                                                     <span className="font-bold green-good">
                                                                         {i.port}
