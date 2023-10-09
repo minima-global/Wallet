@@ -1,13 +1,18 @@
-import { FC, useContext, useState } from 'react';
+import { FC, useContext, useEffect, useState } from 'react';
 import ValueTransfer from './components/forms/ValueTransfer/ValueTransfer';
 import CoinSplit from './components/forms/CoinSplit/CoinSplit';
 import Grid from '../components/UI/Grid';
 import { appContext } from '../AppContext';
 import CardContent from '../components/UI/CardContent';
+import Consolidate from './Consolidate';
 
 const Send: FC = () => {
-    const { setOpenDrawer } = useContext(appContext);
+    const { setOpenDrawer, getBalance } = useContext(appContext);
     const [formUtility, setFormUtility] = useState('value');
+
+    useEffect(() => {
+        getBalance();
+    }, []);
 
     const handleUtilityChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         setFormUtility(event.target.value);
@@ -47,6 +52,9 @@ const Send: FC = () => {
                                 <option id="split" value="split">
                                     Split coins
                                 </option>
+                                <option id="consolidate" value="consolidate">
+                                    Consolidate
+                                </option>
                             </select>
 
                             <svg
@@ -81,6 +89,7 @@ const Send: FC = () => {
                     <>
                         {formUtility === 'value' && <ValueTransfer />}
                         {formUtility === 'split' && <CoinSplit />}
+                        {formUtility === 'consolidate' && <Consolidate />}
                     </>
                 }
             />

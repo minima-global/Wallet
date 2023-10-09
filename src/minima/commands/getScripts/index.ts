@@ -2,7 +2,7 @@ import { Scripts } from '../../../@types/minima';
 
 export const getScripts = (): Promise<Scripts[]> => {
     return new Promise((resolve, reject) => {
-        MDS.cmd('scripts', (res) => {
+        window.MDS.cmd('scripts', (res: any) => {
             if (!res.status) reject(res.error ? res.error : 'RPC Failed');
 
             resolve(res.response);

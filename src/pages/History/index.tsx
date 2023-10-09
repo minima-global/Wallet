@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 
 import { appContext } from '../../AppContext';
@@ -45,7 +45,7 @@ const History = () => {
                 historyFacade[key].filter((_t: any) => _t.txpowid.includes(filterText)).length > 0
             ) {
                 elements.push(
-                    <>
+                    <React.Fragment key={Math.random()}>
                         {historyFacade[key] &&
                             historyFacade[key].filter((_t: any) => _t.txpowid.includes(filterText)).length > 0 && (
                                 <div>
@@ -165,7 +165,7 @@ const History = () => {
                                     </ul>
                                 </div>
                             )}
-                    </>
+                    </React.Fragment>
                 );
             }
         }

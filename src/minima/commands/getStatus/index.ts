@@ -2,7 +2,7 @@ import { Status } from '../../../@types/minima';
 
 export const getStatus = (): Promise<Status> => {
     return new Promise((resolve, reject) => {
-        MDS.cmd('status', (res) => {
+        window.MDS.cmd('status', (res: any) => {
             if (!res.status) reject(res.error ? res.error : 'RPC Failed');
 
             resolve(res.response);

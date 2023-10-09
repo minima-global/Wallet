@@ -1,6 +1,6 @@
 import { Drawer } from '@mui/material';
 import { useContext } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
 
 import Balance from '../pages/Balance';
 import Send from '../pages/Send';
@@ -63,7 +63,8 @@ const AppNavigation = () => {
                 )}
             <Notification />
             <main id="navigation" className="md:ml-[240px]">
-                <Routes>
+                <Outlet />
+                {/* <Routes>
                     <Route path="/" element={<Navigate replace to="/balance" />} />
                     <Route path="/balance" element={<Balance />} />
                     <Route path="balance/:tokenid" element={<TokenDetail />} />
@@ -79,7 +80,7 @@ const AppNavigation = () => {
                     </Route>
                     <Route path="/offline" element={<Offline />} />
                     <Route path="*" element={<Navigate replace to="/balance" />} />
-                </Routes>
+                </Routes> */}
             </main>
             <div>
                 <Drawer

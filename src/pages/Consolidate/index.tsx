@@ -3,24 +3,24 @@ import Decimal from 'decimal.js';
 import * as Yup from 'yup';
 import { useContext, useState } from 'react';
 
-import Button from '../../../../components/UI/Button';
-import { splitCoin } from '../../../../minima/utils';
-import useIsVaultLocked from '../../../../hooks/useIsVaultLocked';
-import WalletSelect from '../../WalletSelect';
-import { appContext } from '../../../../AppContext';
-import Input from '../../../../components/UI/Input';
-import Grid from '../../../../components/UI/Grid';
+import Button from '../../components/UI/Button';
+import useIsVaultLocked from '../../hooks/useIsVaultLocked';
+import WalletSelect from '../components/WalletSelect';
+import { appContext } from '../../AppContext';
+import Input from '../../components/UI/Input';
+import Grid from '../../components/UI/Grid';
 
 import Lottie from 'lottie-react';
-import Success from '../../../../assets/lottie/Success.json';
-import Loading from '../../../../assets/lottie/Loading.json';
+import Success from '../../assets/lottie/Success.json';
+import Loading from '../../assets/lottie/Loading.json';
 import { createPortal } from 'react-dom';
-import KeyValue from '../../../../components/UI/KeyValue';
+import KeyValue from '../../components/UI/KeyValue';
 
-import TogglePasswordIcon from '../../../../components/UI/TogglePasswordIcon/TogglePasswordIcon';
-import Logs from '../../../../components/UI/Logs';
+import * as rpc from '../../__minima__/libs/RPC';
+import TogglePasswordIcon from '../../components/UI/TogglePasswordIcon/TogglePasswordIcon';
+import Logs from '../../components/UI/Logs';
 
-const CoinSplit = () => {
+const Consolidate = () => {
     const mySchema = useFormSchema();
     const { balance: wallet, avgBurn } = useContext(appContext);
 
@@ -44,12 +44,7 @@ const CoinSplit = () => {
                 }
 
                 try {
-                    const resp = await splitCoin(
-                        formInputs.token.tokenid,
-                        formInputs.token.sendable,
-                        formInputs.burn,
-                        formInputs.password
-                    );
+                    const resp = await rpc.consolidate(formInputs.token.tokenid, formInputs.burn, formInputs.password);
                     setLoading(false);
                     setStep(resp);
                 } catch (error) {
@@ -92,11 +87,7 @@ const CoinSplit = () => {
                                             )}
 
                                             <KeyValue title="Total coins" value={values.token.coins} />
-                                            <KeyValue title="Split amount" value="10" />
-                                            <KeyValue
-                                                title="Total coins after split"
-                                                value={parseInt(values.token.coins) + 10 + ''}
-                                            />
+
                                             <KeyValue
                                                 title="Burn"
                                                 value={parseInt(values.burn) > 0 ? values.burn : '0'}
@@ -296,12 +287,6 @@ const CoinSplit = () => {
                                                 Hmm... something went wrong!
                                             </h1>
                                             <p className="text-black text-center break-all">{error}</p>
-                                            {error.includes('size too large') && (
-                                                <p className="text-black text-center mt-4">
-                                                    Why don't you try to <span className="font-bold">consolidate</span>{' '}
-                                                    some coins to squash them back together and then try to split more.
-                                                </p>
-                                            )}
                                         </div>
                                         <div className="flex flex-col gap-2 w-full mt-4 self-end">
                                             {!isSubmitting && (
@@ -329,11 +314,11 @@ const CoinSplit = () => {
                     <form onSubmit={handleSubmit}>
                         <div className="flex flex-col gap-2">
                             <h1 className="text-black text-sm mb-1">
-                                Splitting your coins allows you to have more UTXOs which means less waiting time in
-                                between transactions. Learn more about transactions on Minima on our{' '}
+                                Consolidating your coins allows you to squash coins together to have less coins lying
+                                around. Learn more on our{' '}
                                 <a
                                     className="font-semibold"
-                                    href="https://docs.minima.global/docs/learn/minima/transactions"
+                                    href="https://docs.minima.global/docs/runanode/terminal_commands#general"
                                     target="_blank"
                                 >
                                     docs.
@@ -371,7 +356,7 @@ const CoinSplit = () => {
     );
 };
 
-export default CoinSplit;
+export default Consolidate;
 
 const useFormSchema = () => {
     const { balance: wallet } = useContext(appContext);
@@ -379,17 +364,8 @@ const useFormSchema = () => {
         token: Yup.object()
             .required('Field Required')
             .test('check-my-tokensendable', 'Invalid token sendable', function (val: any) {
-                const { path, createError } = this;
-                // console.log(val);
                 if (val === undefined) {
                     return false;
-                }
-
-                if (new Decimal(val.sendable).lessThanOrEqualTo(new Decimal(0))) {
-                    return createError({
-                        path,
-                        message: `Oops, not enough funds available to perform a split`,
-                    });
                 }
 
                 return true;
