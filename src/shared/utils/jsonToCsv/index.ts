@@ -1,15 +1,15 @@
 import { format } from 'date-fns';
 
-const exportToCsv = (e: any, transaction: any) => {
+const exportToCsv = (e: any, transaction: any, fullJson: string) => {
     e.preventDefault();
 
     // Headers for each column
-    let headers = ['Id,Amount,Tokenid,Address,Date,Type,Block,Burn,Json'];
+    let headers = ['Id,Amount,Txpowid,SentToMx,SentTo0x,Date,Type,Block,Burn,Json'];
 
     // Convert users transaction data to a csv
     let usersCsv = transaction.reduce((acc: any, transaction: any) => {
-        const { id, amount, tokenid, address, date, type, block, burn, json } = transaction;
-        acc.push([id, amount, 'id:' + tokenid, address, date, type, block, burn, json].join(','));
+        const { id, amount, txpowid, sentToMx, sentTo0x, date, type, blockPosted, burn } = transaction;
+        acc.push([id, amount, 'id:' + txpowid, sentToMx, sentTo0x, date, type, blockPosted, burn, fullJson].join(','));
         return acc;
     }, []);
 
@@ -18,14 +18,9 @@ const exportToCsv = (e: any, transaction: any) => {
 
     downloadFile([...headers, ...usersCsv].join('\n'), `${fileName}.csv`);
 };
-interface IProps {
-    data: any;
-    fileName: any;
-    fileType: any;
-}
 
 const downloadFile = async (data: string, fileName: string) => {
-    return new Promise((resolve) => {
+    return new Promise(() => {
         // first we need to save this as a file
         (window as any).MDS.file.save(`/myTransactions/${fileName}`, data, function (resp: any) {
             if (resp.status) {
@@ -47,20 +42,6 @@ const downloadFile = async (data: string, fileName: string) => {
                 });
                 a.dispatchEvent(clickEvt);
                 a.remove();
-
-                // const origFilePath = `/myTransactions/${fileName}`;
-                // const newFilePath = `/my_downloads/${fileName}_minima_download_as_file_`;
-                // //Copy the original file to webfolder - WITH the special name
-                // (window as any).MDS.file.copytoweb(origFilePath, newFilePath, function () {
-                //     const url = `my_downloads/${fileName}` + '_minima_download_as_file_';
-                //     // Now create a normal link - that when clicked downloads it..
-                //     const link = document.createElement('a');
-                //     link.href = url;
-                //     document.body.appendChild(link);
-                //     link.click();
-                //     link.remove();
-                //     resolve(true);
-                // });
             }
         });
     });

@@ -1,13 +1,13 @@
 /**
  * Select either an url or to upload an image for all token creation forms
  */
-import { Box, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
 import React from 'react';
 import AddImage from '../../../pages/components/forms/AddImage';
 import FormFieldWrapper from '../FormFieldWrapper';
-import styles from '../../../theme/cssmodule/Components.module.css';
 import { useFormikContext } from 'formik';
-
+import Input from '../../../components/UI/Input';
+import { Box } from '@mui/material';
+import styles from './FormImage.module.css';
 const FormImageUrlSelect = () => {
     const [imageSelection, setMyImageSelection] = React.useState<any>('CONTENTUPLOAD');
 
@@ -39,7 +39,7 @@ const FormImageUrlSelect = () => {
                 <select
                     defaultValue={imageSelection}
                     onChange={handleChange}
-                    className="p-4 hover:opacity-80 hover:cursor-pointer rounded-lg w-full hover:bg-slate-200"
+                    className="p-4 text-black hover:opacity-80 hover:cursor-pointer rounded-lg w-full hover:bg-slate-200"
                 >
                     <option id="value" value="CONTENTUPLOAD">
                         Upload an icon
@@ -75,7 +75,7 @@ const FormImageUrlSelect = () => {
                             sx={{
                                 borderColor:
                                     formik.touched.url && Boolean(formik.errors.url) ? '#FCBEBD!important' : 'none',
-                                padding: formik.touched.url && Boolean(formik.errors.url) ? '0!important' : '8px',
+
                                 marginBottom:
                                     formik.touched.url && Boolean(formik.errors.url) ? '30px!important' : '8px',
 
@@ -97,7 +97,6 @@ const FormImageUrlSelect = () => {
                                     marginTop: '0.5px',
                                 },
                             }}
-                            className={styles['form-image-preview-box']}
                         >
                             <AddImage formik={formik} onImageChange={onImageChange} />
                         </Box>
@@ -105,22 +104,13 @@ const FormImageUrlSelect = () => {
                     help=""
                 />
             ) : (
-                <FormFieldWrapper
-                    children={
-                        <TextField
-                            disabled={formik.isSubmitting}
-                            fullWidth
-                            id="url"
-                            name="url"
-                            placeholder="url *"
-                            value={formik.values.url}
-                            onBlur={formik.handleBlur}
-                            onChange={formik.handleChange}
-                            error={formik.touched.url && Boolean(formik.errors.url)}
-                            helperText={formik.touched.url && formik.errors.url}
-                        />
-                    }
-                    help=""
+                <Input
+                    id="url"
+                    type="text"
+                    placeholder="Icon URL"
+                    disabled={formik.isSubmitting}
+                    {...formik.getFieldProps('url')}
+                    error={formik.touched.url && formik.errors.url ? formik.errors.url : false}
                 />
             )}
         </>

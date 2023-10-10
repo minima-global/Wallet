@@ -102,6 +102,7 @@ export interface Status {
     minima: number;
     coins: number;
     data: string;
+    uptime: string;
     memory: Memory;
     chain: Chain;
     txpow: Txpow;

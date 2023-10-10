@@ -1,36 +1,36 @@
-import { MINIMA__TOKEN_ID } from './../shared/constants';
-/**
- *
- * Minima Utility Functions
- * Useful extra fncs not available in api
- *
- */
-
-import { callGetAddress, rpc } from './rpc-commands';
-
 import Decimal from 'decimal.js';
 
-/**
- * Split a coin by 2
- */
-export const splitCoin = async (tokenid: string, sendable: string, burn: string, password: string) => {
-    let miniaddress = '';
-    try {
-        miniaddress = await callGetAddress();
-    } catch (error: any) {
-        throw new Error(error);
-    }
-    let finalAmountToSend = new Decimal(0);
-    const hasBurn = burn && burn.length ? burn : false;
-    const hasPassword = password && password.length ? password : false;
-    finalAmountToSend =
-        hasBurn && MINIMA__TOKEN_ID === '0x00' ? new Decimal(sendable).minus(new Decimal(burn)) : new Decimal(sendable);
+export const splitCoin = (tokenid: string, sendable: string, burn: string, password: string): Promise<2 | 3> => {
+    return new Promise((resolve, reject) => {
+        (window as any).MDS.cmd('getaddress', (resp: any) => {
+            if (resp.status) {
+                const mxAddress = resp.response.miniaddress;
 
-    return rpc(
-        `send address:${miniaddress} tokenid:${tokenid} amount:${finalAmountToSend.toString()} split:${2} ${
-            hasBurn ? 'burn:' + burn : ''
-        } ${hasPassword ? 'password:' + hasPassword : ''}`
-    ).catch((err) => {
-        throw new Error(err);
+                const hasBurn = burn && burn.length ? burn : false;
+                const hasPassword = password && password.length ? password : false;
+                const amountMinusBurn =
+                    hasBurn && tokenid === '0x00' ? new Decimal(sendable).minus(burn).toString() : sendable;
+
+                (window as any).MDS.cmd(
+                    `send address:${mxAddress} tokenid:${tokenid} amount:${amountMinusBurn} split:${10} ${
+                        hasBurn ? 'burn:' + burn : ''
+                    } ${hasPassword ? 'password:' + hasPassword : ''}`,
+                    (resp: any) => {
+                        if (!resp.status && !resp.pending)
+                            reject(
+                                resp.error
+                                    ? resp.error
+                                    : resp.message
+                                    ? resp.message
+                                    : 'Sending failed, please try again later'
+                            );
+
+                        if (!resp.status && resp.pending) resolve(3);
+
+                        if (resp.status) resolve(2);
+                    }
+                );
+            }
+        });
     });
 };

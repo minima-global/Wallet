@@ -1,30 +1,32 @@
 import { MinimaToken } from '../@types/minima';
 
-interface ISendPayload {
-    token: MinimaToken;
-    amount: string;
-    address: string;
-    burn?: string;
-    password?: string;
-}
-const callSend = async (data: ISendPayload) => {
-    try {
-        const hasPassword = data.password && data.password.length ? data.password : false;
-        const hasBurn = data.burn && data.burn.length ? data.burn : false;
+const callSend = async (
+    token: MinimaToken,
+    amount: string,
+    address: string,
+    message: string,
+    burn: string,
+    password: string
+): Promise<2 | 3> => {
+    return new Promise((resolve, reject) => {
+        const hasPassword = password && password.length ? password : false;
+        const hasBurn = burn && parseInt(burn) > 0 ? burn : false;
+        (window as any).MDS.cmd(
+            `send amount:${amount} address:${address} tokenid:${token.tokenid} ${hasBurn ? 'burn:' + hasBurn : ''} ${
+                hasPassword ? 'password:' + hasPassword : ''
+            } ${message.length > 0 ? `state:{"44":"[${message}]"}` : ''}`,
+            (resp: any) => {
+                if (!resp.status && !resp.pending)
+                    reject(
+                        resp.error ? resp.error : resp.message ? resp.message : 'Sending failed, please try again later'
+                    );
 
-        const response = await rpc(
-            `send amount:${data.amount} address:${data.address} tokenid:${data.token.tokenid} ${
-                hasBurn ? 'burn:' + hasBurn : ''
-            } ${hasPassword ? 'password:' + hasPassword : ''}`
+                if (!resp.status && resp.pending) resolve(3);
+
+                if (resp.status) resolve(2);
+            }
         );
-
-        return {
-            postedHeight: response.header.block,
-            postedTxpowid: response.txpowid,
-        };
-    } catch (err: any) {
-        throw new Error(err);
-    }
+    });
 };
 const callGetAddress = async () => {
     try {
@@ -80,7 +82,7 @@ const getWalletBalance = (): Promise<MinimaToken[]> => {
 
 export const rpc = (command: string): Promise<any> => {
     return new Promise((resolve, reject) => {
-        MDS.cmd(command, (resp: any) => {
+        (window as any).MDS.cmd(command, (resp: any) => {
             if (resp.length > 0) {
                 //console.log(`multi command activity.`);
                 let success = true;

@@ -62,7 +62,7 @@
   bottom: 0;
 }
 
-.dd {
+/* .dd {
   z-index: 46;
   background-color: #E9E9EB;
 
@@ -80,7 +80,7 @@
   height: max-content;
   min-height: 50vh;
   max-height: 85vh;
-}
+} */
 .dd ul {
   margin:0;
   padding:0;

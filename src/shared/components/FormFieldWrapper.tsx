@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
 import { Stack, Typography } from '@mui/material';
 import { ReactElement } from 'react';
-import { MiRequiredAsterisk } from './forms/Required';
 
 const FieldWrapper = styled('div')`
     width: 100%;
@@ -29,7 +28,7 @@ const FormFieldWrapper = ({ children, help, required = false }: IProps) => {
         <FieldWrapper>
             <Stack alignItems="flex-start" justifyContent="center">
                 <Typography variant="caption">
-                    {help} {required && <MiRequiredAsterisk>*</MiRequiredAsterisk>}
+                    {help} {required && <div>*</div>}
                 </Typography>
             </Stack>
             {children}

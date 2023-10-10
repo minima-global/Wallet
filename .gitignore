@@ -16,6 +16,8 @@ build
 /build
 /dist
 
+*.mds.zip
+.env
 
 
 # .npmrc

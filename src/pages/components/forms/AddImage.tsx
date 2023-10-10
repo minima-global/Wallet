@@ -1,9 +1,5 @@
 import React, { ReactNode } from 'react';
 
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import styles from '../../../theme/cssmodule/Components.module.css';
-import { Box, Stack, Typography } from '@mui/material';
-
 function isString(myString: string | ArrayBuffer | null): myString is string {
     return (myString as string).length !== undefined; // ArrayBuffer has byteLength property not length
 }
@@ -51,35 +47,38 @@ const AddImage = ({ onImageChange = () => {}, formik }: IProps) => {
     };
     return (
         <>
-            {formik.values.url && selectedFile && !formik.isSubmitting ? (
-                <>
-                    <img
-                        alt="form-image-preview"
-                        src={formik.values.url}
-                        className={styles['form-image-preview-box-img']}
-                    />
+            {formik.values.url && selectedFile ? (
+                <div className="relative">
+                    <img alt="" src={formik.values.url} />
 
-                    <Box className={styles['info-label-image-upload']}>
-                        <Typography variant="caption">{selectedFile.name}</Typography>
-                    </Box>
-                </>
-            ) : formik.values.url && selectedFile && formik.isSubmitting ? (
-                <>
-                    <img
-                        alt="form-image-preview"
-                        src={formik.values.url}
-                        className={styles['form-image-preview-box-img-disabled']}
-                    />
-                    {/* <ClearIcon color="inherit" className={styles['clear-icon-disabled']} /> */}
-                    <Box className={styles['info-label-image-upload']}>
-                        <Typography variant="caption">{selectedFile.name}</Typography>
-                    </Box>
-                </>
+                    <div>
+                        <p className="text-black text-sm">{selectedFile.name}</p>
+                    </div>
+
+                    <svg
+                        onClick={() => formik.setFieldValue('url', '')}
+                        className="absolute right-0 top-0"
+                        xmlns="http://www.w3.org/2000/svg"
+                        height="24"
+                        viewBox="0 -960 960 960"
+                        width="24"
+                    >
+                        <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z" />
+                    </svg>
+                </div>
             ) : (
-                <Stack className={styles['info-upload-overlay']} justifyContent="center" alignItems="center">
-                    <CloudUploadIcon fontSize="large" color="inherit" />
-                    <Typography variant="caption">Click here to upload</Typography>
-                </Stack>
+                <div className="bg-slate-200 bg-opacity-80 rounded max-w-max flex flex-col justify-center items-center py-12 px-12 hover:bg-opacity-50 hover:cursor-pointer">
+                    <svg
+                        className="fill-black"
+                        xmlns="http://www.w3.org/2000/svg"
+                        height="24"
+                        viewBox="0 -960 960 960"
+                        width="24"
+                    >
+                        <path d="M440-320v-326L336-542l-56-58 200-200 200 200-56 58-104-104v326h-80ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z" />
+                    </svg>
+                    <p className="text-black text-sm">Click here to upload</p>
+                </div>
             )}
 
             <input
