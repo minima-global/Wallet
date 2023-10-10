@@ -11,3 +11,20 @@
 ##### [2.33.2] - 18 September 23
 
 - Fix send page going stale sometimes when token still undefined
+
+##### [2.34.0] - 10 October 23
+
+- Consolidate added to SendForm
+- Logs added to the confirmation page of Split & Consolidate
+- Coin Split by 10
+- adding names to your default addresses in the receive page
+- added Message field to Send form
+- updated MDSFAIL message
+- hide/show vault password
+- UI/UX design cleaned up and improved
+- Brand icon updated
+- closer look & feel to other dApps
+- bug & other fixes
+
+- dev changes
+  - CRA -> vite for quicker development
