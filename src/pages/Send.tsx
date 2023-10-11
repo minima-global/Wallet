@@ -7,12 +7,14 @@ import CardContent from '../components/UI/CardContent';
 import Consolidate from './Consolidate';
 
 const Send: FC = () => {
-    const { setOpenDrawer, getBalance } = useContext(appContext);
+    const { setOpenDrawer, getBalance, loaded } = useContext(appContext);
     const [formUtility, setFormUtility] = useState('value');
 
     useEffect(() => {
-        getBalance();
-    }, []);
+        if (loaded.current === true) {
+            getBalance();
+        }
+    }, [loaded, loaded.current]);
 
     const handleUtilityChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         setFormUtility(event.target.value);

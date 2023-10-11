@@ -19,7 +19,7 @@ import * as Yup from 'yup';
 import getCurrentNodeVersion from '../../minima/commands/getCurrentVersion';
 
 const ValidateAddress = () => {
-    const { setOpenDrawer } = useContext(appContext);
+    const { setOpenDrawer, loaded } = useContext(appContext);
 
     const [validationData, setValidationData] = useState<any>(false);
 
@@ -31,19 +31,21 @@ const ValidateAddress = () => {
     const [validBuild, setValidBuild] = useState<boolean | null>(null);
 
     useEffect(() => {
-        getCurrentNodeVersion().then((v) => {
-            const versionCheckAddressWasIntroduced = '1.0.21';
-            const comparison = v.localeCompare(versionCheckAddressWasIntroduced);
-            const isRunningSufficientVersion = comparison === 0 || comparison === 1;
+        if (loaded.current === true) {
+            getCurrentNodeVersion().then((v) => {
+                const versionCheckAddressWasIntroduced = '1.0.21';
+                const comparison = v.localeCompare(versionCheckAddressWasIntroduced);
+                const isRunningSufficientVersion = comparison === 0 || comparison === 1;
 
-            if (isRunningSufficientVersion) {
-                setValidBuild(true);
-            }
-            if (!isRunningSufficientVersion) {
-                setValidBuild(false);
-            }
-        });
-    }, []);
+                if (isRunningSufficientVersion) {
+                    setValidBuild(true);
+                }
+                if (!isRunningSufficientVersion) {
+                    setValidBuild(false);
+                }
+            });
+        }
+    }, [loaded.current]);
 
     return (
         <Grid
@@ -150,10 +152,7 @@ const ValidateAddress = () => {
                                                         content={
                                                             <>
                                                                 <div className="mb-8 flex flex-col gap-2">
-                                                                    <KeyValue
-                                                                        title="Validating address"
-                                                                        value={values.address}
-                                                                    />
+                                                                    <KeyValue title="Address" value={values.address} />
                                                                     <KeyValue
                                                                         title="Original"
                                                                         value={validationData.original}
@@ -161,13 +160,11 @@ const ValidateAddress = () => {
                                                                     <KeyValue title="0x" value={validationData['0x']} />
                                                                     <KeyValue title="Mx" value={validationData['Mx']} />
                                                                     <KeyValue
-                                                                        title="Relevant"
-                                                                        value={
-                                                                            validationData.relevant ? 'True' : 'False'
-                                                                        }
+                                                                        title="Address belongs to this node?"
+                                                                        value={validationData.relevant ? 'Yes' : 'No'}
                                                                     />
                                                                     <KeyValue
-                                                                        title="Simple"
+                                                                        title="Simple Address"
                                                                         value={validationData.simple ? 'True' : 'False'}
                                                                     />
                                                                 </div>

@@ -1,7 +1,7 @@
 import { Formik } from 'formik';
 import Decimal from 'decimal.js';
 import * as Yup from 'yup';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import Button from '../../../../components/UI/Button';
 import { callSend } from '../../../../minima/rpc-commands';
@@ -23,7 +23,7 @@ import TogglePasswordIcon from '../../../../components/UI/TogglePasswordIcon/Tog
 import FeatureUnavailable from '../../../../components/UI/FeatureUnavailable';
 
 const ValueTransfer = () => {
-    const { balance: wallet, avgBurn } = useContext(appContext);
+    const { balance: wallet, avgBurn, loaded } = useContext(appContext);
     const mySchema = useFormSchema();
     const [openQrScanner, setOpenQrScanner] = React.useState(false);
     const userLockedVault = useIsVaultLocked();
@@ -73,6 +73,7 @@ const ValueTransfer = () => {
                     }
                 }}
                 validationSchema={mySchema}
+                enableReinitialize={!!loaded.current}
             >
                 {({
                     handleSubmit,
@@ -238,7 +239,7 @@ const ValueTransfer = () => {
                                                         }}
                                                         variant="secondary"
                                                     >
-                                                        Cancel
+                                                        Close
                                                     </Button>
                                                 )}
                                             </div>

@@ -84,7 +84,6 @@ export const rpc = (command: string): Promise<any> => {
     return new Promise((resolve, reject) => {
         (window as any).MDS.cmd(command, (resp: any) => {
             if (resp.length > 0) {
-                //console.log(`multi command activity.`);
                 let success = true;
                 let error = '';
                 resp.forEach((r: any) => {

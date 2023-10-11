@@ -1,14 +1,18 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 
 import * as RPC from '../minima/commands';
+import { appContext } from '../AppContext';
 const useIsVaultLocked = () => {
+    const { loaded } = useContext(appContext);
     const [isVaultLocked, setVaultLocked] = useState(false);
 
     useEffect(() => {
-        RPC.getStatus().then((res) => {
-            if (res.locked) setVaultLocked(true);
-        });
-    }, []);
+        if (loaded.current === true) {
+            RPC.getStatus().then((res) => {
+                if (res.locked) setVaultLocked(true);
+            });
+        }
+    }, [loaded.current]);
 
     return isVaultLocked;
 };

@@ -75,6 +75,16 @@ const AppProvider = ({ children }: IProps) => {
                     rpc.isWriteMode().then((appIsInWriteMode) => {
                         setAppIsInWriteMode(appIsInWriteMode);
                     });
+                    // callAndStoreBalance
+                    getBalance();
+                    // callAndStoreNFTs
+                    getTokens();
+                    // callAndStoreSimpleAddresses
+                    getSimpleAddresses();
+
+                    checkVaultLocked();
+
+                    get50BlockBurnAvg();
 
                     (async () => {
                         await sql(`CREATE TABLE IF NOT EXISTS cache (name varchar(255), data longtext);`);
@@ -92,17 +102,6 @@ const AppProvider = ({ children }: IProps) => {
                             setFavoriteTokens(JSON.parse(favoriteTokens.DATA));
                         }
                     })();
-
-                    // callAndStoreBalance
-                    getBalance();
-                    // callAndStoreNFTs
-                    getTokens();
-                    // callAndStoreSimpleAddresses
-                    getSimpleAddresses();
-
-                    checkVaultLocked();
-
-                    get50BlockBurnAvg();
                 }
                 if (msg.event === 'NEWBLOCK') {
                     // new block
@@ -133,7 +132,6 @@ const AppProvider = ({ children }: IProps) => {
                 }
                 if (msg.event === 'MINIMALOG') {
                     const log = msg.data.message;
-                    console.log('new log', log);
                     setLogs((prevState) => [...prevState, log]);
                 }
 
@@ -310,6 +308,7 @@ const AppProvider = ({ children }: IProps) => {
                 setOpenDrawer,
 
                 avgBurn,
+                loaded,
 
                 // Cache
                 _favoriteTokens,

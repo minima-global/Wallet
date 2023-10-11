@@ -3,7 +3,6 @@ import getSuitableImage from '../../../../shared/utils/imagehandler/getSuitableI
 export const createToken = async (data: any, amount: string, decimals: number): Promise<2 | 3> => {
     return new Promise(async (resolve, reject) => {
         if (data.url.startsWith('data:image/', 0)) {
-            // console.log('it does start with data:image/');
             const compressedImage = await getSuitableImage(data.url);
             const pureCompressedImage = compressedImage.slice(compressedImage.indexOf(',') + 1);
             var xmlString = '<artimage></artimage>';

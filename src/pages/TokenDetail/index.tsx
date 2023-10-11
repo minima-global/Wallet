@@ -219,14 +219,15 @@ const TokenDetail = () => {
 
                                         {viewingToken.tokenid !== '0x00' && (
                                             <KeyValue
-                                                title="Web Validation"
+                                                help="A web validated token would mean that the tokenid of this token was put in a public .txt file on a URL you have provided after minting was successful."
+                                                title="Web validation"
                                                 value={
                                                     <>
                                                         {viewingToken.token.tokenid !== '0x00' &&
                                                         viewingToken.token.webvalidate &&
                                                         !!viewingToken.token.webvalidate.length ? (
                                                             <a
-                                                                className="hover:cursor-pointer text-blue-400 hover:underline"
+                                                                className="hover:cursor-pointer text-blue-400 hover:underline break-all"
                                                                 href={viewingToken.token.webvalidate}
                                                                 target="_blank"
                                                             >

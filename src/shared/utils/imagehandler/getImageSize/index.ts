@@ -13,7 +13,6 @@ function imageSize(url: any): Promise<{ width: number; height: number }> {
             const height = img.naturalHeight;
             resolve({ width, height });
         };
-        // console.log(img.onerror)
         img.onerror = reject;
     });
 

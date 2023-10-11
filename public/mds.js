@@ -396,7 +396,6 @@ var MDS = {
             var items = window.location.search.substr(1).split('&');
             for (var index = 0; index < items.length; index++) {
                 tmp = items[index].split('=');
-                //console.log("TMP:"+tmp);
                 if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
             }
             return result;
@@ -561,9 +560,6 @@ function httpPostAsync(theUrl, params, callback) {
     xmlHttp.open('POST', finalurl, true); // true for asynchronous
     xmlHttp.overrideMimeType('text/plain; charset=UTF-8');
     xmlHttp.send(encodeURIComponent(params));
-    //xmlHttp.onerror = function () {
-    //  console.log("** An error occurred during the transaction");
-    //};
 }
 
 /**

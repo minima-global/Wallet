@@ -211,7 +211,7 @@ const Consolidate = () => {
                                                     }}
                                                     variant="secondary"
                                                 >
-                                                    Cancel
+                                                    Close
                                                 </Button>
                                             )}
                                         </div>

@@ -9,15 +9,17 @@ import { createPortal } from 'react-dom';
 import CardContent from '../components/UI/CardContent';
 
 const Status = () => {
-    const { setOpenDrawer } = useContext(appContext);
+    const { setOpenDrawer, loaded } = useContext(appContext);
     const [status, setStatus] = useState<NodeStatus | undefined>(undefined);
     const [showFullStatus, setShowFullStatus] = useState(false);
 
     useEffect(() => {
-        callStatus().then((status) => {
-            setStatus(status);
-        });
-    }, []);
+        if (loaded.current === true) {
+            callStatus().then((status) => {
+                setStatus(status);
+            });
+        }
+    }, [loaded.current]);
 
     return (
         <>
@@ -77,6 +79,7 @@ const Status = () => {
                         <div className="flex justify-between items-center">
                             <h1 className="text-black font-semibold">Overview</h1>
                             <button
+                                disabled={!status}
                                 className="flex text-sm text-black font-semibold hover:cursor-pointer hover:opacity-90 border-2 border-black rounded-lg py-2 px-4 hover:bg-black hover:text-white hover:fill-[#363AFF] group"
                                 onClick={() => setShowFullStatus(true)}
                             >
@@ -96,16 +99,33 @@ const Status = () => {
                     content={
                         <>
                             <div className="divide-y-2 mb-4">
-                                <KeyValue title="Node version" value={status?.version!} />
-                                <KeyValue title="Uptime" value={status?.uptime!} />
-                                <KeyValue title="Vault locked" value={status?.locked! ? 'True' : 'False'} />
-                                <KeyValue title="Length" value={status?.length.toString()!} />
-                                <KeyValue title="Chain weight" value={status?.weight.toString()!} />
-                                <KeyValue title="Total Minima (global)" value={status?.minima.toString()!} />
-                                <KeyValue title="Total Coins (global)" value={status?.coins.toString()!} />
-                                <KeyValue title="Your data path" value={status?.data!} />
-                                <KeyValue title="RAM usage" value={status?.memory.ram!} />
-                                <KeyValue title="Disk usage" value={status?.memory.disk!} />
+                                {!status && (
+                                    <div className="flex justify-center items-center">
+                                        <svg
+                                            className="animate-spin "
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            height="24"
+                                            viewBox="0 -960 960 960"
+                                            width="24"
+                                        >
+                                            <path d="M480-80q-82 0-155-31.5t-127.5-86Q143-252 111.5-325T80-480q0-83 31.5-155.5t86-127Q252-817 325-848.5T480-880q17 0 28.5 11.5T520-840q0 17-11.5 28.5T480-800q-133 0-226.5 93.5T160-480q0 133 93.5 226.5T480-160q133 0 226.5-93.5T800-480q0-17 11.5-28.5T840-520q17 0 28.5 11.5T880-480q0 82-31.5 155t-86 127.5q-54.5 54.5-127 86T480-80Z" />
+                                        </svg>
+                                    </div>
+                                )}
+                                {!!status && (
+                                    <>
+                                        <KeyValue title="Node version" value={status?.version!} />
+                                        <KeyValue title="Uptime" value={status?.uptime!} />
+                                        <KeyValue title="Vault locked" value={status?.locked! ? 'True' : 'False'} />
+                                        <KeyValue title="Length" value={status?.length.toString()!} />
+                                        <KeyValue title="Chain weight" value={status?.weight.toString()!} />
+                                        <KeyValue title="Total Minima (global)" value={status?.minima.toString()!} />
+                                        <KeyValue title="Total Coins (global)" value={status?.coins.toString()!} />
+                                        <KeyValue title="Your data path" value={status?.data!} />
+                                        <KeyValue title="RAM usage" value={status?.memory.ram!} />
+                                        <KeyValue title="Disk usage" value={status?.memory.disk!} />
+                                    </>
+                                )}
                             </div>
                         </>
                     }

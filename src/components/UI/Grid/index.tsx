@@ -15,8 +15,6 @@ const Grid = ({ title, children, variant }: IProps) => {
         base = 'grid grid-cols-[1fr_minmax(0,560px)_1fr] grid-rows-1 pt-4';
     }
 
-    console.log('innerHeight', innerHeight);
-
     return (
         <div className={`grid grid-cols-1 grid-rows-[56px,1fr] pb-4 `}>
             <header onClick={openTitleBar} className="p-4 bg-black text-white text-md flex items-center gap-2">

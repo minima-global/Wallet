@@ -3,10 +3,8 @@ import { INSUFFICIENT } from './../minima/constants';
 /** Copy to clipboard */
 export async function copyTextToClipboard(text: string) {
     if ('clipboard' in navigator) {
-        // console.log('using clipboard');
         return await navigator.clipboard.writeText(text);
     } else {
-        // console.log('using document.execCommand');
         return copy(text);
     }
 }
@@ -26,7 +24,6 @@ export function copy(text: string) {
 export const hexToString = (str1: string) => {
     if (typeof str1 === 'string') {
         var hex = str1.toString();
-        // console.log(hex);
         var str = '';
         for (var n = 0; n < hex.length; n += 2) {
             str += String.fromCharCode(parseInt(hex.substr(n, 2), 16));
@@ -39,7 +36,6 @@ export const hexToString = (str1: string) => {
 
 // string to hex
 export const strToHex = (str: string) => {
-    // console.log(str);
     var hex = '';
     for (var i = 0; i < str.length; i++) {
         hex += '' + str.charCodeAt(i).toString(16);
@@ -85,7 +81,6 @@ export const isValidURLAll = (urlString: string) => {
 export const isValidURLSecureOnly = (urlString: string) => {
     try {
         const url = new URL(urlString);
-        // console.log(url)
         return url.protocol === 'https:';
     } catch (err) {
         console.error(err);

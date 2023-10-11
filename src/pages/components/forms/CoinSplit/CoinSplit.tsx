@@ -221,7 +221,7 @@ const CoinSplit = () => {
                                                     }}
                                                     variant="secondary"
                                                 >
-                                                    Cancel
+                                                    Close
                                                 </Button>
                                             )}
                                         </div>
@@ -381,7 +381,6 @@ const useFormSchema = () => {
             .required('Field Required')
             .test('check-my-tokensendable', 'Invalid token sendable', function (val: any) {
                 const { path, createError } = this;
-                // console.log(val);
                 if (val === undefined) {
                     return false;
                 }

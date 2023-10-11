@@ -341,7 +341,7 @@ const CreateNFTForm = () => {
                                                             }}
                                                             variant="secondary"
                                                         >
-                                                            Cancel
+                                                            Close
                                                         </Button>
                                                     )}
                                                 </div>

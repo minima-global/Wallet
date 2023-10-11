@@ -312,7 +312,7 @@ const TokenCreation = () => {
                                                         }}
                                                         variant="secondary"
                                                     >
-                                                        Cancel
+                                                        Close
                                                     </Button>
                                                 )}
                                             </div>
