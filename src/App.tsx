@@ -19,6 +19,7 @@ import ValidateAddress from './pages/ValidateAddress';
 import TokenCreation from './pages/TokenCreation/TokenCreation';
 import { createPortal } from 'react-dom';
 import Grid from './components/UI/Grid';
+import useIsMinimaBrowser from './hooks/useIsMinimaBrowser';
 
 export interface RouteType {
     path: string;
@@ -27,6 +28,7 @@ export interface RouteType {
 }
 
 const App = () => {
+    const openTitleBar = useIsMinimaBrowser();
     const { openDrawer, setOpenDrawer, minidappSystemFailed } = useContext(appContext);
     return (
         <>
@@ -34,7 +36,10 @@ const App = () => {
                 createPortal(
                     <div className="ml-0 absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn z-[100000]">
                         <Grid variant="sm" title={<></>}>
-                            <div className="mx-4 rounded bg-white bg-opacity-90 p-4 items-center">
+                            <div
+                                onClick={openTitleBar}
+                                className="mx-4 rounded bg-white bg-opacity-90 p-4 items-center"
+                            >
                                 <div className="grid grid-cols-1 grid-rows-1 pb-4">
                                     <div className="flex flex-col items-center">
                                         <svg
