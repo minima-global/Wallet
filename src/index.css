@@ -91,7 +91,6 @@ body {
     background-repeat: no-repeat;
     background-size: cover;
     overflow: hidden;
-
   }
 
 
@@ -144,3 +143,4 @@ select {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
+

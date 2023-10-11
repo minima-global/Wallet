@@ -58,14 +58,14 @@ const Receive = () => {
                         createPortal(
                             <div className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn">
                                 <Grid variant="sm" title={<></>}>
-                                    <div className="mx-4 rounded bg-white bg-opacity-90 p-4">
+                                    <div className="mx-4 rounded bg-white bg-opacity-90 p-4 h-max">
                                         <h1 className="text-black font-semibold mb-8">Enter a nickname</h1>
                                         <div className="divide-y-2 mb-8">
                                             <Formik
                                                 initialValues={{ nickname: '' }}
                                                 onSubmit={(data) => {
                                                     const { nickname } = data;
-                                                    editNickname(address?.miniaddress, nickname);
+                                                    editNickname(address?.miniaddress, nickname.replaceAll("'", ' '));
                                                 }}
                                                 validationSchema={Yup.object().shape({
                                                     nickname: Yup.string()
@@ -107,6 +107,7 @@ const Receive = () => {
                                                         />
                                                         <div className="flex flex-col gap-2 mt-4">
                                                             <Button
+                                                                extraClass="mt-8 md:mt-16"
                                                                 disabled={isSubmitting || !isValid}
                                                                 type="submit"
                                                                 variant="primary"

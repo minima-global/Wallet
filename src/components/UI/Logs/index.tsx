@@ -44,9 +44,13 @@ const Logs = () => {
             {!hide && (
                 <div className={styles['stream']}>
                     {logs.length ? (
-                        logs.map((l: any, i: number) => <code key={i}>{l}</code>)
+                        logs.map((l: any, i: number) => (
+                            <code className="text-white" key={i}>
+                                {l}
+                            </code>
+                        ))
                     ) : (
-                        <code>Loading logs...</code>
+                        <code className="text-white">Loading logs...</code>
                     )}
 
                     <div ref={ref} className="pt-2" />

@@ -64,7 +64,7 @@ const NFTs = () => {
                                                 </div>
                                             </div>
                                         )}
-                                        {showDetail.token.name.url.length && (
+                                        {!!showDetail.token.name.url.length && (
                                             <img
                                                 className="h-auto w-full rounded-t-lg"
                                                 src={showDetail.token.name.url}

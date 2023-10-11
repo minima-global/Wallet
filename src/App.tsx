@@ -1,22 +1,10 @@
 import { Drawer } from '@mui/material';
 import { useContext } from 'react';
-import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 
-import Balance from './pages/Balance';
-import Send from './pages/Send';
-import Status from './pages/Status';
-import Receive from './pages/Receive';
-import TokenDetail from './pages/Tokendetail';
 import SideMenu from './layout/SideMenu';
-import NFTs from './pages/NFT';
-
-import CreateNFT from './pages/NFT/CreateNFT';
-import History from './pages/History';
-import HistoryTransactionDetailSimple from './pages/HistoryTransactionDetailSimple';
 import Notification from './components/UI/Notification';
 import { appContext } from './AppContext';
-import ValidateAddress from './pages/ValidateAddress';
-import TokenCreation from './pages/TokenCreation/TokenCreation';
 import { createPortal } from 'react-dom';
 import Grid from './components/UI/Grid';
 import useIsMinimaBrowser from './hooks/useIsMinimaBrowser';
@@ -38,7 +26,7 @@ const App = () => {
                         <Grid variant="sm" title={<></>}>
                             <div
                                 onClick={openTitleBar}
-                                className="mx-4 rounded bg-white bg-opacity-90 p-4 items-center"
+                                className="mx-4 rounded bg-white bg-opacity-90 p-4 items-center h-max"
                             >
                                 <div className="grid grid-cols-1 grid-rows-1 pb-4">
                                     <div className="flex flex-col items-center">
@@ -68,23 +56,6 @@ const App = () => {
             <Notification />
             <main id="navigation" className="md:ml-[240px]">
                 <Outlet />
-                {/* <Routes>
-                    <Route path="/" element={<Navigate replace to="/balance" />} />
-                    <Route path="/balance" element={<Balance />} />
-                    <Route path="balance/:tokenid" element={<TokenDetail />} />
-                    <Route path="/send/:tokenid?/:amount?/:address?/:burn?" element={<Send />} />
-                    <Route path="/receive" element={<Receive />} />
-                    <Route path="/validate" element={<ValidateAddress />} />
-                    <Route path="/status" element={<Status />} />
-                    <Route path="/tokencreate" element={<TokenCreation />} />
-                    <Route path="/nfts" element={<NFTs />}></Route>
-                    <Route path="/nfts/createnft" element={<CreateNFT />}></Route>
-                    <Route path="/history" element={<History />}>
-                        <Route path=":transactionid" element={<HistoryTransactionDetailSimple />} />
-                    </Route>
-                    <Route path="/offline" element={<Offline />} />
-                    <Route path="*" element={<Navigate replace to="/balance" />} />
-                </Routes> */}
             </main>
             <div>
                 <Drawer

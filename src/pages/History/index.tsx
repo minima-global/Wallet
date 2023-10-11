@@ -42,6 +42,14 @@ const History = () => {
 
             if (
                 historyFacade[key] &&
+                historyFacade[key].filter((_t: any) => _t.txpowid.includes(filterText)).length === 0 &&
+                !elements.length
+            ) {
+                elements.push(<p className="text-center">No transactions yet!</p>);
+            }
+
+            if (
+                historyFacade[key] &&
                 historyFacade[key].filter((_t: any) => _t.txpowid.includes(filterText)).length > 0
             ) {
                 elements.push(

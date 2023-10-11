@@ -270,7 +270,7 @@ const ValidateAddress = () => {
                                                 extraClass="mt-8 md:mt-16"
                                                 type="submit"
                                                 variant="primary"
-                                                disabled={!touched.address || !isValid}
+                                                disabled={!isValid}
                                             >
                                                 Validate
                                             </Button>

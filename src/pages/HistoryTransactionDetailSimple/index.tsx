@@ -184,8 +184,7 @@ const HistoryTransactionDetailSimple = () => {
                                                         <KeyValue
                                                             className="!break-all !whitespace-normal"
                                                             title="Message"
-                                                            // value={t.data.replace(/[\[\]]+/gi, ' ')}
-                                                            value="LOng messageLOng messageLOng messageLOng messageLOng messageLOng messageLOng messageLOng messageLOng messageLOng messageLOng messageLOng messageLOng messageLOng messageLOng messageLOng messageLOng messageLOng messageLOng message"
+                                                            value={t.data.replace(/[\[\]]+/gi, ' ')}
                                                         />
                                                     ))}
                                         </div>

@@ -129,7 +129,6 @@ const Consolidate = () => {
                                             <h1 className="text-black text-center font-semibold text-xl mb-2">
                                                 Posting transaction...
                                             </h1>
-                                            <Logs />
                                         </div>
                                         <div />
                                     </div>
@@ -153,10 +152,11 @@ const Consolidate = () => {
                                             <h1 className="text-black text-center font-semibold text-xl mb-2">
                                                 Success
                                             </h1>
-                                            <p className="text-black text-center">
+                                            <p className="text-black text-center mb-2">
                                                 The transaction has been posted and should arrive shortly. Check{' '}
                                                 <span className="font-bold">coins</span> property of your token.
                                             </p>
+                                            <Logs />
                                         </div>
                                         <div className="flex flex-col gap-2 w-full mt-8 md:mt-16 self-end">
                                             {!isSubmitting && (
@@ -271,7 +271,7 @@ const Consolidate = () => {
                         createPortal(
                             <div className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn">
                                 <Grid variant="sm" title={<></>}>
-                                    <div className="mx-4 rounded bg-white bg-opacity-90 p-4 items-center grid grid-cols-1 grid-rows-[1fr_1fr]">
+                                    <div className="mx-4 rounded bg-white bg-opacity-90 p-4 items-center grid grid-cols-1 grid-rows-[1fr_1fr] h-max">
                                         <div>
                                             <svg
                                                 className="animate-pulse temporary-pulse fill-[var(--status-red)] mb-4

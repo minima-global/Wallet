@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { createPortal } from 'react-dom';
-import Card from '../../components/UI/Card';
 
 import Grid from '../../components/UI/Grid';
 import FadeIn from '../../components/UI/Animations/FadeIn';
