@@ -133,7 +133,6 @@ const ValidateAddress = () => {
                                 resetForm,
                                 touched,
                                 errors,
-                                dirty,
                             }) => (
                                 <>
                                     {step === 1 &&
@@ -271,7 +270,7 @@ const ValidateAddress = () => {
                                                 extraClass="mt-8 md:mt-16"
                                                 type="submit"
                                                 variant="primary"
-                                                disabled={!dirty || !isValid}
+                                                disabled={!touched.address || !isValid}
                                             >
                                                 Validate
                                             </Button>

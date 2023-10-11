@@ -134,7 +134,6 @@ const CreateNFTForm = () => {
                         values,
                         resetForm,
                         touched,
-                        dirty,
                     }) => (
                         <>
                             {step === 1 &&
@@ -523,7 +522,7 @@ const CreateNFTForm = () => {
                                             <Button
                                                 onClick={() => setStep(1)}
                                                 variant="primary"
-                                                disabled={!dirty || !isValid}
+                                                disabled={!touched.amount || !touched.name || !isValid}
                                             >
                                                 Review
                                             </Button>

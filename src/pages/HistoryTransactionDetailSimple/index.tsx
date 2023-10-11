@@ -215,10 +215,9 @@ const HistoryTransactionDetailSimple = () => {
                                                     aria-expanded={!_showInputs}
                                                     className="accordion-content rounded bg-white bg-opacity-50 h-[auto] border-t-0"
                                                 >
-                                                    <li>Inputs</li>
                                                     {_transaction.inputs.map((i, index) => (
                                                         <li key={i + index} className="divide-y-2">
-                                                            <h3 className="text-black font-semibold text-sm pb-2 mx-4 underline">
+                                                            <h3 className="text-black font-semibold text-sm pb-2 py-2 mx-4 underline">
                                                                 Input {index}
                                                             </h3>
                                                             <KeyValue
@@ -278,10 +277,9 @@ const HistoryTransactionDetailSimple = () => {
                                                     aria-expanded={!_showOutputs}
                                                     className="accordion-content rounded bg-white bg-opacity-50 h-[auto] border-t-0"
                                                 >
-                                                    <li>Outputs</li>
                                                     {_transaction.outputs.map((i, index) => (
                                                         <li key={i + index} className="divide-y-2">
-                                                            <h3 className="text-black font-semibold text-sm pb-2 mx-4 underline">
+                                                            <h3 className="text-black font-semibold text-sm pb-2 py-2 mx-4 underline">
                                                                 Output {index}
                                                             </h3>
                                                             <KeyValue

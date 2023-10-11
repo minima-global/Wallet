@@ -406,7 +406,7 @@ const ValueTransfer = () => {
                                     extraClass="mt-8 md:mt-16"
                                     onClick={() => setStep(1)}
                                     variant="primary"
-                                    disabled={!dirty || !isValid}
+                                    disabled={!dirty && !isValid}
                                 >
                                     Review
                                 </Button>

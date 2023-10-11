@@ -96,6 +96,7 @@ const TokenCreation = () => {
                     touched,
                     resetForm,
                     submitForm,
+                    dirty,
                 }) => (
                     <>
                         {userLockedVault &&
@@ -461,7 +462,7 @@ const TokenCreation = () => {
                                             extraClass="mt-8 md:mt-16"
                                             onClick={() => setStep(1)}
                                             variant="primary"
-                                            disabled={!isValid}
+                                            disabled={!touched.amount || !touched.name || !isValid}
                                         >
                                             Review
                                         </Button>

@@ -28,3 +28,7 @@
 
 - dev changes
   - CRA -> vite for quicker development
+  
+##### [2.34.0] - 10 October 23
+  - Fix layout with Inputs, Outputs in txn history details
+  - Fix the state of buttons on forms when haven't touched the req fields
