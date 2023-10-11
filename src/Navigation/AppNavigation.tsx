@@ -6,7 +6,7 @@ import Balance from '../pages/Balance';
 import Send from '../pages/Send';
 import Status from '../pages/Status';
 import Receive from '../pages/Receive';
-import TokenDetail from '../pages/Tokendetail';
+import TokenDetail from '../pages/TokenDetail';
 import SideMenu from '../layout/SideMenu';
 import NFTs from '../pages/NFT';
 

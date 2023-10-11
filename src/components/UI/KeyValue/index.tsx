@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { ReactElement, useState } from 'react';
 
 interface IProps {
     title: string;
     value: any;
     className?: string;
-    help?: string;
+    help?: ReactElement;
 }
 const KeyValue = ({ title, value, className, help }: IProps) => {
     const [showHelp, setShowHelp] = useState(false);
@@ -41,9 +41,7 @@ const KeyValue = ({ title, value, className, help }: IProps) => {
                         </svg>
                     )}
                 </div>
-                {help && showHelp && (
-                    <p className="p-4 bg-black text-white rounded-lg animate-fadeIn text-sm">{help}</p>
-                )}
+                {help && showHelp && help}
             </div>
             {!showHelp && (
                 <>

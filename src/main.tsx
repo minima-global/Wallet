@@ -6,7 +6,7 @@ import './index.css';
 import AppProvider from './AppContext';
 import AppNavigation from './Navigation/AppNavigation';
 import Balance from './pages/Balance';
-import TokenDetail from './pages/Tokendetail';
+import TokenDetail from './pages/TokenDetail';
 import Send from './pages/Send';
 import Receive from './pages/Receive';
 import ValidateAddress from './pages/ValidateAddress';
