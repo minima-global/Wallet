@@ -177,7 +177,7 @@ const ValidateAddress = () => {
                                                                             }}
                                                                             variant="secondary"
                                                                         >
-                                                                            Cancel
+                                                                            Close
                                                                         </Button>
                                                                     )}
                                                                 </div>

@@ -7,9 +7,9 @@ import validateMinimaAddress from '../../../minima/commands/validateMinimaAddres
 import { QrReader } from 'react-qr-reader';
 
 type PermissionsCamera = PermissionName & 'camera';
-type PermissionState = 'denied' | 'granted' | 'prompt' | undefined;
+type PermissionState = 'denied' | 'granted' | 'prompt' | null;
 const QrScanner = ({ open, closeModal }: any) => {
-    const [cameraStatus, setCameraStatus] = useState<PermissionState | false>(false);
+    const [cameraStatus, setCameraStatus] = useState<PermissionState | null>(null);
     const formik: any = useFormikContext();
 
     const [error, setError] = useState<false | string>(false);
@@ -29,32 +29,45 @@ const QrScanner = ({ open, closeModal }: any) => {
         }
     };
 
+    const requestCamera = () => {
+        navigator.permissions.query({ name: 'camera' } as PermissionsCamera).then((v) => {
+            if (v.state === 'prompt') {
+                setCameraStatus('prompt');
+                navigator.mediaDevices
+                    .getUserMedia({ audio: false, video: true })
+                    .then((r) => {
+                        if (r.active) {
+                            setCameraStatus('granted');
+                        }
+                        if (!r.active) {
+                            setCameraStatus('denied');
+                        }
+                    })
+                    .catch((err) => {
+                        console.error('Camera unavailable', err);
+                        return setCameraStatus('denied');
+                    });
+            }
+            if (v.state === 'denied') {
+                setCameraStatus('denied');
+            }
+            if (v.state === 'granted') {
+                setCameraStatus('granted');
+            }
+        });
+    };
+
     useEffect(() => {
         if (open) {
             if (navigator && 'permissions' in navigator) {
-                navigator.permissions
-                    .query({ name: 'camera' } as PermissionsCamera)
-                    .then((v) => {
-                        if (v.state === 'granted') {
-                            navigator.mediaDevices.getUserMedia({ audio: false, video: true }).catch((err) => {
-                                console.error('Camera unavailable', err);
-                                return setCameraStatus('denied');
-                            });
-                        }
-
-                        setCameraStatus(v.state);
-                    })
-                    .catch((err) => {
-                        console.error('Camera permissions', err);
-                        setCameraStatus(false);
-                    });
+                requestCamera();
             }
         }
     }, [open]);
 
     return (
         open && (
-            <div className="z-20 absolute left-0 md:left-[240px] right-0 bottom-0 top-0 bg-black bg-opacity-80">
+            <div className="z-20 absolute left-0 md:left-[240px] right-0 bottom-0 top-0 bg-black bg-opacity-80 animate-fadeIn">
                 <Grid variant="lg" title={<></>}>
                     <>
                         <div className="relative rounded bg-white mx-6 h-max">
@@ -99,22 +112,14 @@ const QrScanner = ({ open, closeModal }: any) => {
                                 </div>
                             )}
 
-                            {!cameraStatus && (
-                                <div className="flex flex-col items-center justify-center text-center p-8">
-                                    <h1 className="text-black text-xl font-semibold mb-4">
-                                        Camera API is unavailable on this browser!
-                                    </h1>
-                                    <p className="text-black mb-4">
-                                        Please consider using compatible and up to date browser. Try a later version of
-                                        google chrome, firefox, brave or safari.
-                                    </p>
-                                </div>
-                            )}
-
                             {cameraStatus === 'prompt' && (
                                 <div className="flex flex-col items-center justify-center text-center p-8">
-                                    <h1 className="text-black text-xl font-semibold mb-4">Camera is unavailable!</h1>
-                                    <p className="text-black mb-4">Accept the camera permissions prompt and proceed.</p>
+                                    <h1 className="text-black text-xl font-semibold mb-4">
+                                        Wallet is requesting camea
+                                    </h1>
+                                    <p className="text-black mb-4">
+                                        Please accept the camera permissions prompt first.
+                                    </p>
                                 </div>
                             )}
 

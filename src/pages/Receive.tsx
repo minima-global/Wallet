@@ -10,6 +10,7 @@ import Input from '../components/UI/Input';
 import Button from '../components/UI/Button';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import * as utils from '../shared/utils';
 
 const Receive = () => {
     const { simpleAddresses, setOpenDrawer, _nicknameAddress, editNickname, showEditNickname, setShowEditNickname } =
@@ -170,8 +171,11 @@ const Receive = () => {
                                     </div>
 
                                     <div className="grid grid-cols-[auto_1fr] grid-rows-1 gap-1 items-center">
-                                        <p className="text-black text-sm truncate">
+                                        <p className="text-black text-sm hidden md:block truncate">
                                             {address ? address.miniaddress : ''}
+                                        </p>
+                                        <p className="text-black text-sm  md:hidden">
+                                            {address ? utils.truncateString(address.miniaddress, 8, 8) : ''}
                                         </p>
                                         <button onClick={handleCopyClick}>
                                             {!copyState && (
@@ -268,7 +272,12 @@ const Receive = () => {
                                                         ? _nicknameAddress[a.miniaddress]
                                                         : 'N/A'}
                                                 </h1>
-                                                <p className="text-black truncate text-sm">{a.miniaddress}</p>
+                                                <p className="text-black text-sm hidden md:block truncate">
+                                                    {a.miniaddress}
+                                                </p>
+                                                <p className="text-black text-sm  md:hidden">
+                                                    {utils.truncateString(a.miniaddress, 8, 8)}
+                                                </p>
                                             </li>
                                         ))}
                                 </ul>

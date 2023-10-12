@@ -195,7 +195,7 @@ const ValueTransfer = () => {
                                                         }}
                                                         variant="secondary"
                                                     >
-                                                        Cancel
+                                                        Close
                                                     </Button>
                                                 )}
                                             </div>

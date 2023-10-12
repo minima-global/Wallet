@@ -177,7 +177,7 @@ const CoinSplit = () => {
                                                     }}
                                                     variant="secondary"
                                                 >
-                                                    Cancel
+                                                    Close
                                                 </Button>
                                             )}
                                         </div>

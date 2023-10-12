@@ -32,3 +32,11 @@
 ##### [2.34.0] - 10 October 23
   - Fix layout with Inputs, Outputs in txn history details
   - Fix the state of buttons on forms when haven't touched the req fields
+
+##### [2.34.6] - 10 October 23
+- fix mds fail error on page refresh
+- truncate address in middle on smaller screen (Receive page)
+- fix Camera prompt issues
+- add Web Validation helpful info
+- change 'Cancel' to 'Close' where appropriate on modals
+clean up logs

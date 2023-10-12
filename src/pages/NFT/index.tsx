@@ -3,7 +3,6 @@ import { useContext, useState } from 'react';
 import { appContext } from '../../AppContext';
 
 import Grid from '../../components/UI/Grid';
-import Card from '../../components/UI/Card';
 import { createPortal } from 'react-dom';
 import Button from '../../components/UI/Button';
 import KeyValue from '../../components/UI/KeyValue';
@@ -132,7 +131,7 @@ const NFTs = () => {
                                             Transfer
                                         </Button>
                                         <Button onClick={() => setShowDetail(false)} variant="secondary">
-                                            Cancel
+                                            Close
                                         </Button>
                                     </div>
                                 </div>
