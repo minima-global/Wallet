@@ -24,6 +24,7 @@ import { createPortal } from 'react-dom';
 import useIsVaultLocked from '../../../hooks/useIsVaultLocked';
 import { useNavigate } from 'react-router-dom';
 import CardContent from '../../../components/UI/CardContent';
+import Burn from '../../../components/UI/Burn';
 
 const CreateNFTForm = () => {
     const mySchema = useMySchema();
@@ -220,10 +221,6 @@ const CreateNFTForm = () => {
                                                     <KeyValue
                                                         title="Burn"
                                                         value={parseInt(values.burn) > 0 ? values.burn : '0'}
-                                                    />
-                                                    <KeyValue
-                                                        title="Burn avg (last 50 blocks)"
-                                                        value={avgBurn.toString()}
                                                     />
                                                 </div>
                                                 <div className="flex flex-col gap-2 mt-8 md:mt-16">
@@ -507,17 +504,7 @@ const CreateNFTForm = () => {
                                                 advance and add the tokenid after creating the token.
                                             </p>
 
-                                            <Input
-                                                id="burn"
-                                                type="number"
-                                                disabled={isSubmitting}
-                                                placeholder="Burn"
-                                                {...getFieldProps('burn')}
-                                                error={touched.burn && errors.burn ? errors.burn : false}
-                                            />
-                                            <p className="text-slate-500 text-sm mb-4">
-                                                Prioritize your transaction by adding a burn.
-                                            </p>
+                                            <Burn />
 
                                             <Button
                                                 onClick={() => setStep(1)}

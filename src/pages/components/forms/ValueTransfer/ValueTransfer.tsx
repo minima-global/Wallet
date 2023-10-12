@@ -21,6 +21,7 @@ import Success from '../../../../assets/lottie/Success.json';
 import Loading from '../../../../assets/lottie/Loading.json';
 import TogglePasswordIcon from '../../../../components/UI/TogglePasswordIcon/TogglePasswordIcon';
 import FeatureUnavailable from '../../../../components/UI/FeatureUnavailable';
+import Burn from '../../../../components/UI/Burn';
 
 const ValueTransfer = () => {
     const { balance: wallet, avgBurn, loaded } = useContext(appContext);
@@ -118,7 +119,7 @@ const ValueTransfer = () => {
                                                     title="Burn"
                                                     value={parseInt(values.burn) > 0 ? values.burn : '0'}
                                                 />
-                                                <KeyValue title="Burn avg (last 50 blocks)" value={avgBurn} />
+
                                                 <KeyValue
                                                     title="Public message"
                                                     value={values.message.length > 0 ? values.message : 'N/A'}
@@ -390,24 +391,14 @@ const ValueTransfer = () => {
                                         error={touched.message && errors.message ? errors.message : false}
                                     />
 
-                                    <Input
-                                        id="burn"
-                                        type="number"
-                                        disabled={isSubmitting}
-                                        placeholder="Burn"
-                                        {...getFieldProps('burn')}
-                                        error={touched.burn && errors.burn ? errors.burn : false}
-                                    />
-                                    <p className="text-slate-500 text-sm mb-4">
-                                        Prioritize your transaction by adding a burn.
-                                    </p>
+                                    <Burn />
                                 </div>
 
                                 <Button
                                     extraClass="mt-8 md:mt-16"
                                     onClick={() => setStep(1)}
                                     variant="primary"
-                                    disabled={!dirty && !isValid}
+                                    disabled={!isValid}
                                 >
                                     Review
                                 </Button>

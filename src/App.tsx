@@ -61,13 +61,9 @@ const App = () => {
                 <Drawer
                     variant="temporary"
                     open={openDrawer}
-                    onClose={(event, reason) => {
-                        if (reason === 'backdropClick' || reason === 'escapeKeyDown') {
-                            setOpenDrawer(false);
-                        }
-                    }}
+                    onClick={() => setOpenDrawer(false)}
                     ModalProps={{ keepMounted: true }}
-                    className="md:hidden grid"
+                    className="md:hidden grid z-[100000]"
                 >
                     <SideMenu />
                 </Drawer>

@@ -19,6 +19,7 @@ import KeyValue from '../../components/UI/KeyValue';
 import * as rpc from '../../__minima__/libs/RPC';
 import TogglePasswordIcon from '../../components/UI/TogglePasswordIcon/TogglePasswordIcon';
 import Logs from '../../components/UI/Logs';
+import Burn from '../../components/UI/Burn';
 
 const Consolidate = () => {
     const mySchema = useFormSchema();
@@ -92,7 +93,6 @@ const Consolidate = () => {
                                                 title="Burn"
                                                 value={parseInt(values.burn) > 0 ? values.burn : '0'}
                                             />
-                                            <KeyValue title="Burn avg (last 50 blocks)" value={avgBurn} />
                                         </div>
                                         <div className="flex flex-col gap-2">
                                             <Button
@@ -327,18 +327,7 @@ const Consolidate = () => {
                             <WalletSelect />
                             {errors.token && <p className="red-bad text-sm">{errors.token}</p>}
 
-                            <Input
-                                id="burn"
-                                type="number"
-                                disabled={isSubmitting}
-                                placeholder="Burn"
-                                {...getFieldProps('burn')}
-                                error={touched.burn && errors.burn ? errors.burn.toString() : false}
-                                extraClass="mt-2"
-                            />
-                            <p className="text-slate-500 text-sm mb-2 mt-2">
-                                Prioritize your transaction by adding a burn.
-                            </p>
+                            <Burn />
 
                             <Button
                                 extraClass="mt-8 md:mt-16"

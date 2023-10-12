@@ -22,6 +22,7 @@ import { createPortal } from 'react-dom';
 import useIsVaultLocked from '../../hooks/useIsVaultLocked';
 import Input from '../../components/UI/Input';
 import FormImageUrlSelect from '../../shared/components/forms/FormImageUrlSelect';
+import Burn from '../../components/UI/Burn';
 
 const TokenCreation = () => {
     const mySchema = useMySchema();
@@ -191,10 +192,6 @@ const TokenCreation = () => {
                                                 <KeyValue
                                                     title="Burn"
                                                     value={parseInt(values.burn) > 0 ? values.burn : '0'}
-                                                />
-                                                <KeyValue
-                                                    title="Burn avg (last 50 blocks)"
-                                                    value={avgBurn.toString()}
                                                 />
                                             </div>
                                             <div className="flex flex-col gap-2">
@@ -446,17 +443,7 @@ const TokenCreation = () => {
                                             add the tokenid after creating the token.
                                         </p>
 
-                                        <Input
-                                            id="burn"
-                                            type="number"
-                                            disabled={isSubmitting}
-                                            placeholder="Burn"
-                                            {...getFieldProps('burn')}
-                                            error={touched.burn && errors.burn ? errors.burn : false}
-                                        />
-                                        <p className="text-slate-500 text-sm mb-4">
-                                            Prioritize your transaction by adding a burn.
-                                        </p>
+                                        <Burn />
 
                                         <Button
                                             extraClass="mt-8 md:mt-16"

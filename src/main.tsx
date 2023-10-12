@@ -4,7 +4,6 @@ import { Navigate, Route, RouterProvider, createHashRouter, createRoutesFromElem
 import App from './App';
 import './index.css';
 import AppProvider from './AppContext';
-import AppNavigation from './Navigation/AppNavigation';
 import Balance from './pages/Balance';
 import TokenDetail from './pages/TokenDetail';
 import Send from './pages/Send';
