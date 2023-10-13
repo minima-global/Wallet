@@ -153,8 +153,7 @@ const Consolidate = () => {
                                                 Success
                                             </h1>
                                             <p className="text-black text-center mb-2">
-                                                The transaction has been posted and should arrive shortly. Check{' '}
-                                                <span className="font-bold">coins</span> property of your token.
+                                                The transaction has been posted and should arrive shortly.
                                             </p>
                                             <Logs />
                                         </div>
@@ -318,7 +317,7 @@ const Consolidate = () => {
                                 around. Learn more on our{' '}
                                 <a
                                     className="font-semibold"
-                                    href="https://docs.minima.global/docs/runanode/terminal_commands#general"
+                                    href="https://docs.minima.global/docs/learn/minima/coreconcepts#utxo-model"
                                     target="_blank"
                                 >
                                     docs.

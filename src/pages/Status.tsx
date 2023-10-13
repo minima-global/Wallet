@@ -32,7 +32,10 @@ const Status = () => {
                                 <>
                                     <svg
                                         className="fill-white hover:cursor-pointer"
-                                        onClick={() => setShowFullStatus(false)}
+                                        onClick={(e: any) => {
+                                            e.stopPropagation();
+                                            setShowFullStatus(false);
+                                        }}
                                         xmlns="http://www.w3.org/2000/svg"
                                         height="24"
                                         viewBox="0 -960 960 960"

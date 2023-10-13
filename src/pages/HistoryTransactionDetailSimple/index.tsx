@@ -61,7 +61,10 @@ const HistoryTransactionDetailSimple = () => {
                                 <>
                                     <svg
                                         className="fill-white hover:cursor-pointer"
-                                        onClick={() => setViewJson(false)}
+                                        onClick={(e: any) => {
+                                            e.stopPropagation();
+                                            setViewJson(false);
+                                        }}
                                         xmlns="http://www.w3.org/2000/svg"
                                         height="24"
                                         viewBox="0 -960 960 960"
@@ -98,7 +101,10 @@ const HistoryTransactionDetailSimple = () => {
                                 <>
                                     <svg
                                         className="fill-white hover:cursor-pointer"
-                                        onClick={() => navigate(-1)}
+                                        onClick={(e: any) => {
+                                            e.stopPropagation();
+                                            navigate(-1);
+                                        }}
                                         xmlns="http://www.w3.org/2000/svg"
                                         height="24"
                                         viewBox="0 -960 960 960"

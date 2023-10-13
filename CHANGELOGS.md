@@ -42,6 +42,18 @@
 - clean up logs
 
 
-##### [2.34.7] - 14 October 23
+##### [2.34.7] - 12 October 23
 - Menu backdrop click to close
 - Add Burn as optional & info dialog
+- 
+##### [2.34.8] - 13 October 23
+- Update consolidate, coin split link
+- Success message on consolidate : remove Check coins property of your token
+- Burn info keep only Last 10 and last 50 
+- Stop propagation when tapping hamburger menu
+- Untitled address (from N/A)
+- Add scrollbar to address list
+- Receive page tweak design, copy tap anywhere in white box (better mobile ux)
+- Update Select component in TokenCreaton & SendPage
+- Hide QrScanner in internal Minima browser
+- Update Burn Copy

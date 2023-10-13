@@ -334,7 +334,7 @@ const CoinSplit = () => {
                                 between transactions. Learn more about transactions on Minima on our{' '}
                                 <a
                                     className="font-semibold"
-                                    href="https://docs.minima.global/docs/learn/minima/transactions"
+                                    href="https://docs.minima.global/docs/learn/minima/coreconcepts#utxo-model"
                                     target="_blank"
                                 >
                                     docs.

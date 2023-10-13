@@ -44,19 +44,27 @@ const History = () => {
 
             if (
                 historyFacade[key] &&
-                historyFacade[key].filter((_t: any) => _t.txpowid.includes(filterText)).length > 0
+                historyFacade[key].filter(
+                    (_t: any) => _t.txpowid.includes(filterText) || _t.tokenName.includes(filterText)
+                ).length > 0
             ) {
                 elements.push(
                     <React.Fragment key={Math.random()}>
                         {historyFacade[key] &&
-                            historyFacade[key].filter((_t: any) => _t.txpowid.includes(filterText)).length > 0 && (
+                            historyFacade[key].filter(
+                                (_t: any) => _t.txpowid.includes(filterText) || _t.tokenName.includes(filterText)
+                            ).length > 0 && (
                                 <div>
                                     <h3 className="text-sm font-semibold text-black mt-2 mb-2">{displayDate}</h3>
 
                                     <ul className="flex flex-col gap-2">
                                         {historyFacade[key] &&
                                             historyFacade[key]
-                                                .filter((_t: any) => _t.txpowid.includes(filterText))
+                                                .filter(
+                                                    (_t: any) =>
+                                                        _t.txpowid.includes(filterText) ||
+                                                        _t.tokenName.includes(filterText)
+                                                )
                                                 .map((t: any) => (
                                                     <li
                                                         key={t.txpowid}
@@ -184,7 +192,10 @@ const History = () => {
                 title={
                     <>
                         <svg
-                            onClick={() => setOpenDrawer(true)}
+                            onClick={(e: any) => {
+                                e.stopPropagation();
+                                setOpenDrawer(true);
+                            }}
                             className="block md:hidden fill-white"
                             xmlns="http://www.w3.org/2000/svg"
                             height="24"
@@ -208,7 +219,7 @@ const History = () => {
                                 value={filterText}
                                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilterText(e.target.value)}
                                 type="search"
-                                placeholder="Search transaction by txpowid"
+                                placeholder="Search by txpowid or token name"
                             />
                         }
                         content={

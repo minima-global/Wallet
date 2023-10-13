@@ -68,17 +68,12 @@ const Burn = () => {
                             <div className="flex flex-col gap-4 mx-4 rounded bg-white bg-opacity-90 p-4 mb-4 shadow-sm h-max">
                                 <div className="overflow-scroll my-2 mb-4">
                                     <p className="font-semibold mb-6">
-                                        Adding a burn puts your transaction as priority in the mempool and is needed
-                                        when the network is busy and congested. The report below will help you identify
-                                        whether you need to add a burn and how much other users are setting their fees
-                                        on average.
+                                        Burning Minima increases the chance that your transaction will be put into the
+                                        next block. It is optional and only required when the network is busy and blocks
+                                        are full. The table below shows the burn currently being set by users.
                                     </p>
-                                    <div className="grid grid-cols-3 grid-rows-1 divide-x mt-4">
-                                        <div>
-                                            <h3 className="bg-black text-white text-center px-2 truncate">
-                                                Last block
-                                            </h3>
-                                        </div>
+                                    <div className="grid grid-cols-[50px_1fr_1fr] grid-rows-1 divide-x mt-4">
+                                        <div className="bg-black w-[50px]"></div>
                                         <div>
                                             <h3 className="bg-black text-white text-center truncate px-2">
                                                 Last 10 blocks
@@ -90,39 +85,36 @@ const Burn = () => {
                                             </h3>
                                         </div>
                                     </div>
-                                    <div className="grid grid-cols-3 grid-rows-1 divide-x">
+                                    <div className="grid grid-cols-[50px_1fr_1fr] grid-rows-1 divide-x">
                                         <div>
-                                            <h3 className="bg-white text-black text-left grid grid-cols-[1fr_1fr] grid-rows-1">
-                                                <span className="pl-2 text-slate-400 text-sm">Txns:</span>
-                                                {burnData && burnData['1block'].txns}
-                                            </h3>
-                                            <h3 className="bg-white text-black text-left grid grid-cols-[1fr_1fr] grid-rows-1">
-                                                <span className="pl-2 text-slate-400 text-sm">Avg:</span>
-                                                {burnData && burnData['1block'].avg}
-                                            </h3>
-                                            <h3 className="bg-white text-black text-left grid grid-cols-[1fr_1fr] grid-rows-1">
-                                                <span className="pl-2 text-slate-400 text-sm">Min:</span>
-                                                {burnData && burnData['1block'].min}
-                                            </h3>
-                                            <h3 className="bg-white text-black text-left grid grid-cols-[1fr_1fr] grid-rows-1">
-                                                <span className="pl-2 text-slate-400 text-sm">Max:</span>
-                                                {burnData && burnData['1block'].max}
-                                            </h3>
+                                            <div className="pl-2 h-[24px] text-slate-500 bg-gray-300 text-sm font-semibold">
+                                                Txns
+                                            </div>
+                                            <div className="pl-2 h-[24px] text-slate-500 bg-gray-300 text-sm font-semibold">
+                                                Avg
+                                            </div>
+                                            <div className="pl-2 h-[24px] text-slate-500 bg-gray-300 text-sm font-semibold">
+                                                Min
+                                            </div>
+                                            <div className="pl-2 h-[24px] text-slate-500 bg-gray-300 text-sm font-semibold">
+                                                Max
+                                            </div>
                                         </div>
                                         <div>
-                                            <h3 className="bg-white text-black text-center">
+                                            <h3 className="bg-white text-black text-center grid grid-cols-1 grid-rows-1">
                                                 {burnData && burnData['10block'].txns}
                                             </h3>
-                                            <h3 className="bg-white text-black text-center">
+                                            <h3 className="bg-white text-black text-center grid grid-cols-1 grid-rows-1">
                                                 {burnData && burnData['10block'].avg}
                                             </h3>
-                                            <h3 className="bg-white text-black text-center">
+                                            <h3 className="bg-white text-black text-center grid grid-cols-1 grid-rows-1">
                                                 {burnData && burnData['10block'].min}
                                             </h3>
-                                            <h3 className="bg-white text-black text-center">
+                                            <h3 className="bg-white text-black text-center grid grid-cols-1 grid-rows-1">
                                                 {burnData && burnData['10block'].max}
                                             </h3>
                                         </div>
+
                                         <div>
                                             <h3 className="bg-white text-black text-center">
                                                 {burnData && burnData['50block'].txns}
@@ -167,7 +159,6 @@ const Burn = () => {
                         id="checked-checkbox"
                         type="checkbox"
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                            console.log(e.currentTarget.checked);
                             setViewInput(e.currentTarget.checked);
                         }}
                         className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded"

@@ -41,7 +41,10 @@ const Receive = () => {
                 title={
                     <>
                         <svg
-                            onClick={() => setOpenDrawer(true)}
+                            onClick={(e: any) => {
+                                e.stopPropagation();
+                                setOpenDrawer(true);
+                            }}
                             className="block md:hidden fill-white"
                             xmlns="http://www.w3.org/2000/svg"
                             height="24"
@@ -140,7 +143,7 @@ const Receive = () => {
                             <>
                                 <div className="flex justify-center">
                                     <QRCode
-                                        className="rounded h-[240px] w-[240px] mt-8 animate-fadeIn"
+                                        className="rounded h-[190px] w-[190px] md:h-[240px] md:w-[240px] mt-8 animate-fadeIn"
                                         value={address ? address?.miniaddress : ''}
                                         type="M"
                                     />
@@ -149,59 +152,102 @@ const Receive = () => {
                         }
                         content={
                             <div>
-                                <div className="bg-white p-4">
-                                    <div className="grid grid-cols-[auto_1fr] grid-rows-1 gap-2 w-full">
-                                        <h1 className="text-black font-semibold truncate">
-                                            {address && _nicknameAddress && _nicknameAddress[address.miniaddress]
-                                                ? _nicknameAddress[address.miniaddress]
-                                                : 'N/A'}
-                                        </h1>
-                                        {address && (
-                                            <svg
-                                                onClick={() => setShowEditNickname(address.miniaddress)}
-                                                className="hover:cursor-pointer hover:scale-105 fill-purple-400"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                height="20"
-                                                viewBox="0 -960 960 960"
-                                                width="20"
+                                <div
+                                    onClick={handleCopyClick}
+                                    className={`p-4 ${
+                                        copyState ? 'bg-green-good' : 'bg-white hover:bg-slate-100 hover:cursor-pointer'
+                                    }`}
+                                >
+                                    {!copyState && (
+                                        <>
+                                            <div
+                                                onClick={(e: any) => e.stopPropagation()}
+                                                className={`flex justify-center md:grid md:grid-cols-[auto_1fr] md:grid-rows-1 gap-2 w-full`}
                                             >
-                                                <path d="M200-200h56l345-345-56-56-345 345v56Zm572-403L602-771l56-56q23-23 56.5-23t56.5 23l56 56q23 23 24 55.5T829-660l-57 57Zm-58 59L290-120H120v-170l424-424 170 170Zm-141-29-28-28 56 56-28-28Z" />
-                                            </svg>
-                                        )}
-                                    </div>
+                                                <h1
+                                                    className="text-black font-semibold truncate"
+                                                    onClick={(e: any) => e.stopPropagation()}
+                                                >
+                                                    {address &&
+                                                    _nicknameAddress &&
+                                                    _nicknameAddress[address.miniaddress]
+                                                        ? _nicknameAddress[address.miniaddress]
+                                                        : 'Untitled address'}
+                                                </h1>
+                                                {address && (
+                                                    <svg
+                                                        onClick={(e: any) => {
+                                                            e.stopPropagation();
+                                                            setShowEditNickname(address.miniaddress);
+                                                        }}
+                                                        className="hover:cursor-pointer hover:scale-105 fill-purple-400"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        height="20"
+                                                        viewBox="0 -960 960 960"
+                                                        width="20"
+                                                    >
+                                                        <path d="M200-200h56l345-345-56-56-345 345v56Zm572-403L602-771l56-56q23-23 56.5-23t56.5 23l56 56q23 23 24 55.5T829-660l-57 57Zm-58 59L290-120H120v-170l424-424 170 170Zm-141-29-28-28 56 56-28-28Z" />
+                                                    </svg>
+                                                )}
+                                            </div>
 
-                                    <div className="grid grid-cols-[auto_1fr] grid-rows-1 gap-1 items-center">
-                                        <p className="text-black text-sm hidden md:block truncate">
-                                            {address ? address.miniaddress : ''}
-                                        </p>
-                                        <p className="text-black text-sm  md:hidden">
-                                            {address ? utils.truncateString(address.miniaddress, 8, 8) : ''}
-                                        </p>
-                                        <button onClick={handleCopyClick}>
-                                            {!copyState && (
-                                                <svg
-                                                    className="fill-black"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    height="20"
-                                                    viewBox="0 -960 960 960"
-                                                    width="20"
+                                            <div
+                                                className={`flex justify-center md:grid md:grid-cols-[auto_1fr] md:grid-rows-1 gap-1 items-center`}
+                                            >
+                                                <p
+                                                    onClick={(e: any) => e.stopPropagation()}
+                                                    className="text-black text-sm hidden md:block truncate"
                                                 >
-                                                    <path d="M360-240q-33 0-56.5-23.5T280-320v-480q0-33 23.5-56.5T360-880h360q33 0 56.5 23.5T800-800v480q0 33-23.5 56.5T720-240H360Zm0-80h360v-480H360v480ZM200-80q-33 0-56.5-23.5T120-160v-560h80v560h440v80H200Zm160-240v-480 480Z" />
-                                                </svg>
-                                            )}
-                                            {copyState && (
-                                                <svg
-                                                    className="fill-[#FFA010]"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    height="20"
-                                                    viewBox="0 -960 960 960"
-                                                    width="20"
+                                                    {address ? address.miniaddress : ''}
+                                                </p>
+                                                <p
+                                                    onClick={(e: any) => e.stopPropagation()}
+                                                    className="text-black text-sm md:hidden"
                                                 >
-                                                    <path d="m438-240 226-226-58-58-169 169-84-84-57 57 142 142ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z" />
-                                                </svg>
-                                            )}
-                                        </button>
-                                    </div>
+                                                    {address ? utils.truncateString(address.miniaddress, 10, 10) : ''}
+                                                </p>
+                                                <button className="hidden md:block" onClick={handleCopyClick}>
+                                                    {!copyState && (
+                                                        <svg
+                                                            className="fill-black"
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                            height="20"
+                                                            viewBox="0 -960 960 960"
+                                                            width="20"
+                                                        >
+                                                            <path d="M360-240q-33 0-56.5-23.5T280-320v-480q0-33 23.5-56.5T360-880h360q33 0 56.5 23.5T800-800v480q0 33-23.5 56.5T720-240H360Zm0-80h360v-480H360v480ZM200-80q-33 0-56.5-23.5T120-160v-560h80v560h440v80H200Zm160-240v-480 480Z" />
+                                                        </svg>
+                                                    )}
+                                                    {copyState && (
+                                                        <svg
+                                                            className="fill-[#FFA010]"
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                            height="20"
+                                                            viewBox="0 -960 960 960"
+                                                            width="20"
+                                                        >
+                                                            <path d="m438-240 226-226-58-58-169 169-84-84-57 57 142 142ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z" />
+                                                        </svg>
+                                                    )}
+                                                </button>
+                                            </div>
+                                        </>
+                                    )}
+                                    {copyState && (
+                                        <div className="flex justify-center gap-1 items-center animate-fadeIn">
+                                            <h1 className="text-black truncate gap-1">Copied</h1>
+
+                                            <svg
+                                                className=""
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                height="24"
+                                                viewBox="0 -960 960 960"
+                                                width="24"
+                                            >
+                                                <path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z" />
+                                            </svg>
+                                        </div>
+                                    )}
                                 </div>
 
                                 <button
@@ -220,11 +266,13 @@ const Receive = () => {
                                 </button>
 
                                 <ul
+                                    id="address-selector"
                                     aria-expanded={!showFullList}
                                     className="accordion-content rounded bg-white h-[250px] divide-y-1"
                                 >
                                     <li className="mx-4 my-2">
                                         <Input
+                                            extraClass="text-center md:text-left"
                                             id="search"
                                             name="search"
                                             disabled={false}
@@ -267,16 +315,16 @@ const Receive = () => {
                                                 }}
                                                 className="truncate mb-2 px-4 p-4 first:mt-2 text-black hover:bg-slate-50 hover:cursor-pointer"
                                             >
-                                                <h1 className="text-black font-semibold truncate">
+                                                <h1 className="text-black font-semibold truncate text-center md:text-left">
                                                     {_nicknameAddress && _nicknameAddress[a.miniaddress]
                                                         ? _nicknameAddress[a.miniaddress]
-                                                        : 'N/A'}
+                                                        : 'Untitled address'}
                                                 </h1>
-                                                <p className="text-black text-sm hidden md:block truncate">
+                                                <p className="text-black text-sm hidden md:block truncate text-center md:text-left">
                                                     {a.miniaddress}
                                                 </p>
-                                                <p className="text-black text-sm  md:hidden">
-                                                    {utils.truncateString(a.miniaddress, 8, 8)}
+                                                <p className="text-black text-sm  md:hidden text-center md:text-left">
+                                                    {utils.truncateString(a.miniaddress, 12, 12)}
                                                 </p>
                                             </li>
                                         ))}

@@ -43,7 +43,10 @@ const CreateNFTForm = () => {
             title={
                 <>
                     <svg
-                        onClick={() => navigate(-1)}
+                        onClick={(e: any) => {
+                            e.stopPropagation();
+                            navigate(-1);
+                        }}
                         className="fill-white hover:cursor-pointer"
                         xmlns="http://www.w3.org/2000/svg"
                         height="24"
@@ -484,7 +487,9 @@ const CreateNFTForm = () => {
                                                     </>
                                                 }
                                             />
-                                            <p className="text-slate-500 text-sm mb-4">A description about your NFT.</p>
+                                            <p className="text-slate-500 text-sm mb-4">
+                                                Enter a description about your Non-fungible token
+                                            </p>
 
                                             <Input
                                                 id="webvalidate"

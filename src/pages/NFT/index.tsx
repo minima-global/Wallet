@@ -26,7 +26,10 @@ const NFTs = () => {
             title={
                 <>
                     <svg
-                        onClick={() => setOpenDrawer(true)}
+                        onClick={(e: any) => {
+                            e.stopPropagation();
+                            setOpenDrawer(true);
+                        }}
                         className="block md:hidden fill-white"
                         xmlns="http://www.w3.org/2000/svg"
                         height="24"
@@ -46,10 +49,11 @@ const NFTs = () => {
                             <Grid variant="lg" title={<></>}>
                                 <div className="mx-4 rounded bg-white bg-opacity-90 p-4 h-max max-h-[calc(100%_-_16px)] overflow-y-scroll">
                                     <h1 className="text-black font-bold truncate mb-2 text-center">
-                                        {showDetail.token.name.name}
+                                        {'name' in showDetail.token.name && showDetail.token.name.name}
+                                        {!('name' in showDetail.token.name) && 'N/A'}
                                     </h1>
                                     <div className="divide-y-2 mb-8">
-                                        {!showDetail.token.name.url.length && (
+                                        {'url' in showDetail.token.name && !showDetail.token.name.url.length && (
                                             <div className=" bg-white flex flex-col gap-4 truncate">
                                                 <div className="w-auto h-[50vh] flex items-center justify-center bg-slate-200">
                                                     <svg
@@ -63,7 +67,7 @@ const NFTs = () => {
                                                 </div>
                                             </div>
                                         )}
-                                        {!!showDetail.token.name.url.length && (
+                                        {'url' in showDetail.token.name && !!showDetail.token.name.url.length && (
                                             <img
                                                 className="h-auto w-full rounded-t-lg"
                                                 src={showDetail.token.name.url}
@@ -73,7 +77,7 @@ const NFTs = () => {
                                         <KeyValue
                                             title="Creator"
                                             value={
-                                                showDetail.token.name.owner.length
+                                                'owner' in showDetail.token.name && showDetail.token.name.owner.length
                                                     ? showDetail.token.name.owner
                                                     : 'Anonymous'
                                             }
@@ -81,6 +85,7 @@ const NFTs = () => {
                                         <KeyValue
                                             title="Description"
                                             value={
+                                                'description' in showDetail.token.name &&
                                                 showDetail.token.name.description.length
                                                     ? showDetail.token.name.description
                                                     : 'N/A'
@@ -90,18 +95,21 @@ const NFTs = () => {
                                             title="Web validation"
                                             value={
                                                 <>
-                                                    {!!showDetail.token.name.webvalidate.length && (
-                                                        <div className="flex justify-between items-center">
-                                                            <a
-                                                                className="hover:cursor-pointer text-blue-400 hover:underline"
-                                                                href={showDetail.token.name.webvalidate}
-                                                                target="_blank"
-                                                            >
-                                                                {showDetail.token.name.webvalidate}
-                                                            </a>
-                                                        </div>
-                                                    )}
-                                                    {!showDetail.token.name.webvalidate.length && 'N/A'}
+                                                    {'webvalidate' in showDetail.token.name &&
+                                                        !!showDetail.token.name.webvalidate.length && (
+                                                            <div className="flex justify-between items-center">
+                                                                <a
+                                                                    className="hover:cursor-pointer text-blue-400 hover:underline"
+                                                                    href={showDetail.token.name.webvalidate}
+                                                                    target="_blank"
+                                                                >
+                                                                    {showDetail.token.name.webvalidate}
+                                                                </a>
+                                                            </div>
+                                                        )}
+                                                    {'webvalidate' in showDetail.token.name &&
+                                                        !showDetail.token.name.webvalidate.length &&
+                                                        'N/A'}
                                                 </>
                                             }
                                         />
@@ -109,16 +117,19 @@ const NFTs = () => {
                                             title="External URL"
                                             value={
                                                 <>
-                                                    {!!showDetail.token.name.external_url.length && (
-                                                        <a
-                                                            className="hover:cursor-pointer text-blue-400 hover:underline"
-                                                            href={showDetail.token.name.external_url}
-                                                            target="_blank"
-                                                        >
-                                                            {showDetail.token.name.external_url}
-                                                        </a>
-                                                    )}
-                                                    {!showDetail.token.name.external_url.length && 'N/A'}
+                                                    {'external_url' in showDetail.token.name &&
+                                                        !!showDetail.token.name.external_url.length && (
+                                                            <a
+                                                                className="hover:cursor-pointer text-blue-400 hover:underline"
+                                                                href={showDetail.token.name.external_url}
+                                                                target="_blank"
+                                                            >
+                                                                {showDetail.token.name.external_url}
+                                                            </a>
+                                                        )}
+                                                    {'external_url' in showDetail.token.name &&
+                                                        !showDetail.token.name.external_url.length &&
+                                                        'N/A'}
                                                 </>
                                             }
                                         />
@@ -266,12 +277,13 @@ const NFTs = () => {
                             {selectedTab === 1 && (
                                 <ul
                                     className={`grid  grid-cols-2 ${
-                                        _favoriteTokens.length > 2 ? 'md:grid-cols-3' : ''
+                                        _favoriteTokens && _favoriteTokens.length > 2 ? 'md:grid-cols-3' : ''
                                     } grid-rows-1 ${
                                         !_favoriteTokens || _favoriteTokens.length === 0 ? '!grid-cols-1' : ''
                                     } gap-2 mt-8 animate-fadeIn3`}
                                 >
-                                    {!!_favoriteTokens.length &&
+                                    {_favoriteTokens &&
+                                        !!_favoriteTokens.length &&
                                         NFTs.filter((t: any) => _favoriteTokens.includes(t.tokenid)).map((w: any) => (
                                             <li
                                                 key={w.tokenid}

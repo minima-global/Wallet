@@ -287,25 +287,6 @@ const WalletSelect = () => {
                                     : formik.values.token.coins + ' coin(s) available'}
                             </p>
                         </div>
-
-                        <svg
-                            className={`${active ? styles.active : ''} my-auto fill-gray-500`}
-                            width="32"
-                            height="33"
-                            viewBox="0 0 32 33"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <mask id="mask0_2226_53255" maskUnits="userSpaceOnUse" x="0" y="0" width="32" height="33">
-                                <rect y="0.550781" width="32" height="32" fill="#D9D9D9" />
-                            </mask>
-                            <g mask="url(#mask0_2226_53255)">
-                                <path
-                                    d="M16.0004 20.6172L8.4668 13.0508L9.6668 11.8844L16.0004 18.2172L22.334 11.8844L23.534 13.0844L16.0004 20.6172Z"
-                                    fill="#08090B"
-                                />
-                            </g>
-                        </svg>
                     </div>
                 </>
             )}

@@ -53,7 +53,10 @@ const ValidateAddress = () => {
             title={
                 <>
                     <svg
-                        onClick={() => setOpenDrawer(true)}
+                        onClick={(e: any) => {
+                            e.stopPropagation();
+                            setOpenDrawer(true);
+                        }}
                         className="block md:hidden fill-white"
                         xmlns="http://www.w3.org/2000/svg"
                         height="24"
@@ -102,8 +105,7 @@ const ValidateAddress = () => {
                     header={
                         <>
                             <h1 className="text-black mb-4 font-semibold">
-                                Validate an 0x or Mx address. Check if it's relevant to your address and other
-                                properties.
+                                Validate an 0x or Mx wallet address and check whether it is relevant to your node.
                             </h1>
                         </>
                     }
@@ -232,7 +234,14 @@ const ValidateAddress = () => {
                                                             <h1 className="text-black text-center font-semibold text-xl mb-2">
                                                                 Hmm... something went wrong!
                                                             </h1>
-                                                            <p className="text-black text-center break-all">{error}</p>
+                                                            <p className="text-black text-center break-all">
+                                                                {typeof error.includes !== 'undefined' &&
+                                                                error.includes('java.lang.IllegalArgumentException:')
+                                                                    ? error.split(
+                                                                          'java.lang.IllegalArgumentException:'
+                                                                      )[1]
+                                                                    : error}
+                                                            </p>
                                                         </div>
                                                         <div className="flex flex-col gap-2 w-full mt-8 md:mt-16 self-end">
                                                             {!isSubmitting && (

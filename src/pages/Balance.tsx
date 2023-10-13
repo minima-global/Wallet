@@ -12,7 +12,10 @@ const Balance = () => {
             title={
                 <>
                     <svg
-                        onClick={() => setOpenDrawer(true)}
+                        onClick={(e: any) => {
+                            e.stopPropagation();
+                            setOpenDrawer(true);
+                        }}
                         className="block md:hidden fill-white"
                         xmlns="http://www.w3.org/2000/svg"
                         height="24"

@@ -33,7 +33,10 @@ const TokenDetail = () => {
                     {
                         <>
                             <svg
-                                onClick={() => navigate(-1)}
+                                onClick={(e: any) => {
+                                    e.stopPropagation();
+                                    navigate(-1);
+                                }}
                                 className="fill-white hover:cursor-pointer"
                                 xmlns="http://www.w3.org/2000/svg"
                                 height="24"

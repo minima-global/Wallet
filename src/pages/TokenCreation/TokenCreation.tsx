@@ -40,7 +40,10 @@ const TokenCreation = () => {
                 <>
                     {' '}
                     <svg
-                        onClick={() => setOpenDrawer(true)}
+                        onClick={(e: any) => {
+                            e.stopPropagation();
+                            setOpenDrawer(true);
+                        }}
                         className="block md:hidden fill-white"
                         xmlns="http://www.w3.org/2000/svg"
                         height="24"
@@ -413,13 +416,15 @@ const TokenCreation = () => {
                                                 </>
                                             }
                                         />
-                                        <p className="text-slate-500 text-sm mb-4">A description about your NFT.</p>
+                                        <p className="text-slate-500 text-sm mb-4">
+                                            Enter a description about your token
+                                        </p>
 
                                         <Input
                                             id="ticker"
                                             type="text"
                                             disabled={isSubmitting}
-                                            placeholder="Web validation URL"
+                                            placeholder="Ticker symbol"
                                             {...getFieldProps('ticker')}
                                             error={touched.ticker && errors.ticker ? errors.ticker : false}
                                         />
