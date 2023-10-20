@@ -241,7 +241,7 @@ const NFTs = () => {
                                                         <div className="w-[-webkit-fill-available] flex items-center justify-center bg-slate-200">
                                                             <svg
                                                                 xmlns="http://www.w3.org/2000/svg"
-                                                                height="100%"
+                                                                height="250"
                                                                 viewBox="0 -960 960 960"
                                                                 width="100%"
                                                             >
@@ -258,7 +258,7 @@ const NFTs = () => {
                                                         <div className="w-[-webkit-fill-available] flex items-center justify-center bg-slate-200">
                                                             <svg
                                                                 xmlns="http://www.w3.org/2000/svg"
-                                                                height="100%"
+                                                                height="250"
                                                                 viewBox="0 -960 960 960"
                                                                 width="100%"
                                                             >

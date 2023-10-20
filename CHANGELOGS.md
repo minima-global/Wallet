@@ -71,3 +71,6 @@
 - Set a fixed height of content on NFT Collection page
 - Fixed downloading transaction CSV
 - Added a download all transactions on History page
+
+##### [2.34.12] - 20 October 23
+- Set fixed height to all NFTs 
