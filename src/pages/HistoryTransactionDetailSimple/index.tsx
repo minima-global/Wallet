@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import exportToCsv from '../../shared/utils/jsonToCsv';
+import { downloadAllAsCsv, downloadCsv } from '../../shared/utils/jsonToCsv';
 
 import { appContext } from '../../AppContext';
 import { createPortal } from 'react-dom';
@@ -35,14 +35,13 @@ const HistoryTransactionDetailSimple = () => {
         stateVars: any[];
     } | null>(null);
 
-    const handleExportingToCSV = (e: any) => {
-        if (_transaction) {
-            exportToCsv(
-                e,
-                historyDetails,
-                JSON.stringify(history.find((t: any) => t.txpowid === _transaction.txpowid))
-            );
-        }
+    const handleExportingToCSV = (_t: any) => {
+        const transactionDetail = historyDetails.find((t: any) => t.txpowid === _t.txpowid);
+        const { amount, txpowid, sentToMx, sentTo0x, date, type, blockPosted, burn } = transactionDetail;
+
+        const fullJson = JSON.stringify(history.find((t: any) => t.txpowid === _t.txpowid));
+
+        downloadCsv({ amount, txpowid, sentToMx, sentTo0x, date, type, blockPosted, burn, fullJson });
     };
 
     useEffect(() => {
@@ -135,7 +134,7 @@ const HistoryTransactionDetailSimple = () => {
                                             </svg>
 
                                             <svg
-                                                onClick={handleExportingToCSV}
+                                                onClick={() => handleExportingToCSV(_transaction)}
                                                 className="fill-black hover:cursor-pointer"
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 height="24"

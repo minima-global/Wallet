@@ -45,7 +45,7 @@
 ##### [2.34.7] - 12 October 23
 - Menu backdrop click to close
 - Add Burn as optional & info dialog
-- 
+
 ##### [2.34.8] - 13 October 23
 - Update consolidate, coin split link
 - Success message on consolidate : remove Check coins property of your token
@@ -57,3 +57,17 @@
 - Update Select component in TokenCreaton & SendPage
 - Hide QrScanner in internal Minima browser
 - Update Burn Copy
+
+##### [2.34.9] - 13 October 23
+- Fix .length error in NFTs 
+- Clean up logs
+
+
+##### [2.34.10] - 18 October 23
+- Fixed nfts uniqueness
+- Backward compatible images for NFTs if they use artimage
+
+##### [2.34.11] - 20 October 23
+- Set a fixed height of content on NFT Collection page
+- Fixed downloading transaction CSV
+- Added a download all transactions on History page

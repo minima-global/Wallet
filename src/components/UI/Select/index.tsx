@@ -45,6 +45,7 @@ const Select = ({ current, setCurrent, def, options }: IProps) => {
                 {options &&
                     options.map((o) => (
                         <li
+                            key={Math.random()}
                             className={`hover:bg-slate-100 p-4 ${o === current ? 'bg-slate-100' : ''}`}
                             onClick={() => {
                                 setCurrent(o);

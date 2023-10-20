@@ -9,13 +9,18 @@ import CardContent from '../../components/UI/CardContent';
 
 import { format, isSameWeek, isSameYear } from 'date-fns';
 
+import 'flowbite';
+import { initFlowbite } from 'flowbite';
+import { downloadAllAsCsv } from '../../shared/utils/jsonToCsv';
+
 const History = () => {
     const navigate = useNavigate();
-    const { historyFacade, setOpenDrawer, getHistory, loaded } = useContext(appContext);
+    const { historyFacade, historyDetails, history, setOpenDrawer, getHistory, loaded } = useContext(appContext);
 
     const [filterText, setFilterText] = useState('');
 
     useEffect(() => {
+        initFlowbite();
         if (loaded.current === true) {
             getHistory();
         }
@@ -185,6 +190,27 @@ const History = () => {
 
     createElement();
 
+    const handleDownloadAll = () => {
+        const transactions = historyDetails.map((_t: any) => {
+            const { amount, txpowid, sentToMx, sentTo0x, date, type, blockPosted, burn } = _t;
+            const fullJson = JSON.stringify(history.find((t: any) => t.txpowid === _t.txpowid));
+
+            return {
+                amount,
+                txpowid,
+                sentToMx,
+                sentTo0x,
+                date,
+                type,
+                blockPosted,
+                burn,
+                fullJson,
+            };
+        });
+
+        downloadAllAsCsv(transactions);
+    };
+
     return (
         <>
             <Outlet />
@@ -212,15 +238,49 @@ const History = () => {
                 <>
                     <CardContent
                         header={
-                            <Input
-                                id="search"
-                                name="search"
-                                disabled={false}
-                                value={filterText}
-                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilterText(e.target.value)}
-                                type="search"
-                                placeholder="Search by txpowid or token name"
-                            />
+                            <div className="flex flex-col w-full">
+                                <span className="w-full flex justify-end mb-4">
+                                    <svg
+                                        id="dropdownDefaultButton"
+                                        data-dropdown-toggle="dropdown"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        height="24"
+                                        viewBox="0 -960 960 960"
+                                        width="24"
+                                    >
+                                        <path d="M480-160q-33 0-56.5-23.5T400-240q0-33 23.5-56.5T480-320q33 0 56.5 23.5T560-240q0 33-23.5 56.5T480-160Zm0-240q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm0-240q-33 0-56.5-23.5T400-720q0-33 23.5-56.5T480-800q33 0 56.5 23.5T560-720q0 33-23.5 56.5T480-640Z" />
+                                    </svg>
+                                    <div
+                                        id="dropdown"
+                                        className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700"
+                                    >
+                                        <ul
+                                            className="py-2 text-sm text-gray-700 dark:text-gray-200"
+                                            aria-labelledby="dropdownDefaultButton"
+                                        >
+                                            <li>
+                                                <a
+                                                    onClick={() => {
+                                                        handleDownloadAll();
+                                                    }}
+                                                    className="block px-4 py-2 hover:bg-gray-100 hover:cursor-pointer dark:hover:bg-gray-600 dark:hover:text-white"
+                                                >
+                                                    Download all
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </span>
+                                <Input
+                                    id="search"
+                                    name="search"
+                                    disabled={false}
+                                    value={filterText}
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilterText(e.target.value)}
+                                    type="search"
+                                    placeholder="Search by txpowid or token name"
+                                />
+                            </div>
                         }
                         content={
                             <div className="flex flex-col gap-8">

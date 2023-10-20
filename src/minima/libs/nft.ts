@@ -5,9 +5,9 @@
 //  */
 import getSuitableImage from '../../shared/utils/imagehandler/getSuitableImage';
 import { createCustomToken } from '../rpc-commands';
-import { MiCustomToken, MiNFT } from '../../@types/nft';
+import { MinimaToken, NonFungibleToken } from '../../@types/nft';
 
-const buildCustomTokenCreation = async (tokenData: MiNFT | MiCustomToken, amount: string, nft: boolean) => {
+const buildCustomTokenCreation = async (tokenData: NonFungibleToken | MinimaToken, amount: string, nft: boolean) => {
     try {
         // if this is a data uri then compress it..
         if (tokenData.url.startsWith('data:image/', 0)) {

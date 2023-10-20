@@ -2,7 +2,6 @@ import { useContext } from 'react';
 import Grid from '../components/UI/Grid';
 import Wallet from './components/wallet/Wallet';
 import { appContext } from '../AppContext';
-import { Outlet } from 'react-router-dom';
 
 const Balance = () => {
     const { setOpenDrawer } = useContext(appContext);

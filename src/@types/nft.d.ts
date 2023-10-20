@@ -3,12 +3,12 @@
  * this should help for any written minidapp to interface with the same NFT interface
  */
 
-interface MiNFT extends MiCustomToken {
+interface NonFungibleToken extends MinimaToken {
     external_url: string;
     owner: string;
 }
 
-interface MiCustomToken {
+interface MinimaToken {
     name: string;
     url: string;
     description: string;
@@ -16,4 +16,4 @@ interface MiCustomToken {
     webvalidate?: string;
 }
 
-export { MiNFT, MiCustomToken };
+export { NonFungibleToken, MinimaToken };

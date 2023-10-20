@@ -13,7 +13,6 @@ const NFTs = () => {
     const navigate = useNavigate();
     const [selectedTab, setSelectedTab] = useState(0);
     const [showDetail, setShowDetail] = useState<any | false>(false);
-
     const { NFTs, setOpenDrawer, toggleFavourite, _favoriteTokens } = useContext(appContext);
 
     const handleTabClick = (index: number) => {
@@ -47,13 +46,16 @@ const NFTs = () => {
                     createPortal(
                         <div className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn">
                             <Grid variant="lg" title={<></>}>
-                                <div className="mx-4 rounded bg-white bg-opacity-90 p-4 h-max max-h-[calc(100%_-_16px)] overflow-y-scroll">
+                                <div
+                                    id="card-view"
+                                    className="mx-4 rounded bg-white bg-opacity-90 p-4 h-max max-h-[calc(100%_-_16px)] overflow-y-scroll"
+                                >
                                     <h1 className="text-black font-bold truncate mb-2 text-center">
-                                        {'name' in showDetail.token.name && showDetail.token.name.name}
-                                        {!('name' in showDetail.token.name) && 'N/A'}
+                                        {'name' in showDetail.name && showDetail.name.name}
+                                        {!('name' in showDetail.name) && 'N/A'}
                                     </h1>
                                     <div className="divide-y-2 mb-8">
-                                        {'url' in showDetail.token.name && !showDetail.token.name.url.length && (
+                                        {'url' in showDetail.name && !showDetail.name.url.length && (
                                             <div className=" bg-white flex flex-col gap-4 truncate">
                                                 <div className="w-auto h-[50vh] flex items-center justify-center bg-slate-200">
                                                     <svg
@@ -67,27 +69,40 @@ const NFTs = () => {
                                                 </div>
                                             </div>
                                         )}
-                                        {'url' in showDetail.token.name && !!showDetail.token.name.url.length && (
+                                        {'url' in showDetail.name && !!showDetail.name.url.length && (
                                             <img
                                                 className="h-auto w-full rounded-t-lg"
-                                                src={showDetail.token.name.url}
+                                                src={showDetail.name.url}
                                                 alt=""
                                             />
+                                        )}
+                                        {!('url' in showDetail.name) && (
+                                            <div className=" bg-white flex flex-col gap-4 truncate">
+                                                <div className="w-auto h-[50vh] flex items-center justify-center bg-slate-200">
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        height="50vh"
+                                                        viewBox="0 -960 960 960"
+                                                        width="100%"
+                                                    >
+                                                        <path d="M360-390q-21 0-35.5-14.5T310-440q0-21 14.5-35.5T360-490q21 0 35.5 14.5T410-440q0 21-14.5 35.5T360-390Zm240 0q-21 0-35.5-14.5T550-440q0-21 14.5-35.5T600-490q21 0 35.5 14.5T650-440q0 21-14.5 35.5T600-390ZM480-160q134 0 227-93t93-227q0-24-3-46.5T786-570q-21 5-42 7.5t-44 2.5q-91 0-172-39T390-708q-32 78-91.5 135.5T160-486v6q0 134 93 227t227 93Zm0 80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm-54-715q42 70 114 112.5T700-640q14 0 27-1.5t27-3.5q-42-70-114-112.5T480-800q-14 0-27 1.5t-27 3.5ZM177-581q51-29 89-75t57-103q-51 29-89 75t-57 103Zm249-214Zm-103 36Z" />
+                                                    </svg>
+                                                </div>
+                                            </div>
                                         )}
                                         <KeyValue
                                             title="Creator"
                                             value={
-                                                'owner' in showDetail.token.name && showDetail.token.name.owner.length
-                                                    ? showDetail.token.name.owner
+                                                'owner' in showDetail.name && showDetail.name.owner.length
+                                                    ? showDetail.name.owner
                                                     : 'Anonymous'
                                             }
                                         />
                                         <KeyValue
                                             title="Description"
                                             value={
-                                                'description' in showDetail.token.name &&
-                                                showDetail.token.name.description.length
-                                                    ? showDetail.token.name.description
+                                                'description' in showDetail.name && showDetail.name.description.length
+                                                    ? showDetail.name.description
                                                     : 'N/A'
                                             }
                                         />
@@ -95,21 +110,22 @@ const NFTs = () => {
                                             title="Web validation"
                                             value={
                                                 <>
-                                                    {'webvalidate' in showDetail.token.name &&
-                                                        !!showDetail.token.name.webvalidate.length && (
+                                                    {'webvalidate' in showDetail.name &&
+                                                        !!showDetail.name.webvalidate.length && (
                                                             <div className="flex justify-between items-center">
                                                                 <a
                                                                     className="hover:cursor-pointer text-blue-400 hover:underline"
-                                                                    href={showDetail.token.name.webvalidate}
+                                                                    href={showDetail.name.webvalidate}
                                                                     target="_blank"
                                                                 >
-                                                                    {showDetail.token.name.webvalidate}
+                                                                    {showDetail.name.webvalidate}
                                                                 </a>
                                                             </div>
                                                         )}
-                                                    {'webvalidate' in showDetail.token.name &&
-                                                        !showDetail.token.name.webvalidate.length &&
+                                                    {'webvalidate' in showDetail.name &&
+                                                        !showDetail.name.webvalidate.length &&
                                                         'N/A'}
+                                                    {!('webvalidate' in showDetail.name) && 'N/A'}
                                                 </>
                                             }
                                         />
@@ -117,19 +133,20 @@ const NFTs = () => {
                                             title="External URL"
                                             value={
                                                 <>
-                                                    {'external_url' in showDetail.token.name &&
-                                                        !!showDetail.token.name.external_url.length && (
+                                                    {'external_url' in showDetail.name &&
+                                                        !!showDetail.name.external_url.length && (
                                                             <a
                                                                 className="hover:cursor-pointer text-blue-400 hover:underline"
-                                                                href={showDetail.token.name.external_url}
+                                                                href={showDetail.name.external_url}
                                                                 target="_blank"
                                                             >
-                                                                {showDetail.token.name.external_url}
+                                                                {showDetail.name.external_url}
                                                             </a>
                                                         )}
-                                                    {'external_url' in showDetail.token.name &&
-                                                        !showDetail.token.name.external_url.length &&
+                                                    {'external_url' in showDetail.name &&
+                                                        !showDetail.name.external_url.length &&
                                                         'N/A'}
+                                                    {!('external_url' in showDetail.name) && 'N/A'}
                                                 </>
                                             }
                                         />
@@ -198,24 +215,42 @@ const NFTs = () => {
                             {selectedTab === 0 && (
                                 <ul
                                     className={`grid grid-cols-2 ${!NFTs || NFTs.length === 0 ? '!grid-cols-1' : ''} ${
-                                        NFTs.length > 2 ? 'md:grid-cols-3' : ''
+                                        NFTs && NFTs.length > 2 ? 'md:grid-cols-3' : ''
                                     } grid-rows-1 gap-2 mt-8 animate-fadeIn3`}
                                 >
-                                    {!!NFTs.length &&
+                                    {NFTs &&
+                                        !!NFTs.length &&
                                         NFTs.map((w: any) => (
                                             <li
                                                 key={w.tokenid}
-                                                className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+                                                className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 h-max"
                                             >
-                                                {!!w.token.name.url.length && (
+                                                {'url' in w.name && !!w.name.url.length && (
                                                     <img
                                                         onClick={() => setShowDetail(w)}
-                                                        className="rounded-t-lg w-[-webkit-fill-available]"
-                                                        src={w.token.name.url}
+                                                        className="rounded-t-lg w-[-webkit-fill-available] h-[250px]"
+                                                        src={w.name.url}
                                                         alt=""
                                                     />
                                                 )}
-                                                {!w.token.name.url.length && (
+                                                {'url' in w.name && !w.name.url.length && (
+                                                    <div
+                                                        className=" bg-white flex flex-col gap-4 truncate"
+                                                        onClick={() => setShowDetail(w)}
+                                                    >
+                                                        <div className="w-[-webkit-fill-available] flex items-center justify-center bg-slate-200">
+                                                            <svg
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                height="100%"
+                                                                viewBox="0 -960 960 960"
+                                                                width="100%"
+                                                            >
+                                                                <path d="M360-390q-21 0-35.5-14.5T310-440q0-21 14.5-35.5T360-490q21 0 35.5 14.5T410-440q0 21-14.5 35.5T360-390Zm240 0q-21 0-35.5-14.5T550-440q0-21 14.5-35.5T600-490q21 0 35.5 14.5T650-440q0 21-14.5 35.5T600-390ZM480-160q134 0 227-93t93-227q0-24-3-46.5T786-570q-21 5-42 7.5t-44 2.5q-91 0-172-39T390-708q-32 78-91.5 135.5T160-486v6q0 134 93 227t227 93Zm0 80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm-54-715q42 70 114 112.5T700-640q14 0 27-1.5t27-3.5q-42-70-114-112.5T480-800q-14 0-27 1.5t-27 3.5ZM177-581q51-29 89-75t57-103q-51 29-89 75t-57 103Zm249-214Zm-103 36Z" />
+                                                            </svg>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                                {!('url' in w.name) && (
                                                     <div
                                                         className=" bg-white flex flex-col gap-4 truncate"
                                                         onClick={() => setShowDetail(w)}
@@ -236,7 +271,7 @@ const NFTs = () => {
                                                 <div className="p-5">
                                                     <div className="flex justify-between">
                                                         <h5 className="text-sm font-bold tracking-tight text-gray-900 dark:text-white truncate">
-                                                            {w.token.name.name}
+                                                            {'name' in w.name ? w.name.name : 'N/A'}
                                                         </h5>
 
                                                         {_favoriteTokens.includes(w.tokenid) && (
@@ -266,7 +301,7 @@ const NFTs = () => {
                                                     </div>
 
                                                     <p className="mb-3 font-light text-sm text-gray-700 dark:text-gray-400 truncate">
-                                                        {w.token.name.owner}
+                                                        {w.name.owner}
                                                     </p>
                                                 </div>
                                             </li>
@@ -287,17 +322,34 @@ const NFTs = () => {
                                         NFTs.filter((t: any) => _favoriteTokens.includes(t.tokenid)).map((w: any) => (
                                             <li
                                                 key={w.tokenid}
-                                                className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+                                                className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 h-max"
                                             >
-                                                {!!w.token.name.url.length && (
+                                                {'url' in w.name && !!w.name.url.length && (
                                                     <img
                                                         onClick={() => setShowDetail(w)}
                                                         className="rounded-t-lg w-[-webkit-fill-available]"
-                                                        src={w.token.name.url}
+                                                        src={w.name.url}
                                                         alt=""
                                                     />
                                                 )}
-                                                {!w.token.name.url.length && (
+                                                {'url' in w.name && !w.name.url.length && (
+                                                    <div
+                                                        className=" bg-white flex flex-col gap-4 truncate"
+                                                        onClick={() => setShowDetail(w)}
+                                                    >
+                                                        <div className="w-[-webkit-fill-available] flex items-center justify-center bg-slate-200">
+                                                            <svg
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                height="100%"
+                                                                viewBox="0 -960 960 960"
+                                                                width="100%"
+                                                            >
+                                                                <path d="M360-390q-21 0-35.5-14.5T310-440q0-21 14.5-35.5T360-490q21 0 35.5 14.5T410-440q0 21-14.5 35.5T360-390Zm240 0q-21 0-35.5-14.5T550-440q0-21 14.5-35.5T600-490q21 0 35.5 14.5T650-440q0 21-14.5 35.5T600-390ZM480-160q134 0 227-93t93-227q0-24-3-46.5T786-570q-21 5-42 7.5t-44 2.5q-91 0-172-39T390-708q-32 78-91.5 135.5T160-486v6q0 134 93 227t227 93Zm0 80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm-54-715q42 70 114 112.5T700-640q14 0 27-1.5t27-3.5q-42-70-114-112.5T480-800q-14 0-27 1.5t-27 3.5ZM177-581q51-29 89-75t57-103q-51 29-89 75t-57 103Zm249-214Zm-103 36Z" />
+                                                            </svg>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                                {!('url' in w.name) && (
                                                     <div
                                                         className=" bg-white flex flex-col gap-4 truncate"
                                                         onClick={() => setShowDetail(w)}
@@ -318,7 +370,7 @@ const NFTs = () => {
                                                 <div className="p-5">
                                                     <div className="flex justify-between">
                                                         <h5 className="text-sm font-bold tracking-tight text-gray-900 dark:text-white truncate">
-                                                            {w.token.name.name}
+                                                            {w.name.name}
                                                         </h5>
 
                                                         {_favoriteTokens.includes(w.tokenid) && (
@@ -348,7 +400,7 @@ const NFTs = () => {
                                                     </div>
 
                                                     <p className="mb-3 font-light text-sm text-gray-700 dark:text-gray-400 truncate">
-                                                        {w.token.name.owner}
+                                                        {w.name.owner}
                                                     </p>
                                                 </div>
                                             </li>

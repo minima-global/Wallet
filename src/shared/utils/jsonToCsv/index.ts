@@ -1,22 +1,40 @@
 import { format } from 'date-fns';
 
-const exportToCsv = (e: any, transaction: any, fullJson: string) => {
-    e.preventDefault();
+const downloadCsv = (transaction: any) => {
+    const { headers, transactionCsv, fileName } = exportToCsv(transaction);
+    downloadFile([...headers, transactionCsv].join('\n'), fileName);
+};
 
-    // Headers for each column
-    let headers = ['Id,Amount,Txpowid,SentToMx,SentTo0x,Date,Type,Block,Burn,Json'];
+const downloadAllAsCsv = (transaction: any) => {
+    const { headers, transactionCsv, fileName } = exportToCsv(transaction);
 
-    // Convert users transaction data to a csv
-    let usersCsv = transaction.reduce((acc: any, transaction: any) => {
-        const { id, amount, txpowid, sentToMx, sentTo0x, date, type, blockPosted, burn } = transaction;
-        acc.push([id, amount, 'id:' + txpowid, sentToMx, sentTo0x, date, type, blockPosted, burn, fullJson].join(','));
-        return acc;
-    }, []);
+    downloadFile([...headers, ...transactionCsv].join('\n'), fileName);
+};
+
+const exportToCsv = (transaction: any) => {
+    let headers = ['Amount,Txpowid,SentToMx,SentTo0x,Date,Type,Block,Burn,Json'];
+
+    let transactionCsv = '';
+    if (!Array.isArray(transaction)) {
+        transactionCsv = Object.values(transaction).toString();
+    }
+    if (Array.isArray(transaction)) {
+        transactionCsv = transaction.reduce((acc: any, transaction: any) => {
+            const { amount, txpowid, sentToMx, sentTo0x, date, type, blockPosted, burn, fullJson } = transaction;
+
+            acc.push([amount, txpowid, sentToMx, sentTo0x, date, type, blockPosted, burn, fullJson].join(','));
+            return acc;
+        }, []);
+    }
 
     const dateCreation = format(new Date(), '_dMMMyyyy_Hmm');
-    const fileName = `transaction_export_${dateCreation}`;
+    const fileName = `transaction_export_${dateCreation}.csv`;
 
-    downloadFile([...headers, ...usersCsv].join('\n'), `${fileName}.csv`);
+    return {
+        headers,
+        transactionCsv,
+        fileName,
+    };
 };
 
 const downloadFile = async (data: string, fileName: string) => {
@@ -47,4 +65,4 @@ const downloadFile = async (data: string, fileName: string) => {
     });
 };
 
-export default exportToCsv;
+export { downloadCsv, downloadAllAsCsv };

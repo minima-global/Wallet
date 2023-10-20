@@ -132,14 +132,15 @@ interface MinimaToken {
 
 interface Token {
     name: any;
-    tokenid: string;
+    coinid: string;
     total: string;
     decimals: number;
-    scale: string;
-    coinid?: string;
     script?: string;
     totalamount?: string;
+    coinid?: string;
+    scale: string;
     created?: string;
+    tokenid: string;
 }
 
 interface NetworkStatus {
@@ -188,7 +189,7 @@ interface Coin {
     token: Token;
     tokenamount: string;
     storestate: boolean;
-    state: [];
+    state: State[];
     spent: boolean;
     mmrentry: string;
     created: string;
@@ -369,7 +370,7 @@ interface TokenGenerator {
 }
 
 interface State {
-    port: string;
+    port: number;
+    type: number;
     data: string;
-    keeper: string;
 }
