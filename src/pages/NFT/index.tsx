@@ -327,7 +327,7 @@ const NFTs = () => {
                                                 {'url' in w.name && !!w.name.url.length && (
                                                     <img
                                                         onClick={() => setShowDetail(w)}
-                                                        className="rounded-t-lg w-[-webkit-fill-available]"
+                                                        className="rounded-t-lg w-[-webkit-fill-available] h-[250px]"
                                                         src={w.name.url}
                                                         alt=""
                                                     />
@@ -340,7 +340,7 @@ const NFTs = () => {
                                                         <div className="w-[-webkit-fill-available] flex items-center justify-center bg-slate-200">
                                                             <svg
                                                                 xmlns="http://www.w3.org/2000/svg"
-                                                                height="100%"
+                                                                height="250"
                                                                 viewBox="0 -960 960 960"
                                                                 width="100%"
                                                             >
@@ -357,7 +357,7 @@ const NFTs = () => {
                                                         <div className="w-[-webkit-fill-available] flex items-center justify-center bg-slate-200">
                                                             <svg
                                                                 xmlns="http://www.w3.org/2000/svg"
-                                                                height="100%"
+                                                                height="250"
                                                                 viewBox="0 -960 960 960"
                                                                 width="100%"
                                                             >

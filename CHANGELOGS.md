@@ -72,5 +72,5 @@
 - Fixed downloading transaction CSV
 - Added a download all transactions on History page
 
-##### [2.34.12] - 20 October 23
-- Set fixed height to all NFTs 
+##### [2.34.13] - 20 October 23
+- Set fixed height to all NFTs + favorites
