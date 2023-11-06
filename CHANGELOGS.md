@@ -74,3 +74,6 @@
 
 ##### [2.34.13] - 20 October 23
 - Set fixed height to all NFTs + favorites
+
+##### [2.34.14] - 03 November 23
+- Added category to dapp.conf
