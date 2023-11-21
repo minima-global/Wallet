@@ -230,6 +230,12 @@ const Receive = () => {
                                                         </svg>
                                                     )}
                                                 </button>
+                                                <button
+                                                    onClick={handleCopyClick}
+                                                    className="md:hidden bg-black text-white px-2 py-1 rounded-full text-sm"
+                                                >
+                                                    Copy
+                                                </button>
                                             </div>
                                         </>
                                     )}

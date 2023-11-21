@@ -3,7 +3,6 @@ import { useState, useEffect, useContext } from 'react';
 import styles from './WalletSelect.module.css';
 import { MinimaToken } from '../../../@types/minima';
 
-import { CSSTransition } from 'react-transition-group';
 import { containsText } from '../../../shared/functions';
 import { useFormikContext } from 'formik';
 import Input from '../../../components/UI/Input';
@@ -34,6 +33,7 @@ const WalletSelect = () => {
     }, [balance, formik.values]);
 
     useEffect(() => {
+        const requestingAddress = searchParams.get('address');
         const requestingTokenID = searchParams.get('tokenid');
         const requestingAmount = searchParams.get('amount');
         const requestingBurn = searchParams.get('burn');
@@ -45,6 +45,10 @@ const WalletSelect = () => {
                     formik.setFieldValue('token', fetchToken);
                 }
             }
+        }
+
+        if (requestingAddress !== null) {
+            formik.setFieldValue('address', requestingAddress);
         }
 
         if (requestingAmount !== null) {

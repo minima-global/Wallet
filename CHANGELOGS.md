@@ -77,3 +77,7 @@
 
 ##### [2.34.14] - 03 November 23
 - Added category to dapp.conf
+
+##### [2.35.0] - 21 November 23
+- Pick up URL parameter address for the Send page
+- Added a copy button for the Receive page on mobile view

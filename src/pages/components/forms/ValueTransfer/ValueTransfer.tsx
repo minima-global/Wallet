@@ -7,7 +7,6 @@ import Button from '../../../../components/UI/Button';
 import { callSend } from '../../../../minima/rpc-commands';
 
 import QrScanner from '../../../../shared/components/qrscanner/QrScanner';
-import useIsUserRunningWebView from '../../../../hooks/useIsUserRunningWebView';
 import useIsVaultLocked from '../../../../hooks/useIsVaultLocked';
 import WalletSelect from '../../WalletSelect';
 import { appContext } from '../../../../AppContext';
@@ -24,7 +23,7 @@ import FeatureUnavailable from '../../../../components/UI/FeatureUnavailable';
 import Burn from '../../../../components/UI/Burn';
 
 const ValueTransfer = () => {
-    const { balance: wallet, avgBurn, loaded } = useContext(appContext);
+    const { balance: wallet, loaded } = useContext(appContext);
     const mySchema = useFormSchema();
     const [openQrScanner, setOpenQrScanner] = React.useState(false);
     const userLockedVault = useIsVaultLocked();
@@ -93,7 +92,6 @@ const ValueTransfer = () => {
                     resetForm,
                     touched,
                     setFieldValue,
-                    dirty,
                 }) => (
                     <>
                         <FeatureUnavailable
@@ -453,7 +451,11 @@ const useFormSchema = () => {
                     return false;
                 }
 
-                if (new Decimal(val).greaterThan(new Decimal(parent.token.sendable))) {
+                if (
+                    parent.token &&
+                    'sendable' in parent.token &&
+                    new Decimal(val).greaterThan(new Decimal(parent.token.sendable))
+                ) {
                     const desiredAmountToSend = new Decimal(val);
                     const available = new Decimal(parent.token.sendable);
                     const requiredAnother = desiredAmountToSend.minus(available);
