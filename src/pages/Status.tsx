@@ -117,16 +117,16 @@ const Status = () => {
                                 )}
                                 {!!status && (
                                     <>
-                                        <KeyValue title="Node version" value={status?.version!} />
+                                        <KeyValue title="Node Version" value={status?.version!} />
                                         <KeyValue title="Uptime" value={status?.uptime!} />
-                                        <KeyValue title="Vault locked" value={status?.locked! ? 'True' : 'False'} />
+                                        <KeyValue title="Vault Locked" value={status?.locked! ? 'True' : 'False'} />
                                         <KeyValue title="Length" value={status?.length.toString()!} />
-                                        <KeyValue title="Chain weight" value={status?.weight.toString()!} />
+                                        <KeyValue title="Chain Weight" value={status?.weight.toString()!} />
                                         <KeyValue title="Total Minima (global)" value={status?.minima.toString()!} />
                                         <KeyValue title="Total Coins (global)" value={status?.coins.toString()!} />
-                                        <KeyValue title="Your data path" value={status?.data!} />
-                                        <KeyValue title="RAM usage" value={status?.memory.ram!} />
-                                        <KeyValue title="Disk usage" value={status?.memory.disk!} />
+                                        <KeyValue title="Your Data Path" value={status?.data!} />
+                                        <KeyValue title="RAM Usage" value={status?.memory.ram!} />
+                                        <KeyValue title="Disk Usage" value={status?.memory.disk!} />
                                     </>
                                 )}
                             </div>

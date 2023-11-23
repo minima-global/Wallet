@@ -8,6 +8,11 @@ import NFTAuthenticity from '../tokens/NFTAuthenticity';
 import { appContext } from '../../../AppContext';
 import CardContent from '../../../components/UI/CardContent';
 
+import Decimal from 'decimal.js';
+
+import formatNumber from 'format-number';
+import * as utilities from '../../../utilities';
+
 const Wallet = () => {
     const navigate = useNavigate();
     const { balance } = useContext(appContext);
@@ -54,11 +59,11 @@ const Wallet = () => {
                                     .map((t: MinimaToken) => (
                                         <li
                                             onClick={() => navigate(t.tokenid)}
-                                            className="hover:bg-slate-200 hover:cursor-pointer bg-white flex rounded-lg gap-4 truncate mb-4"
+                                            className="hover:bg-slate-200 hover:cursor-pointer bg-white rounded-lg mb-4 whitespace-nowrap grid grid-cols-[auto_1fr] items-center"
                                             key={t.tokenid}
                                         >
                                             {t.tokenid === '0x00' && (
-                                                <div className="relative">
+                                                <div className="relative w-max inline-block mr-2">
                                                     <svg
                                                         className="absolute right-1 bottom-2"
                                                         xmlns="http://www.w3.org/2000/svg"
@@ -94,7 +99,7 @@ const Wallet = () => {
                                             )}
 
                                             {t.tokenid !== '0x00' && (
-                                                <div className="relative">
+                                                <div className="relative w-max inline-block mr-2">
                                                     <img
                                                         className="rounded-l-lg w-[80px] h-[80px]"
                                                         alt="token-icon"
@@ -112,19 +117,138 @@ const Wallet = () => {
                                                 </div>
                                             )}
 
-                                            <div className="my-auto truncate max-w-[360px]">
-                                                {t.tokenid === '0x00' && (
-                                                    <h6 className="font-bold truncate text-black">Minima</h6>
-                                                )}
-                                                {t.tokenid !== '0x00' && (
-                                                    <h6 className="font-bold text-black">
-                                                        {t.token && 'name' in t?.token
-                                                            ? t?.token.name
-                                                            : 'Name not available'}
-                                                    </h6>
-                                                )}
+                                            <div className="grid grid-cols-[auto_1fr] gap-2">
+                                                <div>
+                                                    {t.tokenid === '0x00' && (
+                                                        <h6 className="font-bold truncate text-black">Minima</h6>
+                                                    )}
+                                                    {t.tokenid !== '0x00' && (
+                                                        <h6 className="font-bold text-black">
+                                                            {t.token && 'name' in t?.token
+                                                                ? t?.token.name
+                                                                : 'Name not available'}
+                                                        </h6>
+                                                    )}
 
-                                                <p className="font-normal truncate text-black">{t.sendable}</p>
+                                                    {t.tokenid === '0x00' && (
+                                                        <p className="font-bold truncate text-black text-opacity-50">
+                                                            $MINIMA
+                                                        </p>
+                                                    )}
+                                                    {t.tokenid !== '0x00' && (
+                                                        <p className="font-bold text-black text-opacity-50">
+                                                            {t.token && 'ticker' in t?.token
+                                                                ? '$' + t?.token.ticker
+                                                                : ''}
+                                                        </p>
+                                                    )}
+                                                </div>
+                                                <div className="flex flex-end w-full justify-end">
+                                                    <div>
+                                                        <div className="grid grid-cols-[1fr_auto] items-center mr-4">
+                                                            <p
+                                                                className={`${
+                                                                    t.unconfirmed !== '0'
+                                                                        ? 'bg-yellow-500 text-yellow-200 animate-pulse'
+                                                                        : 'bg-green-200 text-green-600'
+                                                                } w-max justify-self-end text-green-600 text-[12px] rounded-full px-2 max-w-max  font-bold`}
+                                                            >
+                                                                {formatNumber({
+                                                                    prefix: '',
+                                                                    truncate: 3,
+                                                                    suffix:
+                                                                        utilities.getCharacterCountAfterChar(
+                                                                            t.confirmed,
+                                                                            '.'
+                                                                        ) > 3
+                                                                            ? '...'
+                                                                            : '',
+                                                                })(new Decimal(t.sendable).toNumber())}
+                                                            </p>
+
+                                                            {t.unconfirmed === '0' && (
+                                                                <svg
+                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                    width="24"
+                                                                    height="24"
+                                                                    className="min-h-[24px] min-w-[24px]"
+                                                                    viewBox="0 0 24 24"
+                                                                    stroke-width="2"
+                                                                    stroke="#22c55e"
+                                                                    fill="none"
+                                                                    stroke-linecap="round"
+                                                                    stroke-linejoin="round"
+                                                                >
+                                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                                    <path d="M7 9m0 2a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2z" />
+                                                                    <path d="M14 14m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                                                                    <path d="M17 9v-2a2 2 0 0 0 -2 -2h-10a2 2 0 0 0 -2 2v6a2 2 0 0 0 2 2h2" />
+                                                                </svg>
+                                                            )}
+                                                            {t.unconfirmed !== '0' && (
+                                                                <svg
+                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                    className="min-h-[24px] min-w-[24px] animate-pulse"
+                                                                    width="24"
+                                                                    height="24"
+                                                                    viewBox="0 0 24 24"
+                                                                    stroke-width="2"
+                                                                    stroke="#eab308"
+                                                                    fill="none"
+                                                                    stroke-linecap="round"
+                                                                    stroke-linejoin="round"
+                                                                >
+                                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                                    <path d="M6.5 7h11" />
+                                                                    <path d="M6 20v-2a6 6 0 1 1 12 0v2a1 1 0 0 1 -1 1h-10a1 1 0 0 1 -1 -1z" />
+                                                                    <path d="M6 4v2a6 6 0 1 0 12 0v-2a1 1 0 0 0 -1 -1h-10a1 1 0 0 0 -1 1z" />
+                                                                </svg>
+                                                            )}
+                                                        </div>
+                                                        <div className="grid grid-cols-[1fr_auto] items-center mr-4">
+                                                            <p className="w-max justify-self-end text-white text-[12px] rounded-full px-2 max-w-max bg-black">
+                                                                {formatNumber({
+                                                                    prefix: '',
+                                                                    truncate: 3,
+                                                                    // decimal: '.',
+                                                                    // integerSeparator: '.',
+                                                                    suffix:
+                                                                        utilities.getCharacterCountAfterChar(
+                                                                            new Decimal(t.confirmed)
+                                                                                .minus(t.sendable)
+                                                                                .toString(),
+                                                                            '.'
+                                                                        ) > 3
+                                                                            ? '...'
+                                                                            : '',
+                                                                })(
+                                                                    new Decimal(t.confirmed)
+                                                                        .minus(t.sendable)
+                                                                        .toNumber()
+                                                                )}
+                                                            </p>
+                                                            <svg
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                width="24"
+                                                                height="24"
+                                                                className="min-h-[24px] min-w-[24px]"
+                                                                viewBox="0 0 24 24"
+                                                                stroke-width="2"
+                                                                stroke="currentColor"
+                                                                fill="none"
+                                                                stroke-linecap="round"
+                                                                stroke-linejoin="round"
+                                                            >
+                                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                                <path
+                                                                    d="M12 2c-.218 0 -.432 .002 -.642 .005l-.616 .017l-.299 .013l-.579 .034l-.553 .046c-4.785 .464 -6.732 2.411 -7.196 7.196l-.046 .553l-.034 .579c-.005 .098 -.01 .198 -.013 .299l-.017 .616l-.004 .318l-.001 .324c0 .218 .002 .432 .005 .642l.017 .616l.013 .299l.034 .579l.046 .553c.464 4.785 2.411 6.732 7.196 7.196l.553 .046l.579 .034c.098 .005 .198 .01 .299 .013l.616 .017l.642 .005l.642 -.005l.616 -.017l.299 -.013l.579 -.034l.553 -.046c4.785 -.464 6.732 -2.411 7.196 -7.196l.046 -.553l.034 -.579c.005 -.098 .01 -.198 .013 -.299l.017 -.616l.005 -.642l-.005 -.642l-.017 -.616l-.013 -.299l-.034 -.579l-.046 -.553c-.464 -4.785 -2.411 -6.732 -7.196 -7.196l-.553 -.046l-.579 -.034a28.058 28.058 0 0 0 -.299 -.013l-.616 -.017l-.318 -.004l-.324 -.001zm0 4a3 3 0 0 1 2.995 2.824l.005 .176v1a2 2 0 0 1 1.995 1.85l.005 .15v3a2 2 0 0 1 -1.85 1.995l-.15 .005h-6a2 2 0 0 1 -1.995 -1.85l-.005 -.15v-3a2 2 0 0 1 1.85 -1.995l.15 -.005v-1a3 3 0 0 1 3 -3zm3 6h-6v3h6v-3zm-3 -4a1 1 0 0 0 -.993 .883l-.007 .117v1h2v-1a1 1 0 0 0 -1 -1z"
+                                                                    fill="currentColor"
+                                                                    stroke-width="0"
+                                                                />
+                                                            </svg>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </li>
                                     ))}

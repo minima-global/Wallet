@@ -35,6 +35,7 @@
         "decimal.js": "^10.4.2",
         "env-cmd": "^10.1.0",
         "flowbite": "^1.8.1",
+        "format-number": "^3.0.0",
         "formik": "^2.2.9",
         "http-proxy-middleware": "^2.0.2",
         "lottie-react": "^2.4.0",
