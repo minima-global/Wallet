@@ -81,3 +81,8 @@
 ##### [2.35.0] - 21 November 23
 - Pick up URL parameter address for the Send page
 - Added a copy button for the Receive page on mobile view
+
+##### [2.36.0] - 21 November 23
+- Added Settings & currency formatter
+- Re-worked the way tokens are displayed with their different states (confirmed, unconfirmed, sendable)
+- Design tweaks

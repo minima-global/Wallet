@@ -48,13 +48,13 @@ const Input = ({
     const [showHelp, setShowHelp] = useState(false);
 
     let base =
-        'w-full p-4  bg-white text-base text-black color-typing placeholder-core-grey-60 rounded disabled:opacity-40 disabled:cursor-not-allowed focus:outline-[#3DA2FF]';
+        'w-full p-4  bg-white text-base text-black rounded disabled:bg-opacity-40 disabled:cursor-not-allowed focus:shadow-gray-100 focus:shadow-lg focus:border-none! focus:outline-none!';
 
     if (extraClass) {
         base += ` ${extraClass}`;
     }
     if (error) {
-        base += ' form-error-border red-bad';
+        base += ' border-2 border-red-500';
     }
 
     return (
@@ -120,7 +120,9 @@ const Input = ({
                 )}
             </div>
 
-            {error && <div className="text-sm form-error-message text-left mb-4">{error}</div>}
+            {error && (
+                <div className="text-left mt-3 bg-red-500 text-red-100 rounded px-2 py-1 text-[12px]">{error}</div>
+            )}
         </div>
     );
 };

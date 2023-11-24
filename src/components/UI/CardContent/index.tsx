@@ -8,13 +8,13 @@ interface IProps {
 const CardContent = ({ header, content, className }: IProps) => {
     return (
         <div
-            className={`flex h-max max-h-[calc(100%_-_16px)] flex-col gap-4 mx-4 rounded bg-white bg-opacity-50 p-4 mb-4 shadow-sm ${
+            className={`flex h-max flex-col gap-4 mx-4 rounded bg-white bg-opacity-70 p-4 shadow-sm mb-4 ${
                 className ? className : ''
             }`}
         >
             {header}
             <div className="divide-y-2" />
-            <div id="card-content" className="overflow-scroll overflow-x-hidden">
+            <div id="card-content" className="h-max">
                 {content}
             </div>
         </div>

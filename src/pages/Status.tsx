@@ -7,9 +7,11 @@ import { appContext } from '../AppContext';
 import KeyValue from '../components/UI/KeyValue';
 import { createPortal } from 'react-dom';
 import CardContent from '../components/UI/CardContent';
+import useFormatMinimaNumber from '../__minima__/libs/utils/useMakeNumber';
 
 const Status = () => {
     const { setOpenDrawer, loaded } = useContext(appContext);
+    const { makeMinimaNumber } = useFormatMinimaNumber();
     const [status, setStatus] = useState<NodeStatus | undefined>(undefined);
     const [showFullStatus, setShowFullStatus] = useState(false);
 
@@ -120,10 +122,19 @@ const Status = () => {
                                         <KeyValue title="Node Version" value={status?.version!} />
                                         <KeyValue title="Uptime" value={status?.uptime!} />
                                         <KeyValue title="Vault Locked" value={status?.locked! ? 'True' : 'False'} />
-                                        <KeyValue title="Length" value={status?.length.toString()!} />
+                                        <KeyValue
+                                            title="Length"
+                                            value={makeMinimaNumber(status?.length.toString()!, 2000)}
+                                        />
                                         <KeyValue title="Chain Weight" value={status?.weight.toString()!} />
-                                        <KeyValue title="Total Minima (global)" value={status?.minima.toString()!} />
-                                        <KeyValue title="Total Coins (global)" value={status?.coins.toString()!} />
+                                        <KeyValue
+                                            title="Total Minima (global)"
+                                            value={makeMinimaNumber(status?.minima.toString()!, 2000)}
+                                        />
+                                        <KeyValue
+                                            title="Total Coins (global)"
+                                            value={makeMinimaNumber(status?.coins.toString()!, 2000)}
+                                        />
                                         <KeyValue title="Your Data Path" value={status?.data!} />
                                         <KeyValue title="RAM Usage" value={status?.memory.ram!} />
                                         <KeyValue title="Disk Usage" value={status?.memory.disk!} />

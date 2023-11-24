@@ -12,10 +12,15 @@ import { format, isSameWeek, isSameYear } from 'date-fns';
 import 'flowbite';
 import { initFlowbite } from 'flowbite';
 import { downloadAllAsCsv } from '../../shared/utils/jsonToCsv';
+import * as utilities from '../../utilities';
+import Decimal from 'decimal.js';
+import useFormatMinimaNumber from '../../__minima__/libs/utils/useMakeNumber';
 
 const History = () => {
     const navigate = useNavigate();
-    const { historyFacade, historyDetails, history, setOpenDrawer, getHistory, loaded } = useContext(appContext);
+    const { makeMinimaNumber } = useFormatMinimaNumber();
+    const { historyFacade, historyDetails, history, setOpenDrawer, getHistory, loaded, _currencyFormat } =
+        useContext(appContext);
 
     const [filterText, setFilterText] = useState('');
 
@@ -169,7 +174,7 @@ const History = () => {
                                                         <div>
                                                             <h1 className="text-black">{t.tokenName}</h1>
                                                             <p className="text-black">
-                                                                {t.amount === '0' ? '-' : t.amount}
+                                                                {t.amount === '0' ? '-' : makeMinimaNumber(t.amount, 3)}
                                                             </p>
                                                         </div>
                                                         <h3 className="text-black font-light text-sm">

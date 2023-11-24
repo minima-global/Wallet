@@ -52,24 +52,11 @@
   color: var(--core-black-contrast-3);
 }
 
-.text-error {
-  color: var(--status-red);
-}
-
-.form-error-message {
-  color: var(--status-red);
-  font-weight: 600;
-}
 
 .form-success-message {
   color: var(--status-green);
   font-weight: 600;
 }
-.form-error-border {
-  border: 1px solid var(--status-red);
-  border-radius: 4px;
-}
-
 
 .bg-core-grey-10 {
   background-color: var(--core-grey-10);
@@ -142,4 +129,16 @@ select {
 #card-content {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
+}
+
+
+input {
+  outline:  none!important;
+  border: none!important;
+  border-top: none!important;
+}
+input:focus {
+  outline:  none!important;
+  border: none!important;
+  border-top: none!important;
 }

@@ -201,13 +201,13 @@ const WalletSelect = () => {
 
                                                                 {t.tokenid === '0x00' && (
                                                                     <p className="font-bold truncate text-black text-opacity-50">
-                                                                        $MINIMA
+                                                                        MINIMA
                                                                     </p>
                                                                 )}
                                                                 {t.tokenid !== '0x00' && (
                                                                     <p className="font-bold text-black text-opacity-50">
                                                                         {t.token && 'ticker' in t?.token
-                                                                            ? '$' + t?.token.ticker
+                                                                            ? t?.token.ticker
                                                                             : ''}
                                                                     </p>
                                                                 )}
@@ -485,12 +485,12 @@ const WalletSelect = () => {
                                 )}
 
                                 {formik.values.token.tokenid === '0x00' && (
-                                    <p className="font-bold truncate text-black text-opacity-50">$MINIMA</p>
+                                    <p className="font-bold truncate text-black text-opacity-50">MINIMA</p>
                                 )}
                                 {formik.values.token.tokenid !== '0x00' && (
                                     <p className="font-bold text-black text-opacity-50">
                                         {formik.values.token.token && 'ticker' in formik.values.token?.token
-                                            ? '$' + formik.values.token?.token.ticker
+                                            ? formik.values.token?.token.ticker
                                             : ''}
                                     </p>
                                 )}

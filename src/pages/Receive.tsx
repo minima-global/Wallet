@@ -60,7 +60,7 @@ const Receive = () => {
                 <div>
                     {showEditNickname &&
                         createPortal(
-                            <div className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn">
+                            <div className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-[50px] bg-black bg-opacity-50 animate-fadeIn">
                                 <Grid variant="sm" title={<></>}>
                                     <div className="mx-4 rounded bg-white bg-opacity-90 p-4 h-max">
                                         <h1 className="text-black font-semibold mb-8">Enter a nickname</h1>
@@ -141,12 +141,35 @@ const Receive = () => {
                         className="!p-0"
                         header={
                             <>
-                                <div className="flex justify-center">
+                                <div className="flex justify-center flex-col items-center">
                                     <QRCode
+                                        onClick={handleCopyClick}
                                         className="rounded h-[190px] w-[190px] md:h-[240px] md:w-[240px] mt-8 animate-fadeIn"
                                         value={address ? address?.miniaddress : ''}
                                         type="M"
                                     />
+                                    <div className="flex items-center">
+                                        <svg
+                                            className="w-5 h-5 animate-bounce temporary-pulse"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            height="24"
+                                            viewBox="0 -960 960 960"
+                                            width="24"
+                                        >
+                                            <path d="M419-80q-28 0-52.5-12T325-126L107-403l19-20q20-21 48-25t52 11l74 45v-328q0-17 11.5-28.5T340-760q17 0 29 11.5t12 28.5v472l-97-60 104 133q6 7 14 11t17 4h221q33 0 56.5-23.5T720-240v-160q0-17-11.5-28.5T680-440H461v-80h219q50 0 85 35t35 85v160q0 66-47 113T640-80H419ZM167-620q-13-22-20-47.5t-7-52.5q0-83 58.5-141.5T340-920q83 0 141.5 58.5T540-720q0 27-7 52.5T513-620l-69-40q8-14 12-28.5t4-31.5q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 17 4 31.5t12 28.5l-69 40Zm335 280Z" />
+                                        </svg>
+                                        <h1 className="text-[12px] mt-1">Tap the QR Code to copy </h1>
+
+                                        <svg
+                                            className="w-4 h-4 mt-1 animate-pulse temporary-pulse"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            height="24"
+                                            viewBox="0 -960 960 960"
+                                            width="24"
+                                        >
+                                            <path d="M360-240q-33 0-56.5-23.5T280-320v-480q0-33 23.5-56.5T360-880h360q33 0 56.5 23.5T800-800v480q0 33-23.5 56.5T720-240H360Zm0-80h360v-480H360v480ZM200-80q-33 0-56.5-23.5T120-160v-560h80v560h440v80H200Zm160-240v-480 480Z" />
+                                        </svg>
+                                    </div>
                                 </div>
                             </>
                         }
@@ -229,12 +252,6 @@ const Receive = () => {
                                                             <path d="m438-240 226-226-58-58-169 169-84-84-57 57 142 142ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z" />
                                                         </svg>
                                                     )}
-                                                </button>
-                                                <button
-                                                    onClick={handleCopyClick}
-                                                    className="md:hidden bg-black text-white px-2 py-1 rounded-full text-sm"
-                                                >
-                                                    Copy
                                                 </button>
                                             </div>
                                         </>

@@ -161,7 +161,7 @@ const Burn = () => {
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                             setViewInput(e.currentTarget.checked);
                         }}
-                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded"
+                        className="w-4 h-4 text-blue-600 bg-white border-gray-300 rounded"
                     />
                     <svg
                         onClick={handleViewBurnInfo}
@@ -177,7 +177,7 @@ const Burn = () => {
                 {viewInput && (
                     <Input
                         id="burn"
-                        type="number"
+                        type="text"
                         disabled={formik.isSubmitting}
                         placeholder="Burn"
                         {...formik.getFieldProps('burn')}

@@ -12,11 +12,13 @@ import CardContent from '../../components/UI/CardContent';
 
 import * as utilities from '../../utilities';
 import Decimal from 'decimal.js';
+import useFormatMinimaNumber from '../../__minima__/libs/utils/useMakeNumber';
 
 const TokenDetail = () => {
     const navigate = useNavigate();
     const { tokenid } = useParams();
 
+    const { makeMinimaNumber } = useFormatMinimaNumber();
     const { balance, _currencyFormat } = useContext(appContext);
     const [viewingToken, setViewingToken] = useState<null | MinimaToken>(null);
 
@@ -221,26 +223,12 @@ const TokenDetail = () => {
 
                                         <KeyValue
                                             title="Total Minted"
-                                            value={utilities.formatNumberPreference(
-                                                new Decimal(viewingToken.total).toNumber(),
-                                                7,
-                                                utilities.getCharacterCountAfterChar(viewingToken.total, '.') > 7
-                                                    ? '...'
-                                                    : '',
-                                                _currencyFormat
-                                            )}
+                                            value={makeMinimaNumber(viewingToken.total, 2000)}
                                         />
 
                                         <KeyValue
                                             title="Total Coins"
-                                            value={utilities.formatNumberPreference(
-                                                new Decimal(viewingToken.coins).toNumber(),
-                                                7,
-                                                utilities.getCharacterCountAfterChar(viewingToken.coins, '.') > 7
-                                                    ? '...'
-                                                    : '',
-                                                _currencyFormat
-                                            )}
+                                            value={makeMinimaNumber(viewingToken.coins, 2000)}
                                         />
 
                                         {viewingToken.tokenid !== '0x00' && (
@@ -297,57 +285,15 @@ const TokenDetail = () => {
                                     <div className="flex flex-col divide-solid divide-y-2">
                                         <KeyValue
                                             title="Sendable"
-                                            value={
-                                                viewingToken.sendable && _currencyFormat !== null
-                                                    ? utilities.formatNumberPreference(
-                                                          new Decimal(viewingToken.sendable).toNumber(),
-                                                          7,
-                                                          utilities.getCharacterCountAfterChar(
-                                                              viewingToken.sendable,
-                                                              '.'
-                                                          ) > 7
-                                                              ? '...'
-                                                              : '',
-                                                          _currencyFormat
-                                                      )
-                                                    : 'N/A'
-                                            }
+                                            value={makeMinimaNumber(viewingToken.sendable, 2000)}
                                         />
                                         <KeyValue
                                             title="Confirmed"
-                                            value={
-                                                viewingToken.confirmed && _currencyFormat !== null
-                                                    ? utilities.formatNumberPreference(
-                                                          new Decimal(viewingToken.confirmed).toNumber(),
-                                                          7,
-                                                          utilities.getCharacterCountAfterChar(
-                                                              viewingToken.confirmed,
-                                                              '.'
-                                                          ) > 7
-                                                              ? '...'
-                                                              : '',
-                                                          _currencyFormat
-                                                      )
-                                                    : 'N/A'
-                                            }
+                                            value={makeMinimaNumber(viewingToken.confirmed, 2000)}
                                         />
                                         <KeyValue
                                             title="Unconfirmed"
-                                            value={
-                                                viewingToken.unconfirmed && _currencyFormat !== null
-                                                    ? utilities.formatNumberPreference(
-                                                          new Decimal(viewingToken.unconfirmed).toNumber(),
-                                                          7,
-                                                          utilities.getCharacterCountAfterChar(
-                                                              viewingToken.unconfirmed,
-                                                              '.'
-                                                          ) > 7
-                                                              ? '...'
-                                                              : '',
-                                                          _currencyFormat
-                                                      )
-                                                    : 'N/A'
-                                            }
+                                            value={makeMinimaNumber(viewingToken.unconfirmed, 2000)}
                                         />
                                     </div>
                                 </div>

@@ -23,10 +23,12 @@ import useIsVaultLocked from '../../hooks/useIsVaultLocked';
 import Input from '../../components/UI/Input';
 import FormImageUrlSelect from '../../shared/components/forms/FormImageUrlSelect';
 import Burn from '../../components/UI/Burn';
+import useFormatMinimaNumber from '../../__minima__/libs/utils/useMakeNumber';
 
 const TokenCreation = () => {
     const mySchema = useMySchema();
-    const { balance: wallet, setOpenDrawer, avgBurn } = useContext(appContext);
+    const { balance: wallet, setOpenDrawer } = useContext(appContext);
+    const { makeMinimaNumber } = useFormatMinimaNumber();
     const userLockedVault = useIsVaultLocked();
 
     const [error, setError] = useState<false | string>(false);
@@ -165,7 +167,7 @@ const TokenCreation = () => {
                                                         <h6 className="font-bold text-black">{values.name}</h6>
 
                                                         <p className="font-normal truncate text-black">
-                                                            {values.amount}
+                                                            {makeMinimaNumber(values.amount, 2000)}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -194,7 +196,11 @@ const TokenCreation = () => {
 
                                                 <KeyValue
                                                     title="Burn"
-                                                    value={parseInt(values.burn) > 0 ? values.burn : '0'}
+                                                    value={
+                                                        parseInt(values.burn) > 0
+                                                            ? makeMinimaNumber(values.burn, 2000)
+                                                            : '0'
+                                                    }
                                                 />
                                             </div>
                                             <div className="flex flex-col gap-2">

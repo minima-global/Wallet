@@ -11,9 +11,11 @@ import CardContent from '../../../components/UI/CardContent';
 import Decimal from 'decimal.js';
 
 import * as utilities from '../../../utilities';
+import useFormatMinimaNumber from '../../../__minima__/libs/utils/useMakeNumber';
 
 const Wallet = () => {
     const navigate = useNavigate();
+    const { makeMinimaNumber } = useFormatMinimaNumber();
     const { balance, _currencyFormat } = useContext(appContext);
     const [filterText, setFilterText] = React.useState('');
     return (
@@ -131,14 +133,12 @@ const Wallet = () => {
 
                                                     {t.tokenid === '0x00' && (
                                                         <p className="font-bold truncate text-black text-opacity-50">
-                                                            $MINIMA
+                                                            MINIMA
                                                         </p>
                                                     )}
                                                     {t.tokenid !== '0x00' && (
                                                         <p className="font-bold text-black text-opacity-50">
-                                                            {t.token && 'ticker' in t?.token
-                                                                ? '$' + t?.token.ticker
-                                                                : ''}
+                                                            {t.token && 'ticker' in t?.token ? t?.token.ticker : ''}
                                                         </p>
                                                     )}
                                                 </div>
@@ -152,7 +152,8 @@ const Wallet = () => {
                                                                         : 'bg-green-200 text-green-600'
                                                                 } w-max justify-self-end text-green-600 text-[12px] rounded-full px-2 max-w-max  font-bold`}
                                                             >
-                                                                {_currencyFormat !== null &&
+                                                                {makeMinimaNumber(t.sendable, 3)}
+                                                                {/* {_currencyFormat !== null &&
                                                                     utilities.formatNumberPreference(
                                                                         new Decimal(t.sendable).toNumber(),
                                                                         3,
@@ -163,18 +164,7 @@ const Wallet = () => {
                                                                             ? '...'
                                                                             : '',
                                                                         _currencyFormat
-                                                                    )}
-                                                                {/* {formatNumber({
-                                                                    prefix: '',
-                                                                    truncate: 3,
-                                                                    suffix:
-                                                                        utilities.getCharacterCountAfterChar(
-                                                                            t.confirmed,
-                                                                            '.'
-                                                                        ) > 3
-                                                                            ? '...'
-                                                                            : '',
-                                                                })(new Decimal(t.sendable).toNumber())} */}
+                                                                    )} */}
                                                             </p>
 
                                                             {t.unconfirmed === '0' && (
@@ -218,7 +208,13 @@ const Wallet = () => {
                                                         </div>
                                                         <div className="grid grid-cols-[1fr_auto] items-center mr-4">
                                                             <p className="w-max justify-self-end text-white text-[12px] rounded-full px-2 max-w-max bg-black">
-                                                                {_currencyFormat !== null &&
+                                                                {makeMinimaNumber(
+                                                                    new Decimal(t.confirmed)
+                                                                        .minus(t.sendable)
+                                                                        .toString(),
+                                                                    3
+                                                                )}
+                                                                {/* {_currencyFormat !== null &&
                                                                     utilities.formatNumberPreference(
                                                                         new Decimal(t.confirmed)
                                                                             .minus(t.sendable)
@@ -233,27 +229,7 @@ const Wallet = () => {
                                                                             ? '...'
                                                                             : '',
                                                                         _currencyFormat
-                                                                    )}
-
-                                                                {/* {formatNumber({
-                                                                    prefix: '',
-                                                                    truncate: 3,
-                                                                    // decimal: '.',
-                                                                    // integerSeparator: '.',
-                                                                    suffix:
-                                                                        utilities.getCharacterCountAfterChar(
-                                                                            new Decimal(t.confirmed)
-                                                                                .minus(t.sendable)
-                                                                                .toString(),
-                                                                            '.'
-                                                                        ) > 3
-                                                                            ? '...'
-                                                                            : '',
-                                                                })(
-                                                                    new Decimal(t.confirmed)
-                                                                        .minus(t.sendable)
-                                                                        .toNumber()
-                                                                )} */}
+                                                                    )} */}
                                                             </p>
                                                             <svg
                                                                 xmlns="http://www.w3.org/2000/svg"

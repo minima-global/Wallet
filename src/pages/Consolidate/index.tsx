@@ -20,10 +20,12 @@ import * as rpc from '../../__minima__/libs/RPC';
 import TogglePasswordIcon from '../../components/UI/TogglePasswordIcon/TogglePasswordIcon';
 import Logs from '../../components/UI/Logs';
 import Burn from '../../components/UI/Burn';
+import useFormatMinimaNumber from '../../__minima__/libs/utils/useMakeNumber';
 
 const Consolidate = () => {
     const mySchema = useFormSchema();
-    const { balance: wallet, avgBurn } = useContext(appContext);
+    const { balance: wallet } = useContext(appContext);
+    const { makeMinimaNumber } = useFormatMinimaNumber();
 
     const userLockedVault = useIsVaultLocked();
 
@@ -91,7 +93,11 @@ const Consolidate = () => {
 
                                             <KeyValue
                                                 title="Burn"
-                                                value={parseInt(values.burn) > 0 ? values.burn : '0'}
+                                                value={
+                                                    parseInt(values.burn) > 0
+                                                        ? makeMinimaNumber(values.burn, 2000)
+                                                        : '0'
+                                                }
                                             />
                                         </div>
                                         <div className="flex flex-col gap-2">

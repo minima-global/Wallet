@@ -21,9 +21,11 @@ import Loading from '../../../../assets/lottie/Loading.json';
 import TogglePasswordIcon from '../../../../components/UI/TogglePasswordIcon/TogglePasswordIcon';
 import FeatureUnavailable from '../../../../components/UI/FeatureUnavailable';
 import Burn from '../../../../components/UI/Burn';
+import useFormatMinimaNumber from '../../../../__minima__/libs/utils/useMakeNumber';
 
 const ValueTransfer = () => {
     const { balance: wallet, loaded } = useContext(appContext);
+    const { makeMinimaNumber } = useFormatMinimaNumber();
     const mySchema = useFormSchema();
     const [openQrScanner, setOpenQrScanner] = React.useState(false);
     const userLockedVault = useIsVaultLocked();
@@ -118,10 +120,17 @@ const ValueTransfer = () => {
                                                 )}
 
                                                 <KeyValue title="Recipient address" value={values.address} />
-                                                <KeyValue title="Amount" value={values.amount} />
+                                                <KeyValue
+                                                    title="Amount"
+                                                    value={makeMinimaNumber(values.amount, 2000)}
+                                                />
                                                 <KeyValue
                                                     title="Burn"
-                                                    value={parseInt(values.burn) > 0 ? values.burn : '0'}
+                                                    value={
+                                                        parseInt(values.burn) > 0
+                                                            ? makeMinimaNumber(values.burn, 2000)
+                                                            : '0'
+                                                    }
                                                 />
 
                                                 <KeyValue
@@ -444,11 +453,21 @@ const useFormSchema = () => {
             .required('Field Required'),
         amount: Yup.string()
             .required('Field Required')
-            .matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters.')
+            .matches(
+                /^[^a-zA-Z\\;'",]+$/,
+                'Invalid number.  Make sure to use only digits, "." for decimals and nothing for thousands. (e.g 1000.234)'
+            )
             .test('check-my-amount', 'Invalid amount', function (val) {
                 const { path, createError, parent } = this;
                 if (val === undefined) {
                     return false;
+                }
+
+                if (!Number(val)) {
+                    return createError({
+                        path,
+                        message: 'Invalid number.  Make sure to only use "." for decimals and nothing for thousands.',
+                    });
                 }
 
                 if (
@@ -487,6 +506,13 @@ const useFormSchema = () => {
                 const { path, createError } = this;
                 if (val === undefined) {
                     return true;
+                }
+
+                if (!Number(val)) {
+                    return createError({
+                        path,
+                        message: 'Invalid number.  Make sure to only use "." for decimals and nothing for thousands.',
+                    });
                 }
 
                 const burn = new Decimal(val);
