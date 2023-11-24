@@ -1,21 +1,25 @@
 import { ReactElement, useState } from 'react';
 
 interface IProps {
-    title: string;
+    title: any;
     value: any;
+    clickable?: true;
     className?: string;
     help?: ReactElement;
 }
-const KeyValue = ({ title, value, className, help }: IProps) => {
+const KeyValue = ({ title, value, clickable, className, help }: IProps) => {
     const [showHelp, setShowHelp] = useState(false);
 
     return (
         <div
-            className={`bg-white p-4 overflow-hidden relative rounded flex flex-col md:grid md:items-center md:grid-cols-[auto_1fr] md:grid-rows-1 md:gap-2`}
+            className={`bg-white p-4 overflow-hidden relative rounded flex flex-col md:grid md:items-center md:grid-cols-[auto_1fr] md:grid-rows-1 md:gap-2 ${
+                clickable ? 'hover:bg-opacity-50 hover:cursor-pointer' : ''
+            }`}
         >
             <div className={` ${help && showHelp ? 'grid grid-cols-[auto_1fr] grid-rows-1 gap-4' : ''}`}>
                 <div className="flex gap-1 items-center">
-                    <h3 className="text-black truncate font-bold">{title}</h3>
+                    {typeof title === 'string' && <h3 className="text-black truncate font-bold">{title}</h3>}
+                    {typeof title !== 'string' && title}
                     {help && !showHelp && (
                         <svg
                             onClick={() => setShowHelp(true)}

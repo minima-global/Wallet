@@ -15,6 +15,7 @@ import NFTs from './pages/NFT';
 import CreateNFT from './pages/NFT/CreateNFT';
 import History from './pages/History';
 import HistoryTransactionDetailSimple from './pages/HistoryTransactionDetailSimple';
+import Settings from './pages/Settings';
 
 const router = createHashRouter(
     createRoutesFromElements(
@@ -32,6 +33,7 @@ const router = createHashRouter(
             <Route path="history" element={<History />}>
                 <Route path=":transactionid" element={<HistoryTransactionDetailSimple />} />
             </Route>
+            <Route path="settings" element={<Settings />} />
             <Route path="*" element={<Navigate replace to="balance" />} />
         </Route>
     )

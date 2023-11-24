@@ -10,12 +10,11 @@ import CardContent from '../../../components/UI/CardContent';
 
 import Decimal from 'decimal.js';
 
-import formatNumber from 'format-number';
 import * as utilities from '../../../utilities';
 
 const Wallet = () => {
     const navigate = useNavigate();
-    const { balance } = useContext(appContext);
+    const { balance, _currencyFormat } = useContext(appContext);
     const [filterText, setFilterText] = React.useState('');
     return (
         <>
@@ -153,7 +152,19 @@ const Wallet = () => {
                                                                         : 'bg-green-200 text-green-600'
                                                                 } w-max justify-self-end text-green-600 text-[12px] rounded-full px-2 max-w-max  font-bold`}
                                                             >
-                                                                {formatNumber({
+                                                                {_currencyFormat !== null &&
+                                                                    utilities.formatNumberPreference(
+                                                                        new Decimal(t.sendable).toNumber(),
+                                                                        3,
+                                                                        utilities.getCharacterCountAfterChar(
+                                                                            t.sendable,
+                                                                            '.'
+                                                                        ) > 3
+                                                                            ? '...'
+                                                                            : '',
+                                                                        _currencyFormat
+                                                                    )}
+                                                                {/* {formatNumber({
                                                                     prefix: '',
                                                                     truncate: 3,
                                                                     suffix:
@@ -163,7 +174,7 @@ const Wallet = () => {
                                                                         ) > 3
                                                                             ? '...'
                                                                             : '',
-                                                                })(new Decimal(t.sendable).toNumber())}
+                                                                })(new Decimal(t.sendable).toNumber())} */}
                                                             </p>
 
                                                             {t.unconfirmed === '0' && (
@@ -207,7 +218,24 @@ const Wallet = () => {
                                                         </div>
                                                         <div className="grid grid-cols-[1fr_auto] items-center mr-4">
                                                             <p className="w-max justify-self-end text-white text-[12px] rounded-full px-2 max-w-max bg-black">
-                                                                {formatNumber({
+                                                                {_currencyFormat !== null &&
+                                                                    utilities.formatNumberPreference(
+                                                                        new Decimal(t.confirmed)
+                                                                            .minus(t.sendable)
+                                                                            .toNumber(),
+                                                                        3,
+                                                                        utilities.getCharacterCountAfterChar(
+                                                                            new Decimal(t.confirmed)
+                                                                                .minus(t.sendable)
+                                                                                .toString(),
+                                                                            '.'
+                                                                        ) > 3
+                                                                            ? '...'
+                                                                            : '',
+                                                                        _currencyFormat
+                                                                    )}
+
+                                                                {/* {formatNumber({
                                                                     prefix: '',
                                                                     truncate: 3,
                                                                     // decimal: '.',
@@ -225,7 +253,7 @@ const Wallet = () => {
                                                                     new Decimal(t.confirmed)
                                                                         .minus(t.sendable)
                                                                         .toNumber()
-                                                                )}
+                                                                )} */}
                                                             </p>
                                                             <svg
                                                                 xmlns="http://www.w3.org/2000/svg"

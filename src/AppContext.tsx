@@ -16,6 +16,7 @@ interface IProps {
 var balanceInterval: ReturnType<typeof setInterval>;
 const AppProvider = ({ children }: IProps) => {
     const loaded = useRef(false);
+
     const [mode, setMode] = useState('desktop');
 
     const [appIsInWriteMode, setAppIsInWriteMode] = useState<boolean | null>(null);
@@ -66,6 +67,7 @@ const AppProvider = ({ children }: IProps) => {
     const [showEditNickname, setShowEditNickname] = useState<string | false>(false);
     const [_nicknameAddress, setDefaultAddressesWithName] = useState<{ name: string; script: Scripts }[]>([]);
     const [_favoriteTokens, setFavoriteTokens] = useState<string[]>([]);
+    const [_currencyFormat, setCurrencyFormat] = useState<{ decimal: string; thousands: string } | null>(null);
 
     useEffect(() => {
         if (!loaded.current) {
@@ -94,12 +96,19 @@ const AppProvider = ({ children }: IProps) => {
                         );
                         const favoriteTokens: any = await sql(`SELECT * FROM cache WHERE name= 'FAVORITE_TOKENS'`);
 
+                        const currFormat: any = await sql(`SELECT * FROM cache WHERE name= 'CURRENCY_FORMAT'`);
+
                         if (nicknameAddresses) {
                             setDefaultAddressesWithName(JSON.parse(nicknameAddresses.DATA));
                         }
 
                         if (favoriteTokens) {
                             setFavoriteTokens(JSON.parse(favoriteTokens.DATA));
+                        }
+
+                        if (currFormat) {
+                            console.log('Setting saved config 4 currency', JSON.parse(currFormat.DATA));
+                            setCurrencyFormat(JSON.parse(currFormat.DATA));
                         }
                     })();
                 }
@@ -223,6 +232,24 @@ const AppProvider = ({ children }: IProps) => {
         });
     };
 
+    const updateCurrencyFormat = async (decimal: string, thousands: string) => {
+        const updatedFormat = {
+            decimal,
+            thousands,
+        };
+
+        // update nicknames
+        setCurrencyFormat(updatedFormat);
+
+        const format = await sql(`SELECT * FROM cache WHERE name = 'CURRENCY_FORMAT'`);
+
+        if (!format) {
+            await sql(`INSERT INTO cache (name, data) VALUES ('CURRENCY_FORMAT', '${JSON.stringify(updatedFormat)}')`);
+        } else {
+            await sql(`UPDATE cache SET data = '${JSON.stringify(updatedFormat)}' WHERE name = 'CURRENCY_FORMAT'`);
+        }
+    };
+
     const editNickname = async (address: string, nickname: string) => {
         const updatedNicknames = {
             ..._nicknameAddress,
@@ -305,6 +332,10 @@ const AppProvider = ({ children }: IProps) => {
                 editNickname,
                 setShowEditNickname,
                 showEditNickname,
+
+                // currenyFormatter
+                _currencyFormat,
+                updateCurrencyFormat,
             }}
         >
             {children}

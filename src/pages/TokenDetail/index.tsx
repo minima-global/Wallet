@@ -10,11 +10,14 @@ import { MinimaToken } from '../../@types/minima';
 import KeyValue from '../../components/UI/KeyValue';
 import CardContent from '../../components/UI/CardContent';
 
+import * as utilities from '../../utilities';
+import Decimal from 'decimal.js';
+
 const TokenDetail = () => {
     const navigate = useNavigate();
     const { tokenid } = useParams();
 
-    const { balance } = useContext(appContext);
+    const { balance, _currencyFormat } = useContext(appContext);
     const [viewingToken, setViewingToken] = useState<null | MinimaToken>(null);
 
     const [fullscreenView, setFullScreenView] = useState(false);
@@ -216,9 +219,29 @@ const TokenDetail = () => {
 
                                         <KeyValue title="Token ID" value={viewingToken.tokenid} />
 
-                                        <KeyValue title="Total Minted" value={viewingToken.total} />
+                                        <KeyValue
+                                            title="Total Minted"
+                                            value={utilities.formatNumberPreference(
+                                                new Decimal(viewingToken.total).toNumber(),
+                                                7,
+                                                utilities.getCharacterCountAfterChar(viewingToken.total, '.') > 7
+                                                    ? '...'
+                                                    : '',
+                                                _currencyFormat
+                                            )}
+                                        />
 
-                                        <KeyValue title="Total Coins" value={viewingToken.coins} />
+                                        <KeyValue
+                                            title="Total Coins"
+                                            value={utilities.formatNumberPreference(
+                                                new Decimal(viewingToken.coins).toNumber(),
+                                                7,
+                                                utilities.getCharacterCountAfterChar(viewingToken.coins, '.') > 7
+                                                    ? '...'
+                                                    : '',
+                                                _currencyFormat
+                                            )}
+                                        />
 
                                         {viewingToken.tokenid !== '0x00' && (
                                             <KeyValue
@@ -274,15 +297,57 @@ const TokenDetail = () => {
                                     <div className="flex flex-col divide-solid divide-y-2">
                                         <KeyValue
                                             title="Sendable"
-                                            value={viewingToken.sendable ? viewingToken.sendable : 'N/A'}
+                                            value={
+                                                viewingToken.sendable && _currencyFormat !== null
+                                                    ? utilities.formatNumberPreference(
+                                                          new Decimal(viewingToken.sendable).toNumber(),
+                                                          7,
+                                                          utilities.getCharacterCountAfterChar(
+                                                              viewingToken.sendable,
+                                                              '.'
+                                                          ) > 7
+                                                              ? '...'
+                                                              : '',
+                                                          _currencyFormat
+                                                      )
+                                                    : 'N/A'
+                                            }
                                         />
                                         <KeyValue
                                             title="Confirmed"
-                                            value={viewingToken.confirmed ? viewingToken.confirmed : 'N/A'}
+                                            value={
+                                                viewingToken.confirmed && _currencyFormat !== null
+                                                    ? utilities.formatNumberPreference(
+                                                          new Decimal(viewingToken.confirmed).toNumber(),
+                                                          7,
+                                                          utilities.getCharacterCountAfterChar(
+                                                              viewingToken.confirmed,
+                                                              '.'
+                                                          ) > 7
+                                                              ? '...'
+                                                              : '',
+                                                          _currencyFormat
+                                                      )
+                                                    : 'N/A'
+                                            }
                                         />
                                         <KeyValue
                                             title="Unconfirmed"
-                                            value={viewingToken.unconfirmed ? viewingToken.unconfirmed : 'N/A'}
+                                            value={
+                                                viewingToken.unconfirmed && _currencyFormat !== null
+                                                    ? utilities.formatNumberPreference(
+                                                          new Decimal(viewingToken.unconfirmed).toNumber(),
+                                                          7,
+                                                          utilities.getCharacterCountAfterChar(
+                                                              viewingToken.unconfirmed,
+                                                              '.'
+                                                          ) > 7
+                                                              ? '...'
+                                                              : '',
+                                                          _currencyFormat
+                                                      )
+                                                    : 'N/A'
+                                            }
                                         />
                                     </div>
                                 </div>
