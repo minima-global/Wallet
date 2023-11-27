@@ -10,8 +10,6 @@ import { MinimaToken } from '../../@types/minima';
 import KeyValue from '../../components/UI/KeyValue';
 import CardContent from '../../components/UI/CardContent';
 
-import * as utilities from '../../utilities';
-import Decimal from 'decimal.js';
 import useFormatMinimaNumber from '../../__minima__/libs/utils/useMakeNumber';
 
 const TokenDetail = () => {
@@ -19,7 +17,7 @@ const TokenDetail = () => {
     const { tokenid } = useParams();
 
     const { makeMinimaNumber } = useFormatMinimaNumber();
-    const { balance, _currencyFormat } = useContext(appContext);
+    const { balance } = useContext(appContext);
     const [viewingToken, setViewingToken] = useState<null | MinimaToken>(null);
 
     const [fullscreenView, setFullScreenView] = useState(false);

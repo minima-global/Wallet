@@ -1,7 +1,7 @@
 import formatNumber from 'format-number';
 
 export const formatNumberPreference = (
-    number: number,
+    number: any,
     truncate: number,
     suffix: string,
     format: { decimal: '.'; thousands: ',' }

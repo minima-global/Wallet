@@ -19,8 +19,7 @@ import useFormatMinimaNumber from '../../__minima__/libs/utils/useMakeNumber';
 const History = () => {
     const navigate = useNavigate();
     const { makeMinimaNumber } = useFormatMinimaNumber();
-    const { historyFacade, historyDetails, history, setOpenDrawer, getHistory, loaded, _currencyFormat } =
-        useContext(appContext);
+    const { historyFacade, historyDetails, history, setOpenDrawer, getHistory, loaded } = useContext(appContext);
 
     const [filterText, setFilterText] = useState('');
 

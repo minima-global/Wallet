@@ -124,16 +124,16 @@ const Status = () => {
                                         <KeyValue title="Vault Locked" value={status?.locked! ? 'True' : 'False'} />
                                         <KeyValue
                                             title="Length"
-                                            value={makeMinimaNumber(status?.length.toString()!, 2000)}
+                                            value={makeMinimaNumber(status.length.toString(), 2000)}
                                         />
                                         <KeyValue title="Chain Weight" value={status?.weight.toString()!} />
                                         <KeyValue
                                             title="Total Minima (global)"
-                                            value={makeMinimaNumber(status?.minima.toString()!, 2000)}
+                                            value={makeMinimaNumber(status.minima.toString(), 2000)}
                                         />
                                         <KeyValue
                                             title="Total Coins (global)"
-                                            value={makeMinimaNumber(status?.coins.toString()!, 2000)}
+                                            value={makeMinimaNumber(status.coins.toString(), 2000)}
                                         />
                                         <KeyValue title="Your Data Path" value={status?.data!} />
                                         <KeyValue title="RAM Usage" value={status?.memory.ram!} />
