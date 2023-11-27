@@ -30,10 +30,12 @@
   - CRA -> vite for quicker development
   
 ##### [2.34.0] - 10 October 23
-  - Fix layout with Inputs, Outputs in txn history details
-  - Fix the state of buttons on forms when haven't touched the req fields
+
+- Fix layout with Inputs, Outputs in txn history details
+- Fix the state of buttons on forms when haven't touched the req fields
 
 ##### [2.34.6] - 14 October 23
+
 - fix mds fail error on page refresh
 - truncate address in middle on smaller screen (Receive page)
 - fix Camera prompt issues
@@ -41,12 +43,13 @@
 - change 'Cancel' to 'Close' where appropriate on modals
 - clean up logs
 
-
 ##### [2.34.7] - 12 October 23
+
 - Menu backdrop click to close
 - Add Burn as optional & info dialog
 
 ##### [2.34.8] - 13 October 23
+
 - Update consolidate, coin split link
 - Success message on consolidate : remove Check coins property of your token
 - Burn info keep only Last 10 and last 50 
@@ -59,32 +62,45 @@
 - Update Burn Copy
 
 ##### [2.34.9] - 13 October 23
+
 - Fix .length error in NFTs 
 - Clean up logs
 
-
 ##### [2.34.10] - 18 October 23
+
 - Fixed nfts uniqueness
 - Backward compatible images for NFTs if they use artimage
 
 ##### [2.34.11] - 20 October 23
+
 - Set a fixed height of content on NFT Collection page
 - Fixed downloading transaction CSV
 - Added a download all transactions on History page
 
 ##### [2.34.13] - 20 October 23
+
 - Set fixed height to all NFTs + favorites
 
 ##### [2.34.14] - 03 November 23
+
 - Added category to dapp.conf
 
 ##### [2.35.0] - 21 November 23
+
 - Pick up URL parameter address for the Send page
 - Added a copy button for the Receive page on mobile view
 
 ##### [2.36.0] - 24 November 23
+
 - Added Settings & currency formatter
 - Re-worked the way tokens are displayed with their different states (confirmed, unconfirmed, sendable)
 - Added token information about the sendable, confirmed  & unconfirmed state
 - Tap QR Code to copy on Receive page
 - Design tweaks
+
+##### [2.36.3] - 27 November 23
+
+- No transactions recorded yet for history state fixed
+- Keys ongoing creation dialog when just starting node added
+- Updated copy for token information
+- Bug fixes

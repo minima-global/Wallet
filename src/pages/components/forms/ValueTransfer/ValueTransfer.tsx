@@ -501,7 +501,10 @@ const useFormSchema = () => {
                 return true;
             }),
         burn: Yup.string()
-            .matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters.')
+            .matches(
+                /^[^a-zA-Z\\;'",]+$/,
+                'Invalid number.  Make sure to use only digits, "." for decimals and nothing for thousands. (e.g 1000.234)'
+            )
             .test('check-my-burnamount', 'Invalid burn amount', function (val) {
                 const { path, createError } = this;
                 if (val === undefined) {

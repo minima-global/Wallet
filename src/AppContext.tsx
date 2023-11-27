@@ -18,6 +18,7 @@ const AppProvider = ({ children }: IProps) => {
     const loaded = useRef(false);
 
     const [mode, setMode] = useState('desktop');
+    const [isCreatingKeys, setCreatingKeys] = useState(false);
 
     const [appIsInWriteMode, setAppIsInWriteMode] = useState<boolean | null>(null);
     const [minidappSystemFailed, setMinidappSystemFailed] = useState<boolean | null>(null);
@@ -67,7 +68,10 @@ const AppProvider = ({ children }: IProps) => {
     const [showEditNickname, setShowEditNickname] = useState<string | false>(false);
     const [_nicknameAddress, setDefaultAddressesWithName] = useState<{ name: string; script: Scripts }[]>([]);
     const [_favoriteTokens, setFavoriteTokens] = useState<string[]>([]);
-    const [_currencyFormat, setCurrencyFormat] = useState<{ decimal: string; thousands: string } | null>(null);
+    const [_currencyFormat, setCurrencyFormat] = useState<{ decimal: string; thousands: string } | null>({
+        decimal: ',',
+        thousands: '',
+    });
 
     useEffect(() => {
         if (!loaded.current) {
@@ -107,11 +111,11 @@ const AppProvider = ({ children }: IProps) => {
                         }
 
                         if (currFormat) {
-                            console.log('Setting saved config 4 currency', JSON.parse(currFormat.DATA));
                             setCurrencyFormat(JSON.parse(currFormat.DATA));
                         }
                     })();
                 }
+
                 if (msg.event === 'NEWBLOCK') {
                     // new block
 
@@ -142,6 +146,17 @@ const AppProvider = ({ children }: IProps) => {
                 if (msg.event === 'MINIMALOG') {
                     const log = msg.data.message;
                     setLogs((prevState) => [...prevState, log]);
+
+                    const isCreatingKeys = log.includes('8 more initial keys created..');
+                    const isDoneCreatingKeys = log.includes('All default getaddress keys created..');
+                    if (isCreatingKeys) {
+                        setCreatingKeys(true);
+                    }
+
+                    if (isDoneCreatingKeys) {
+                        setCreatingKeys(false);
+                        window.location.reload();
+                    }
                 }
 
                 if (msg.event === 'MDS_SHUTDOWN') {
@@ -315,6 +330,7 @@ const AppProvider = ({ children }: IProps) => {
                 getBalance,
 
                 logs,
+                isCreatingKeys,
 
                 notificationMessage,
 

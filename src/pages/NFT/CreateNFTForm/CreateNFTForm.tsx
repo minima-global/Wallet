@@ -547,7 +547,6 @@ const useMySchema = () => {
             .matches(/^[^\\;]+$/, 'Invalid characters.'),
         url: Yup.string()
             .trim()
-
             .test('check-my-url', 'Invalid Url.', function (val) {
                 const { path, createError, parent } = this;
                 if (val === undefined) {
@@ -568,12 +567,23 @@ const useMySchema = () => {
             }),
         amount: Yup.string()
             .required('This field is required')
-            .matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters.')
+            .matches(
+                /^[^a-zA-Z\\;'",]+$/,
+                'Invalid number.  Make sure to use only digits, "." for decimals and nothing for thousands. (e.g 1000.234)'
+            )
             .test('check-my-amount', 'Invalid amount, NFTs cannot be divisible', function (val) {
                 const { path, createError } = this;
                 if (val === undefined) {
                     return false;
                 }
+
+                if (!Number(val)) {
+                    return createError({
+                        path,
+                        message: 'Invalid number.  Make sure to only use "." for decimals and nothing for thousands.',
+                    });
+                }
+
                 if (new Decimal(val).greaterThan(new Decimal(1000000000000))) {
                     return createError({
                         path,
@@ -599,12 +609,23 @@ const useMySchema = () => {
             .max(255, 'Maximum 255 characters allowed.')
             .matches(/^[^\\;]+$/, 'Invalid characters.'),
         burn: Yup.string()
-            .matches(/^[^a-zA-Z\\;'"]+$/, 'Invalid characters.')
+            .matches(
+                /^[^a-zA-Z\\;'",]+$/,
+                'Invalid number.  Make sure to use only digits, "." for decimals and nothing for thousands. (e.g 1000.234)'
+            )
             .test('check-my-burnamount', 'Invalid burn amount', function (val) {
                 const { path, createError } = this;
                 if (val === undefined) {
                     return true;
                 }
+
+                if (!Number(val)) {
+                    return createError({
+                        path,
+                        message: 'Invalid number.  Make sure to only use "." for decimals and nothing for thousands.',
+                    });
+                }
+
                 const burn = new Decimal(val);
 
                 if (burn.greaterThan(wallet[0].sendable)) {

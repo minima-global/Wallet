@@ -89,11 +89,11 @@ const Wallet = () => {
                                                                     height="24"
                                                                     className="min-h-[24px] min-w-[24px]"
                                                                     viewBox="0 0 24 24"
-                                                                    stroke-width="2"
+                                                                    strokeWidth="2"
                                                                     stroke="#22c55e"
                                                                     fill="none"
-                                                                    stroke-linecap="round"
-                                                                    stroke-linejoin="round"
+                                                                    strokeLinecap="round"
+                                                                    strokeLinejoin="round"
                                                                 >
                                                                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                                     <path d="M7 9m0 2a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2z" />
@@ -103,11 +103,11 @@ const Wallet = () => {
                                                                 <h3 className="font-semibold">Sendable</h3>
                                                             </div>
                                                             <div className="border-t m-2"></div>
-                                                            <div className="text-center font-mono text-slate-500 bg-white rounded-lg p-2">
-                                                                {makeMinimaNumber(tokenInformation.sendable, 3)}
+                                                            <div className="text-center font-mono text-slate-500 bg-white truncate rounded-lg p-2">
+                                                                {makeMinimaNumber(tokenInformation.sendable, 2000)}
                                                             </div>
-                                                            <p className="text-sm text-center">
-                                                                Funds are available to be spent immediately.
+                                                            <p className="text-sm text-center mt-8">
+                                                                Funds are available to be spent immediately
                                                             </p>
                                                         </div>
                                                         <div className="bg-white rounded-lg px-4 py-2 flex-col">
@@ -118,20 +118,20 @@ const Wallet = () => {
                                                                     height="24"
                                                                     className="min-h-[24px] min-w-[24px]"
                                                                     viewBox="0 0 24 24"
-                                                                    stroke-width="2"
+                                                                    strokeWidth="2"
                                                                     stroke="currentColor"
                                                                     fill="none"
-                                                                    stroke-linecap="round"
-                                                                    stroke-linejoin="round"
+                                                                    strokeLinecap="round"
+                                                                    strokeLinejoin="round"
                                                                 >
                                                                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                                     <path
                                                                         d="M12 2c-.218 0 -.432 .002 -.642 .005l-.616 .017l-.299 .013l-.579 .034l-.553 .046c-4.785 .464 -6.732 2.411 -7.196 7.196l-.046 .553l-.034 .579c-.005 .098 -.01 .198 -.013 .299l-.017 .616l-.004 .318l-.001 .324c0 .218 .002 .432 .005 .642l.017 .616l.013 .299l.034 .579l.046 .553c.464 4.785 2.411 6.732 7.196 7.196l.553 .046l.579 .034c.098 .005 .198 .01 .299 .013l.616 .017l.642 .005l.642 -.005l.616 -.017l.299 -.013l.579 -.034l.553 -.046c4.785 -.464 6.732 -2.411 7.196 -7.196l.046 -.553l.034 -.579c.005 -.098 .01 -.198 .013 -.299l.017 -.616l.005 -.642l-.005 -.642l-.017 -.616l-.013 -.299l-.034 -.579l-.046 -.553c-.464 -4.785 -2.411 -6.732 -7.196 -7.196l-.553 -.046l-.579 -.034a28.058 28.058 0 0 0 -.299 -.013l-.616 -.017l-.318 -.004l-.324 -.001zm0 4a3 3 0 0 1 2.995 2.824l.005 .176v1a2 2 0 0 1 1.995 1.85l.005 .15v3a2 2 0 0 1 -1.85 1.995l-.15 .005h-6a2 2 0 0 1 -1.995 -1.85l-.005 -.15v-3a2 2 0 0 1 1.85 -1.995l.15 -.005v-1a3 3 0 0 1 3 -3zm3 6h-6v3h6v-3zm-3 -4a1 1 0 0 0 -.993 .883l-.007 .117v1h2v-1a1 1 0 0 0 -1 -1z"
                                                                         fill="currentColor"
-                                                                        stroke-width="0"
+                                                                        strokeWidth="0"
                                                                     />
                                                                 </svg>
-                                                                <h3 className="font-semibold">Confirmed</h3>
+                                                                <h3 className="font-semibold">Locked</h3>
                                                             </div>
                                                             <div className="border-t m-2"></div>
                                                             <div className="text-center font-mono text-slate-500 bg-white rounded-lg p-2">
@@ -148,10 +148,9 @@ const Wallet = () => {
                                                                 )}
                                                                 )
                                                             </div>
-                                                            <p className="text-sm text-center">
-                                                                Confirmed shows the total coins you have, both the
-                                                                sendable and locked up coins. <br /> The locked icon
-                                                                displays only the locked total amount.
+                                                            <p className="text-sm text-center mt-8">
+                                                                Confirmed is the total of sendable and also locked up.
+                                                                Locked will display the locked amount.
                                                             </p>
                                                         </div>
                                                         <div className="bg-white rounded-lg px-4 py-2 flex-col">
@@ -162,11 +161,11 @@ const Wallet = () => {
                                                                     width="24"
                                                                     height="24"
                                                                     viewBox="0 0 24 24"
-                                                                    stroke-width="2"
+                                                                    strokeWidth="2"
                                                                     stroke="#eab308"
                                                                     fill="none"
-                                                                    stroke-linecap="round"
-                                                                    stroke-linejoin="round"
+                                                                    strokeLinecap="round"
+                                                                    strokeLinejoin="round"
                                                                 >
                                                                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                                     <path d="M6.5 7h11" />
@@ -179,7 +178,7 @@ const Wallet = () => {
                                                             <div className="text-center font-mono text-slate-500 bg-white rounded-lg p-2">
                                                                 {makeMinimaNumber(tokenInformation.unconfirmed, 3)}
                                                             </div>
-                                                            <p className="text-sm text-center">
+                                                            <p className="text-sm text-center mt-8">
                                                                 Unconfirmed are funds awaiting minimum block time
                                                                 confirmation in the mempool.
                                                             </p>
@@ -292,6 +291,7 @@ const Wallet = () => {
                                                         <div
                                                             onClick={(e) => {
                                                                 e.stopPropagation();
+
                                                                 setTokenInformation({
                                                                     confirmed: t.confirmed,
                                                                     sendable: t.sendable,
@@ -317,11 +317,11 @@ const Wallet = () => {
                                                                     height="24"
                                                                     className="min-h-[24px] min-w-[24px]"
                                                                     viewBox="0 0 24 24"
-                                                                    stroke-width="2"
+                                                                    strokeWidth="2"
                                                                     stroke="#22c55e"
                                                                     fill="none"
-                                                                    stroke-linecap="round"
-                                                                    stroke-linejoin="round"
+                                                                    strokeLinecap="round"
+                                                                    strokeLinejoin="round"
                                                                 >
                                                                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                                     <path d="M7 9m0 2a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2z" />
@@ -336,11 +336,11 @@ const Wallet = () => {
                                                                     width="24"
                                                                     height="24"
                                                                     viewBox="0 0 24 24"
-                                                                    stroke-width="2"
+                                                                    strokeWidth="2"
                                                                     stroke="#eab308"
                                                                     fill="none"
-                                                                    stroke-linecap="round"
-                                                                    stroke-linejoin="round"
+                                                                    strokeLinecap="round"
+                                                                    strokeLinejoin="round"
                                                                 >
                                                                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                                     <path d="M6.5 7h11" />
@@ -374,17 +374,17 @@ const Wallet = () => {
                                                                 height="24"
                                                                 className="min-h-[24px] min-w-[24px]"
                                                                 viewBox="0 0 24 24"
-                                                                stroke-width="2"
+                                                                strokeWidth="2"
                                                                 stroke="currentColor"
                                                                 fill="none"
-                                                                stroke-linecap="round"
-                                                                stroke-linejoin="round"
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
                                                             >
                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                                 <path
                                                                     d="M12 2c-.218 0 -.432 .002 -.642 .005l-.616 .017l-.299 .013l-.579 .034l-.553 .046c-4.785 .464 -6.732 2.411 -7.196 7.196l-.046 .553l-.034 .579c-.005 .098 -.01 .198 -.013 .299l-.017 .616l-.004 .318l-.001 .324c0 .218 .002 .432 .005 .642l.017 .616l.013 .299l.034 .579l.046 .553c.464 4.785 2.411 6.732 7.196 7.196l.553 .046l.579 .034c.098 .005 .198 .01 .299 .013l.616 .017l.642 .005l.642 -.005l.616 -.017l.299 -.013l.579 -.034l.553 -.046c4.785 -.464 6.732 -2.411 7.196 -7.196l.046 -.553l.034 -.579c.005 -.098 .01 -.198 .013 -.299l.017 -.616l.005 -.642l-.005 -.642l-.017 -.616l-.013 -.299l-.034 -.579l-.046 -.553c-.464 -4.785 -2.411 -6.732 -7.196 -7.196l-.553 -.046l-.579 -.034a28.058 28.058 0 0 0 -.299 -.013l-.616 -.017l-.318 -.004l-.324 -.001zm0 4a3 3 0 0 1 2.995 2.824l.005 .176v1a2 2 0 0 1 1.995 1.85l.005 .15v3a2 2 0 0 1 -1.85 1.995l-.15 .005h-6a2 2 0 0 1 -1.995 -1.85l-.005 -.15v-3a2 2 0 0 1 1.85 -1.995l.15 -.005v-1a3 3 0 0 1 3 -3zm3 6h-6v3h6v-3zm-3 -4a1 1 0 0 0 -.993 .883l-.007 .117v1h2v-1a1 1 0 0 0 -1 -1z"
                                                                     fill="currentColor"
-                                                                    stroke-width="0"
+                                                                    strokeWidth="0"
                                                                 />
                                                             </svg>
                                                         </div>

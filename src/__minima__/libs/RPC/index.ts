@@ -6,3 +6,4 @@ export * from './getScripts';
 export * from './checkAddress';
 export * from './createToken';
 export * from './consolidate';
+export * from './getLockedAmountForContract';

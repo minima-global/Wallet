@@ -243,55 +243,85 @@ const History = () => {
                 <>
                     <CardContent
                         header={
-                            <div className="flex flex-col w-full">
-                                <span className="w-full flex justify-end mb-4">
-                                    <svg
-                                        id="dropdownDefaultButton"
-                                        data-dropdown-toggle="dropdown"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        height="24"
-                                        viewBox="0 -960 960 960"
-                                        width="24"
-                                    >
-                                        <path d="M480-160q-33 0-56.5-23.5T400-240q0-33 23.5-56.5T480-320q33 0 56.5 23.5T560-240q0 33-23.5 56.5T480-160Zm0-240q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm0-240q-33 0-56.5-23.5T400-720q0-33 23.5-56.5T480-800q33 0 56.5 23.5T560-720q0 33-23.5 56.5T480-640Z" />
-                                    </svg>
-                                    <div
-                                        id="dropdown"
-                                        className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700"
-                                    >
-                                        <ul
-                                            className="py-2 text-sm text-gray-700 dark:text-gray-200"
-                                            aria-labelledby="dropdownDefaultButton"
+                            <>
+                                {JSON.stringify(historyFacade) === '{}' && loaded.current && (
+                                    <div className="flex justify-center">
+                                        <svg
+                                            className="fill-yellow-500"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="64"
+                                            height="64"
+                                            viewBox="0 0 24 24"
+                                            strokeWidth="2"
+                                            stroke="currentColor"
+                                            fill="none"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
                                         >
-                                            <li>
-                                                <a
-                                                    onClick={() => {
-                                                        handleDownloadAll();
-                                                    }}
-                                                    className="block px-4 py-2 hover:bg-gray-100 hover:cursor-pointer dark:hover:bg-gray-600 dark:hover:text-white"
-                                                >
-                                                    Download all
-                                                </a>
-                                            </li>
-                                        </ul>
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                                            <path d="M14.5 16.05a3.5 3.5 0 0 0 -5 0" />
+                                            <path d="M8 9l2 2" />
+                                            <path d="M10 9l-2 2" />
+                                            <path d="M14 9l2 2" />
+                                            <path d="M16 9l-2 2" />
+                                        </svg>
                                     </div>
-                                </span>
-                                <Input
-                                    id="search"
-                                    name="search"
-                                    disabled={false}
-                                    value={filterText}
-                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilterText(e.target.value)}
-                                    type="search"
-                                    placeholder="Search by txpowid or token name"
-                                />
-                            </div>
+                                )}
+                                {JSON.stringify(historyFacade) !== '{}' && loaded.current && (
+                                    <div className="flex flex-col w-full">
+                                        <span className="w-full flex justify-end mb-4">
+                                            <svg
+                                                id="dropdownDefaultButton"
+                                                data-dropdown-toggle="dropdown"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                height="24"
+                                                viewBox="0 -960 960 960"
+                                                width="24"
+                                            >
+                                                <path d="M480-160q-33 0-56.5-23.5T400-240q0-33 23.5-56.5T480-320q33 0 56.5 23.5T560-240q0 33-23.5 56.5T480-160Zm0-240q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm0-240q-33 0-56.5-23.5T400-720q0-33 23.5-56.5T480-800q33 0 56.5 23.5T560-720q0 33-23.5 56.5T480-640Z" />
+                                            </svg>
+                                            <div
+                                                id="dropdown"
+                                                className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700"
+                                            >
+                                                <ul
+                                                    className="py-2 text-sm text-gray-700 dark:text-gray-200"
+                                                    aria-labelledby="dropdownDefaultButton"
+                                                >
+                                                    <li>
+                                                        <a
+                                                            onClick={() => {
+                                                                handleDownloadAll();
+                                                            }}
+                                                            className="block px-4 py-2 hover:bg-gray-100 hover:cursor-pointer dark:hover:bg-gray-600 dark:hover:text-white"
+                                                        >
+                                                            Download all
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </span>
+                                        <Input
+                                            id="search"
+                                            name="search"
+                                            disabled={false}
+                                            value={filterText}
+                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                                                setFilterText(e.target.value)
+                                            }
+                                            type="search"
+                                            placeholder="Search by txpowid or token name"
+                                        />
+                                    </div>
+                                )}
+                            </>
                         }
                         content={
                             <div className="flex flex-col gap-8">
                                 <ul className="flex flex-col gap-2 divide-y divide-gray-200">
-                                    {!historyFacade && loaded.current && (
-                                        <p className="text-center text-black">No transactions recorded yet</p>
+                                    {JSON.stringify(historyFacade) === '{}' && loaded.current && (
+                                        <p className="text-center text-slate-500">No transactions recorded yet</p>
                                     )}
                                     {!historyFacade && !loaded.current && (
                                         <div className="flex justify-center items-center">
