@@ -4,10 +4,12 @@ interface IProps {
     header: ReactElement;
     content: ReactElement;
     className?: string;
+    onClick?: any;
 }
-const CardContent = ({ header, content, className }: IProps) => {
+const CardContent = ({ header, content, className, onClick }: IProps) => {
     return (
         <div
+            onClick={onClick}
             className={`flex h-max flex-col gap-4 mx-4 rounded bg-white bg-opacity-70 p-4 shadow-sm mb-4 ${
                 className ? className : ''
             }`}

@@ -27,7 +27,10 @@ const Status = () => {
         <>
             {showFullStatus &&
                 createPortal(
-                    <div className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn">
+                    <div
+                        onClick={() => setShowFullStatus(false)}
+                        className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn"
+                    >
                         <Grid
                             variant="lg"
                             title={
@@ -49,7 +52,10 @@ const Status = () => {
                                 </>
                             }
                         >
-                            <div className="flex flex-col gap-4 mx-4 rounded bg-white bg-opacity-90 p-4 mb-4 shadow-sm">
+                            <div
+                                onClick={(e) => e.stopPropagation()}
+                                className="flex flex-col gap-4 mx-4 rounded bg-white bg-opacity-90 p-4 mb-4 shadow-sm"
+                            >
                                 <div className="overflow-scroll">
                                     <pre className="text-black text-sm break-all max-h-[calc(100vh_-_56px)]">
                                         {JSON.stringify(status, null, 2)}
@@ -119,8 +125,8 @@ const Status = () => {
                                 )}
                                 {!!status && (
                                     <>
-                                        <KeyValue title="Node Version" value={status?.version!} />
-                                        <KeyValue title="Uptime" value={status?.uptime!} />
+                                        <KeyValue truncate={false} title="Node Version" value={status?.version!} />
+                                        <KeyValue truncate={false} title="Uptime" value={status?.uptime!} />
                                         <KeyValue title="Vault Locked" value={status?.locked! ? 'True' : 'False'} />
                                         <KeyValue
                                             title="Length"
@@ -128,14 +134,21 @@ const Status = () => {
                                         />
                                         <KeyValue title="Chain Weight" value={status?.weight.toString()!} />
                                         <KeyValue
+                                            truncate={false}
                                             title="Total Minima (global)"
                                             value={makeMinimaNumber(status.minima.toString(), 2000)}
                                         />
                                         <KeyValue
+                                            truncate={false}
                                             title="Total Coins (global)"
                                             value={makeMinimaNumber(status.coins.toString(), 2000)}
                                         />
-                                        <KeyValue title="Your Data Path" value={status?.data!} />
+                                        <KeyValue
+                                            truncate={false}
+                                            clipboard
+                                            title="Your Data Path"
+                                            value={status?.data!}
+                                        />
                                         <KeyValue title="RAM Usage" value={status?.memory.ram!} />
                                         <KeyValue title="Disk Usage" value={status?.memory.disk!} />
                                     </>

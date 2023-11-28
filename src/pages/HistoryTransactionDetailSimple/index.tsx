@@ -53,7 +53,10 @@ const HistoryTransactionDetailSimple = () => {
             {_viewFullJson &&
                 _transaction &&
                 createPortal(
-                    <div className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn">
+                    <div
+                        onClick={() => setViewJson(false)}
+                        className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn"
+                    >
                         <Grid
                             variant="lg"
                             title={
@@ -75,7 +78,10 @@ const HistoryTransactionDetailSimple = () => {
                                 </>
                             }
                         >
-                            <div className="flex flex-col gap-4 mx-4 rounded bg-white bg-opacity-90 p-4 mb-4 shadow-sm">
+                            <div
+                                onClick={(e) => e.stopPropagation()}
+                                className="flex flex-col gap-4 mx-4 rounded bg-white bg-opacity-90 p-4 mb-4 shadow-sm"
+                            >
                                 <div className="overflow-scroll">
                                     <pre className="text-black text-sm break-all max-h-[calc(100vh_-_56px)]">
                                         {JSON.stringify(
@@ -93,7 +99,10 @@ const HistoryTransactionDetailSimple = () => {
 
             {params &&
                 createPortal(
-                    <div className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn">
+                    <div
+                        onClick={() => navigate(-1)}
+                        className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn"
+                    >
                         <Grid
                             variant="lg"
                             title={
@@ -116,6 +125,7 @@ const HistoryTransactionDetailSimple = () => {
                             }
                         >
                             <CardContent
+                                onClick={(e: any) => e.stopPropagation()}
                                 className="bg-opacity-90"
                                 header={
                                     <span className="flex justify-between">
@@ -150,6 +160,8 @@ const HistoryTransactionDetailSimple = () => {
                                     <div className="flex flex-col gap-8">
                                         <div className="divide-y-2">
                                             <KeyValue
+                                                truncate={false}
+                                                clipboard
                                                 title="Transaction ID (TxPOWID)"
                                                 value={_transaction ? _transaction.txpowid : 'N/A'}
                                             />
@@ -160,10 +172,14 @@ const HistoryTransactionDetailSimple = () => {
                                             <KeyValue title="Type" value={_transaction ? _transaction.type : 'N/A'} />
                                             <div>
                                                 <KeyValue
+                                                    clipboard
+                                                    truncate={false}
                                                     title="Sent to"
                                                     value={_transaction ? _transaction.sentToMx : 'N/A'}
                                                 />
                                                 <KeyValue
+                                                    clipboard
+                                                    truncate={false}
                                                     title="(0x)"
                                                     value={_transaction ? _transaction.sentTo0x : 'N/A'}
                                                 />
@@ -243,8 +259,18 @@ const HistoryTransactionDetailSimple = () => {
                                                                     />
                                                                 )}
                                                             </div>
-                                                            <KeyValue title="Coin ID" value={i.coinid} />
-                                                            <KeyValue title="Token ID" value={i.tokenid} />
+                                                            <KeyValue
+                                                                truncate={false}
+                                                                clipboard
+                                                                title="Coin ID"
+                                                                value={i.coinid}
+                                                            />
+                                                            <KeyValue
+                                                                truncate={false}
+                                                                clipboard
+                                                                title="Token ID"
+                                                                value={i.tokenid}
+                                                            />
                                                             <KeyValue title="Spent" value={i.spent ? 'Yes' : 'No'} />
                                                             <KeyValue
                                                                 title="Storing state"
@@ -305,8 +331,18 @@ const HistoryTransactionDetailSimple = () => {
                                                                     />
                                                                 )}
                                                             </div>
-                                                            <KeyValue title="Coin ID" value={i.coinid} />
-                                                            <KeyValue title="Token ID" value={i.tokenid} />
+                                                            <KeyValue
+                                                                truncate={false}
+                                                                clipboard
+                                                                title="Coin ID"
+                                                                value={i.coinid}
+                                                            />
+                                                            <KeyValue
+                                                                truncate={false}
+                                                                clipboard
+                                                                title="Token ID"
+                                                                value={i.tokenid}
+                                                            />
                                                             <KeyValue title="Spent" value={i.spent ? 'Yes' : 'No'} />
                                                             <KeyValue
                                                                 title="Storing state"
@@ -355,6 +391,8 @@ const HistoryTransactionDetailSimple = () => {
 
                                                                 <KeyValue title="Type" value={i.type + ''} />
                                                                 <KeyValue
+                                                                    truncate={false}
+                                                                    clipboard
                                                                     title="Data"
                                                                     value={i.data.replace(/[\[\]]+/gi, ' ')}
                                                                 />

@@ -263,12 +263,12 @@ const Wallet = () => {
                                             )}
 
                                             <div className="grid grid-cols-[auto_1fr] gap-2">
-                                                <div>
+                                                <div className="overflow-hidden">
                                                     {t.tokenid === '0x00' && (
                                                         <h6 className="font-bold truncate text-black">Minima</h6>
                                                     )}
                                                     {t.tokenid !== '0x00' && (
-                                                        <h6 className="font-bold text-black">
+                                                        <h6 className="font-bold text-black truncate">
                                                             {t.token && 'name' in t?.token
                                                                 ? t?.token.name
                                                                 : 'Name not available'}
