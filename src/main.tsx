@@ -8,7 +8,6 @@ import Balance from './pages/Balance';
 import TokenDetail from './pages/TokenDetail';
 import Send from './pages/Send';
 import Receive from './pages/Receive';
-import ValidateAddress from './pages/ValidateAddress';
 import Status from './pages/Status';
 import TokenCreation from './pages/TokenCreation/TokenCreation';
 import NFTs from './pages/NFT';
@@ -25,7 +24,6 @@ const router = createHashRouter(
             <Route path="balance/:tokenid" element={<TokenDetail />} />
             <Route path="send" element={<Send />} />
             <Route path="receive" element={<Receive />} />
-            <Route path="validate" element={<ValidateAddress />} />
             <Route path="status" element={<Status />} />
             <Route path="tokencreate" element={<TokenCreation />} />
             <Route path="nfts" element={<NFTs />} />

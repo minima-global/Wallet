@@ -73,7 +73,10 @@ const WalletSelect = () => {
         <>
             {active &&
                 createPortal(
-                    <div className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn">
+                    <div
+                        onClick={() => setActive(false)}
+                        className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn"
+                    >
                         <Grid
                             variant="lg"
                             title={
@@ -93,6 +96,7 @@ const WalletSelect = () => {
                             }
                         >
                             <CardContent
+                                onClick={(e: any) => e.stopPropagation()}
                                 className="bg-white bg-opacity-80"
                                 header={
                                     <>
@@ -185,14 +189,14 @@ const WalletSelect = () => {
                                                         )}
 
                                                         <div className="grid grid-cols-[auto_1fr] gap-2">
-                                                            <div>
+                                                            <div className="overflow-hidden">
                                                                 {t.tokenid === '0x00' && (
                                                                     <h6 className="font-bold truncate text-black">
                                                                         Minima
                                                                     </h6>
                                                                 )}
                                                                 {t.tokenid !== '0x00' && (
-                                                                    <h6 className="font-bold text-black">
+                                                                    <h6 className="font-bold text-black truncate">
                                                                         {t.token && 'name' in t?.token
                                                                             ? t?.token.name
                                                                             : 'Name not available'}
@@ -471,13 +475,13 @@ const WalletSelect = () => {
                             </div>
                         )}
 
-                        <div className="grid grid-cols-[auto_1fr] gap-2">
-                            <div>
+                        <div className="grid grid-cols-[1fr_auto] gap-2">
+                            <div className="overflow-hidden">
                                 {formik.values.token.tokenid === '0x00' && (
                                     <h6 className="font-bold truncate text-black">Minima</h6>
                                 )}
                                 {formik.values.token.tokenid !== '0x00' && (
-                                    <h6 className="font-bold text-black">
+                                    <h6 className="font-bold text-black truncate">
                                         {formik.values.token.token && 'name' in formik.values.token?.token
                                             ? formik.values.token?.token.name
                                             : 'Name not available'}

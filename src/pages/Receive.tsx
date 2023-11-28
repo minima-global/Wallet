@@ -11,20 +11,73 @@ import Button from '../components/UI/Button';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import * as utils from '../shared/utils';
+import getCurrentNodeVersion from '../minima/commands/getCurrentVersion';
+
+import * as rpc from '../__minima__/libs/RPC';
+import KeyValue from '../components/UI/KeyValue';
 
 const Receive = () => {
-    const { simpleAddresses, setOpenDrawer, _nicknameAddress, editNickname, showEditNickname, setShowEditNickname } =
-        useContext(appContext);
+    const {
+        loaded,
+        simpleAddresses,
+        setOpenDrawer,
+        _nicknameAddress,
+        editNickname,
+        showEditNickname,
+        setShowEditNickname,
+    } = useContext(appContext);
     const [address, setAddress] = useState<Scripts | null>(null);
     const [showFullList, setShowFullList] = useState(false);
     const [copyState, setCopy] = useState(false);
     const [filterText, setFilterText] = useState('');
+
+    const [error, setError] = useState<false | string>(false);
+    const [loading, setLoading] = useState(false);
+    const [step, setStep] = useState(0);
+    const [validateAddress, setValidateAddress] = useState(false);
+    const [validationData, setValidationData] = useState<any>(false);
+    const [validBuild, setValidBuild] = useState<boolean | null>(null);
+
+    useEffect(() => {
+        if (loaded.current === true) {
+            getCurrentNodeVersion().then((v) => {
+                const versionCheckAddressWasIntroduced = '1.0.21';
+                const comparison = v.localeCompare(versionCheckAddressWasIntroduced);
+                const isRunningSufficientVersion = comparison === 0 || comparison === 1;
+
+                if (isRunningSufficientVersion) {
+                    setValidBuild(true);
+                }
+                if (!isRunningSufficientVersion) {
+                    setValidBuild(false);
+                }
+            });
+        }
+    }, [loaded.current]);
 
     useEffect(() => {
         if (simpleAddresses.length) {
             setAddress(simpleAddresses[Math.floor(Math.random() * simpleAddresses.length)]);
         }
     }, [simpleAddresses]);
+
+    const validateCurrentAddress = () => {
+        setLoading(true);
+
+        if (address) {
+            rpc.checkAddress(address?.miniaddress)
+                .then((result) => {
+                    setValidationData({ address: address.miniaddress, ...result });
+                })
+                .catch((err) => {
+                    console.error(err);
+                    setError(err as string);
+                })
+                .finally(() => {
+                    setLoading(false);
+                });
+        }
+    };
 
     const handleCopyClick = () => {
         copy(address ? address.miniaddress : '');
@@ -141,13 +194,432 @@ const Receive = () => {
                         className="!p-0"
                         header={
                             <>
+                                {error &&
+                                    createPortal(
+                                        <div
+                                            onClick={() => setError(false)}
+                                            className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn"
+                                        >
+                                            <Grid variant="sm" title={<></>}>
+                                                <div
+                                                    onClick={(e) => e.stopPropagation()}
+                                                    className="mx-4 rounded bg-white bg-opacity-90 p-4 items-center h-max max-h-[calc(100%_-_16px)] overflow-y-scroll"
+                                                >
+                                                    <div>
+                                                        <svg
+                                                            className="animate-pulse temporary-pulse fill-[var(--status-red)] mb-4
+                                                mx-auto mt-8"
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                            height="64"
+                                                            viewBox="0 -960 960 960"
+                                                            width="64"
+                                                        >
+                                                            <path d="M480-280q17 0 28.5-11.5T520-320q0-17-11.5-28.5T480-360q-17 0-28.5 11.5T440-320q0 17 11.5 28.5T480-280Zm-40-160h80v-240h-80v240Zm40 360q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
+                                                        </svg>
+                                                        <h1 className="text-black text-center font-semibold text-xl mb-2">
+                                                            Hmm... something went wrong!
+                                                        </h1>
+                                                        <p className="text-black text-center break-all">
+                                                            {typeof error.includes !== 'undefined' &&
+                                                            error.includes('java.lang.IllegalArgumentException:')
+                                                                ? error.split('java.lang.IllegalArgumentException:')[1]
+                                                                : error}
+                                                        </p>
+                                                    </div>
+                                                    <div className="flex flex-col gap-2 w-full mt-8 md:mt-16 self-end">
+                                                        <Button
+                                                            onClick={() => {
+                                                                setError(false);
+                                                            }}
+                                                            variant="secondary"
+                                                        >
+                                                            Cancel
+                                                        </Button>
+                                                    </div>
+                                                </div>
+                                            </Grid>
+                                        </div>,
+
+                                        document.body
+                                    )}
+                                {validateAddress &&
+                                    createPortal(
+                                        <div
+                                            onClick={() => setValidateAddress(false)}
+                                            className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn"
+                                        >
+                                            <Grid
+                                                variant="lg"
+                                                title={
+                                                    <>
+                                                        <svg
+                                                            className="fill-white hover:cursor-pointer"
+                                                            onClick={(e: any) => {
+                                                                e.stopPropagation();
+                                                                setValidateAddress(false);
+                                                            }}
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                            height="24"
+                                                            viewBox="0 -960 960 960"
+                                                            width="24"
+                                                        >
+                                                            <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+                                                        </svg>
+                                                        Enter address
+                                                    </>
+                                                }
+                                            >
+                                                <CardContent
+                                                    onClick={(e: any) => e.stopPropagation()}
+                                                    className="bg-opacity-90"
+                                                    header={<></>}
+                                                    content={
+                                                        <>
+                                                            <Formik
+                                                                initialValues={{ address: '' }}
+                                                                onSubmit={async (formInputs) => {
+                                                                    setStep(0);
+                                                                    setLoading(true);
+
+                                                                    const { address } = formInputs;
+                                                                    try {
+                                                                        const resp = await rpc.checkAddress(
+                                                                            formInputs.address
+                                                                        );
+                                                                        setLoading(false);
+                                                                        setStep(1);
+                                                                        setValidationData({ address, ...resp });
+                                                                    } catch (error) {
+                                                                        setLoading(false);
+                                                                        setError(error as string);
+                                                                    }
+                                                                }}
+                                                                validationSchema={validationSchema}
+                                                            >
+                                                                {({
+                                                                    handleSubmit,
+                                                                    getFieldProps,
+                                                                    isValid,
+                                                                    isSubmitting,
+                                                                    touched,
+                                                                    errors,
+                                                                }) => (
+                                                                    <>
+                                                                        <form onSubmit={handleSubmit}>
+                                                                            <div>
+                                                                                <Input
+                                                                                    disabled={isSubmitting}
+                                                                                    type="text"
+                                                                                    id="address"
+                                                                                    {...getFieldProps('address')}
+                                                                                    placeholder="0x or Mx address"
+                                                                                    error={
+                                                                                        errors.address &&
+                                                                                        touched.address
+                                                                                            ? errors.address
+                                                                                            : false
+                                                                                    }
+                                                                                />
+                                                                                <Button
+                                                                                    extraClass="mt-8 md:mt-16"
+                                                                                    type="submit"
+                                                                                    variant="primary"
+                                                                                    disabled={!isValid || loading}
+                                                                                >
+                                                                                    {!loading && 'Validate'}
+                                                                                    {!!loading && (
+                                                                                        <div className="flex items-center justify-center">
+                                                                                            <svg
+                                                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                                                className="animate-spin"
+                                                                                                width="24"
+                                                                                                height="24"
+                                                                                                viewBox="0 0 24 24"
+                                                                                                stroke-width="2"
+                                                                                                stroke="currentColor"
+                                                                                                fill="none"
+                                                                                                stroke-linecap="round"
+                                                                                                stroke-linejoin="round"
+                                                                                            >
+                                                                                                <path
+                                                                                                    stroke="none"
+                                                                                                    d="M0 0h24v24H0z"
+                                                                                                    fill="none"
+                                                                                                />
+                                                                                                <path d="M10 20.777a8.942 8.942 0 0 1 -2.48 -.969" />
+                                                                                                <path d="M14 3.223a9.003 9.003 0 0 1 0 17.554" />
+                                                                                                <path d="M4.579 17.093a8.961 8.961 0 0 1 -1.227 -2.592" />
+                                                                                                <path d="M3.124 10.5c.16 -.95 .468 -1.85 .9 -2.675l.169 -.305" />
+                                                                                                <path d="M6.907 4.579a8.954 8.954 0 0 1 3.093 -1.356" />
+                                                                                            </svg>
+                                                                                        </div>
+                                                                                    )}
+                                                                                </Button>
+                                                                            </div>
+                                                                        </form>
+                                                                    </>
+                                                                )}
+                                                            </Formik>
+                                                        </>
+                                                    }
+                                                />
+                                            </Grid>
+                                        </div>,
+                                        document.body
+                                    )}
+
+                                {validationData &&
+                                    createPortal(
+                                        <div
+                                            onClick={() => setValidationData(false)}
+                                            className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn"
+                                        >
+                                            <Grid
+                                                variant="lg"
+                                                title={
+                                                    <>
+                                                        <svg
+                                                            className="fill-white hover:cursor-pointer"
+                                                            onClick={(e: any) => {
+                                                                e.stopPropagation();
+                                                                setValidationData(false);
+                                                                if (validateAddress) {
+                                                                    setValidateAddress(false);
+                                                                }
+                                                            }}
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                            height="24"
+                                                            viewBox="0 -960 960 960"
+                                                            width="24"
+                                                        >
+                                                            <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+                                                        </svg>
+                                                        Validation Report
+                                                    </>
+                                                }
+                                            >
+                                                <CardContent
+                                                    className="bg-opacity-90"
+                                                    header={<></>}
+                                                    content={
+                                                        <>
+                                                            <div
+                                                                onClick={(e) => e.stopPropagation()}
+                                                                className="mb-8 flex flex-col gap-2"
+                                                            >
+                                                                <div className="grid grid-cols-2 gap-2">
+                                                                    <div className="bg-black rounded-lg text-white font-bold flex flex-col items-center p-4">
+                                                                        <h3 className="pb-8 text-center text-sm">
+                                                                            Address belongs to this node?
+                                                                        </h3>
+                                                                        {validationData.relevant && (
+                                                                            <svg
+                                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                                width="32"
+                                                                                height="32"
+                                                                                viewBox="0 0 24 24"
+                                                                                stroke-width="2"
+                                                                                stroke="currentColor"
+                                                                                fill="none"
+                                                                                stroke-linecap="round"
+                                                                                stroke-linejoin="round"
+                                                                            >
+                                                                                <path
+                                                                                    stroke="none"
+                                                                                    d="M0 0h24v24H0z"
+                                                                                    fill="none"
+                                                                                />
+                                                                                <path
+                                                                                    d="M12 2c-.218 0 -.432 .002 -.642 .005l-.616 .017l-.299 .013l-.579 .034l-.553 .046c-4.785 .464 -6.732 2.411 -7.196 7.196l-.046 .553l-.034 .579c-.005 .098 -.01 .198 -.013 .299l-.017 .616l-.004 .318l-.001 .324c0 .218 .002 .432 .005 .642l.017 .616l.013 .299l.034 .579l.046 .553c.464 4.785 2.411 6.732 7.196 7.196l.553 .046l.579 .034c.098 .005 .198 .01 .299 .013l.616 .017l.642 .005l.642 -.005l.616 -.017l.299 -.013l.579 -.034l.553 -.046c4.785 -.464 6.732 -2.411 7.196 -7.196l.046 -.553l.034 -.579c.005 -.098 .01 -.198 .013 -.299l.017 -.616l.005 -.642l-.005 -.642l-.017 -.616l-.013 -.299l-.034 -.579l-.046 -.553c-.464 -4.785 -2.411 -6.732 -7.196 -7.196l-.553 -.046l-.579 -.034a28.058 28.058 0 0 0 -.299 -.013l-.616 -.017l-.318 -.004l-.324 -.001zm2.293 7.293a1 1 0 0 1 1.497 1.32l-.083 .094l-4 4a1 1 0 0 1 -1.32 .083l-.094 -.083l-2 -2a1 1 0 0 1 1.32 -1.497l.094 .083l1.293 1.292l3.293 -3.292z"
+                                                                                    fill="#00B894"
+                                                                                    stroke-width="0"
+                                                                                />
+                                                                            </svg>
+                                                                        )}
+                                                                        {!validationData.relevant && (
+                                                                            <svg
+                                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                                width="32"
+                                                                                height="32"
+                                                                                viewBox="0 0 24 24"
+                                                                                stroke-width="2"
+                                                                                stroke="#FF5252"
+                                                                                fill="none"
+                                                                                stroke-linecap="round"
+                                                                                stroke-linejoin="round"
+                                                                            >
+                                                                                <path
+                                                                                    stroke="none"
+                                                                                    d="M0 0h24v24H0z"
+                                                                                    fill="none"
+                                                                                />
+                                                                                <path d="M10 8l4 8" />
+                                                                                <path d="M10 16l4 -8" />
+                                                                                <path d="M12 3c7.2 0 9 1.8 9 9s-1.8 9 -9 9s-9 -1.8 -9 -9s1.8 -9 9 -9z" />
+                                                                            </svg>
+                                                                        )}
+                                                                    </div>
+                                                                    <div className="bg-black rounded-lg text-white font-bold flex flex-col items-center p-4">
+                                                                        <h3 className="pb-8 text-center text-sm">
+                                                                            Simple address?
+                                                                        </h3>
+                                                                        {validationData.simple && (
+                                                                            <svg
+                                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                                width="32"
+                                                                                height="32"
+                                                                                viewBox="0 0 24 24"
+                                                                                stroke-width="2"
+                                                                                stroke="currentColor"
+                                                                                fill="none"
+                                                                                stroke-linecap="round"
+                                                                                stroke-linejoin="round"
+                                                                            >
+                                                                                <path
+                                                                                    stroke="none"
+                                                                                    d="M0 0h24v24H0z"
+                                                                                    fill="none"
+                                                                                />
+                                                                                <path
+                                                                                    d="M12 2c-.218 0 -.432 .002 -.642 .005l-.616 .017l-.299 .013l-.579 .034l-.553 .046c-4.785 .464 -6.732 2.411 -7.196 7.196l-.046 .553l-.034 .579c-.005 .098 -.01 .198 -.013 .299l-.017 .616l-.004 .318l-.001 .324c0 .218 .002 .432 .005 .642l.017 .616l.013 .299l.034 .579l.046 .553c.464 4.785 2.411 6.732 7.196 7.196l.553 .046l.579 .034c.098 .005 .198 .01 .299 .013l.616 .017l.642 .005l.642 -.005l.616 -.017l.299 -.013l.579 -.034l.553 -.046c4.785 -.464 6.732 -2.411 7.196 -7.196l.046 -.553l.034 -.579c.005 -.098 .01 -.198 .013 -.299l.017 -.616l.005 -.642l-.005 -.642l-.017 -.616l-.013 -.299l-.034 -.579l-.046 -.553c-.464 -4.785 -2.411 -6.732 -7.196 -7.196l-.553 -.046l-.579 -.034a28.058 28.058 0 0 0 -.299 -.013l-.616 -.017l-.318 -.004l-.324 -.001zm2.293 7.293a1 1 0 0 1 1.497 1.32l-.083 .094l-4 4a1 1 0 0 1 -1.32 .083l-.094 -.083l-2 -2a1 1 0 0 1 1.32 -1.497l.094 .083l1.293 1.292l3.293 -3.292z"
+                                                                                    fill="#00B894"
+                                                                                    stroke-width="0"
+                                                                                />
+                                                                            </svg>
+                                                                        )}
+                                                                        {!validationData.simple && (
+                                                                            <svg
+                                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                                width="32"
+                                                                                height="32"
+                                                                                viewBox="0 0 24 24"
+                                                                                stroke-width="2"
+                                                                                stroke="#FF5252"
+                                                                                fill="none"
+                                                                                stroke-linecap="round"
+                                                                                stroke-linejoin="round"
+                                                                            >
+                                                                                <path
+                                                                                    stroke="none"
+                                                                                    d="M0 0h24v24H0z"
+                                                                                    fill="none"
+                                                                                />
+                                                                                <path d="M10 8l4 8" />
+                                                                                <path d="M10 16l4 -8" />
+                                                                                <path d="M12 3c7.2 0 9 1.8 9 9s-1.8 9 -9 9s-9 -1.8 -9 -9s1.8 -9 9 -9z" />
+                                                                            </svg>
+                                                                        )}
+                                                                    </div>
+                                                                </div>
+
+                                                                <KeyValue
+                                                                    truncate={false}
+                                                                    title="Address"
+                                                                    value={validationData.address}
+                                                                />
+                                                                <KeyValue
+                                                                    truncate={false}
+                                                                    title="Original"
+                                                                    value={validationData.original}
+                                                                    clipboard
+                                                                />
+                                                                <KeyValue
+                                                                    truncate={false}
+                                                                    title="0x"
+                                                                    value={validationData['0x']}
+                                                                    clipboard
+                                                                />
+                                                                <KeyValue
+                                                                    truncate={false}
+                                                                    title="Mx"
+                                                                    value={validationData['Mx']}
+                                                                    clipboard
+                                                                />
+
+                                                                {validateAddress && (
+                                                                    <button
+                                                                        onClick={() => setValidationData(false)}
+                                                                        className="hover:opacity-90 bg-slate-400 text-white font-bold p-4 rounded mt-8"
+                                                                    >
+                                                                        Validate other
+                                                                    </button>
+                                                                )}
+                                                            </div>
+                                                        </>
+                                                    }
+                                                />
+                                            </Grid>
+                                        </div>,
+                                        document.body
+                                    )}
+
                                 <div className="flex justify-center flex-col items-center">
+                                    <div className="flex flex-end justify-end w-full">
+                                        <div className="px-1 py-2 flex items-center gap-2">
+                                            <button
+                                                disabled={!validBuild || loading || !address}
+                                                onClick={validateCurrentAddress}
+                                                className="disabled:bg-opacity-30 disabled:text-red hover:opacity-90 bg-black text-white px-4 py-2 md:px-2 md:py-1 rounded"
+                                            >
+                                                {!loading && 'Validate'}
+                                                {!!loading && (
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        className="animate-spin"
+                                                        width="24"
+                                                        height="24"
+                                                        viewBox="0 0 24 24"
+                                                        stroke-width="2"
+                                                        stroke="currentColor"
+                                                        fill="none"
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                    >
+                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                        <path d="M10 20.777a8.942 8.942 0 0 1 -2.48 -.969" />
+                                                        <path d="M14 3.223a9.003 9.003 0 0 1 0 17.554" />
+                                                        <path d="M4.579 17.093a8.961 8.961 0 0 1 -1.227 -2.592" />
+                                                        <path d="M3.124 10.5c.16 -.95 .468 -1.85 .9 -2.675l.169 -.305" />
+                                                        <path d="M6.907 4.579a8.954 8.954 0 0 1 3.093 -1.356" />
+                                                    </svg>
+                                                )}
+                                            </button>
+                                            <button
+                                                disabled={!validBuild}
+                                                onClick={() => setValidateAddress(true)}
+                                                className="bg-slate-700 text-white h-full px-2 rounded"
+                                            >
+                                                {validBuild && (
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        width="24"
+                                                        height="24"
+                                                        viewBox="0 0 24 24"
+                                                        stroke-width="2"
+                                                        stroke="currentColor"
+                                                        fill="none"
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                    >
+                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                        <path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
+                                                        <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+                                                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                                                        <path d="M21 21v-2a4 4 0 0 0 -3 -3.85" />
+                                                    </svg>
+                                                )}
+                                                {!validBuild && 'v1.0.21+'}
+                                            </button>
+                                        </div>
+                                    </div>
+
                                     <QRCode
                                         onClick={handleCopyClick}
                                         className="rounded h-[190px] w-[190px] md:h-[240px] md:w-[240px] mt-8 animate-fadeIn"
                                         value={address ? address?.miniaddress : ''}
                                         type="M"
                                     />
+
                                     <div className="flex items-center">
                                         <svg
                                             className="w-5 h-5 animate-bounce temporary-pulse"
@@ -219,16 +691,11 @@ const Receive = () => {
                                             >
                                                 <p
                                                     onClick={(e: any) => e.stopPropagation()}
-                                                    className="text-black text-sm hidden md:block truncate"
+                                                    className="text-black text-sm overflow-x-auto"
                                                 >
                                                     {address ? address.miniaddress : ''}
                                                 </p>
-                                                <p
-                                                    onClick={(e: any) => e.stopPropagation()}
-                                                    className="text-black text-sm md:hidden"
-                                                >
-                                                    {address ? utils.truncateString(address.miniaddress, 10, 10) : ''}
-                                                </p>
+
                                                 <button className="hidden md:block" onClick={handleCopyClick}>
                                                     {!copyState && (
                                                         <svg
@@ -361,3 +828,13 @@ const Receive = () => {
     );
 };
 export default Receive;
+
+const validationSchema = () => {
+    return Yup.object().shape({
+        address: Yup.string()
+            .matches(/0|M[xX][0-9a-zA-Z]+/, 'Invalid Address.')
+            .min(59, 'Invalid Address, too short.')
+            .max(66, 'Invalid Address, too long.')
+            .required('Field Required'),
+    });
+};

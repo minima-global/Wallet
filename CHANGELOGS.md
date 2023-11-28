@@ -104,3 +104,9 @@
 - Keys ongoing creation dialog when just starting node added
 - Updated copy for token information
 - Bug fixes
+
+##### [2.37.3] - 28 November 23
+
+- Updated validation on Receive page
+- Important truncated info is now scroll-able and can be copied throughout the app
+- Clicking outside overlaying not-so-important dialogs are now closed

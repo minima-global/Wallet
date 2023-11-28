@@ -160,12 +160,12 @@ const TokenDetail = () => {
                                     </div>
                                 )}
 
-                                <div className="my-auto">
+                                <div className="my-auto overflow-x-hidden">
                                     {viewingToken.tokenid === '0x00' && (
                                         <h6 className="text-lg font-bold text-black">Minima</h6>
                                     )}
                                     {viewingToken.tokenid !== '0x00' && (
-                                        <h6 className="text-lg font-bold text-black">
+                                        <h6 className="text-lg font-bold text-black truncate">
                                             {viewingToken && 'name' in viewingToken.token
                                                 ? viewingToken.token.name
                                                 : 'Name not available'}
@@ -217,7 +217,7 @@ const TokenDetail = () => {
                                             />
                                         )}
 
-                                        <KeyValue title="Token ID" value={viewingToken.tokenid} />
+                                        <KeyValue title="Token ID" value={viewingToken.tokenid} clipboard />
 
                                         <KeyValue
                                             title="Total Minted"

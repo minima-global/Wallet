@@ -80,7 +80,10 @@ const Settings = () => {
                         <>
                             {showCurrencyFormatter &&
                                 createPortal(
-                                    <div className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn">
+                                    <div
+                                        onClick={() => setShowCurrencyFormatter(false)}
+                                        className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn"
+                                    >
                                         <Grid
                                             variant="lg"
                                             title={
@@ -102,7 +105,10 @@ const Settings = () => {
                                                 </>
                                             }
                                         >
-                                            <div className="flex flex-col gap-4 mx-4 rounded bg-white bg-opacity-90 p-4 mb-4 shadow-sm">
+                                            <div
+                                                onClick={(e) => e.stopPropagation()}
+                                                className="flex flex-col gap-4 mx-4 rounded bg-white bg-opacity-90 p-4 mb-4 shadow-sm"
+                                            >
                                                 <h3 className="font-semibold">Display as</h3>
                                                 <div className="font-mono text-center bg-white rounded-lg py-6 px-4 text-yellow-500 font-bold">
                                                     {formatNumber({

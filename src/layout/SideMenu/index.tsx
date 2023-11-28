@@ -53,16 +53,6 @@ const SideMenu = () => {
                 </NavLink>
                 <NavLink
                     onClick={() => setOpenDrawer(false)}
-                    to="/validate"
-                    className={`${({ isActive }: any) => (isActive ? 'active' : '')} flex items-center gap-2 px-3 py-2`}
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                        <path d="M517-518 347-688l57-56 113 113 227-226 56 56-283 283Zm43 458-280-78v58H40v-440h318l248 92q33 12 53.5 42t20.5 66h80q50 0 85 33t35 87v40L560-60ZM120-160h80v-280h-80v280Zm438 16 238-74q-3-11-13.5-16.5T760-240H568q-31 0-56-4t-54-14l-69-24 23-76 80 26q18 6 42 9t66 3q0-11-6.5-21T578-354l-234-86h-64v220l278 76ZM200-300Zm400-20Zm-400 20Zm80 0Z" />
-                    </svg>
-                    Validate Address
-                </NavLink>
-                <NavLink
-                    onClick={() => setOpenDrawer(false)}
                     to="/status"
                     className={`${({ isActive }: any) => (isActive ? 'active' : '')} flex items-center gap-2 px-3 py-2`}
                 >

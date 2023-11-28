@@ -170,9 +170,9 @@ const History = () => {
                                                                 </svg>
                                                             )}
                                                         </div>
-                                                        <div>
-                                                            <h1 className="text-black">{t.tokenName}</h1>
-                                                            <p className="text-black">
+                                                        <div className="overflow-x-hidden">
+                                                            <h1 className="text-black truncate">{t.tokenName}</h1>
+                                                            <p className="text-black font-bold">
                                                                 {t.amount === '0' ? '-' : makeMinimaNumber(t.amount, 3)}
                                                             </p>
                                                         </div>
