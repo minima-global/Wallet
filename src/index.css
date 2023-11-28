@@ -143,10 +143,6 @@ input:focus {
   border-top: none!important;
 }
 
-/* For WebKit browsers (Chrome, Safari) */
-::-webkit-scrollbar {
-  width: 12px; /* Set the width of the scrollbar */
-}
 
 ::-webkit-scrollbar-track {
   background-color: #f1f1f1; /* Set the color of the scrollbar track */
