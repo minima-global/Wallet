@@ -69,7 +69,7 @@ const AppProvider = ({ children }: IProps) => {
     const [_nicknameAddress, setDefaultAddressesWithName] = useState<{ name: string; script: Scripts }[]>([]);
     const [_favoriteTokens, setFavoriteTokens] = useState<string[]>([]);
     const [_currencyFormat, setCurrencyFormat] = useState<{ decimal: string; thousands: string }>({
-        decimal: ',',
+        decimal: '.',
         thousands: '',
     });
 
