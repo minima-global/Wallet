@@ -649,7 +649,6 @@ const Receive = () => {
                         content={
                             <div>
                                 <div
-                                    onClick={handleCopyClick}
                                     className={`p-4 ${
                                         copyState ? 'bg-green-good' : 'bg-white hover:bg-slate-100 hover:cursor-pointer'
                                     }`}
