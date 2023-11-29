@@ -3,8 +3,9 @@ import * as RPC from '../../../minima/commands';
 
 interface IProps {
     tokenid: string;
+    relative?: boolean;
 }
-const NFTAuthenticity = ({ tokenid }: IProps) => {
+const NFTAuthenticity = ({ tokenid, relative = false }: IProps) => {
     const [isTokenValidated, setIsTokenValidated] = React.useState<boolean | null>(false);
 
     React.useEffect(() => {
@@ -19,7 +20,7 @@ const NFTAuthenticity = ({ tokenid }: IProps) => {
             {isTokenValidated && (
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="fill-blue-500 absolute right-1 bottom-0"
+                    className={`fill-blue-500 ${relative ? 'relative' : 'absolute right-1 bottom-0'}`}
                     width="24"
                     height="24"
                     viewBox="0 0 24 24"
@@ -38,7 +39,7 @@ const NFTAuthenticity = ({ tokenid }: IProps) => {
             {!isTokenValidated && (
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="absolute right-1 fill-yellow-100"
+                    className={`fill-yellow-100 ${relative ? 'relative' : 'absolute right-1'}`}
                     width="24"
                     height="24"
                     viewBox="0 0 24 24"

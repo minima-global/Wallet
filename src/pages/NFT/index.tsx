@@ -53,13 +53,141 @@ const NFTs = () => {
             <div className="flex flex-col gap-1">
                 {showDetail &&
                     createPortal(
-                        <div className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn">
-                            <Grid variant="lg" title={<></>}>
+                        <div
+                            onClick={() => setShowDetail(false)}
+                            className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn"
+                        >
+                            <Grid
+                                variant="lg"
+                                title={
+                                    <>
+                                        <svg
+                                            className="fill-white hover:cursor-pointer"
+                                            onClick={(e: any) => {
+                                                e.stopPropagation();
+                                                setShowDetail(false);
+                                            }}
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            height="24"
+                                            viewBox="0 -960 960 960"
+                                            width="24"
+                                        >
+                                            <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+                                        </svg>
+                                        NFT Details
+                                    </>
+                                }
+                            >
                                 <div
-                                    id="card-view"
-                                    className="mx-4 rounded bg-white bg-opacity-90 p-4 h-max max-h-[calc(100%_-_16px)] overflow-y-scroll"
+                                    onClick={(e: any) => e.stopPropagation()}
+                                    className="grid grid-cols-1 md:grid-cols-[1fr_1fr] bg-white rounded mx-4 mb-4 md:mx-0 h-max gap-2"
                                 >
-                                    <h1 className="text-black font-bold truncate mb-2 text-center">
+                                    <div className="flex justify-center items-start md:items-center">
+                                        <div className="rounded border">
+                                            {'url' in showDetail.name && !!showDetail.name.url.length && (
+                                                <img
+                                                    className="h-[378px] w-[378px] object-cover"
+                                                    src={showDetail.name.url}
+                                                    alt={`my_NFT_${showDetail.tokenid}`}
+                                                />
+                                            )}
+                                            {(!showDetail.name.url ||
+                                                ('url' in showDetail.name && showDetail.name.url.length === 0)) && (
+                                                <svg
+                                                    className="h-[378px] w-[378px] object-cover"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    viewBox="0 -960 960 960"
+                                                >
+                                                    <path d="M360-390q-21 0-35.5-14.5T310-440q0-21 14.5-35.5T360-490q21 0 35.5 14.5T410-440q0 21-14.5 35.5T360-390Zm240 0q-21 0-35.5-14.5T550-440q0-21 14.5-35.5T600-490q21 0 35.5 14.5T650-440q0 21-14.5 35.5T600-390ZM480-160q134 0 227-93t93-227q0-24-3-46.5T786-570q-21 5-42 7.5t-44 2.5q-91 0-172-39T390-708q-32 78-91.5 135.5T160-486v6q0 134 93 227t227 93Zm0 80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm-54-715q42 70 114 112.5T700-640q14 0 27-1.5t27-3.5q-42-70-114-112.5T480-800q-14 0-27 1.5t-27 3.5ZM177-581q51-29 89-75t57-103q-51 29-89 75t-57 103Zm249-214Zm-103 36Z" />
+                                                </svg>
+                                            )}
+                                        </div>
+                                    </div>
+                                    <div className="px-4 md:px-0 py-4 overflow-auto grid grid-rows-[2fr_1fr]">
+                                        <div className="grid grid-rows-[1fr_1fr]">
+                                            <div>
+                                                <div className="animate-fadeIn text-inherit font-bold truncate w-full grid grid-cols-[auto_1fr] gap-1">
+                                                    <h1 className="font-bold truncate text-left text-black text-xl">
+                                                        {'name' in showDetail.name && showDetail.name.name}
+                                                        {!('name' in showDetail.name) && 'N/A'}
+                                                    </h1>
+                                                    <div className="relative">
+                                                        {showDetail.name.webvalidate &&
+                                                            showDetail.name.webvalidate.length && (
+                                                                <NFTAuthenticity
+                                                                    relative
+                                                                    tokenid={showDetail.tokenid}
+                                                                />
+                                                            )}
+                                                    </div>
+                                                </div>
+                                                <p className="p-0 m-0 lowercase text-slate-500">
+                                                    @
+                                                    {'owner' in showDetail.name && showDetail.name.owner.length
+                                                        ? showDetail.name.owner
+                                                        : 'anon'}
+                                                </p>
+                                                <p className="whitespace-normal break-word">
+                                                    {'description' in showDetail.name &&
+                                                    showDetail.name.description.length
+                                                        ? showDetail.name.description
+                                                        : 'No description'}
+                                                </p>
+                                            </div>
+                                            <div>
+                                                {('external_url' in showDetail.name ||
+                                                    'webvalidate' in showDetail.name) && (
+                                                    <h3 className="font-extrabold text-lg">Extra data</h3>
+                                                )}
+                                                {'external_url' in showDetail.name && (
+                                                    <div>
+                                                        <h6>External Url</h6>
+                                                        {showDetail.name.external_url.length ? (
+                                                            <a
+                                                                className="text-blue-500"
+                                                                target="_blank"
+                                                                href={showDetail.name.external_url}
+                                                            >
+                                                                {showDetail.name.external_url}
+                                                            </a>
+                                                        ) : (
+                                                            <p className="text-sm text-slate-500">None set</p>
+                                                        )}
+                                                    </div>
+                                                )}
+                                                {'webvalidate' in showDetail.name && (
+                                                    <div>
+                                                        <h6>Webvalidate</h6>
+                                                        {showDetail.name.webvalidate.length ? (
+                                                            <a
+                                                                className="text-blue-500"
+                                                                target="_blank"
+                                                                href={showDetail.name.webvalidate}
+                                                            >
+                                                                {showDetail.name.webvalidate}
+                                                            </a>
+                                                        ) : (
+                                                            <p className="text-sm text-slate-500">None set</p>
+                                                        )}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                        <div className="flex items-end mr-4">
+                                            <button
+                                                onClick={() => navigate('/send?tokenid=' + showDetail.tokenid)}
+                                                className="bg-black hover:bg-opacity-90 w-full rounded-lg p-4 text-white h-max"
+                                            >
+                                                Transfer
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                {/* <div
+                                    id="card-view"
+                                    className="mx-4 rounded bg-white p-4 h-max max-h-[calc(100%_-_16px)] overflow-y-scroll"
+                                >
+                                    <h1 className="font-bold truncate mb-2 text-left text-blue-400 text-xl">
                                         {'name' in showDetail.name && showDetail.name.name}
                                         {!('name' in showDetail.name) && 'N/A'}
                                     </h1>
@@ -115,50 +243,7 @@ const NFTs = () => {
                                                     : 'N/A'
                                             }
                                         />
-                                        <KeyValue
-                                            title="Web validation"
-                                            value={
-                                                <>
-                                                    {'webvalidate' in showDetail.name &&
-                                                        !!showDetail.name.webvalidate.length && (
-                                                            <div className="flex justify-between items-center">
-                                                                <a
-                                                                    className="hover:cursor-pointer text-blue-400 hover:underline"
-                                                                    href={showDetail.name.webvalidate}
-                                                                    target="_blank"
-                                                                >
-                                                                    {showDetail.name.webvalidate}
-                                                                </a>
-                                                            </div>
-                                                        )}
-                                                    {'webvalidate' in showDetail.name &&
-                                                        !showDetail.name.webvalidate.length &&
-                                                        'N/A'}
-                                                    {!('webvalidate' in showDetail.name) && 'N/A'}
-                                                </>
-                                            }
-                                        />
-                                        <KeyValue
-                                            title="External URL"
-                                            value={
-                                                <>
-                                                    {'external_url' in showDetail.name &&
-                                                        !!showDetail.name.external_url.length && (
-                                                            <a
-                                                                className="hover:cursor-pointer text-blue-400 hover:underline"
-                                                                href={showDetail.name.external_url}
-                                                                target="_blank"
-                                                            >
-                                                                {showDetail.name.external_url}
-                                                            </a>
-                                                        )}
-                                                    {'external_url' in showDetail.name &&
-                                                        !showDetail.name.external_url.length &&
-                                                        'N/A'}
-                                                    {!('external_url' in showDetail.name) && 'N/A'}
-                                                </>
-                                            }
-                                        />
+                                        
                                     </div>
                                     <div className="flex flex-col gap-2 mt-8 md:mt-16">
                                         <Button
@@ -171,7 +256,7 @@ const NFTs = () => {
                                             Close
                                         </Button>
                                     </div>
-                                </div>
+                                </div> */}
                             </Grid>
                         </div>,
 
@@ -316,43 +401,6 @@ const NFTs = () => {
                                                         </div>
                                                     </div>
                                                 </div>
-
-                                                {/* <div className="p-5">
-                                                <div className="flex justify-between">
-                                                    <h5 className="text-sm font-bold tracking-tight text-gray-900 dark:text-white truncate">
-                                                        {'name' in w.name ? w.name.name : 'N/A'}
-                                                    </h5>
-
-                                                    {_favoriteTokens.includes(w.tokenid) && (
-                                                        <svg
-                                                            onClick={() => toggleFavourite(w.tokenid)}
-                                                            className="fill-red-700"
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            height="24"
-                                                            viewBox="0 -960 960 960"
-                                                            width="24"
-                                                        >
-                                                            <path d="m479.761-109-63.5-57.022q-101.957-91.717-168.555-158.434-66.597-66.718-105.717-119.816-39.12-53.098-54.74-97.815Q71.63-586.804 71.63-634q0-97.587 65.272-162.978 65.272-65.392 162.859-65.392 51.761 0 98.522 21.044 46.76 21.043 81.478 59.847 34.717-38.804 81.478-59.847Q608-862.37 659.761-862.37q97.587 0 163.098 65.392Q888.37-731.587 888.37-634q0 46.957-15.5 91.674-15.5 44.717-54.739 97.696-39.24 52.978-105.957 119.815-66.717 66.837-168.913 158.793L479.761-109Z" />
-                                                        </svg>
-                                                    )}
-                                                    {!_favoriteTokens.includes(w.tokenid) && (
-                                                        <svg
-                                                            onClick={() => toggleFavourite(w.tokenid)}
-                                                            className="hover:cursor-pointer hover:animate-pulse hover:fill-red-600"
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            height="24"
-                                                            viewBox="0 -960 960 960"
-                                                            width="24"
-                                                        >
-                                                            <path d="M440-501Zm0 381L313-234q-72-65-123.5-116t-85-96q-33.5-45-49-87T40-621q0-94 63-156.5T260-840q52 0 99 22t81 62q34-40 81-62t99-22q81 0 136 45.5T831-680h-85q-18-40-53-60t-73-20q-51 0-88 27.5T463-660h-46q-31-45-70.5-72.5T260-760q-57 0-98.5 39.5T120-621q0 33 14 67t50 78.5q36 44.5 98 104T440-228q26-23 61-53t56-50l9 9 19.5 19.5L605-283l9 9q-22 20-56 49.5T498-172l-58 52Zm280-160v-120H600v-80h120v-120h80v120h120v80H800v120h-80Z" />
-                                                        </svg>
-                                                    )}
-                                                </div>
-
-                                                <p className="mb-3 font-light text-sm text-gray-700 dark:text-gray-400 truncate">
-                                                    {w.name.owner}
-                                                </p>
-                                            </div> */}
                                             </div>
                                         ))}
                                 </Masonry>
