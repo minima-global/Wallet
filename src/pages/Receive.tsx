@@ -273,7 +273,6 @@ const Receive = () => {
                                             >
                                                 <CardContent
                                                     onClick={(e: any) => e.stopPropagation()}
-                                                    className="bg-opacity-100"
                                                     header={<></>}
                                                     content={
                                                         <>
@@ -310,7 +309,7 @@ const Receive = () => {
                                                                         <form onSubmit={handleSubmit}>
                                                                             <div>
                                                                                 <Input
-                                                                                    extraClass="bg-blue-100"
+                                                                                    extraClass="bg-blue-100!"
                                                                                     disabled={isSubmitting}
                                                                                     type="text"
                                                                                     id="address"
@@ -403,7 +402,6 @@ const Receive = () => {
                                             >
                                                 <CardContent
                                                     onClick={(e: any) => e.stopPropagation()}
-                                                    className="bg-white bg-opacity-100"
                                                     header={<></>}
                                                     content={
                                                         <>
