@@ -62,7 +62,7 @@ const KeyValue = ({ title, value, clickable, className, help, clipboard, truncat
             {!showHelp && (
                 <>
                     {typeof value === 'string' || typeof value === 'number' ? (
-                        <div className="grid grid-cols-[1fr_auto] gap-1">
+                        <div className={`grid grid-cols-[1fr_${clipboard ? 'auto' : ''}] gap-5`}>
                             <p
                                 className={`text-black animate-fadeIn ${truncate ? 'truncate' : 'overflow-x-auto'} ${
                                     className ? className : ''
@@ -71,7 +71,7 @@ const KeyValue = ({ title, value, clickable, className, help, clipboard, truncat
                                 {value}
                             </p>
                             {clipboard && (
-                                <div>
+                                <div className="flex items-center">
                                     {!_copy && (
                                         <svg
                                             onClick={handleCopyClick}

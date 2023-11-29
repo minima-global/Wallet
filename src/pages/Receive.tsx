@@ -115,7 +115,7 @@ const Receive = () => {
                         createPortal(
                             <div className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-[50px] bg-black bg-opacity-50 animate-fadeIn">
                                 <Grid variant="sm" title={<></>}>
-                                    <div className="mx-4 rounded bg-white bg-opacity-90 p-4 h-max">
+                                    <div className="mx-4 rounded bg-white p-4 h-max">
                                         <h1 className="text-black font-semibold mb-8">Enter a nickname</h1>
                                         <div className="divide-y-2 mb-8">
                                             <Formik
@@ -151,7 +151,9 @@ const Receive = () => {
                                                                     ? errors.nickname
                                                                     : false
                                                             }
-                                                            extraClass={`${errors.nickname ? 'pr-20 truncate' : ''}`}
+                                                            extraClass={`${
+                                                                errors.nickname ? 'pr-20 truncate' : ''
+                                                            } bg-blue-100`}
                                                             endIcon={
                                                                 <>
                                                                     {values.nickname.length >= 255 && (
@@ -399,7 +401,8 @@ const Receive = () => {
                                                 }
                                             >
                                                 <CardContent
-                                                    className="bg-opacity-90"
+                                                    onClick={(e) => e.stopPropagation()}
+                                                    className="bg-white bg-opacity-100"
                                                     header={<></>}
                                                     content={
                                                         <>
@@ -407,122 +410,120 @@ const Receive = () => {
                                                                 onClick={(e) => e.stopPropagation()}
                                                                 className="mb-8 flex flex-col gap-2"
                                                             >
+                                                                <KeyValue
+                                                                    truncate={false}
+                                                                    title="Validating"
+                                                                    value={validationData.address}
+                                                                />
                                                                 <div className="grid grid-cols-2 gap-2">
-                                                                    <div className="bg-black rounded-lg text-white font-bold flex flex-col items-center p-4">
+                                                                    <div className="bg-blue-100 rounded-lg text-black font-bold  p-4 grid grid-cols-1 grid-rows-[1fr_auto]">
                                                                         <h3 className="pb-8 text-center text-sm">
                                                                             Address belongs to this node?
                                                                         </h3>
-                                                                        {validationData.relevant && (
-                                                                            <svg
-                                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                                width="32"
-                                                                                height="32"
-                                                                                viewBox="0 0 24 24"
-                                                                                stroke-width="2"
-                                                                                stroke="currentColor"
-                                                                                fill="none"
-                                                                                stroke-linecap="round"
-                                                                                stroke-linejoin="round"
-                                                                            >
-                                                                                <path
-                                                                                    stroke="none"
-                                                                                    d="M0 0h24v24H0z"
+                                                                        <div className="text-center flex justify-center">
+                                                                            {validationData.relevant && (
+                                                                                <svg
+                                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                                    width="32"
+                                                                                    height="32"
+                                                                                    viewBox="0 0 24 24"
+                                                                                    stroke-width="2"
+                                                                                    stroke="currentColor"
                                                                                     fill="none"
-                                                                                />
-                                                                                <path
-                                                                                    d="M12 2c-.218 0 -.432 .002 -.642 .005l-.616 .017l-.299 .013l-.579 .034l-.553 .046c-4.785 .464 -6.732 2.411 -7.196 7.196l-.046 .553l-.034 .579c-.005 .098 -.01 .198 -.013 .299l-.017 .616l-.004 .318l-.001 .324c0 .218 .002 .432 .005 .642l.017 .616l.013 .299l.034 .579l.046 .553c.464 4.785 2.411 6.732 7.196 7.196l.553 .046l.579 .034c.098 .005 .198 .01 .299 .013l.616 .017l.642 .005l.642 -.005l.616 -.017l.299 -.013l.579 -.034l.553 -.046c4.785 -.464 6.732 -2.411 7.196 -7.196l.046 -.553l.034 -.579c.005 -.098 .01 -.198 .013 -.299l.017 -.616l.005 -.642l-.005 -.642l-.017 -.616l-.013 -.299l-.034 -.579l-.046 -.553c-.464 -4.785 -2.411 -6.732 -7.196 -7.196l-.553 -.046l-.579 -.034a28.058 28.058 0 0 0 -.299 -.013l-.616 -.017l-.318 -.004l-.324 -.001zm2.293 7.293a1 1 0 0 1 1.497 1.32l-.083 .094l-4 4a1 1 0 0 1 -1.32 .083l-.094 -.083l-2 -2a1 1 0 0 1 1.32 -1.497l.094 .083l1.293 1.292l3.293 -3.292z"
-                                                                                    fill="#00B894"
-                                                                                    stroke-width="0"
-                                                                                />
-                                                                            </svg>
-                                                                        )}
-                                                                        {!validationData.relevant && (
-                                                                            <svg
-                                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                                width="32"
-                                                                                height="32"
-                                                                                viewBox="0 0 24 24"
-                                                                                stroke-width="2"
-                                                                                stroke="#FF5252"
-                                                                                fill="none"
-                                                                                stroke-linecap="round"
-                                                                                stroke-linejoin="round"
-                                                                            >
-                                                                                <path
-                                                                                    stroke="none"
-                                                                                    d="M0 0h24v24H0z"
+                                                                                    stroke-linecap="round"
+                                                                                    stroke-linejoin="round"
+                                                                                >
+                                                                                    <path
+                                                                                        stroke="none"
+                                                                                        d="M0 0h24v24H0z"
+                                                                                        fill="none"
+                                                                                    />
+                                                                                    <path
+                                                                                        d="M12 2c-.218 0 -.432 .002 -.642 .005l-.616 .017l-.299 .013l-.579 .034l-.553 .046c-4.785 .464 -6.732 2.411 -7.196 7.196l-.046 .553l-.034 .579c-.005 .098 -.01 .198 -.013 .299l-.017 .616l-.004 .318l-.001 .324c0 .218 .002 .432 .005 .642l.017 .616l.013 .299l.034 .579l.046 .553c.464 4.785 2.411 6.732 7.196 7.196l.553 .046l.579 .034c.098 .005 .198 .01 .299 .013l.616 .017l.642 .005l.642 -.005l.616 -.017l.299 -.013l.579 -.034l.553 -.046c4.785 -.464 6.732 -2.411 7.196 -7.196l.046 -.553l.034 -.579c.005 -.098 .01 -.198 .013 -.299l.017 -.616l.005 -.642l-.005 -.642l-.017 -.616l-.013 -.299l-.034 -.579l-.046 -.553c-.464 -4.785 -2.411 -6.732 -7.196 -7.196l-.553 -.046l-.579 -.034a28.058 28.058 0 0 0 -.299 -.013l-.616 -.017l-.318 -.004l-.324 -.001zm2.293 7.293a1 1 0 0 1 1.497 1.32l-.083 .094l-4 4a1 1 0 0 1 -1.32 .083l-.094 -.083l-2 -2a1 1 0 0 1 1.32 -1.497l.094 .083l1.293 1.292l3.293 -3.292z"
+                                                                                        fill="#00B894"
+                                                                                        stroke-width="0"
+                                                                                    />
+                                                                                </svg>
+                                                                            )}
+                                                                            {!validationData.relevant && (
+                                                                                <svg
+                                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                                    width="32"
+                                                                                    height="32"
+                                                                                    viewBox="0 0 24 24"
+                                                                                    stroke-width="2"
+                                                                                    stroke="#FF5252"
                                                                                     fill="none"
-                                                                                />
-                                                                                <path d="M10 8l4 8" />
-                                                                                <path d="M10 16l4 -8" />
-                                                                                <path d="M12 3c7.2 0 9 1.8 9 9s-1.8 9 -9 9s-9 -1.8 -9 -9s1.8 -9 9 -9z" />
-                                                                            </svg>
-                                                                        )}
+                                                                                    stroke-linecap="round"
+                                                                                    stroke-linejoin="round"
+                                                                                >
+                                                                                    <path
+                                                                                        stroke="none"
+                                                                                        d="M0 0h24v24H0z"
+                                                                                        fill="none"
+                                                                                    />
+                                                                                    <path d="M10 8l4 8" />
+                                                                                    <path d="M10 16l4 -8" />
+                                                                                    <path d="M12 3c7.2 0 9 1.8 9 9s-1.8 9 -9 9s-9 -1.8 -9 -9s1.8 -9 9 -9z" />
+                                                                                </svg>
+                                                                            )}
+                                                                        </div>
                                                                     </div>
-                                                                    <div className="bg-black rounded-lg text-white font-bold flex flex-col items-center p-4">
+                                                                    <div className="bg-blue-100 rounded-lg text-black font-bold p-4 grid grid-cols-1 grid-rows-[1fr_auto]">
                                                                         <h3 className="pb-8 text-center text-sm">
                                                                             Simple address?
                                                                         </h3>
-                                                                        {validationData.simple && (
-                                                                            <svg
-                                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                                width="32"
-                                                                                height="32"
-                                                                                viewBox="0 0 24 24"
-                                                                                stroke-width="2"
-                                                                                stroke="currentColor"
-                                                                                fill="none"
-                                                                                stroke-linecap="round"
-                                                                                stroke-linejoin="round"
-                                                                            >
-                                                                                <path
-                                                                                    stroke="none"
-                                                                                    d="M0 0h24v24H0z"
+                                                                        <div className="text-center flex justify-center">
+                                                                            {validationData.simple && (
+                                                                                <svg
+                                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                                    width="32"
+                                                                                    height="32"
+                                                                                    viewBox="0 0 24 24"
+                                                                                    stroke-width="2"
+                                                                                    stroke="currentColor"
                                                                                     fill="none"
-                                                                                />
-                                                                                <path
-                                                                                    d="M12 2c-.218 0 -.432 .002 -.642 .005l-.616 .017l-.299 .013l-.579 .034l-.553 .046c-4.785 .464 -6.732 2.411 -7.196 7.196l-.046 .553l-.034 .579c-.005 .098 -.01 .198 -.013 .299l-.017 .616l-.004 .318l-.001 .324c0 .218 .002 .432 .005 .642l.017 .616l.013 .299l.034 .579l.046 .553c.464 4.785 2.411 6.732 7.196 7.196l.553 .046l.579 .034c.098 .005 .198 .01 .299 .013l.616 .017l.642 .005l.642 -.005l.616 -.017l.299 -.013l.579 -.034l.553 -.046c4.785 -.464 6.732 -2.411 7.196 -7.196l.046 -.553l.034 -.579c.005 -.098 .01 -.198 .013 -.299l.017 -.616l.005 -.642l-.005 -.642l-.017 -.616l-.013 -.299l-.034 -.579l-.046 -.553c-.464 -4.785 -2.411 -6.732 -7.196 -7.196l-.553 -.046l-.579 -.034a28.058 28.058 0 0 0 -.299 -.013l-.616 -.017l-.318 -.004l-.324 -.001zm2.293 7.293a1 1 0 0 1 1.497 1.32l-.083 .094l-4 4a1 1 0 0 1 -1.32 .083l-.094 -.083l-2 -2a1 1 0 0 1 1.32 -1.497l.094 .083l1.293 1.292l3.293 -3.292z"
-                                                                                    fill="#00B894"
-                                                                                    stroke-width="0"
-                                                                                />
-                                                                            </svg>
-                                                                        )}
-                                                                        {!validationData.simple && (
-                                                                            <svg
-                                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                                width="32"
-                                                                                height="32"
-                                                                                viewBox="0 0 24 24"
-                                                                                stroke-width="2"
-                                                                                stroke="#FF5252"
-                                                                                fill="none"
-                                                                                stroke-linecap="round"
-                                                                                stroke-linejoin="round"
-                                                                            >
-                                                                                <path
-                                                                                    stroke="none"
-                                                                                    d="M0 0h24v24H0z"
+                                                                                    stroke-linecap="round"
+                                                                                    stroke-linejoin="round"
+                                                                                >
+                                                                                    <path
+                                                                                        stroke="none"
+                                                                                        d="M0 0h24v24H0z"
+                                                                                        fill="none"
+                                                                                    />
+                                                                                    <path
+                                                                                        d="M12 2c-.218 0 -.432 .002 -.642 .005l-.616 .017l-.299 .013l-.579 .034l-.553 .046c-4.785 .464 -6.732 2.411 -7.196 7.196l-.046 .553l-.034 .579c-.005 .098 -.01 .198 -.013 .299l-.017 .616l-.004 .318l-.001 .324c0 .218 .002 .432 .005 .642l.017 .616l.013 .299l.034 .579l.046 .553c.464 4.785 2.411 6.732 7.196 7.196l.553 .046l.579 .034c.098 .005 .198 .01 .299 .013l.616 .017l.642 .005l.642 -.005l.616 -.017l.299 -.013l.579 -.034l.553 -.046c4.785 -.464 6.732 -2.411 7.196 -7.196l.046 -.553l.034 -.579c.005 -.098 .01 -.198 .013 -.299l.017 -.616l.005 -.642l-.005 -.642l-.017 -.616l-.013 -.299l-.034 -.579l-.046 -.553c-.464 -4.785 -2.411 -6.732 -7.196 -7.196l-.553 -.046l-.579 -.034a28.058 28.058 0 0 0 -.299 -.013l-.616 -.017l-.318 -.004l-.324 -.001zm2.293 7.293a1 1 0 0 1 1.497 1.32l-.083 .094l-4 4a1 1 0 0 1 -1.32 .083l-.094 -.083l-2 -2a1 1 0 0 1 1.32 -1.497l.094 .083l1.293 1.292l3.293 -3.292z"
+                                                                                        fill="#00B894"
+                                                                                        stroke-width="0"
+                                                                                    />
+                                                                                </svg>
+                                                                            )}
+                                                                            {!validationData.simple && (
+                                                                                <svg
+                                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                                    width="32"
+                                                                                    height="32"
+                                                                                    viewBox="0 0 24 24"
+                                                                                    stroke-width="2"
+                                                                                    stroke="#FF5252"
                                                                                     fill="none"
-                                                                                />
-                                                                                <path d="M10 8l4 8" />
-                                                                                <path d="M10 16l4 -8" />
-                                                                                <path d="M12 3c7.2 0 9 1.8 9 9s-1.8 9 -9 9s-9 -1.8 -9 -9s1.8 -9 9 -9z" />
-                                                                            </svg>
-                                                                        )}
+                                                                                    stroke-linecap="round"
+                                                                                    stroke-linejoin="round"
+                                                                                >
+                                                                                    <path
+                                                                                        stroke="none"
+                                                                                        d="M0 0h24v24H0z"
+                                                                                        fill="none"
+                                                                                    />
+                                                                                    <path d="M10 8l4 8" />
+                                                                                    <path d="M10 16l4 -8" />
+                                                                                    <path d="M12 3c7.2 0 9 1.8 9 9s-1.8 9 -9 9s-9 -1.8 -9 -9s1.8 -9 9 -9z" />
+                                                                                </svg>
+                                                                            )}
+                                                                        </div>
                                                                     </div>
                                                                 </div>
 
-                                                                <KeyValue
-                                                                    truncate={false}
-                                                                    title="Address"
-                                                                    value={validationData.address}
-                                                                />
-                                                                <KeyValue
-                                                                    truncate={false}
-                                                                    title="Original"
-                                                                    value={validationData.original}
-                                                                    clipboard
-                                                                />
                                                                 <KeyValue
                                                                     truncate={false}
                                                                     title="0x"
@@ -539,9 +540,9 @@ const Receive = () => {
                                                                 {validateAddress && (
                                                                     <button
                                                                         onClick={() => setValidationData(false)}
-                                                                        className="hover:opacity-90 bg-slate-400 text-white font-bold p-4 rounded mt-8"
+                                                                        className="hover:opacity-90 bg-black text-white font-bold p-4 rounded mt-8"
                                                                     >
-                                                                        Validate other
+                                                                        Back
                                                                     </button>
                                                                 )}
                                                             </div>
