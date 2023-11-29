@@ -273,7 +273,7 @@ const Receive = () => {
                                             >
                                                 <CardContent
                                                     onClick={(e: any) => e.stopPropagation()}
-                                                    className="bg-opacity-90"
+                                                    className="bg-opacity-100"
                                                     header={<></>}
                                                     content={
                                                         <>
@@ -310,6 +310,7 @@ const Receive = () => {
                                                                         <form onSubmit={handleSubmit}>
                                                                             <div>
                                                                                 <Input
+                                                                                    extraClass="bg-blue-100"
                                                                                     disabled={isSubmitting}
                                                                                     type="text"
                                                                                     id="address"
@@ -401,7 +402,7 @@ const Receive = () => {
                                                 }
                                             >
                                                 <CardContent
-                                                    onClick={(e) => e.stopPropagation()}
+                                                    onClick={(e: any) => e.stopPropagation()}
                                                     className="bg-white bg-opacity-100"
                                                     header={<></>}
                                                     content={
@@ -616,7 +617,7 @@ const Receive = () => {
 
                                     <QRCode
                                         onClick={handleCopyClick}
-                                        className="rounded h-[190px] w-[190px] md:h-[240px] md:w-[240px] mt-8 animate-fadeIn"
+                                        className="rounded h-[210px] w-[210px] md:h-[240px] md:w-[240px] mt-8 animate-fadeIn"
                                         value={address ? address?.miniaddress : ''}
                                         type="M"
                                     />
@@ -631,17 +632,7 @@ const Receive = () => {
                                         >
                                             <path d="M419-80q-28 0-52.5-12T325-126L107-403l19-20q20-21 48-25t52 11l74 45v-328q0-17 11.5-28.5T340-760q17 0 29 11.5t12 28.5v472l-97-60 104 133q6 7 14 11t17 4h221q33 0 56.5-23.5T720-240v-160q0-17-11.5-28.5T680-440H461v-80h219q50 0 85 35t35 85v160q0 66-47 113T640-80H419ZM167-620q-13-22-20-47.5t-7-52.5q0-83 58.5-141.5T340-920q83 0 141.5 58.5T540-720q0 27-7 52.5T513-620l-69-40q8-14 12-28.5t4-31.5q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 17 4 31.5t12 28.5l-69 40Zm335 280Z" />
                                         </svg>
-                                        <h1 className="text-[12px] mt-1">Tap the QR Code to copy </h1>
-
-                                        <svg
-                                            className="w-4 h-4 mt-1 animate-pulse temporary-pulse"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            height="24"
-                                            viewBox="0 -960 960 960"
-                                            width="24"
-                                        >
-                                            <path d="M360-240q-33 0-56.5-23.5T280-320v-480q0-33 23.5-56.5T360-880h360q33 0 56.5 23.5T800-800v480q0 33-23.5 56.5T720-240H360Zm0-80h360v-480H360v480ZM200-80q-33 0-56.5-23.5T120-160v-560h80v560h440v80H200Zm160-240v-480 480Z" />
-                                        </svg>
+                                        <h1 className="text-[12px] mt-1">Tap the QR Code to copy address</h1>
                                     </div>
                                 </div>
                             </>

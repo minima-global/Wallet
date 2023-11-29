@@ -462,7 +462,7 @@ const WalletSelect = () => {
                                     className="rounded-l-lg w-[80px] h-[80px]"
                                     alt="token-icon"
                                     src={
-                                        'url' in formik.values.token && formik.values.token.url.length
+                                        'url' in formik.values.token.token && formik.values.token.token.url.length
                                             ? formik.values.token.token.url
                                             : `https://robohash.org/${formik.values.token.tokenid}`
                                     }
