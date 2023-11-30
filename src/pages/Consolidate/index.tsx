@@ -358,8 +358,17 @@ const useFormSchema = () => {
         token: Yup.object()
             .required('Field Required')
             .test('check-my-tokensendable', 'Invalid token sendable', function (val: any) {
+                const { path, createError } = this;
+
                 if (val === undefined) {
                     return false;
+                }
+
+                if (new Decimal(val.sendable).lessThanOrEqualTo(new Decimal(0))) {
+                    return createError({
+                        path,
+                        message: `Oops, not enough funds available to perform a consolidate`,
+                    });
                 }
 
                 return true;

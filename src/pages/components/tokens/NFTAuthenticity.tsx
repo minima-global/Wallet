@@ -39,7 +39,7 @@ const NFTAuthenticity = ({ tokenid, relative = false }: IProps) => {
             {!isTokenValidated && (
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className={`fill-yellow-100 ${relative ? 'relative' : 'absolute right-1'}`}
+                    className={`fill-yellow-100 ${relative ? 'relative' : 'absolute right-1 bottom-0'}`}
                     width="24"
                     height="24"
                     viewBox="0 0 24 24"

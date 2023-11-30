@@ -122,3 +122,12 @@
 - Address Validation report UI made simpler
 - NFT Page now supports Masonry CSS Grid
 - NFT Detail updated
+
+##### [2.37.6] - 30 November 23 
+
+- Tweak NFT page design
+- Update NFT default images
+- Fix unvalidated NFT icon
+- Copy data path in Status page fixed
+- Clicking token amount info on Send page now shows token info
+- Make token info backdrop click close dialog

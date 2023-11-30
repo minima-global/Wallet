@@ -56,7 +56,10 @@ const Wallet = () => {
                         <>
                             {tokenInformation &&
                                 createPortal(
-                                    <div className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn">
+                                    <div
+                                        onClick={() => setTokenInformation(false)}
+                                        className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn"
+                                    >
                                         <Grid
                                             variant="lg"
                                             title={
@@ -75,7 +78,10 @@ const Wallet = () => {
                                                 </>
                                             }
                                         >
-                                            <div className="flex flex-col gap-4 mx-4 rounded bg-white bg-opacity-90 p-4 mb-4 shadow-sm h-max">
+                                            <div
+                                                onClick={(e: any) => e.stopPropagation()}
+                                                className="flex flex-col gap-4 mx-4 rounded bg-white bg-opacity-90 p-4 mb-4 shadow-sm h-max"
+                                            >
                                                 <div className="my-2 mb-4">
                                                     <p className="font-semibold mb-6">
                                                         There are three possible states for a token:

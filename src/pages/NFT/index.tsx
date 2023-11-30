@@ -80,7 +80,7 @@ const NFTs = () => {
                             >
                                 <div
                                     onClick={(e: any) => e.stopPropagation()}
-                                    className="grid grid-cols-1 md:grid-cols-[1fr_1fr] bg-white rounded mx-4 mb-4 md:mx-0 h-max gap-2"
+                                    className="grid grid-cols-1 md:grid-cols-[1fr_1fr] bg-white rounded mx-8 my-4 h-max py-4 px-4 md:px-0 md:py-0 gap-2"
                                 >
                                     <div className="flex justify-center items-start md:items-center">
                                         <div className="rounded border">
@@ -93,13 +93,9 @@ const NFTs = () => {
                                             )}
                                             {(!showDetail.name.url ||
                                                 ('url' in showDetail.name && showDetail.name.url.length === 0)) && (
-                                                <svg
-                                                    className="h-[378px] w-[378px] object-cover"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 -960 960 960"
-                                                >
-                                                    <path d="M360-390q-21 0-35.5-14.5T310-440q0-21 14.5-35.5T360-490q21 0 35.5 14.5T410-440q0 21-14.5 35.5T360-390Zm240 0q-21 0-35.5-14.5T550-440q0-21 14.5-35.5T600-490q21 0 35.5 14.5T650-440q0 21-14.5 35.5T600-390ZM480-160q134 0 227-93t93-227q0-24-3-46.5T786-570q-21 5-42 7.5t-44 2.5q-91 0-172-39T390-708q-32 78-91.5 135.5T160-486v6q0 134 93 227t227 93Zm0 80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm-54-715q42 70 114 112.5T700-640q14 0 27-1.5t27-3.5q-42-70-114-112.5T480-800q-14 0-27 1.5t-27 3.5ZM177-581q51-29 89-75t57-103q-51 29-89 75t-57 103Zm249-214Zm-103 36Z" />
-                                                </svg>
+                                                <h3 className="h-[378px] w-[378px] flex items-center justify-center text-slate-400">
+                                                    No image set
+                                                </h3>
                                             )}
                                         </div>
                                     </div>
@@ -254,32 +250,19 @@ const NFTs = () => {
                                                             alt=""
                                                         />
                                                     )}
-                                                    {'url' in w.name && !w.name.url.length && (
+                                                    {(('url' in w.name && !w.name.url.length) || !w.name.url) && (
                                                         <div
                                                             // className=" bg-white flex flex-col gap-4 truncate"
                                                             onClick={() => setShowDetail(w)}
                                                         >
-                                                            <svg
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                viewBox="0 -960 960 960"
-                                                            >
-                                                                <path d="M360-390q-21 0-35.5-14.5T310-440q0-21 14.5-35.5T360-490q21 0 35.5 14.5T410-440q0 21-14.5 35.5T360-390Zm240 0q-21 0-35.5-14.5T550-440q0-21 14.5-35.5T600-490q21 0 35.5 14.5T650-440q0 21-14.5 35.5T600-390ZM480-160q134 0 227-93t93-227q0-24-3-46.5T786-570q-21 5-42 7.5t-44 2.5q-91 0-172-39T390-708q-32 78-91.5 135.5T160-486v6q0 134 93 227t227 93Zm0 80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm-54-715q42 70 114 112.5T700-640q14 0 27-1.5t27-3.5q-42-70-114-112.5T480-800q-14 0-27 1.5t-27 3.5ZM177-581q51-29 89-75t57-103q-51 29-89 75t-57 103Zm249-214Zm-103 36Z" />
-                                                            </svg>
+                                                            <img
+                                                                className="w-[-webkit-fill-available]"
+                                                                alt="token-icon"
+                                                                src={`https://robohash.org/${w.tokenid}`}
+                                                            />
                                                         </div>
                                                     )}
-                                                    {!('url' in w.name) && (
-                                                        <div
-                                                            // className=" bg-white flex flex-col gap-4 truncate"
-                                                            onClick={() => setShowDetail(w)}
-                                                        >
-                                                            <svg
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                viewBox="0 -960 960 960"
-                                                            >
-                                                                <path d="M360-390q-21 0-35.5-14.5T310-440q0-21 14.5-35.5T360-490q21 0 35.5 14.5T410-440q0 21-14.5 35.5T360-390Zm240 0q-21 0-35.5-14.5T550-440q0-21 14.5-35.5T600-490q21 0 35.5 14.5T650-440q0 21-14.5 35.5T600-390ZM480-160q134 0 227-93t93-227q0-24-3-46.5T786-570q-21 5-42 7.5t-44 2.5q-91 0-172-39T390-708q-32 78-91.5 135.5T160-486v6q0 134 93 227t227 93Zm0 80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm-54-715q42 70 114 112.5T700-640q14 0 27-1.5t27-3.5q-42-70-114-112.5T480-800q-14 0-27 1.5t-27 3.5ZM177-581q51-29 89-75t57-103q-51 29-89 75t-57 103Zm249-214Zm-103 36Z" />
-                                                            </svg>
-                                                        </div>
-                                                    )}
+
                                                     <div className="absolute group-hover:grid hidden animate-fadeIn bottom-0 text-inherit font-bold truncate w-full grid-cols-[1fr_auto]">
                                                         <h3 className="pl-2">
                                                             {'name' in w.name ? w.name.name : 'N/A'}
