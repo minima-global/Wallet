@@ -25,6 +25,7 @@ const AppProvider = ({ children }: IProps) => {
     const [shuttingDown, setShuttingDown] = useState<boolean | null>(null);
 
     // RPC DATA
+    const [_maxima, setMaxima] = useState('');
     const [NFTs, setNFTs] = useState<Coin[]>([]);
     const [balance, setBalance] = useState<MinimaToken[]>([]);
     const [history, setHistory] = useState<TxPOW[]>([]);
@@ -81,6 +82,8 @@ const AppProvider = ({ children }: IProps) => {
                     rpc.isWriteMode().then((appIsInWriteMode) => {
                         setAppIsInWriteMode(appIsInWriteMode);
                     });
+                    // callAndSaveMaximaName
+                    getMaximaName();
                     // callAndStoreBalance
                     getBalance();
                     // callAndStoreNFTs
@@ -176,6 +179,14 @@ const AppProvider = ({ children }: IProps) => {
         }
     }, []);
 
+    const getMaximaName = () => {
+        (window as any).MDS.cmd('maxima', (resp: any) => {
+            if (resp.status) {
+                setMaxima(resp.response.name);
+            }
+        });
+    };
+
     const checkVaultLocked = () => {
         rpc.isVaultLocked().then((r) => {
             setVaultLocked(r);
@@ -207,11 +218,35 @@ const AppProvider = ({ children }: IProps) => {
         });
     };
 
+    const fetchIPFSImageUri = async (image: string) => {
+        try {
+            const resp = await fetch(image);
+            if (!resp.ok) {
+                throw new Error('Failed to fetch image');
+            }
+
+            // Convert the response to a blob
+            const blob = await resp.blob();
+
+            // Create a data URL from the blob
+            const dataUrl = URL.createObjectURL(blob);
+
+            // Set the data URL as the image source
+            return dataUrl;
+        } catch (error) {
+            console.error(error as string);
+            return '';
+        }
+    };
     const getBalance = async () => {
         await rpc.getMinimaBalance().then((b) => {
-            b.map((t) => {
+            b.map(async (t) => {
                 if (t.token.url && t.token.url.startsWith('<artimage>', 0)) {
                     t.token.url = makeTokenImage(t.token.url, t.tokenid);
+                }
+
+                if (t.token.url && t.token.url.startsWith('https://ipfs.io/ipns/')) {
+                    t.token.url = await fetchIPFSImageUri(t.token.url);
                 }
             });
 
@@ -352,6 +387,9 @@ const AppProvider = ({ children }: IProps) => {
                 // currenyFormatter
                 _currencyFormat,
                 updateCurrencyFormat,
+
+                // maxima name
+                maximaName: _maxima,
             }}
         >
             {children}

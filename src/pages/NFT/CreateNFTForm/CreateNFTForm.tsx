@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Stack } from '@mui/material';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -30,7 +30,7 @@ import useFormatMinimaNumber from '../../../__minima__/libs/utils/useMakeNumber'
 const CreateNFTForm = () => {
     const mySchema = useMySchema();
     const navigate = useNavigate();
-    const { balance: wallet } = useContext(appContext);
+    const { balance: wallet, maximaName } = useContext(appContext);
     const { makeMinimaNumber } = useFormatMinimaNumber();
 
     const userLockedVault = useIsVaultLocked();
@@ -101,7 +101,7 @@ const CreateNFTForm = () => {
                         name: '',
                         description: '',
                         external_url: '',
-                        owner: '',
+                        owner: maximaName && typeof maximaName === 'string' ? maximaName : '',
                         creation_date: '',
                         webvalidate: '',
                         burn: '',
@@ -450,7 +450,7 @@ const CreateNFTForm = () => {
                                                 error={touched.owner && errors.owner ? errors.owner : false}
                                             />
                                             <p className="text-slate-500 text-sm mb-4">
-                                                A creator name can optionally be added
+                                                A creator name can optionally be added (Maxima name set by default)
                                             </p>
 
                                             <Input

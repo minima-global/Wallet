@@ -131,3 +131,8 @@
 - Copy data path in Status page fixed
 - Clicking token amount info on Send page now shows token info
 - Make token info backdrop click close dialog
+
+##### [2.38.0] - 30 November 23 
+
+- Added IPFS Uri Support for tokens
+- Added Maxima name as default name for Creator's name on NFT Creation form
