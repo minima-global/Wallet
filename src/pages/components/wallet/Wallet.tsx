@@ -56,7 +56,10 @@ const Wallet = () => {
                         <>
                             {tokenInformation &&
                                 createPortal(
-                                    <div className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn">
+                                    <div
+                                        onClick={() => setTokenInformation(false)}
+                                        className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn"
+                                    >
                                         <Grid
                                             variant="lg"
                                             title={
@@ -75,10 +78,13 @@ const Wallet = () => {
                                                 </>
                                             }
                                         >
-                                            <div className="flex flex-col gap-4 mx-4 rounded bg-white bg-opacity-90 p-4 mb-4 shadow-sm h-max">
+                                            <div
+                                                onClick={(e: any) => e.stopPropagation()}
+                                                className="flex flex-col gap-4 mx-4 rounded bg-white bg-opacity-90 p-4 mb-4 shadow-sm h-max"
+                                            >
                                                 <div className="my-2 mb-4">
                                                     <p className="font-semibold mb-6">
-                                                        A token has three different states it can be in:
+                                                        There are three possible states for a token:
                                                     </p>
                                                     <div className="flex flex-col gap-y-2.5">
                                                         <div className="bg-white rounded-lg px-4 py-2 flex-col">
@@ -107,7 +113,7 @@ const Wallet = () => {
                                                                 {makeMinimaNumber(tokenInformation.sendable, 2000)}
                                                             </div>
                                                             <p className="text-sm text-center mt-8">
-                                                                Funds are available to be spent immediately
+                                                                Funds are available to be spent immediately.
                                                             </p>
                                                         </div>
                                                         <div className="bg-white rounded-lg px-4 py-2 flex-col">
@@ -134,23 +140,26 @@ const Wallet = () => {
                                                                 <h3 className="font-semibold">Locked</h3>
                                                             </div>
                                                             <div className="border-t m-2"></div>
-                                                            <div className="text-center font-mono text-slate-500 bg-white rounded-lg p-2">
-                                                                Confirmed(
-                                                                {makeMinimaNumber(tokenInformation.confirmed, 3)}) -
+                                                            <div className="text-center font-mono text-slate-500 bg-white rounded-lg p-2 whitespace-normal overflow-x-auto">
+                                                                The difference of Confirmed(
+                                                                {makeMinimaNumber(tokenInformation.confirmed, 3)}) &
                                                                 Sendable(
-                                                                {makeMinimaNumber(tokenInformation.sendable, 3)}) =
-                                                                TotalLockedCoins(
-                                                                {makeMinimaNumber(
-                                                                    new Decimal(tokenInformation.sendable)
-                                                                        .minus(tokenInformation.confirmed)
-                                                                        .toString(),
-                                                                    3
-                                                                )}
+                                                                {makeMinimaNumber(tokenInformation.sendable, 3)})
+                                                                returns TotalLockedCoins(
+                                                                <span className="font-bold">
+                                                                    {makeMinimaNumber(
+                                                                        new Decimal(tokenInformation.sendable)
+                                                                            .minus(tokenInformation.confirmed)
+                                                                            .abs()
+                                                                            .toString(),
+                                                                        3
+                                                                    )}
+                                                                </span>
                                                                 )
                                                             </div>
                                                             <p className="text-sm text-center mt-8">
-                                                                Confirmed is the total of sendable and also locked up.
-                                                                Locked will display the locked amount.
+                                                                Locked will show coins that were locked in a smart
+                                                                contract.
                                                             </p>
                                                         </div>
                                                         <div className="bg-white rounded-lg px-4 py-2 flex-col">

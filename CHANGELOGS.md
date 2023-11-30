@@ -110,3 +110,29 @@
 - Updated validation on Receive page
 - Important truncated info is now scroll-able and can be copied throughout the app
 - Clicking outside overlaying not-so-important dialogs are now closed
+
+##### [2.37.4] - 29 November 23 
+
+- Cut off overlaying content in Locked section
+- Validation UI fixed
+- Removed copying in the address box, QR Code is now main copy button
+- TotalLockedCoins is now absolute
+- Send page NFT images weren't rendered, now fixed
+- Make radix point default for decimals
+- Address Validation report UI made simpler
+- NFT Page now supports Masonry CSS Grid
+- NFT Detail updated
+
+##### [2.37.6] - 30 November 23 
+
+- Tweak NFT page design
+- Update NFT default images
+- Fix unvalidated NFT icon
+- Copy data path in Status page fixed
+- Clicking token amount info on Send page now shows token info
+- Make token info backdrop click close dialog
+
+##### [2.38.0] - 30 November 23 
+
+- Added IPFS Uri Support for tokens
+- Added Maxima name as default name for Creator's name on NFT Creation form

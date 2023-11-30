@@ -1,6 +1,6 @@
 {
     "name": "wallet",
-    "version": "2.37.4",
+    "version": "2.38.0",
     "private": true,
     "type": "module",
     "description": "Exchange tokens with Minimalists",
@@ -42,6 +42,7 @@
         "prettier": "^2.7.1",
         "react": "^17.0.2",
         "react-dom": "^17.0.2",
+        "react-masonry-css": "^1.0.16",
         "react-qr-code": "^2.0.3",
         "react-qr-reader": "^3.0.0-beta-1",
         "react-redux": "^8.0.2",
