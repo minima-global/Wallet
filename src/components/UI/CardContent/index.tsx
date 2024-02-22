@@ -6,7 +6,7 @@ interface IProps {
     className?: string;
     onClick?: any;
 }
-const CardContent = ({ header, content, className, onClick }: IProps) => {
+const Card = ({ header, content, className, onClick }: IProps) => {
     return (
         <div
             onClick={onClick}
@@ -23,4 +23,4 @@ const CardContent = ({ header, content, className, onClick }: IProps) => {
     );
 };
 
-export default CardContent;
+export default Card;

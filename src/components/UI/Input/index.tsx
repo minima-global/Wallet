@@ -48,7 +48,7 @@ const Input = ({
     const [showHelp, setShowHelp] = useState(false);
 
     let base =
-        'w-full p-4  bg-white text-base text-black rounded disabled:bg-opacity-40 disabled:cursor-not-allowed focus:shadow-gray-100 focus:shadow-lg focus:border-none! focus:outline-none!';
+        'w-full p-4 bg-white text-black rounded disabled:bg-opacity-40 focus:border focus:border-teal-500 !h-[64px]';
 
     if (extraClass) {
         base += ` ${extraClass}`;

@@ -29,7 +29,7 @@ const KeyValue = ({ title, value, clickable, className, help, clipboard, truncat
             }`}
         >
             <div className={` ${help && showHelp ? 'grid grid-cols-[auto_1fr] grid-rows-1 gap-4' : ''}`}>
-                <div className="flex gap-1 items-center">
+                <div className="flex gap-1 items-center overflow-x-scroll">
                     {typeof title === 'string' && <h3 className="text-black truncate font-bold">{title}</h3>}
                     {typeof title !== 'string' && title}
                     {help && !showHelp && (
@@ -60,11 +60,11 @@ const KeyValue = ({ title, value, clickable, className, help, clipboard, truncat
                 {help && showHelp && help}
             </div>
             {!showHelp && (
-                <>
+                <div className="overflow-x-auto">
                     {typeof value === 'string' || typeof value === 'number' ? (
                         <div className={`grid grid-cols-[1fr_${clipboard ? 'auto' : ''}] gap-5`}>
                             <p
-                                className={`text-black animate-fadeIn ${truncate ? 'truncate' : 'overflow-x-auto'} ${
+                                className={`text-black animate-fadeIn truncate  ${
                                     className ? className : ''
                                 }`}
                             >
@@ -117,7 +117,7 @@ const KeyValue = ({ title, value, clickable, className, help, clipboard, truncat
                     ) : (
                         <div className="animate-fadeIn">{value}</div>
                     )}
-                </>
+                </div>
             )}
         </div>
     );

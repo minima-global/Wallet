@@ -1,27 +1,48 @@
-import { ReactElement } from 'react';
+import { ReactElement, useContext } from 'react';
 import useIsMinimaBrowser from '../../../hooks/useIsMinimaBrowser';
-import useGetInnerHeight from '../../../hooks/useGetInnerHeight';
+import { appContext } from '../../../AppContext';
+
+import styles from "./Grid.module.css";
 
 interface IProps {
-    title: ReactElement;
+    title: string;
     children: ReactElement;
-    variant: 'sm' | 'lg';
 }
-const Grid = ({ title, children, variant }: IProps) => {
+const Grid = ({ title, children }: IProps) => {
     const openTitleBar = useIsMinimaBrowser();
-    const innerHeight = useGetInnerHeight();
-    let base = `grid grid-cols-[1fr_minmax(0,760px)_1fr] grid-rows-1 pt-4`;
-    if (variant === 'sm') {
-        base = 'grid grid-cols-[1fr_minmax(0,560px)_1fr] grid-rows-1 pt-4';
-    }
+    const { promptMenu } = useContext(appContext);
 
     return (
-        <div className={`grid grid-cols-1 grid-rows-[56px,1fr] pb-4 `}>
-            <header onClick={openTitleBar} className="p-4 bg-black text-white text-md flex items-center gap-2">
-                {title}
+        <div className={styles['grid']}>
+            <header onClick={openTitleBar}>
+                <div className="flex items-center">
+                    <svg
+                       className="block md:hidden mr-1"
+                       xmlns="http://www.w3.org/2000/svg"
+                       onClick={(e: any) => {
+                           e.stopPropagation();
+                           promptMenu();
+                       }}
+                        width="32"
+                        height="32"
+                        viewBox="0 0 24 24"
+                        stroke-width="2.5"
+                        stroke="#FFFFFF"
+                        fill="none"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M4 6l16 0" />
+                        <path d="M4 12l16 0" />
+                        <path d="M4 18l16 0" />
+                    </svg>
+                    
+                    <h3 className="font-bold text-white text-xl">{title}</h3>
+                </div>
             </header>
 
-            <main style={{ height: `${innerHeight - 56}px` }} className={`${base} overflow-y-scroll`}>
+            <main>
                 <div />
                 {children}
                 <div />

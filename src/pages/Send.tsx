@@ -6,10 +6,10 @@ import { appContext } from '../AppContext';
 import CardContent from '../components/UI/CardContent';
 import Consolidate from './Consolidate';
 import Select from '../components/UI/Select';
+import SelectTransferType from './components/SelectTransferType';
 
 const Send: FC = () => {
-    const { setOpenDrawer, getBalance, loaded } = useContext(appContext);
-    const [current, setCurrent] = useState<string | null>('Value transfer');
+    const { getBalance, loaded, _transferType } = useContext(appContext);
 
     useEffect(() => {
         if (loaded.current === true) {
@@ -18,44 +18,15 @@ const Send: FC = () => {
     }, [loaded, loaded.current]);
 
     return (
-        <Grid
-            variant="lg"
-            title={
-                <>
-                    <svg
-                        onClick={(e: any) => {
-                            e.stopPropagation();
-                            setOpenDrawer(true);
-                        }}
-                        className="block md:hidden fill-white"
-                        xmlns="http://www.w3.org/2000/svg"
-                        height="24"
-                        viewBox="0 -960 960 960"
-                        width="24"
-                    >
-                        <path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z" />
-                    </svg>
-                    Send
-                </>
-            }
-        >
-            <CardContent
-                header={
-                    <Select
-                        def="Value transfer"
-                        options={['Value transfer', 'Split coins', 'Consolidate']}
-                        setCurrent={setCurrent}
-                        current={current}
-                    />
-                }
-                content={
-                    <>
-                        {current === 'Value transfer' && <ValueTransfer />}
-                        {current === 'Split coins' && <CoinSplit />}
-                        {current === 'Consolidate' && <Consolidate />}
-                    </>
-                }
-            />
+        <Grid title="Send">
+            <div className="px-4 md:px-0">                
+                <div className="mb-4">
+                    <SelectTransferType />
+                </div>
+                {_transferType === 'value' && <ValueTransfer />}
+                {_transferType === 'split' && <CoinSplit />}
+                {_transferType === 'consolidate' && <Consolidate />}
+            </div>
         </Grid>
     );
 };

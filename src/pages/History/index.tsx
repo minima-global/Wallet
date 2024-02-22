@@ -9,8 +9,6 @@ import CardContent from '../../components/UI/CardContent';
 
 import { format, isSameWeek, isSameYear } from 'date-fns';
 
-import 'flowbite';
-import { initFlowbite } from 'flowbite';
 import { downloadAllAsCsv } from '../../shared/utils/jsonToCsv';
 import * as utilities from '../../utilities';
 import Decimal from 'decimal.js';
@@ -24,7 +22,7 @@ const History = () => {
     const [filterText, setFilterText] = useState('');
 
     useEffect(() => {
-        initFlowbite();
+       
         if (loaded.current === true) {
             getHistory();
         }

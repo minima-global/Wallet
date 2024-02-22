@@ -3,6 +3,8 @@ import Decimal from 'decimal.js';
 import * as Yup from 'yup';
 import React, { useContext, useEffect, useState } from 'react';
 
+import * as utils from '../../../../utilities';
+
 import Button from '../../../../components/UI/Button';
 import { callSend } from '../../../../minima/rpc-commands';
 
@@ -26,7 +28,6 @@ import useFormatMinimaNumber from '../../../../__minima__/libs/utils/useMakeNumb
 const ValueTransfer = () => {
     const { balance: wallet, loaded } = useContext(appContext);
     const { makeMinimaNumber } = useFormatMinimaNumber();
-    const mySchema = useFormSchema();
     const [openQrScanner, setOpenQrScanner] = React.useState(false);
     const userLockedVault = useIsVaultLocked();
     const [internalBrowserWarningModal, setInternalBrowserWarningModal] = useState(false);
@@ -62,13 +63,12 @@ const ValueTransfer = () => {
                         setLoading(false);
                         return setStep(5);
                     }
-
                     try {
                         const resp = await callSend(
                             formInputs.token,
                             formInputs.amount,
                             formInputs.address,
-                            formInputs.message,
+                            utils.encodeMessage(formInputs.message),
                             formInputs.burn,
                             formInputs.password
                         );
@@ -80,8 +80,112 @@ const ValueTransfer = () => {
                         setError(error as string);
                     }
                 }}
-                validationSchema={mySchema}
-                enableReinitialize={!!loaded.current}
+                validationSchema={Yup.object().shape({
+                    token: Yup.object()
+                        .required('Field Required')
+                        .test('check-my-tokensendable', 'Invalid token sendable', function (val: any) {
+                            const { path, createError } = this;
+                            if (val === undefined) {
+                                return false;
+                            }
+
+                            if (new Decimal(val.sendable).equals(new Decimal(0))) {
+                                return createError({
+                                    path,
+                                    message: `Insufficient funds, not enough funds available to send`,
+                                });
+                            }
+
+                            return true;
+                        }),
+                    address: Yup.string()
+                        .matches(/0|M[xX][0-9a-zA-Z]+/, 'Invalid Address.')
+                        .min(59, 'Invalid Address, too short.')
+                        .max(66, 'Invalid Address, too long.')
+                        .required('Field Required'),
+                    amount: Yup.string()
+                        .required('Field Required')
+                        .matches(
+                            /^[^a-zA-Z\\;'",]+$/,
+                            'Invalid number.  Make sure to use only digits, "." for decimals and nothing for thousands. (e.g 1000.234)'
+                        )
+                        .test('check-my-amount', 'Invalid amount', function (val) {
+                            const { path, createError, parent } = this;
+                            if (val === undefined) {
+                                return false;
+                            }
+
+                            if (!Number(val)) {
+                                return createError({
+                                    path,
+                                    message:
+                                        'Invalid number.  Make sure to only use "." for decimals and nothing for thousands.',
+                                });
+                            }
+
+                            if (
+                                parent.token &&
+                                'sendable' in parent.token &&
+                                new Decimal(val).greaterThan(new Decimal(parent.token.sendable))
+                            ) {
+                                const desiredAmountToSend = new Decimal(val);
+                                const available = new Decimal(parent.token.sendable);
+                                const requiredAnother = desiredAmountToSend.minus(available);
+
+                                return createError({
+                                    path,
+                                    message: `Oops, insufficient funds, you require another ${requiredAnother.toNumber()} ${
+                                        parent.tokenid === '0x00'
+                                            ? parent.token
+                                            : parent.token.token.name
+                                            ? parent.token.token.name
+                                            : 'Unavailable'
+                                    }`,
+                                });
+                            }
+
+                            if (new Decimal(val).lessThanOrEqualTo(new Decimal(0))) {
+                                return createError({
+                                    path,
+                                    message: `Oops, you haven't entered a valid amount to send`,
+                                });
+                            }
+
+                            return true;
+                        }),
+                    burn: Yup.string()
+                        .matches(
+                            /^[^a-zA-Z\\;'",]+$/,
+                            'Invalid number.  Make sure to use only digits, "." for decimals and nothing for thousands. (e.g 1000.234)'
+                        )
+                        .test('check-my-burnamount', 'Invalid burn amount', function (val) {
+                            const { path, createError } = this;
+                            if (val === undefined) {
+                                return true;
+                            }
+
+                            if (!Number(val)) {
+                                return createError({
+                                    path,
+                                    message:
+                                        'Invalid number.  Make sure to only use "." for decimals and nothing for thousands.',
+                                });
+                            }
+
+                            const burn = new Decimal(val);
+
+                            if (burn.greaterThan(wallet[0].sendable)) {
+                                return createError({
+                                    path,
+                                    message: `Oops, not enough funds available to burn.  You require another ${burn
+                                        .minus(wallet[0].sendable)
+                                        .toNumber()} Minima`,
+                                });
+                            }
+
+                            return true;
+                        }),
+                })}
             >
                 {({
                     handleSubmit,
@@ -102,10 +206,10 @@ const ValueTransfer = () => {
                         />
                         {step === 1 &&
                             createPortal(
-                                <div className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn">
-                                    <Grid variant="lg" title={<></>}>
+                                <div className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50">
+                                    <Grid title="">
                                         <div className="mx-4 rounded bg-white bg-opacity-90 p-4 h-max max-h-[calc(100%_-_16px)] overflow-y-scroll">
-                                            <h1 className="text-black font-semibold mb-8">Transaction review</h1>
+                                            <h1 className="text-black font-semibold mb-8">Transaction payload</h1>
                                             <div className="divide-y-2 mb-8">
                                                 {values.token.tokenid !== '0x00' && (
                                                     <KeyValue
@@ -135,7 +239,14 @@ const ValueTransfer = () => {
 
                                                 <KeyValue
                                                     title="Public message"
-                                                    value={values.message.length > 0 ? values.message : 'N/A'}
+                                                    value={
+                                                        <div>
+                                                            <h3>{values.message}</h3>
+                                                            <p className="text-sm">
+                                                                {utils.encodeMessage(values.message)}
+                                                            </p>
+                                                        </div>
+                                                    }
                                                 />
                                             </div>
                                             <div className="flex flex-col gap-2 mt-8 md:mt-16">
@@ -162,7 +273,7 @@ const ValueTransfer = () => {
                         {loading &&
                             createPortal(
                                 <div className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn">
-                                    <Grid variant="sm" title={<></>}>
+                                    <Grid title="">
                                         <div className="mx-4 rounded bg-white bg-opacity-90 p-4 items-center h-max overflow-y-scroll">
                                             <div className="grid">
                                                 <Lottie
@@ -184,7 +295,7 @@ const ValueTransfer = () => {
                         {step === 2 &&
                             createPortal(
                                 <div className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn">
-                                    <Grid variant="sm" title={<></>}>
+                                    <Grid title="">
                                         <div className="mx-4 rounded bg-white bg-opacity-90 p-4 items-center h-max overflow-y-scroll">
                                             <div className="grid">
                                                 <Lottie
@@ -223,7 +334,7 @@ const ValueTransfer = () => {
                         {step === 3 &&
                             createPortal(
                                 <div className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn">
-                                    <Grid variant="sm" title={<></>}>
+                                    <Grid title="">
                                         <div className="mx-4 rounded bg-white bg-opacity-90 p-4 items-center h-max overflow-y-scroll">
                                             <div>
                                                 <svg
@@ -266,7 +377,7 @@ const ValueTransfer = () => {
                         {step === 5 &&
                             createPortal(
                                 <div className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn">
-                                    <Grid variant="sm" title={<></>}>
+                                    <Grid title="">
                                         <div className="mx-4 rounded bg-white bg-opacity-90 p-4 h-max overflow-y-scroll">
                                             <h1 className="text-black font-semibold mb-8">Enter vault password</h1>
                                             <div className="divide-y-2 mb-8">
@@ -313,8 +424,8 @@ const ValueTransfer = () => {
                         {error &&
                             createPortal(
                                 <div className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn">
-                                    <Grid variant="sm" title={<></>}>
-                                        <div className="mx-4 rounded bg-white bg-opacity-90 p-4 items-center">
+                                    <Grid title="">
+                                        <div className="mx-4 rounded bg-white bg-opacity-90 p-4 items-center h-max">
                                             <div>
                                                 <svg
                                                     className="animate-pulse temporary-pulse fill-[var(--status-red)] mb-4
@@ -372,14 +483,25 @@ const ValueTransfer = () => {
                                             <>
                                                 {canUseWebcam && (
                                                     <svg
-                                                        className="fill-gray-500 hover:cursor-pointer hover:animate-pulse"
                                                         onClick={handleOpenQrScanner}
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        height="24"
-                                                        viewBox="0 -960 960 960"
-                                                        width="24"
+                                                        width="32"
+                                                        height="32"
+                                                        viewBox="0 0 24 24"
+                                                        stroke-width="2.5"
+                                                        stroke="#000000"
+                                                        fill="none"
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
                                                     >
-                                                        <path d="M40-120v-200h80v120h120v80H40Zm680 0v-80h120v-120h80v200H720ZM160-240v-480h80v480h-80Zm120 0v-480h40v480h-40Zm120 0v-480h80v480h-80Zm120 0v-480h120v480H520Zm160 0v-480h40v480h-40Zm80 0v-480h40v480h-40ZM40-640v-200h200v80H120v120H40Zm800 0v-120H720v-80h200v200h-80Z" />
+                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                        <path d="M10 8v8" />
+                                                        <path d="M14 8v8" />
+                                                        <path d="M8 10h8" />
+                                                        <path d="M8 14h8" />
+                                                        <path d="M4 8v-2a2 2 0 0 1 2 -2h2" />
+                                                        <path d="M4 16v2a2 2 0 0 0 2 2h2" />
+                                                        <path d="M16 4h2a2 2 0 0 1 2 2v2" />
+                                                        <path d="M16 20h2a2 2 0 0 0 2 -2v-2" />
                                                     </svg>
                                                 )}
                                             </>
@@ -395,14 +517,10 @@ const ValueTransfer = () => {
                                         error={touched.amount && errors.amount ? errors.amount : false}
                                     />
 
-                                    <Input
-                                        id="message"
-                                        type="text"
-                                        disabled={isSubmitting}
-                                        placeholder="Message"
-                                        {...getFieldProps('message')}
-                                        error={touched.message && errors.message ? errors.message : false}
-                                    />
+                                    <textarea className="p-4 dark:bg-white" rows={5}  id="message" disabled={isSubmitting} {...getFieldProps('message')} placeholder="Message (public)"></textarea>
+
+
+                                    
 
                                     <Burn />
                                 </div>
@@ -413,7 +531,7 @@ const ValueTransfer = () => {
                                     variant="primary"
                                     disabled={!isValid}
                                 >
-                                    Review
+                                    Next
                                 </Button>
                             </div>
                         </form>
@@ -425,111 +543,3 @@ const ValueTransfer = () => {
 };
 
 export default ValueTransfer;
-
-const useFormSchema = () => {
-    const { balance: wallet } = useContext(appContext);
-    return Yup.object().shape({
-        token: Yup.object()
-            .required('Field Required')
-            .test('check-my-tokensendable', 'Invalid token sendable', function (val: any) {
-                const { path, createError } = this;
-                if (val === undefined) {
-                    return false;
-                }
-
-                if (new Decimal(val.sendable).equals(new Decimal(0))) {
-                    return createError({
-                        path,
-                        message: `Insufficient funds, not enough funds available to send`,
-                    });
-                }
-
-                return true;
-            }),
-        address: Yup.string()
-            .matches(/0|M[xX][0-9a-zA-Z]+/, 'Invalid Address.')
-            .min(59, 'Invalid Address, too short.')
-            .max(66, 'Invalid Address, too long.')
-            .required('Field Required'),
-        amount: Yup.string()
-            .required('Field Required')
-            .matches(
-                /^[^a-zA-Z\\;'",]+$/,
-                'Invalid number.  Make sure to use only digits, "." for decimals and nothing for thousands. (e.g 1000.234)'
-            )
-            .test('check-my-amount', 'Invalid amount', function (val) {
-                const { path, createError, parent } = this;
-                if (val === undefined) {
-                    return false;
-                }
-
-                if (!Number(val)) {
-                    return createError({
-                        path,
-                        message: 'Invalid number.  Make sure to only use "." for decimals and nothing for thousands.',
-                    });
-                }
-
-                if (
-                    parent.token &&
-                    'sendable' in parent.token &&
-                    new Decimal(val).greaterThan(new Decimal(parent.token.sendable))
-                ) {
-                    const desiredAmountToSend = new Decimal(val);
-                    const available = new Decimal(parent.token.sendable);
-                    const requiredAnother = desiredAmountToSend.minus(available);
-
-                    return createError({
-                        path,
-                        message: `Oops, insufficient funds, you require another ${requiredAnother.toNumber()} ${
-                            parent.tokenid === '0x00'
-                                ? parent.token
-                                : parent.token.token.name
-                                ? parent.token.token.name
-                                : 'Unavailable'
-                        }`,
-                    });
-                }
-
-                if (new Decimal(val).lessThanOrEqualTo(new Decimal(0))) {
-                    return createError({
-                        path,
-                        message: `Oops, you haven't entered a valid amount to send`,
-                    });
-                }
-
-                return true;
-            }),
-        burn: Yup.string()
-            .matches(
-                /^[^a-zA-Z\\;'",]+$/,
-                'Invalid number.  Make sure to use only digits, "." for decimals and nothing for thousands. (e.g 1000.234)'
-            )
-            .test('check-my-burnamount', 'Invalid burn amount', function (val) {
-                const { path, createError } = this;
-                if (val === undefined) {
-                    return true;
-                }
-
-                if (!Number(val)) {
-                    return createError({
-                        path,
-                        message: 'Invalid number.  Make sure to only use "." for decimals and nothing for thousands.',
-                    });
-                }
-
-                const burn = new Decimal(val);
-
-                if (burn.greaterThan(wallet[0].sendable)) {
-                    return createError({
-                        path,
-                        message: `Oops, not enough funds available to burn.  You require another ${burn
-                            .minus(wallet[0].sendable)
-                            .toNumber()} Minima`,
-                    });
-                }
-
-                return true;
-            }),
-    });
-};

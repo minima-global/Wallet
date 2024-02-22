@@ -1,7 +1,9 @@
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { downloadAllAsCsv, downloadCsv } from '../../shared/utils/jsonToCsv';
+import {  downloadCsv } from '../../shared/utils/jsonToCsv';
+
+import * as utils from "../../utilities";
 
 import { appContext } from '../../AppContext';
 import { createPortal } from 'react-dom';
@@ -205,7 +207,7 @@ const HistoryTransactionDetailSimple = () => {
                                                         <KeyValue
                                                             className="!break-all !whitespace-normal"
                                                             title="Message"
-                                                            value={t.data.replace(/[\[\]]+/gi, ' ')}
+                                                            value={utils.decodeMessage(t.data).replace(/[\[\]]+/gi, ' ')}
                                                         />
                                                     ))}
                                         </div>
@@ -232,6 +234,7 @@ const HistoryTransactionDetailSimple = () => {
                                                     </svg>
                                                 </div>
                                                 <ul
+                                                    key={_transaction.txpowid}
                                                     aria-expanded={!_showInputs}
                                                     className="accordion-content rounded bg-white bg-opacity-50 h-[auto] border-t-0"
                                                 >

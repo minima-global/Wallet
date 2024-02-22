@@ -17,6 +17,8 @@ var balanceInterval: ReturnType<typeof setInterval>;
 const AppProvider = ({ children }: IProps) => {
     const loaded = useRef(false);
 
+    const [_transferType, setTransferType] = useState<'value' | 'split' | 'consolidate'>('value');
+
     const [mode, setMode] = useState('desktop');
     const [isCreatingKeys, setCreatingKeys] = useState(false);
 
@@ -343,9 +345,20 @@ const AppProvider = ({ children }: IProps) => {
         }
     };
 
+    const promptMenu = () => {
+        setOpenDrawer((prevState) => !prevState);
+    };
+
+    const selectTransferType = (transferType: 'value' | 'split' | 'consolidate') => {
+        setTransferType(transferType);
+    };
+
     return (
         <appContext.Provider
             value={{
+                _transferType,
+                selectTransferType,
+                
                 vaultLocked,
                 checkVaultLocked,
 
@@ -372,6 +385,7 @@ const AppProvider = ({ children }: IProps) => {
                 // drawer
                 openDrawer,
                 setOpenDrawer,
+                promptMenu,
 
                 avgBurn,
                 loaded,
