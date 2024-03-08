@@ -487,11 +487,11 @@ const ValueTransfer = () => {
                                                         width="32"
                                                         height="32"
                                                         viewBox="0 0 24 24"
-                                                        stroke-width="2.5"
+                                                        strokeWidth="2.5"
                                                         stroke="#000000"
                                                         fill="none"
-                                                        stroke-linecap="round"
-                                                        stroke-linejoin="round"
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
                                                     >
                                                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                         <path d="M10 8v8" />

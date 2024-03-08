@@ -22,14 +22,12 @@ import Loading from '../../../assets/lottie/Loading.json';
 import { appContext } from '../../../AppContext';
 import { createPortal } from 'react-dom';
 import useIsVaultLocked from '../../../hooks/useIsVaultLocked';
-import { useNavigate } from 'react-router-dom';
 import CardContent from '../../../components/UI/CardContent';
 import Burn from '../../../components/UI/Burn';
 import useFormatMinimaNumber from '../../../__minima__/libs/utils/useMakeNumber';
 
 const CreateNFTForm = () => {
     const mySchema = useMySchema();
-    const navigate = useNavigate();
     const { balance: wallet, maximaName } = useContext(appContext);
     const { makeMinimaNumber } = useFormatMinimaNumber();
 
@@ -39,6 +37,7 @@ const CreateNFTForm = () => {
     const [loading, setLoading] = useState(false);
     const [step, setStep] = useState(0);
 
+    return null;
     return (
         <Grid
             variant="lg"

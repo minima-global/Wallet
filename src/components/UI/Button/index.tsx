@@ -29,7 +29,7 @@ const Button: React.FC<React.PropsWithChildren<ButtonProps>> = ({
     onTouchEnd,
 }) => {
     let base =
-        'w-full px-4 py-3.5 font-bold text-lg rounded';
+        'w-full px-4 py-3.5 font-bold text-lg rounded disabled:hover';
 
     if (extraClass && extraClass.length) {
         base += ` ${extraClass ? extraClass + '' : ''}`;

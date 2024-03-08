@@ -1,11 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Roboto+Mono:wght@400&display=swap');
 
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
+:root {    
   font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
@@ -23,119 +22,6 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
-}
-
-body {
-    margin: 0;
-    color: #08090B;
-    height: 100%; 
-    min-height: -webkit-fill-available;
-    font-weight: 500;
-    letter-spacing: 0.3px;
-    font-family: 'Manrope', sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    -webkit-tap-highlight-color: transparent;
-    background-color: var(--background-color);
-    background-image: var(--background-image);
-    background-repeat: no-repeat;
-    background-size: cover;
-    overflow: hidden;
-  }
-
-
-select {
-  -webkit-appearance: none;
-  appearance: none;
-}
-
-.active {
-  color: #FFFFFF;
-  fill: #FFA010;
-  padding: 8px; 
-  background-color: var(--core-black-100);
-}
-
-.temporary-pulse {
-  -webkit-animation-iteration-count: 3;
-  animation-iteration-count: 3;
-}
-
-.arrow-active {
-  transform: rotate(180deg);
-  transition: transform 0.2s ease-in;
-}
-.arrow-passive {
-  transform: rotate(0deg);
-  transition: transform 0.2s ease-in;
-}
-
-.accordion-content {
-  overflow: hidden;
-  overflow-y: overlay;
-  max-height: 1000px;
-  transition: max-height 1s ease-in-out;
-}
-
-.accordion-content[aria-expanded="true"] {
-  max-height: 0px;
-  transition: max-height 0.5s cubic-bezier(0, 1, 0, 1);
-}
-
-
-/* Hide scrollbar for Chrome, Safari and Opera */
-#card-content::-webkit-scrollbar {
-  display: none;
-}
-
-/* Hide scrollbar for IE, Edge and Firefox */
-#card-content {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
-}
-
-
-input {
-  outline:  none!important;
-  border: none!important;
-  border-top: none!important;
-}
-input:focus {
-  outline:  none!important;
-  border: none!important;
-  border-top: none!important;
-}
-
-
-::-webkit-scrollbar-track {
-  background-color: #f1f1f1; /* Set the color of the scrollbar track */
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: #888; /* Set the color of the scrollbar thumb */
-  border-radius: 6px; /* Set the border-radius of the scrollbar thumb */
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background-color: #555; /* Set the color of the scrollbar thumb on hover */
-}
-
-
-.my-masonry-grid {
-  display: -webkit-box; /* Not needed if autoprefixing */
-  display: -ms-flexbox; /* Not needed if autoprefixing */
-  display: flex;
-  margin-left: -30px; /* gutter size offset */
-  width: auto;
-}
-.my-masonry-grid_column {
-  padding-left: 30px; /* gutter size */
-  background-clip: padding-box;
-}
-
-/* Style your items */
-.my-masonry-grid_column > div { /* change div to reference your elements you put in <Masonry> */
-  margin-bottom: 15px;
 }
 
 a {
@@ -166,22 +52,16 @@ button {
   font-family: inherit;    
   cursor: pointer;
   transition: border-color 0.25s;
-  font-family: 500;
 }
 input:focus {
   color: rgba(255, 255, 255, 0.87);
 }
-
-
-select {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
+button:hover {
+  border-color: #646cff;
 }
-
-.temporary-animate {
-  -webkit-animation-iteration-count: 2;
-  animation-iteration-count: 2;
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
 }
 
 @media (prefers-color-scheme: light) {
@@ -201,3 +81,9 @@ select {
   }
 }
 
+
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}

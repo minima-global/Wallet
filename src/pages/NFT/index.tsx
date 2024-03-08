@@ -4,9 +4,6 @@ import { appContext } from '../../AppContext';
 
 import Grid from '../../components/UI/Grid';
 import { createPortal } from 'react-dom';
-import Button from '../../components/UI/Button';
-import KeyValue from '../../components/UI/KeyValue';
-import { useNavigate } from 'react-router-dom';
 import CardContent from '../../components/UI/CardContent';
 
 import Masonry from 'react-masonry-css';
@@ -20,7 +17,7 @@ const breakpointColumnsObj = {
 };
 
 const NFTs = () => {
-    const navigate = useNavigate();
+    
     const [selectedTab, setSelectedTab] = useState(0);
     const [showDetail, setShowDetail] = useState<any | false>(false);
     const { NFTs, setOpenDrawer, toggleFavourite, _favoriteTokens } = useContext(appContext);
@@ -28,6 +25,8 @@ const NFTs = () => {
     const handleTabClick = (index: number) => {
         setSelectedTab(index);
     };
+
+    return null;
     return (
         <Grid
             variant="lg"

@@ -1,30 +1,36 @@
 import { Drawer } from '@mui/material';
 import { useContext } from 'react';
-import { Outlet } from 'react-router-dom';
-
 import SideMenu from './layout/SideMenu';
 import Notification from './components/UI/Notification';
 import { appContext } from './AppContext';
-import { createPortal } from 'react-dom';
-import Grid from './components/UI/Grid';
-import useIsMinimaBrowser from './hooks/useIsMinimaBrowser';
-import Logs from './components/UI/Logs';
-
-export interface RouteType {
-    path: string;
-    sidebarName: string;
-    element: JSX.Element;
-}
+import Dashboard from './pages/Dashboard';
 
 const App = () => {
-    const openTitleBar = useIsMinimaBrowser();
     const { openDrawer, setOpenDrawer, minidappSystemFailed, isCreatingKeys } = useContext(appContext);
     return (
         <>
-            {isCreatingKeys &&
+            <Notification />
+            <Dashboard />
+            <div>
+                <Drawer
+                    variant="temporary"
+                    open={openDrawer}
+                    onClick={() => setOpenDrawer(false)}
+                    ModalProps={{ keepMounted: true }}
+                    className="md:hidden grid z-[100000]"
+                >
+                    <SideMenu />
+                </Drawer>
+                <Drawer variant="permanent" className="hidden md:grid">
+                    <SideMenu />
+                </Drawer>
+            </div>
+
+
+            {/* {isCreatingKeys &&
                 createPortal(
                     <div className="ml-0 absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn z-[100000]">
-                        <Grid variant="sm" title={<></>}>
+                        <Grid title="">
                             <div
                                 onClick={openTitleBar}
                                 className="mx-4 rounded bg-white bg-opacity-90 p-4 items-center h-max"
@@ -59,11 +65,11 @@ const App = () => {
                     </div>,
 
                     document.body
-                )}
-            {minidappSystemFailed &&
+                )} */}
+            {/* {minidappSystemFailed &&
                 createPortal(
                     <div className="ml-0 absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn z-[100000]">
-                        <Grid variant="sm" title={<></>}>
+                        <Grid>
                             <div
                                 onClick={openTitleBar}
                                 className="mx-4 rounded bg-white bg-opacity-90 p-4 items-center h-max"
@@ -92,25 +98,7 @@ const App = () => {
                     </div>,
 
                     document.body
-                )}
-            <Notification />
-            <main id="navigation" className="md:ml-[240px]">
-                <Outlet />
-            </main>
-            <div>
-                <Drawer
-                    variant="temporary"
-                    open={openDrawer}
-                    onClick={() => setOpenDrawer(false)}
-                    ModalProps={{ keepMounted: true }}
-                    className="md:hidden grid z-[100000]"
-                >
-                    <SideMenu />
-                </Drawer>
-                <Drawer variant="permanent" className="hidden md:grid">
-                    <SideMenu />
-                </Drawer>
-            </div>
+                )} */}
         </>
     );
 };

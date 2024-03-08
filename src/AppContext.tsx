@@ -8,6 +8,8 @@ import { TxPOW } from './types/minima';
 import splitDataByDate from './shared/utils/_txpowHelperFunctions/splitDataByDate';
 import extractHistoryDetails from './shared/utils/_txpowHelperFunctions/extractHistoryDetails';
 
+import * as utils from './utilities';
+
 export const appContext = createContext({} as any);
 
 interface IProps {
@@ -16,15 +18,30 @@ interface IProps {
 var balanceInterval: ReturnType<typeof setInterval>;
 const AppProvider = ({ children }: IProps) => {
     const loaded = useRef(false);
-
+    const [loading, setLoading] = useState(false);
     const [_transferType, setTransferType] = useState<'value' | 'split' | 'consolidate'>('value');
-
     const [mode, setMode] = useState('desktop');
     const [isCreatingKeys, setCreatingKeys] = useState(false);
-
     const [appIsInWriteMode, setAppIsInWriteMode] = useState<boolean | null>(null);
     const [minidappSystemFailed, setMinidappSystemFailed] = useState<boolean | null>(null);
     const [shuttingDown, setShuttingDown] = useState<boolean | null>(null);
+
+    
+    const [_promptSetting, setPromptSettings] = useState(false);
+    const [_promptBalanceInfo, setPromptBalanceInfo] = useState(false);
+    const [_currentNavigation, setCurrentNavigation] = useState("balance");
+    
+    const promptSettings = () => {
+        setPromptSettings((prevState) => !prevState);
+    };
+    
+    const promptBalanceInfo = () => {
+    setPromptBalanceInfo((prevState) => !prevState);
+    };
+
+    const promptNavigation = (nav:string) => {
+        setCurrentNavigation(nav);
+    }
 
     // RPC DATA
     const [_maxima, setMaxima] = useState('');
@@ -175,12 +192,6 @@ const AppProvider = ({ children }: IProps) => {
         }
     }, [loaded]);
 
-    useEffect(() => {
-        if (window.innerWidth < 568) {
-            setMode('mobile');
-        }
-    }, []);
-
     const getMaximaName = () => {
         (window as any).MDS.cmd('maxima', (resp: any) => {
             if (resp.status) {
@@ -220,27 +231,8 @@ const AppProvider = ({ children }: IProps) => {
         });
     };
 
-    const fetchIPFSImageUri = async (image: string) => {
-        try {
-            const resp = await fetch(image);
-            if (!resp.ok) {
-                throw new Error('Failed to fetch image');
-            }
-
-            // Convert the response to a blob
-            const blob = await resp.blob();
-
-            // Create a data URL from the blob
-            const dataUrl = URL.createObjectURL(blob);
-
-            // Set the data URL as the image source
-            return dataUrl;
-        } catch (error) {
-            console.error(error as string);
-            return '';
-        }
-    };
     const getBalance = async () => {
+        setLoading(true);
         await rpc.getMinimaBalance().then((b) => {
             b.map(async (t) => {
                 if (t.token.url && t.token.url.startsWith('<artimage>', 0)) {
@@ -248,7 +240,7 @@ const AppProvider = ({ children }: IProps) => {
                 }
 
                 if (t.token.url && t.token.url.startsWith('https://ipfs.io/ipns/')) {
-                    t.token.url = await fetchIPFSImageUri(t.token.url);
+                    t.token.url = await utils.fetchIPFSImageUri(t.token.url);
                 }
             });
 
@@ -268,6 +260,7 @@ const AppProvider = ({ children }: IProps) => {
             }
 
             setBalance(b);
+            setLoading(false);
         });
     };
 
@@ -356,9 +349,19 @@ const AppProvider = ({ children }: IProps) => {
     return (
         <appContext.Provider
             value={{
+                _promptBalanceInfo,
+                promptBalanceInfo,
+                
+                _promptSetting,
+                promptSettings,
+
+                _currentNavigation,
+                promptNavigation,
+               
+
                 _transferType,
                 selectTransferType,
-                
+
                 vaultLocked,
                 checkVaultLocked,
 
@@ -368,6 +371,7 @@ const AppProvider = ({ children }: IProps) => {
                 mode,
                 isMobile: mode === 'mobile',
 
+                loading,
                 balance,
                 NFTs,
                 simpleAddresses,

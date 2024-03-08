@@ -17,9 +17,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 12px 16px;
-  
   }
-  
   .grid > main {
     grid-area: main;
     height: 100%;
@@ -29,6 +27,8 @@
     grid-template-rows: 1fr;
     grid-template-columns: 1fr minmax(0, 560px) 1fr;
   }
+  
+  
   
   .grid main > section {
     grid-area: 1 / 2 / 1 / 3;
@@ -65,7 +65,22 @@
     padding: 16px;
     gap: 6px;
   }
-    
+  .grid > footer nav a p {
+    margin: 0;
+    color: #E9E9EB;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    line-height: 1.5;
+  }
+  .grid > footer nav a img {
+    min-height: 18px;
+    min-width: 18px;
+  }
+  
+  .grid > main .desktop__navigation {
+    display: none;
+    margin: 0 32px;
+  }
   @media only screen and (min-width: 590px) {
     .grid > main .desktop__navigation {
       display: block;

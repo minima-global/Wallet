@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
 
 import {  downloadCsv } from '../../shared/utils/jsonToCsv';
 
@@ -13,8 +12,6 @@ import Grid from '../../components/UI/Grid';
 import KeyValue from '../../components/UI/KeyValue';
 
 const HistoryTransactionDetailSimple = () => {
-    const navigate = useNavigate();
-    const params = useParams();
     const { historyDetails, history } = useContext(appContext);
     const [_viewFullJson, setViewJson] = useState(false);
     const [_showInputs, setShowInputs] = useState(false);
@@ -45,7 +42,7 @@ const HistoryTransactionDetailSimple = () => {
 
         downloadCsv({ amount, txpowid, sentToMx, sentTo0x, date, type, blockPosted, burn, fullJson });
     };
-
+    return null;
     useEffect(() => {
         setTransaction(historyDetails.find((t: any) => t.txpowid === params.transactionid));
     }, [params]);

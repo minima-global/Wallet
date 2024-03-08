@@ -3,3 +3,6 @@ export * from './formatNumberPreference/formatNumberPreference';
 
 export * from "./decodeMessage";
 export * from "./encodeMessage";
+export * from "./containsText";
+export * from "./fetchIPFSImageUri";
+export * from "./copyToClipboard"

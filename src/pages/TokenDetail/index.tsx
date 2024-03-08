@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
 import { createPortal } from 'react-dom';
 
 import Grid from '../../components/UI/Grid';
@@ -13,8 +12,8 @@ import CardContent from '../../components/UI/CardContent';
 import useFormatMinimaNumber from '../../__minima__/libs/utils/useMakeNumber';
 
 const TokenDetail = () => {
-    const navigate = useNavigate();
-    const { tokenid } = useParams();
+    
+    return null;
 
     const { makeMinimaNumber } = useFormatMinimaNumber();
     const { balance } = useContext(appContext);

@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
 
 import { appContext } from '../../AppContext';
 
@@ -15,12 +14,13 @@ import Decimal from 'decimal.js';
 import useFormatMinimaNumber from '../../__minima__/libs/utils/useMakeNumber';
 
 const History = () => {
-    const navigate = useNavigate();
     const { makeMinimaNumber } = useFormatMinimaNumber();
     const { historyFacade, historyDetails, history, setOpenDrawer, getHistory, loaded } = useContext(appContext);
 
     const [filterText, setFilterText] = useState('');
 
+
+    return null;
     useEffect(() => {
        
         if (loaded.current === true) {
