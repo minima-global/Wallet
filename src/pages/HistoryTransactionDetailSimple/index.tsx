@@ -2,51 +2,77 @@ import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { downloadAllAsCsv, downloadCsv } from '../../shared/utils/jsonToCsv';
+import { useSpring, animated } from 'react-spring';
 
+import identifyLeadingAmount from '../../shared/utils/_txpowHelperFunctions/identifyLeadingAmount';
 import { appContext } from '../../AppContext';
 import { createPortal } from 'react-dom';
 
 import CardContent from '../../components/UI/CardContent';
 import Grid from '../../components/UI/Grid';
-import KeyValue from '../../components/UI/KeyValue';
+import useFormatMinimaNumber from '../../__minima__/libs/utils/useMakeNumber';
+import { getTxPOWDetailsType } from '../../shared/utils';
+import { format } from 'date-fns';
 
 const HistoryTransactionDetailSimple = () => {
-    const navigate = useNavigate();
-    const params = useParams();
-    const { historyDetails, history } = useContext(appContext);
+    const { makeMinimaNumber } = useFormatMinimaNumber();
+    const { _promptTransactionDetails: _transaction, promptTransactionDetails } = useContext(appContext);
     const [_viewFullJson, setViewJson] = useState(false);
     const [_showInputs, setShowInputs] = useState(false);
-    const [_showOutputs, setShowOutputs] = useState(false);
     const [_showStates, setShowStates] = useState(false);
+    const [showOutputs, setShowOutputs] = useState(false);
 
-    const [_transaction, setTransaction] = useState<{
-        txpowid: string;
-        amount: string;
-        type: string;
-        sentTo0x: string;
-        sentToMx: string;
-        tokenName: string;
-        blockPosted: string;
-        date: string;
-        timemilli: string;
-        burn: string;
-        inputs: any[];
-        outputs: any[];
-        stateVars: any[];
-    } | null>(null);
+    const dropdownAnimationOutputs = useSpring({
+        height: showOutputs ? 'auto' : 0,
+        opacity: showOutputs ? 1 : 0,
+    });
 
-    const handleExportingToCSV = (_t: any) => {
-        const transactionDetail = historyDetails.find((t: any) => t.txpowid === _t.txpowid);
-        const { amount, txpowid, sentToMx, sentTo0x, date, type, blockPosted, burn } = transactionDetail;
+    const dropdownAnimationInputs = useSpring({
+        height: _showInputs ? 'auto' : 0,
+        opacity: _showInputs ? 1 : 0,
+    });
 
-        const fullJson = JSON.stringify(history.find((t: any) => t.txpowid === _t.txpowid));
+    const dropdownAnimationStates = useSpring({
+        height: _showStates ? 'auto' : 0,
+        opacity: _showStates ? 1 : 0,
+    });
 
+    if (!_transaction) {
+        return null;
+    }
+    
+    const hasPublicMessage =
+        _transaction.transaction.body.txn.state.length &&
+        _transaction.transaction.body.txn.state.find((s: any) => s.port === 44)
+            ? _transaction.transaction.body.txn.state.find((s: any) => s.port === 44)
+            : false;
+    const theMessage = hasPublicMessage ? hasPublicMessage.data : '';
+
+    const amount = identifyLeadingAmount(_transaction.details) === '0'
+                                                            ? '-'
+                                                            : makeMinimaNumber(
+                                                                  identifyLeadingAmount(_transaction.details),
+                                                                  2000
+                                                              );
+    const txpowid = _transaction.transaction.txpowid;
+    const sentToMx = _transaction.transaction.body.txn.outputs[0].miniaddress;
+    const sentTo0x = _transaction.transaction.body.txn.outputs[0].address;
+    const date = format(
+        parseInt(_transaction.transaction.header.timemilli),
+        "MMMM do yyyy 'at' h:mm a"
+    );
+    const type = getTxPOWDetailsType(_transaction.details) === 'normal'
+    ? 'Value Transfer'
+    : getTxPOWDetailsType(_transaction.details) === 'custom'
+    ? 'Custom'
+    : 'Token Creation';
+    const blockPosted = _transaction.transaction.header.block;
+    const burn = parseInt(_transaction.transaction.burn) > 0 ? makeMinimaNumber(_transaction.transaction.burn, 2000) : '0';
+    const fullJson = JSON.stringify(_transaction.transaction);
+
+    const handleExportingToCSV = () => {        
         downloadCsv({ amount, txpowid, sentToMx, sentTo0x, date, type, blockPosted, burn, fullJson });
     };
-
-    useEffect(() => {
-        setTransaction(historyDetails.find((t: any) => t.txpowid === params.transactionid));
-    }, [params]);
 
     return (
         <>
@@ -85,7 +111,7 @@ const HistoryTransactionDetailSimple = () => {
                                 <div className="overflow-scroll">
                                     <pre className="text-black text-sm break-all max-h-[calc(100vh_-_56px)]">
                                         {JSON.stringify(
-                                            history.find((t: any) => t.txpowid === _transaction.txpowid),
+                                            _transaction.transaction,
                                             null,
                                             2
                                         )}
@@ -97,12 +123,9 @@ const HistoryTransactionDetailSimple = () => {
                     document.body
                 )}
 
-            {params &&
+            {_transaction &&
                 createPortal(
-                    <div
-                        onClick={() => navigate(-1)}
-                        className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn"
-                    >
+                    <div className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn">
                         <Grid
                             variant="lg"
                             title={
@@ -111,7 +134,7 @@ const HistoryTransactionDetailSimple = () => {
                                         className="fill-white hover:cursor-pointer"
                                         onClick={(e: any) => {
                                             e.stopPropagation();
-                                            navigate(-1);
+                                            promptTransactionDetails(false);
                                         }}
                                         xmlns="http://www.w3.org/2000/svg"
                                         height="24"
@@ -144,7 +167,7 @@ const HistoryTransactionDetailSimple = () => {
                                             </svg>
 
                                             <svg
-                                                onClick={() => handleExportingToCSV(_transaction)}
+                                                onClick={() => handleExportingToCSV()}
                                                 className="fill-black hover:cursor-pointer"
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 height="24"
@@ -159,248 +182,415 @@ const HistoryTransactionDetailSimple = () => {
                                 content={
                                     <div className="flex flex-col gap-8">
                                         <div className="divide-y-2">
-                                            <KeyValue
-                                                truncate={false}
-                                                clipboard
-                                                title="Transaction ID (TxPOWID)"
-                                                value={_transaction ? _transaction.txpowid : 'N/A'}
-                                            />
-                                            <KeyValue
-                                                title="Amount"
-                                                value={_transaction ? _transaction.amount : 'N/A'}
-                                            />
-                                            <KeyValue title="Type" value={_transaction ? _transaction.type : 'N/A'} />
-                                            <div>
-                                                <KeyValue
-                                                    clipboard
-                                                    truncate={false}
-                                                    title="Sent to"
-                                                    value={_transaction ? _transaction.sentToMx : 'N/A'}
-                                                />
-                                                <KeyValue
-                                                    clipboard
-                                                    truncate={false}
-                                                    title="(0x)"
-                                                    value={_transaction ? _transaction.sentTo0x : 'N/A'}
+                                            <div className="bg-white p-4 rounded">
+                                                <h6 className="font-bold">Transaction ID</h6>
+                                                <input
+                                                    className="w-full truncate font-mono"
+                                                    value={_transaction.transaction.txpowid}
+                                                    readOnly
                                                 />
                                             </div>
-                                            <KeyValue
-                                                title="Token"
-                                                value={_transaction ? _transaction.tokenName : 'N/A'}
-                                            />
-                                            <KeyValue
-                                                title="Block"
-                                                value={_transaction ? _transaction.blockPosted : 'N/A'}
-                                            />
-                                            <KeyValue title="Date" value={_transaction ? _transaction.date : 'N/A'} />
-                                            <KeyValue title="Burn" value={_transaction ? _transaction.burn : 'N/A'} />
-                                            {_transaction &&
-                                                !!_transaction.stateVars.length &&
-                                                !!_transaction.stateVars.filter((t) => t.port === 44).length &&
-                                                _transaction &&
-                                                _transaction.stateVars.length &&
-                                                _transaction.stateVars
-                                                    .filter((t) => t.port === 44)
-                                                    .map((t: any) => (
-                                                        <KeyValue
-                                                            className="!break-all !whitespace-normal"
-                                                            title="Message"
-                                                            value={t.data.replace(/[\[\]]+/gi, ' ')}
-                                                        />
-                                                    ))}
+                                            <div className="bg-white p-4 rounded">
+                                                <h6 className="font-bold">Amount</h6>
+                                                <input
+                                                    className="w-full truncate font-mono"
+                                                    value={
+                                                        amount
+                                                    }
+                                                    readOnly
+                                                />
+                                            </div>
+
+                                            <div className="bg-white p-4 rounded">
+                                                <h6 className="font-bold">Transaction Type</h6>
+                                                <input
+                                                    className="w-full truncate"
+                                                    value={
+                                                        type
+                                                    }
+                                                    readOnly
+                                                />
+                                            </div>
+
+                                            <div className="bg-white p-4 rounded">
+                                                <h6 className="font-bold">Recipient (0x)</h6>
+                                                <input
+                                                    className="w-full truncate font-mono"
+                                                    value={sentTo0x}
+                                                    readOnly
+                                                />
+                                            </div>
+
+                                            <div className="bg-white p-4 rounded">
+                                                <h6 className="font-bold">(Mx Address)</h6>
+                                                <input
+                                                    className="w-full truncate font-mono"
+                                                    value={sentToMx}
+                                                    readOnly
+                                                />
+                                            </div>
+
+                                            <div className="bg-white p-4 rounded">
+                                                <h6 className="font-bold">Token</h6>
+                                                <input
+                                                    className="w-full truncate"
+                                                    value={
+                                                        _transaction.transaction.body.txn.outputs[0].tokenid === '0x00'
+                                                            ? 'Minima'
+                                                            : _transaction.transaction.body.txn.outputs[0].token &&
+                                                              _transaction.transaction.body.txn.outputs[0].token.name &&
+                                                              typeof _transaction.transaction.body.txn.outputs[0].token
+                                                                  .name.name === 'string'
+                                                            ? _transaction.transaction.body.txn.outputs[0].token.name
+                                                                  .name
+                                                            : 'N/A'
+                                                    }
+                                                    readOnly
+                                                />
+                                            </div>
+
+                                            <div className="bg-white p-4 rounded">
+                                                <h6 className="font-bold">Block Height</h6>
+                                                <input
+                                                    className="w-full truncate font-mono"
+                                                    value={blockPosted}
+                                                    readOnly
+                                                />
+                                            </div>
+
+                                            <div className="bg-white p-4 rounded">
+                                                <h6 className="font-bold">Date</h6>
+                                                <input
+                                                    className="w-full truncate"
+                                                    value={date}
+                                                    readOnly
+                                                />
+                                            </div>
+
+                                            <div className="bg-white p-4 rounded">
+                                                <h6 className="font-bold">Burn</h6>
+                                                <input
+                                                    className="w-full truncate font-mono"
+                                                    value={burn}
+                                                    readOnly
+                                                />
+                                            </div>
+
+                                            <div className="bg-white p-4 rounded">
+                                                <h6 className="font-bold">Public Message</h6>
+                                                <input
+                                                    className="w-full truncate font-mono"
+                                                    value={theMessage ? theMessage : '-'}
+                                                    readOnly
+                                                />
+                                            </div>
                                         </div>
-
-                                        {_transaction && !!_transaction.inputs.length && (
-                                            <div>
-                                                <div
-                                                    onClick={() => setShowInputs((prevState) => !prevState)}
-                                                    className={`bg-white text-black p-4 flex items-center justify-between rounded-lg font-semibold ${
-                                                        !_showInputs ? '' : 'rounded-b-none'
-                                                    }`}
-                                                >
-                                                    Inputs
-                                                    <svg
-                                                        className={`fill-black ${
-                                                            !_showInputs ? 'arrow-active' : 'arrow-passive'
-                                                        }`}
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        height="24"
-                                                        viewBox="0 -960 960 960"
-                                                        width="24"
+                                        <>
+                                            {!!_transaction.transaction.body.txn.inputs.length && (
+                                                <div className="bg-white shadow-md rounded-lg mb-4">
+                                                    <div
+                                                        onClick={() => setShowInputs((prevState) => !prevState)}
+                                                        className="p-4 flex items-center justify-between rounded-t-lg cursor-pointer"
                                                     >
-                                                        <path d="m296-345-56-56 240-240 240 240-56 56-184-184-184 184Z" />
-                                                    </svg>
-                                                </div>
-                                                <ul
-                                                    aria-expanded={!_showInputs}
-                                                    className="accordion-content rounded bg-white bg-opacity-50 h-[auto] border-t-0"
-                                                >
-                                                    {_transaction.inputs.map((i, index) => (
-                                                        <li key={i + index} className="divide-y-2">
-                                                            <h3 className="text-black font-semibold text-sm pb-2 py-2 mx-4 underline">
-                                                                Input {index}
-                                                            </h3>
-                                                            <KeyValue
-                                                                title="Token"
-                                                                value={
-                                                                    i.tokenid === '0x00'
-                                                                        ? 'Minima'
-                                                                        : i.token !== null
-                                                                        ? i.token.name.name
-                                                                        : 'N/A'
-                                                                }
+                                                        <span className="font-semibold">Inputs</span>
+                                                        <svg
+                                                            className={`w-6 h-6 ${
+                                                                showOutputs ? 'transform rotate-180' : ''
+                                                            }`}
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                            fill="none"
+                                                            viewBox="0 0 24 24"
+                                                            stroke="currentColor"
+                                                        >
+                                                            <path
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
+                                                                strokeWidth="2"
+                                                                d="M19 9l-7 7-7-7"
                                                             />
-                                                            <div>
-                                                                <KeyValue title="Amount" value={i.amount} />
-                                                                {i.tokenamount && (
-                                                                    <KeyValue
-                                                                        title="Token amount"
-                                                                        value={i.tokenamount}
-                                                                    />
-                                                                )}
-                                                            </div>
-                                                            <KeyValue
-                                                                truncate={false}
-                                                                clipboard
-                                                                title="Coin ID"
-                                                                value={i.coinid}
-                                                            />
-                                                            <KeyValue
-                                                                truncate={false}
-                                                                clipboard
-                                                                title="Token ID"
-                                                                value={i.tokenid}
-                                                            />
-                                                            <KeyValue title="Spent" value={i.spent ? 'Yes' : 'No'} />
-                                                            <KeyValue
-                                                                title="Storing state"
-                                                                value={i.storestate ? 'Yes' : 'No'}
-                                                            />
-                                                        </li>
-                                                    ))}
-                                                </ul>
-                                            </div>
-                                        )}
+                                                        </svg>
+                                                    </div>
+                                                    {_showInputs && (
+                                                        <animated.ul
+                                                            style={dropdownAnimationInputs}
+                                                            className="bg-white divide-y divide-gray-200 overflow-hidden"
+                                                        >
+                                                            {_transaction.transaction.body.txn.inputs.map(
+                                                                (output, index) => (
+                                                                    <li key={index} className="p-4">
+                                                                        <h3 className="text-lg font-semibold mb-2">
+                                                                            # {index}
+                                                                        </h3>
+                                                                        <div className="bg-white py-3 border-b border-gray-300">
+                                                                            <h6 className="font-bold">Token</h6>
+                                                                            <input
+                                                                                className="w-full truncate font-mono"
+                                                                                value={
+                                                                                    output.tokenid === '0x00'
+                                                                                        ? 'Minima'
+                                                                                        : output.token
+                                                                                        ? output.token.name.name
+                                                                                        : 'N/A'
+                                                                                }
+                                                                                readOnly
+                                                                            />
+                                                                        </div>
+                                                                        <div className="bg-white py-3 border-b border-gray-300">
+                                                                            <h6 className="font-bold">Amount</h6>
+                                                                            <input
+                                                                                className="w-full truncate font-mono"
+                                                                                value={makeMinimaNumber(
+                                                                                    output.amount,
+                                                                                    2000
+                                                                                )}
+                                                                                readOnly
+                                                                            />
+                                                                        </div>
+                                                                        {output.tokenamount && (
+                                                                            <div className="bg-white py-3 border-b border-gray-300">
+                                                                                <h6 className="font-bold">
+                                                                                    Token Amount
+                                                                                </h6>
+                                                                                <input
+                                                                                    className="w-full truncate font-mono"
+                                                                                    value={makeMinimaNumber(
+                                                                                        output.tokenamount,
+                                                                                        2000
+                                                                                    )}
+                                                                                    readOnly
+                                                                                />
+                                                                            </div>
+                                                                        )}
+                                                                        <div className="bg-white py-3 border-b border-gray-300">
+                                                                            <h6 className="font-bold">Coin ID</h6>
+                                                                            <input
+                                                                                className="w-full truncate font-mono"
+                                                                                value={output.coinid}
+                                                                                readOnly
+                                                                            />
+                                                                        </div>
 
-                                        {_transaction && !!_transaction.outputs.length && (
-                                            <div>
-                                                <div
-                                                    onClick={() => setShowOutputs((prevState) => !prevState)}
-                                                    className={`bg-white text-black p-4 flex items-center justify-between rounded-lg font-semibold ${
-                                                        !_showOutputs ? '' : 'rounded-b-none'
-                                                    }`}
-                                                >
-                                                    Outputs
-                                                    <svg
-                                                        className={`fill-black ${
-                                                            !_showOutputs ? 'arrow-active' : 'arrow-passive'
-                                                        }`}
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        height="24"
-                                                        viewBox="0 -960 960 960"
-                                                        width="24"
+                                                                        <div className="bg-white py-3 border-b border-gray-300">
+                                                                            <h6 className="font-bold">Token ID</h6>
+                                                                            <input
+                                                                                className="w-full truncate font-mono"
+                                                                                value={output.tokenid}
+                                                                                readOnly
+                                                                            />
+                                                                        </div>
+
+                                                                        <div className="bg-white py-3 border-b border-gray-300">
+                                                                            <h6 className="font-bold">Spent</h6>
+                                                                            <input
+                                                                                className="w-full truncate font-mono"
+                                                                                value={output.spent ? 'Yes' : 'No'}
+                                                                                readOnly
+                                                                            />
+                                                                        </div>
+
+                                                                        <div className="bg-white py-3 border-b border-gray-300">
+                                                                            <h6 className="font-bold">Storing State</h6>
+                                                                            <input
+                                                                                className="w-full truncate font-mono"
+                                                                                value={output.storestate ? 'Yes' : 'No'}
+                                                                                readOnly
+                                                                            />
+                                                                        </div>
+                                                                    </li>
+                                                                )
+                                                            )}
+                                                        </animated.ul>
+                                                    )}
+                                                </div>
+                                            )}
+
+                                            {!!_transaction.transaction.body.txn.outputs.length && (
+                                                <div className="bg-white shadow-md rounded-lg mb-4">
+                                                    <div
+                                                        onClick={() => setShowOutputs((prevState) => !prevState)}
+                                                        className="p-4 flex items-center justify-between rounded-t-lg cursor-pointer"
                                                     >
-                                                        <path d="m296-345-56-56 240-240 240 240-56 56-184-184-184 184Z" />
-                                                    </svg>
-                                                </div>
-                                                <ul
-                                                    aria-expanded={!_showOutputs}
-                                                    className="accordion-content rounded bg-white bg-opacity-50 h-[auto] border-t-0"
-                                                >
-                                                    {_transaction.outputs.map((i, index) => (
-                                                        <li key={i + index} className="divide-y-2">
-                                                            <h3 className="text-black font-semibold text-sm pb-2 py-2 mx-4 underline">
-                                                                Output {index}
-                                                            </h3>
-                                                            <KeyValue
-                                                                title="Token"
-                                                                value={
-                                                                    i.tokenid === '0x00'
-                                                                        ? 'Minima'
-                                                                        : i.token !== null
-                                                                        ? i.token.name.name
-                                                                        : 'N/A'
-                                                                }
+                                                        <span className="font-semibold">Outputs</span>
+                                                        <svg
+                                                            className={`w-6 h-6 ${
+                                                                showOutputs ? 'transform rotate-180' : ''
+                                                            }`}
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                            fill="none"
+                                                            viewBox="0 0 24 24"
+                                                            stroke="currentColor"
+                                                        >
+                                                            <path
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
+                                                                strokeWidth="2"
+                                                                d="M19 9l-7 7-7-7"
                                                             />
-                                                            <div>
-                                                                <KeyValue title="Amount" value={i.amount} />
-                                                                {i.tokenamount && (
-                                                                    <KeyValue
-                                                                        title="Token amount"
-                                                                        value={i.tokenamount}
-                                                                    />
-                                                                )}
-                                                            </div>
-                                                            <KeyValue
-                                                                truncate={false}
-                                                                clipboard
-                                                                title="Coin ID"
-                                                                value={i.coinid}
-                                                            />
-                                                            <KeyValue
-                                                                truncate={false}
-                                                                clipboard
-                                                                title="Token ID"
-                                                                value={i.tokenid}
-                                                            />
-                                                            <KeyValue title="Spent" value={i.spent ? 'Yes' : 'No'} />
-                                                            <KeyValue
-                                                                title="Storing state"
-                                                                value={i.storestate ? 'Yes' : 'No'}
-                                                            />
-                                                        </li>
-                                                    ))}
-                                                </ul>
-                                            </div>
-                                        )}
+                                                        </svg>
+                                                    </div>
+                                                    {showOutputs && (
+                                                        <animated.ul
+                                                            style={dropdownAnimationOutputs}
+                                                            className="bg-white divide-y divide-gray-200 overflow-hidden"
+                                                        >
+                                                            {_transaction.transaction.body.txn.outputs.map(
+                                                                (output, index) => (
+                                                                    <li key={index} className="p-4">
+                                                                        <h3 className="text-lg font-semibold mb-2">
+                                                                            # {index}
+                                                                        </h3>
+                                                                        <div className="bg-white py-3 border-b border-gray-300">
+                                                                            <h6 className="font-bold">Token</h6>
+                                                                            <input
+                                                                                className="w-full truncate font-mono"
+                                                                                value={
+                                                                                    output.tokenid === '0x00'
+                                                                                        ? 'Minima'
+                                                                                        : output.token
+                                                                                        ? output.token.name.name
+                                                                                        : 'N/A'
+                                                                                }
+                                                                                readOnly
+                                                                            />
+                                                                        </div>
+                                                                        <div className="bg-white py-3 border-b border-gray-300">
+                                                                            <h6 className="font-bold">Amount</h6>
+                                                                            <input
+                                                                                className="w-full truncate font-mono"
+                                                                                value={makeMinimaNumber(
+                                                                                    output.amount,
+                                                                                    2000
+                                                                                )}
+                                                                                readOnly
+                                                                            />
+                                                                        </div>
+                                                                        {output.tokenamount && (
+                                                                            <div className="bg-white py-3 border-b border-gray-300">
+                                                                                <h6 className="font-bold">
+                                                                                    Token Amount
+                                                                                </h6>
+                                                                                <input
+                                                                                    className="w-full truncate font-mono"
+                                                                                    value={makeMinimaNumber(
+                                                                                        output.tokenamount,
+                                                                                        2000
+                                                                                    )}
+                                                                                    readOnly
+                                                                                />
+                                                                            </div>
+                                                                        )}
+                                                                        <div className="bg-white py-3 border-b border-gray-300">
+                                                                            <h6 className="font-bold">Coin ID</h6>
+                                                                            <input
+                                                                                className="w-full truncate font-mono"
+                                                                                value={output.coinid}
+                                                                                readOnly
+                                                                            />
+                                                                        </div>
 
-                                        {_transaction && !!_transaction.stateVars.length && (
-                                            <div>
-                                                <div
-                                                    onClick={() => setShowStates((prevState) => !prevState)}
-                                                    className={`bg-white text-black p-4 flex items-center justify-between rounded-lg font-semibold ${
-                                                        !_showStates ? '' : 'rounded-b-none'
-                                                    }`}
-                                                >
-                                                    State Variables
-                                                    <svg
-                                                        className={`fill-black ${
-                                                            !_showStates ? 'arrow-active' : 'arrow-passive'
+                                                                        <div className="bg-white py-3 border-b border-gray-300">
+                                                                            <h6 className="font-bold">Token ID</h6>
+                                                                            <input
+                                                                                className="w-full truncate font-mono"
+                                                                                value={output.tokenid}
+                                                                                readOnly
+                                                                            />
+                                                                        </div>
+
+                                                                        <div className="bg-white py-3 border-b border-gray-300">
+                                                                            <h6 className="font-bold">Spent</h6>
+                                                                            <input
+                                                                                className="w-full truncate font-mono"
+                                                                                value={output.spent ? 'Yes' : 'No'}
+                                                                                readOnly
+                                                                            />
+                                                                        </div>
+
+                                                                        <div className="bg-white py-3 border-b border-gray-300">
+                                                                            <h6 className="font-bold">Storing State</h6>
+                                                                            <input
+                                                                                className="w-full truncate font-mono"
+                                                                                value={output.storestate ? 'Yes' : 'No'}
+                                                                                readOnly
+                                                                            />
+                                                                        </div>
+                                                                    </li>
+                                                                )
+                                                            )}
+                                                        </animated.ul>
+                                                    )}
+                                                </div>
+                                            )}
+
+                                            {!!_transaction.transaction.body.txn.state.length && (
+                                                <div className="bg-white shadow-md rounded-lg mb-4">
+                                                    <div
+                                                        onClick={() => setShowStates((prevState) => !prevState)}
+                                                        className={`p-4 flex items-center justify-between rounded-t-lg cursor-pointer ${
+                                                            _showStates ? '' : 'rounded-b-lg'
                                                         }`}
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        height="24"
-                                                        viewBox="0 -960 960 960"
-                                                        width="24"
                                                     >
-                                                        <path d="m296-345-56-56 240-240 240 240-56 56-184-184-184 184Z" />
-                                                    </svg>
+                                                        <span className="font-semibold">State Variables</span>
+                                                        <svg
+                                                            className={`w-6 h-6 ${
+                                                                _showStates ? 'transform rotate-180' : ''
+                                                            }`}
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                            fill="none"
+                                                            viewBox="0 0 24 24"
+                                                            stroke="currentColor"
+                                                        >
+                                                            <path
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
+                                                                strokeWidth="2"
+                                                                d="M19 9l-7 7-7-7"
+                                                            />
+                                                        </svg>
+                                                    </div>
+                                                    {_showStates && (
+                                                        <animated.ul
+                                                        style={dropdownAnimationStates}
+                                                        className="bg-white divide-y divide-gray-200 overflow-hidden"
+                                                    >
+                                                            {_transaction.transaction.body.txn.state.map(
+                                                                (stateVar, index) => (
+                                                                    <li key={index} className="p-4">
+                                                                        <div className="bg-white py-3 border-b border-gray-300">
+                                                                            <h6 className="font-bold">Port</h6>
+                                                                            <input
+                                                                                className="w-full truncate font-mono"
+                                                                                value={stateVar.port}
+                                                                                readOnly
+                                                                            />
+                                                                        </div>
+                                                                        
+                                                                        <div className="bg-white py-3 border-b border-gray-300">
+                                                                            <h6 className="font-bold">Type</h6>
+                                                                            <input
+                                                                                className="w-full truncate font-mono"
+                                                                                value={stateVar.type}
+                                                                                readOnly
+                                                                            />
+                                                                        </div>
+                                                                        
+                                                                        <div className="bg-white py-3 border-b border-gray-300">
+                                                                            <h6 className="font-bold">Data</h6>
+                                                                            <input
+                                                                                className="w-full truncate font-mono"
+                                                                                value={stateVar.data}
+                                                                                readOnly
+                                                                            />
+                                                                        </div>
+                                                                        
+                                                                    </li>
+                                                                )
+                                                            )}
+                                                        </animated.ul>
+                                                    )}
                                                 </div>
-                                                <ul
-                                                    aria-expanded={!_showStates}
-                                                    className="accordion-content rounded bg-white bg-opacity-50 h-[auto] border-t-0"
-                                                >
-                                                    {_transaction &&
-                                                        _transaction.stateVars.map((i, index) => (
-                                                            <li key={i + index} className="divide-y-2">
-                                                                <h3 className="text-black font-semibold text-sm pb-2 mx-4 underline pt-2">
-                                                                    Port{' '}
-                                                                    <span className="font-bold green-good">
-                                                                        {i.port}
-                                                                    </span>
-                                                                </h3>
-
-                                                                <KeyValue title="Type" value={i.type + ''} />
-                                                                <KeyValue
-                                                                    truncate={false}
-                                                                    clipboard
-                                                                    title="Data"
-                                                                    value={i.data.replace(/[\[\]]+/gi, ' ')}
-                                                                />
-                                                            </li>
-                                                        ))}
-                                                </ul>
-                                            </div>
-                                        )}
+                                            )}
+                                        </>                                        
                                     </div>
                                 }
                             />

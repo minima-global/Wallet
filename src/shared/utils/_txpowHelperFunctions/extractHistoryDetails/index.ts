@@ -3,12 +3,12 @@ import { format } from 'date-fns';
 import identifyLeadingAmount from '../identifyLeadingAmount';
 import getTxPOWDetailsType from '../../getTxPOWDetailsType';
 
-const extractHistoryDetails = (txpows: TxPOW[], details: DetailsTxPOW[]) => {
+const extractHistoryDetails = (txpows: TxPOW[], detail: DetailsTxPOW) => {
     return txpows.map((t, i) => {
-        const transactionType = getTxPOWDetailsType(details[i]);
+        const transactionType = getTxPOWDetailsType(detail);
         return {
             txpowid: t.txpowid,
-            amount: identifyLeadingAmount(i, details),
+            amount: identifyLeadingAmount(detail),
             type:
                 transactionType === 'custom'
                     ? 'Custom transaction'

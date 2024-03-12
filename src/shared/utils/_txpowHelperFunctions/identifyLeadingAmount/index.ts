@@ -7,16 +7,20 @@ import getTxPOWDetailsType from '../../getTxPOWDetailsType';
  * @param txpowDetail the details json included with the history command for a txpow
  * @returns the amount to display
  */
-const identifyLeadingAmount = (i: number, txpowDetail: DetailsTxPOW[]) => {
-    const transactionType = getTxPOWDetailsType(txpowDetail[i]);
-    const valueTransfer = transactionType === 'normal';
-    const custom = transactionType === 'custom';
-
-    return custom
-        ? ''
-        : valueTransfer
-        ? txpowDetail[i].difference[Object.keys(txpowDetail[i].difference)[0]]
-        : txpowDetail[i].difference['0xFF'];
+const identifyLeadingAmount = (txpowDetail: DetailsTxPOW) => {
+    try {
+        const transactionType = getTxPOWDetailsType(txpowDetail);
+        const valueTransfer = transactionType === 'normal';
+        const custom = transactionType === 'custom';
+    
+        return custom
+            ? ''
+            : valueTransfer
+            ? txpowDetail.difference[Object.keys(txpowDetail.difference)[0]]
+            : txpowDetail.difference['0xFF'];    
+    } catch (error) {
+        return "";
+    }
 };
 
 export default identifyLeadingAmount;

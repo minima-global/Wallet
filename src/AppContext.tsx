@@ -5,8 +5,6 @@ import { makeTokenImage } from './shared/functions';
 import { Coin, MinimaToken, Scripts } from './@types/minima';
 import { sql } from './__minima__/libs/SQL';
 import { TxPOW } from './types/minima';
-import splitDataByDate from './shared/utils/_txpowHelperFunctions/splitDataByDate';
-import extractHistoryDetails from './shared/utils/_txpowHelperFunctions/extractHistoryDetails';
 
 export const appContext = createContext({} as any);
 
@@ -31,32 +29,13 @@ const AppProvider = ({ children }: IProps) => {
     const [history, setHistory] = useState<TxPOW[]>([]);
     const [logs, setLogs] = useState<string[]>([]);
 
-    const [historyFacade, setHistoryFacade] = useState<{
-        [key: string]: {
-            txpowid: string;
-            tokenName: string;
-            amount: string;
-            tokenid: string;
-            timeMilli: string;
-        }[];
-    }>();
-    const [historyDetails, setHistoryDetails] = useState<
-        {
-            txpowid: string;
-            amount: string;
-            type: string;
-            sentTo0x: string;
-            sentToMx: string;
-            tokenName: string;
-            blockPosted: number;
-            date: string;
-            timemilli: string;
-            burn: number;
-            inputs: any[];
-            outputs: any[];
-            stateVars: any[];
-        }[]
-    >([]);
+
+    const [_promptTransactionDetails, setPromptTransactionDetails] = useState<any>(false);
+    const [_maxHistory, setMaxHistory] = useState(20);
+    const [_currentPage, setCurrentPage] = useState(1);
+    const [_historyTransactions, setHistoryTransactions] = useState([]);
+    const [_historyDetails, setHistoryDetails] = useState([]);
+    
     const [simpleAddresses, setSimpleAddresses] = useState<Scripts[]>([]);
     const [avgBurn, setAvgBurn] = useState(0);
     const [vaultLocked, setVaultLocked] = useState<null | boolean>(null);
@@ -104,7 +83,7 @@ const AppProvider = ({ children }: IProps) => {
                         const favoriteTokens: any = await sql(`SELECT * FROM cache WHERE name= 'FAVORITE_TOKENS'`);
 
                         const currFormat: any = await sql(`SELECT * FROM cache WHERE name= 'CURRENCY_FORMAT'`);
-
+                        
                         if (nicknameAddresses) {
                             setDefaultAddressesWithName(JSON.parse(nicknameAddresses.DATA));
                         }
@@ -209,11 +188,12 @@ const AppProvider = ({ children }: IProps) => {
     };
 
     const getHistory = () => {
-        (window as any).MDS.cmd('history', (resp: any) => {
+        const offSet = _currentPage - 1;
+
+        (window as any).MDS.cmd(`history max:${_maxHistory} offset:${offSet*20}`, (resp: any) => {
             if (resp.status) {
-                setHistoryFacade(splitDataByDate(resp.response.txpows, resp.response.details));
-                setHistoryDetails(extractHistoryDetails(resp.response.txpows, resp.response.details));
-                setHistory(resp.response.txpows);
+                setHistoryTransactions(resp.response.txpows);
+                setHistoryDetails(resp.response.details);
             }
         });
     };
@@ -343,6 +323,10 @@ const AppProvider = ({ children }: IProps) => {
         }
     };
 
+    const promptTransactionDetails = (state: any) => {
+        setPromptTransactionDetails(state);
+    }
+
     return (
         <appContext.Provider
             value={{
@@ -355,14 +339,21 @@ const AppProvider = ({ children }: IProps) => {
                 mode,
                 isMobile: mode === 'mobile',
 
+                _promptTransactionDetails,
+                promptTransactionDetails,
+                
                 balance,
                 NFTs,
                 simpleAddresses,
                 history,
-                historyFacade,
-                historyDetails,
-                getHistory,
+                _historyDetails,
+                _historyTransactions,
+                
                 getBalance,
+
+                _currentPage,
+                setCurrentPage,
+                getHistory,
 
                 logs,
                 isCreatingKeys,
