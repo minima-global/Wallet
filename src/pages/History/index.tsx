@@ -37,7 +37,7 @@ const History = () => {
 
     useEffect(() => {
         if (loaded.current === true) {
-            (window as any).MDS.cmd('history action:size', (resp) => {
+            (window as any).MDS.cmd('history action:size', (resp: any) => {
                 if (resp.status) {
                     setHistorySize(resp.response.size);
                 }
@@ -49,7 +49,7 @@ const History = () => {
 
     // Function to close dropdown when clicking outside
     useEffect(() => {
-        const handleClickOutside = (event) => {
+        const handleClickOutside = (event: any) => {
             // @ts-ignore
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
                 setDropDownMenu(false) // Close dropdown when clicking outside the dropdown menu
@@ -91,11 +91,11 @@ const History = () => {
         }
 
         // Format the date as "Monday 11th" for other cases
-        return format(date, 'EEEE do');
+        return format(date, 'MMMM do');
     });
 
     const handleDownloadAll = () => {
-        const transactions = _historyTransactions.map((_transaction: any, index) => {
+        const transactions = _historyTransactions.map((_transaction: any, index: number) => {
             const amount =
                 identifyLeadingAmount(_transaction.details) === '0'
                     ? '-'
@@ -227,14 +227,14 @@ const History = () => {
                                         <button
                                             disabled={_currentPage === 1}
                                             className="bg-purple-400 font-bold text-white px-4 py-2 rounded-lg disabled:bg-purple-100 disabled:text-violet-200"
-                                            onClick={() => setCurrentPage((prevState) => prevState - 1)}
+                                            onClick={() => setCurrentPage((prevState: any) => prevState - 1)}
                                         >
                                             Previous
                                         </button>
                                         <button
                                             disabled={_historyTransactions.length < 20}
                                             className="bg-purple-400 font-bold text-white px-4 py-2 rounded-lg disabled:font-bold disabled:bg-purple-100 disabled:text-violet-200"
-                                            onClick={() => setCurrentPage((prevState) => prevState + 1)}
+                                            onClick={() => setCurrentPage((prevState: any) => prevState + 1)}
                                         >
                                             Next
                                         </button>

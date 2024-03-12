@@ -1,7 +1,6 @@
-import { useContext, useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useContext, useState } from 'react';
 
-import { downloadAllAsCsv, downloadCsv } from '../../shared/utils/jsonToCsv';
+import {  downloadCsv } from '../../shared/utils/jsonToCsv';
 import { useSpring, animated } from 'react-spring';
 
 import identifyLeadingAmount from '../../shared/utils/_txpowHelperFunctions/identifyLeadingAmount';
@@ -13,6 +12,8 @@ import Grid from '../../components/UI/Grid';
 import useFormatMinimaNumber from '../../__minima__/libs/utils/useMakeNumber';
 import { getTxPOWDetailsType } from '../../shared/utils';
 import { format } from 'date-fns';
+
+import * as utils from "../../utilities"
 
 const HistoryTransactionDetailSimple = () => {
     const { makeMinimaNumber } = useFormatMinimaNumber();
@@ -46,7 +47,7 @@ const HistoryTransactionDetailSimple = () => {
         _transaction.transaction.body.txn.state.find((s: any) => s.port === 44)
             ? _transaction.transaction.body.txn.state.find((s: any) => s.port === 44)
             : false;
-    const theMessage = hasPublicMessage ? hasPublicMessage.data : '';
+    const theMessage = hasPublicMessage ? utils.decode(hasPublicMessage.data).substring(1, hasPublicMessage.data.length-1) : '';
 
     const amount = identifyLeadingAmount(_transaction.details) === '0'
                                                             ? '-'
@@ -316,7 +317,7 @@ const HistoryTransactionDetailSimple = () => {
                                                             className="bg-white divide-y divide-gray-200 overflow-hidden"
                                                         >
                                                             {_transaction.transaction.body.txn.inputs.map(
-                                                                (output, index) => (
+                                                                (output: any, index: any) => (
                                                                     <li key={index} className="p-4">
                                                                         <h3 className="text-lg font-semibold mb-2">
                                                                             # {index}
@@ -434,7 +435,7 @@ const HistoryTransactionDetailSimple = () => {
                                                             className="bg-white divide-y divide-gray-200 overflow-hidden"
                                                         >
                                                             {_transaction.transaction.body.txn.outputs.map(
-                                                                (output, index) => (
+                                                                (output: any, index: any) => (
                                                                     <li key={index} className="p-4">
                                                                         <h3 className="text-lg font-semibold mb-2">
                                                                             # {index}
@@ -554,7 +555,7 @@ const HistoryTransactionDetailSimple = () => {
                                                         className="bg-white divide-y divide-gray-200 overflow-hidden"
                                                     >
                                                             {_transaction.transaction.body.txn.state.map(
-                                                                (stateVar, index) => (
+                                                                (stateVar: any, index: any) => (
                                                                     <li key={index} className="p-4">
                                                                         <div className="bg-white py-3 border-b border-gray-300">
                                                                             <h6 className="font-bold">Port</h6>

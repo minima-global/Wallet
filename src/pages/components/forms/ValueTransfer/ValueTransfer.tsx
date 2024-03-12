@@ -23,6 +23,8 @@ import FeatureUnavailable from '../../../../components/UI/FeatureUnavailable';
 import Burn from '../../../../components/UI/Burn';
 import useFormatMinimaNumber from '../../../../__minima__/libs/utils/useMakeNumber';
 
+import * as utils from "../../../../utilities"
+
 const ValueTransfer = () => {
     const { balance: wallet, loaded } = useContext(appContext);
     const { makeMinimaNumber } = useFormatMinimaNumber();
@@ -68,7 +70,7 @@ const ValueTransfer = () => {
                             formInputs.token,
                             formInputs.amount,
                             formInputs.address,
-                            formInputs.message,
+                            utils.encode(formInputs.message),
                             formInputs.burn,
                             formInputs.password
                         );
