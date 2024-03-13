@@ -1,6 +1,8 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { appContext } from '../../AppContext';
 import Grid from '../../components/UI/Grid';
+import { animated, config, useSpring } from 'react-spring';
+
 import { downloadAllAsCsv } from '../../shared/utils/jsonToCsv';
 
 import _ from 'lodash';
@@ -10,11 +12,14 @@ import identifyLeadingAmount from '../../shared/utils/_txpowHelperFunctions/iden
 import HistoryTransactionDetailSimple from '../HistoryTransactionDetailSimple';
 import Decimal from 'decimal.js';
 import useFormatMinimaNumber from '../../__minima__/libs/utils/useMakeNumber';
+import ComposableModal from '../components/ComposableModal';
+import { createPortal } from 'react-dom';
+import Cross from '../components/Cross';
 
 const History = () => {
     const {
         _currentPage,
-        setCurrentPage,    
+        setCurrentPage,
         setOpenDrawer,
         getHistory,
         loaded,
@@ -24,9 +29,9 @@ const History = () => {
         _promptTransactionDetails,
     } = useContext(appContext);
 
-    const { makeMinimaNumber } = useFormatMinimaNumber();
+    const [_promptAllDialog, setPromptAllDialog] = useState(false);
 
-    const [filterText, setFilterText] = useState('');
+    const [working, setWorking] = useState(false);
     const [historySize, setHistorySize] = useState(0);
     const [dropDownMenu, setDropDownMenu] = useState(false); // State to track the index of the item with an open dropdown
     const dropdownRef = useRef(null); // Ref to the dropdown menu
@@ -34,6 +39,16 @@ const History = () => {
     const toggleDropdown = () => {
         setDropDownMenu((prevState) => !prevState);
     };
+
+    const promptAllDialog = () => {
+        setPromptAllDialog((prevState) => !prevState);
+    };
+
+    const springProps = useSpring({
+        opacity: _promptAllDialog ? 1 : 0,
+        transform: _promptAllDialog ? 'translateY(0%) scale(1)' : 'translateY(-50%) scale(0.8)',
+        config: config.stiff,
+    });
 
     useEffect(() => {
         if (loaded.current === true) {
@@ -52,7 +67,7 @@ const History = () => {
         const handleClickOutside = (event: any) => {
             // @ts-ignore
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-                setDropDownMenu(false) // Close dropdown when clicking outside the dropdown menu
+                setDropDownMenu(false); // Close dropdown when clicking outside the dropdown menu
             }
         };
 
@@ -69,7 +84,6 @@ const History = () => {
 
     // Group transactions by date using Lodash _.groupBy()
     const groupedTransactions = _.groupBy(zippedArrays, (transaction) => {
-        // console.log(transaction);
         // Extract the time in milliseconds and convert it to a Date object
         const date = new Date(parseInt(transaction.transaction.header.timemilli, 10));
         const now = new Date();
@@ -94,12 +108,12 @@ const History = () => {
         return format(date, 'MMMM do');
     });
 
-    const handleDownloadAll = () => {
+    const handleDownloadPage = () => {
         const transactions = _historyTransactions.map((_transaction: any, index: number) => {
             const amount =
                 identifyLeadingAmount(_transaction.details) === '0'
                     ? '-'
-                    : identifyLeadingAmount(_historyDetails[index].details)
+                    : identifyLeadingAmount(_historyDetails[index].details);
             const txpowid = _transaction.txpowid;
             const sentToMx = _transaction.body.txn.outputs[0].miniaddress;
             const sentTo0x = _transaction.body.txn.outputs[0].address;
@@ -111,10 +125,7 @@ const History = () => {
                     ? 'Custom'
                     : 'Token Creation';
             const blockPosted = _transaction.header.block;
-            const burn =
-                parseInt(_transaction.burn) > 0
-                    ? _transaction.burn
-                    : '0';
+            const burn = parseInt(_transaction.burn) > 0 ? _transaction.burn : '0';
             const fullJson = JSON.stringify(_transaction);
 
             return {
@@ -132,9 +143,118 @@ const History = () => {
 
         downloadAllAsCsv(transactions);
     };
+    const handleDownloadAll = async () => {
+        setWorking(true);
+        return new Promise((resolve, reject) => {
+            (window as any).MDS.cmd('history', (resp: any) => {
+                if (!resp.status) reject('Failed to fetch history');
+                const { txpows, details, size } = resp.response;
+                const transactions = txpows.map((_transaction: any, index: number) => {
+                    const amount =
+                        identifyLeadingAmount(_transaction.details) === '0'
+                            ? '-'
+                            : identifyLeadingAmount(details[index].details);
+                    const txpowid = _transaction.txpowid;
+                    const sentToMx = _transaction.body.txn.outputs[0].miniaddress;
+                    const sentTo0x = _transaction.body.txn.outputs[0].address;
+                    const date = format(parseInt(_transaction.header.timemilli), "MMMM do yyyy 'at' h:mm a");
+                    const type =
+                        getTxPOWDetailsType(details[index].details) === 'normal'
+                            ? 'Value Transfer'
+                            : getTxPOWDetailsType(details[index].details) === 'custom'
+                            ? 'Custom'
+                            : 'Token Creation';
+                    const blockPosted = _transaction.header.block;
+                    const burn = parseInt(_transaction.burn) > 0 ? _transaction.burn : '0';
+                    const fullJson = JSON.stringify(_transaction);
+
+                    return {
+                        amount,
+                        txpowid,
+                        sentToMx,
+                        sentTo0x,
+                        date,
+                        type,
+                        blockPosted,
+                        burn,
+                        fullJson,
+                    };
+                });
+                downloadAllAsCsv(transactions);
+                resolve(size);
+            });
+        });
+    };
 
     return (
         <>
+            {_promptAllDialog &&
+                createPortal(
+                    <ComposableModal dismiss={promptAllDialog}>
+                        <div className="grid grid-rows-[80px_1fr] mx-4 md:mx-0">
+                            <div />
+                            <animated.div style={springProps}>
+                                <div className="bg-white shadow-md text-black pb-2 px-4 rounded grid grid-rows-[min-content_minmax(0,_260px)_auto]">
+                                    <div className="grid grid-cols-[1fr_auto] py-4">
+                                        <h3 className="font-bold text-black">Download Transaction History</h3>
+                                        {!working && <Cross dismiss={promptAllDialog} />}
+                                    </div>
+                                    <div>
+                                        <p>
+                                            You have <b>{historySize}</b> transactions in total.
+                                        </p>
+                                    </div>
+                                    <div className="grid grid-cols-[1fr_auto]">
+                                        <div />
+
+                                        <div className="grid grid-cols-[minmax(0,_128px)_minmax(0,_128px)] gap-2 py-4">
+                                            {working && <div />}
+                                            {!working && (
+                                                <button onClick={promptAllDialog} className="px-3 py-2 border rounded">
+                                                    Cancel
+                                                </button>
+                                            )}
+                                            <button
+                                                onClick={async () => {
+                                                    await handleDownloadAll();
+                                                    setWorking(false);
+                                                }}
+                                                className="disabled:bg-opacity-10 px-3 py-2 font-bold bg-black text-white rounded"
+                                            >
+                                                {working ? (
+                                                    <div className="flex justify-center items-center">
+                                                        <svg
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                            className="animate-spin"
+                                                            width="32"
+                                                            height="32"
+                                                            viewBox="0 0 24 24"
+                                                            strokeWidth="1.5"
+                                                            stroke="#FFA010"
+                                                            fill="none"
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                        >
+                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                            <path d="M10 20.777a8.942 8.942 0 0 1 -2.48 -.969" />
+                                                            <path d="M14 3.223a9.003 9.003 0 0 1 0 17.554" />
+                                                            <path d="M4.579 17.093a8.961 8.961 0 0 1 -1.227 -2.592" />
+                                                            <path d="M3.124 10.5c.16 -.95 .468 -1.85 .9 -2.675l.169 -.305" />
+                                                            <path d="M6.907 4.579a8.954 8.954 0 0 1 3.093 -1.356" />
+                                                        </svg>
+                                                    </div>
+                                                ) : (
+                                                    'Download'
+                                                )}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </animated.div>
+                        </div>
+                    </ComposableModal>,
+                    document.body
+                )}
             {_promptTransactionDetails && <HistoryTransactionDetailSimple />}
 
             <Grid
@@ -166,14 +286,15 @@ const History = () => {
                     )}
                     {!!_historyTransactions.length && (
                         <div className="bg-white overflow-y-scroll p-4 pt-0 px-0 mx-4 rounded mb-4 md:mx-2">
-                            <div className="px-4 sticky top-0 bg-white py-4 shadow-sm flex items-center">
-                                <input
+                            <div className="px-4 sticky top-0 bg-white py-4 shadow-sm flex items-center justify-between">
+                                {/* <input
                                     value={filterText}
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilterText(e.target.value)}
                                     type="search"
                                     className="appearance-none border-none w-full bg-violet-500 bg-opacity-10 py-3 rounded text-sm placeholder:text-purple-300"
                                     placeholder="Search by txpowid or token name"
-                                />
+                                /> */}
+                                <div />
                                 <div onClick={toggleDropdown} className="flex items-center justift-center">
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
@@ -200,7 +321,16 @@ const History = () => {
                                                 className="cursor-pointer block p-2 py-4 text-sm text-center text-gray-800 w-[200px] hover:bg-violet-300 hover:bg-opacity-10"
                                                 onClick={(e) => {
                                                     e.stopPropagation(); // Prevent click on dropdown from closing the dropdown
-                                                    handleDownloadAll();
+                                                    handleDownloadPage();
+                                                }}
+                                            >
+                                                Download Page
+                                            </a>
+                                            <a
+                                                className="cursor-pointer block p-2 py-4 text-sm text-center text-gray-800 w-[200px] hover:bg-violet-300 hover:bg-opacity-10"
+                                                onClick={(e) => {
+                                                    e.stopPropagation(); // Prevent click on dropdown from closing the dropdown
+                                                    promptAllDialog();
                                                 }}
                                             >
                                                 Download All
@@ -374,4 +504,3 @@ const TransactionIcon = ({ transactionDetail }: any) => {
         </>
     );
 };
-

@@ -47,7 +47,7 @@ const Wallet = () => {
                             value={filterText}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilterText(e.target.value)}
                             type="search"
-                            className="appearance-none border-none w-full bg-violet-500 bg-opacity-10 py-3 rounded text-sm placeholder:text-purple-300"
+                            className="appearance-none border-none w-full bg-violet-500 bg-opacity-10 py-3 rounded text-sm placeholder:text-black placeholder:text-opacity-30"
                             placeholder="Search by token name or id"
                         />
                     }
