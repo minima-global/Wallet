@@ -171,7 +171,7 @@ const History = () => {
                                     value={filterText}
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilterText(e.target.value)}
                                     type="search"
-                                    className="w-full bg-violet-500 bg-opacity-10 py-3 rounded text-sm"
+                                    className="appearance-none border-none w-full bg-violet-500 bg-opacity-10 py-3 rounded text-sm placeholder:text-purple-300"
                                     placeholder="Search by txpowid or token name"
                                 />
                                 <div onClick={toggleDropdown} className="flex items-center justift-center">
@@ -194,7 +194,7 @@ const History = () => {
                                     {dropDownMenu && (
                                         <div
                                             ref={dropdownRef}
-                                            className="absolute right-0 md:left-0 mt-2 w-auto bg-white z-[25] border border-gray-200 rounded-md shadow-md"
+                                            className="absolute right-0 mt-2 top-[30px] w-auto max-w-[200px] bg-white z-[25] border border-gray-200 rounded-md shadow-md"
                                         >
                                             <a
                                                 className="cursor-pointer block p-2 py-4 text-sm text-center text-gray-800 w-[200px] hover:bg-violet-300 hover:bg-opacity-10"

@@ -131,19 +131,6 @@ select {
   scrollbar-width: none;  /* Firefox */
 }
 
-
-input {
-  outline:  none!important;
-  border: none!important;
-  border-top: none!important;
-}
-input:focus {
-  outline:  none!important;
-  border: none!important;
-  border-top: none!important;
-}
-
-
 ::-webkit-scrollbar-track {
   background-color: #f1f1f1; /* Set the color of the scrollbar track */
 }

@@ -43,13 +43,12 @@ const Wallet = () => {
             {balance.length > 0 && (
                 <CardContent
                     header={
-                        <Input
-                            id="search"
-                            name="search"
-                            disabled={false}
+                        <input
+                            value={filterText}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilterText(e.target.value)}
                             type="search"
-                            placeholder="Search token"
+                            className="appearance-none border-none w-full bg-violet-500 bg-opacity-10 py-3 rounded text-sm placeholder:text-purple-300"
+                            placeholder="Search by token name or id"
                         />
                     }
                     content={

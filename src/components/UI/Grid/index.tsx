@@ -1,6 +1,5 @@
 import { ReactElement } from 'react';
 import useIsMinimaBrowser from '../../../hooks/useIsMinimaBrowser';
-import useGetInnerHeight from '../../../hooks/useGetInnerHeight';
 
 interface IProps {
     title: ReactElement;
@@ -9,7 +8,6 @@ interface IProps {
 }
 const Grid = ({ title, children, variant }: IProps) => {
     const openTitleBar = useIsMinimaBrowser();
-    const innerHeight = useGetInnerHeight();
     let base = `grid grid-cols-[1fr_minmax(0,760px)_1fr] grid-rows-1 pt-4`;
     if (variant === 'sm') {
         base = 'grid grid-cols-[1fr_minmax(0,560px)_1fr] grid-rows-1 pt-4';
