@@ -111,9 +111,9 @@ const History = () => {
     const handleDownloadPage = () => {
         const transactions = _historyTransactions.map((_transaction: any, index: number) => {
             const amount =
-                identifyLeadingAmount(_transaction.details) === '0'
+                identifyLeadingAmount(_historyDetails[index]) === '0'
                     ? '-'
-                    : identifyLeadingAmount(_historyDetails[index].details);
+                    : identifyLeadingAmount(_historyDetails[index]);
             const txpowid = _transaction.txpowid;
             const sentToMx = _transaction.body.txn.outputs[0].miniaddress;
             const sentTo0x = _transaction.body.txn.outputs[0].address;
@@ -146,14 +146,12 @@ const History = () => {
     const handleDownloadAll = async () => {
         setWorking(true);
         return new Promise((resolve, reject) => {
-            (window as any).MDS.cmd('history', (resp: any) => {
+            (window as any).MDS.cmd('history max:1000', (resp: any) => {
                 if (!resp.status) reject('Failed to fetch history');
                 const { txpows, details, size } = resp.response;
                 const transactions = txpows.map((_transaction: any, index: number) => {
                     const amount =
-                        identifyLeadingAmount(_transaction.details) === '0'
-                            ? '-'
-                            : identifyLeadingAmount(details[index].details);
+                        identifyLeadingAmount(details[index]) === '0' ? '-' : identifyLeadingAmount(details[index]);
                     const txpowid = _transaction.txpowid;
                     const sentToMx = _transaction.body.txn.outputs[0].miniaddress;
                     const sentTo0x = _transaction.body.txn.outputs[0].address;
@@ -201,7 +199,7 @@ const History = () => {
                                     </div>
                                     <div>
                                         <p>
-                                            You have <b>{historySize}</b> transactions in total.
+                                            You have <b>{historySize}</b> transactions in total.  You can download up to 1000 transactions.
                                         </p>
                                     </div>
                                     <div className="grid grid-cols-[1fr_auto]">
