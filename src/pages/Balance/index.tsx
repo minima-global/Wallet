@@ -5,6 +5,7 @@ import { appContext } from '../../AppContext';
 import Wallet from '../Wallet/Wallet';
 import TokenDetails from './TokenDetails';
 import BalanceInfo from './BalanceInfo';
+import Confirmation from '../../components/UI/Confirmation';
 
 const Balance = () => {
     const { _currentNavigation, promptBalanceInfo } = useContext(appContext);
@@ -19,7 +20,7 @@ const Balance = () => {
     if (_currentNavigation !== 'balance') {
         return null;
     }
-    
+
     const springProps = useSpring({
         opacity: _currentNavigation === 'balance' ? 1 : 0,
         transform: _currentNavigation === 'balance' ? 'translateY(0%) scale(1)' : 'translateY(-50%) scale(1)',
@@ -31,12 +32,12 @@ const Balance = () => {
     };
 
     const handleViewToken = (token: any) => {
-      setViewingToken(token);
-      promptTokenDetails();
-    }
+        setViewingToken(token);
+        promptTokenDetails();
+    };
 
     return (
-        <>
+        <>            
             <BalanceInfo />
 
             <TokenDetails dismiss={promptTokenDetails} display={_promptTokenDetails} token={viewingToken} />
@@ -67,7 +68,12 @@ const Balance = () => {
                         {/* <FetchBalanceButton /> */}
                     </div>
                     <input onChange={handleFilterTextChange} placeholder="Search tokens" type="search" />
-                    <Wallet selectToken={handleViewToken} filterText={filter} selectionMode={false} detailsMode={true} />
+                    <Wallet
+                        selectToken={handleViewToken}
+                        filterText={filter}
+                        selectionMode={false}
+                        detailsMode={true}
+                    />
                 </section>
             </animated.div>
         </>
