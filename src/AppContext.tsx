@@ -10,12 +10,14 @@ import extractHistoryDetails from './shared/utils/_txpowHelperFunctions/extractH
 
 import * as utils from './utilities';
 
+
 export const appContext = createContext({} as any);
 
 interface IProps {
     children: ReactElement;
 }
 var balanceInterval: ReturnType<typeof setInterval>;
+
 const AppProvider = ({ children }: IProps) => {
     const loaded = useRef(false);
     const [loading, setLoading] = useState(false);

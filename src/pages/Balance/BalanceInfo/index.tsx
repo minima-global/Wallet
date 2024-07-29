@@ -1,7 +1,7 @@
 import { useSpring, animated, config, useTransition } from 'react-spring';
 import { useContext, useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import Dialog from '../../../components/UI/Dialog';
+import Dialog from '../../../components/UI/AnimatedDialog';
 import KeyValue from '../../../components/UI/KeyValue';
 import { appContext } from '../../../AppContext';
 import CloseIcon from '../../../components/UI/Icons/CloseIcon';
@@ -23,6 +23,8 @@ const BalanceInfo = () => {
             if (!_promptBalanceInfo) setShow(false);
         },
     });
+
+    return null;
 
     return (
         show &&

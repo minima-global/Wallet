@@ -1,33 +1,25 @@
-import { Drawer } from '@mui/material';
 import { useContext } from 'react';
 import SideMenu from './layout/SideMenu';
 import Notification from './components/UI/Notification';
 import { appContext } from './AppContext';
 import Dashboard from './pages/Dashboard';
+import SideDrawer from './components/SideDrawer';
+import { Grid } from '@mui/material';
+import { createPortal } from 'react-dom';
+import Logs from './components/UI/Logs';
 
 const App = () => {
-    const { openDrawer, setOpenDrawer, minidappSystemFailed, isCreatingKeys } = useContext(appContext);
+    const { openDrawer, promptMenu, openTitleBar, minidappSystemFailed, isCreatingKeys } = useContext(appContext);
     return (
         <>
             <Notification />
             <Dashboard />
             <div>
-                <Drawer
-                    variant="temporary"
-                    open={openDrawer}
-                    onClick={() => setOpenDrawer(false)}
-                    ModalProps={{ keepMounted: true }}
-                    className="md:hidden grid z-[100000]"
-                >
-                    <SideMenu />
-                </Drawer>
-                <Drawer variant="permanent" className="hidden md:grid">
-                    <SideMenu />
-                </Drawer>
+                <SideDrawer isOpen={openDrawer} toggleDrawer={promptMenu}></SideDrawer>                
             </div>
 
 
-            {/* {isCreatingKeys &&
+            {isCreatingKeys &&
                 createPortal(
                     <div className="ml-0 absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn z-[100000]">
                         <Grid title="">
@@ -65,8 +57,8 @@ const App = () => {
                     </div>,
 
                     document.body
-                )} */}
-            {/* {minidappSystemFailed &&
+                )}
+            {minidappSystemFailed &&
                 createPortal(
                     <div className="ml-0 absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn z-[100000]">
                         <Grid>
@@ -98,7 +90,7 @@ const App = () => {
                     </div>,
 
                     document.body
-                )} */}
+                )}
         </>
     );
 };
