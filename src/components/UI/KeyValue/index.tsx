@@ -23,24 +23,34 @@ const KeyValue = ({ title, value, help, clipboard, mono = false, truncate = true
 
     return (
         <>
-            <div className={`bg-white bg-opacity-5 rounded-lg grid grid-rows-2 md:grid-rows-1 md:grid-cols-[auto_1fr] md:gap-2 items-center`}>
-                <h3 className="bg-black text-white bg-opacity-50 p-2 font-bold">{title}</h3>
+            <div className={`rounded-lg grid grid-rows-2 md:grid-rows-1 md:grid-cols-[120px_1fr] border dark:border-[#1B1B1B] md:gap-2 items-center dark:bg-[#1B1B1B] dark:bg-opacity-60`}>
+                <div className='truncate dark:border-r dark:border-r-neutral-800'>
+                    <h3 className="text-center truncate p-2 font-bold bg-neutral-100 text-sm dark:bg-[#1B1B1B] dark:bg-opacity-10">{title}</h3>
+                </div>
                 <div className={`${clipboard && 'grid grid-cols-[1fr_auto] relative h-full items-center'}`}>
-                    <p className={`px-2 md:p-0 text-sm text-white break-word ${truncate && 'truncate'} ${mono && 'font-mono'}`}>
+                    
+                    
+                    {truncate &&                    
+                    <input readOnly value={value} className={`truncate px-2 md:p-0 text-center md:text-left text-sm break-word ${mono && 'font-mono'} bg-transparent focus:outline-none w-full`}/>
+                    }
+                    
+                    {!truncate &&
+                    <p className={`px-2 md:p-0 text-center md:text-left text-sm break-word ${mono && 'font-mono'}`}>
                         {value}
-                    </p>
+                    </p>                    
+                
+                    }
                     {clipboard && (
                         <div
                             onClick={handleCopyClick}
-                            className="relative p-0 m-0 text-black hover:cursor-pointer text-sm bg-teal-300 dark:bg-teal-500 h-full w-[48px] flex items-center justify-center px-2 rounded-r"
+                            className="hover:bg-teal-400 hover:dark:bg-neutral-200 text-neutral-100 dark:text-black hidden md:flex relative p-0 m-0 hover:cursor-pointer text-sm bg-teal-500 dark:bg-neutral-300 h-full w-[48px] items-center justify-center px-2 rounded-r"
                         >
                             <svg
                                 onInput={() => {}}
                                 className="absolute right-0 top-0"
-                                style={{
-                                    color: '#0809ab',
+                                style={{                                    
                                     position: 'absolute',
-                                    top: 10,
+                                    top: 6,
                                     right: 12,
                                     strokeDasharray: 50,
                                     strokeDashoffset: isCopied ? -50 : 0,
@@ -51,8 +61,8 @@ const KeyValue = ({ title, value, help, clipboard, mono = false, truncate = true
                                 width="22"
                                 height="22"
                                 viewBox="0 0 24 24"
-                                strokeWidth="3.5"
-                                stroke="#2c3e50"
+                                strokeWidth="2"
+                                stroke="currentColor"
                                 fill="none"
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
@@ -64,10 +74,9 @@ const KeyValue = ({ title, value, help, clipboard, mono = false, truncate = true
                             <svg
                                 onClick={handleCopyClick}
                                 xmlns="http://www.w3.org/2000/svg"
-                                style={{
-                                    color: 'black',
+                                style={{         
                                     position: 'absolute',
-                                    top: 8,
+                                    top: 6,
                                     right: 10,
                                     strokeDasharray: 50,
                                     strokeDashoffset: isCopied ? 0 : -50,
@@ -76,7 +85,7 @@ const KeyValue = ({ title, value, help, clipboard, mono = false, truncate = true
                                 width="28"
                                 height="24"
                                 viewBox="0 0 24 24"
-                                strokeWidth="3"
+                                strokeWidth="2"
                                 stroke="currentColor"
                                 fill="none"
                                 strokeLinecap="round"
@@ -88,6 +97,7 @@ const KeyValue = ({ title, value, help, clipboard, mono = false, truncate = true
                         </div>
                     )}
                 </div>
+                {clipboard &&<div className="flex md:hidden"><button type="button" onClick={handleCopyClick} className={`${isCopied && "bg-teal-500 dark:bg-teal-300 font-bold transition-colors duration-100"} w-full text-sm text-black dark:text-white tracking-wider bg-neutral-100 dark:bg-[#1B1B1B] hover:dark:bg-black hover:dark:border dark:hover:border-teal-300 hover:dark:border-t-none rounded-t-none`}>{isCopied ? "Copied" : "Copy"}</button></div>}
             </div>
         </>
     );

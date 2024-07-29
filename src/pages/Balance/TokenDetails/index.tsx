@@ -3,6 +3,9 @@ import Dialog from '../../../components/UI/Dialog';
 import { animated, config, useSpring, useTransition } from 'react-spring';
 import KeyValue from '../../../components/UI/KeyValue';
 import { useState, useEffect } from 'react';
+import CloseIcon from '../../../components/UI/Icons/CloseIcon';
+import VerifiedIcon from '../../../components/UI/Icons/VerifiedIcon';
+import Decimal from 'decimal.js';
 
 const TokenDetails = ({ token, display, dismiss }: any) => {
     const [show, setShow] = useState(display);
@@ -40,12 +43,18 @@ const TokenDetails = ({ token, display, dismiss }: any) => {
                                         <animated.div style={styles}>
                                             <div className="relative left-0 right-0 bottom-0 top-0 bg-transparent">
                                                 <div
-                                                    className={`bg-black bg-opacity-90 w-full md:w-[calc(100%_-_16px)] overflow-auto mx-auto p-4 rounded`}
+                                                    className={`bg-white dark:bg-black w-[calc(100%_-_16px)] overflow-auto mx-auto md:w-full p-4 rounded`}
                                                 >
-                                                    <section>
+                                                    <div className="flex items-center justify-between mb-3">
+                                                        <h3 className="font-bold tracking-wide">Token Details</h3>
+                                                        <span onClick={dismiss}>
+                                                            <CloseIcon fill="currentColor" />
+                                                        </span>
+                                                    </div>
+                                                    <div>
                                                         <div className="grid grid-cols-[1fr_auto] items-center">
                                                             <div className="flex items-center">
-                                                                <div className="grid grid-cols-[auto_1fr] gap-2">
+                                                                <div className="grid grid-cols-[auto_1fr] gap-2 bg-neutral-100 dark:bg-[#1B1B1B] dark:bg-opacity-50 w-full ">
                                                                     {!isMinima && isCustomTokenWithUrl && (
                                                                         <img
                                                                             alt="token-icon"
@@ -54,19 +63,19 @@ const TokenDetails = ({ token, display, dismiss }: any) => {
                                                                                     ? token.token.url
                                                                                     : `https://robohash.org/${token.tokenid}`
                                                                             }
-                                                                            className="bg-[#080A0B] w-[56px] min-w-[56px] h-[56px] min-h-[56px]"
+                                                                            className="bg-black dark:bg-[#1B1B1B] w-[56px] min-w-[56px] h-[56px] min-h-[56px]"
                                                                         />
                                                                     )}
                                                                     {isMinima && (
                                                                         <img
                                                                             alt="token-icon"
                                                                             src="./assets/token.svg"
-                                                                            className="w-14 min-w-14"
+                                                                            className="w-14 min-w-14 dark:border-r dark:border-r-neutral-800"
                                                                         />
                                                                     )}
-                                                                    <div className="grid grid-rows-[auto_1fr]">
+                                                                    <div className="grid grid-rows-[auto_1fr] my-auto">
                                                                         <div className="flex items-center">
-                                                                            <h1 className="text-lg text-white">
+                                                                            <h1 className="text-sm font-bold tracking-wide">
                                                                                 {token &&
                                                                                     token.tokenid === '0x00' &&
                                                                                     'Minima'}
@@ -78,29 +87,12 @@ const TokenDetails = ({ token, display, dismiss }: any) => {
                                                                                     token.name.name}
                                                                             </h1>
                                                                             {isMinima && (
-                                                                                <svg
-                                                                                    xmlns="http://www.w3.org/2000/svg"
-                                                                                    className="fill-blue-500 text-black ml-1"
-                                                                                    width="24"
-                                                                                    height="24"
-                                                                                    viewBox="0 0 24 24"
-                                                                                    strokeWidth="2"
-                                                                                    stroke="currentColor"
-                                                                                    fill="none"
-                                                                                    strokeLinecap="round"
-                                                                                    strokeLinejoin="round"
-                                                                                >
-                                                                                    <path
-                                                                                        stroke="none"
-                                                                                        d="M0 0h24v24H0z"
-                                                                                        fill="none"
-                                                                                    />
-                                                                                    <path d="M5 7.2a2.2 2.2 0 0 1 2.2 -2.2h1a2.2 2.2 0 0 0 1.55 -.64l.7 -.7a2.2 2.2 0 0 1 3.12 0l.7 .7c.412 .41 .97 .64 1.55 .64h1a2.2 2.2 0 0 1 2.2 2.2v1c0 .58 .23 1.138 .64 1.55l.7 .7a2.2 2.2 0 0 1 0 3.12l-.7 .7a2.2 2.2 0 0 0 -.64 1.55v1a2.2 2.2 0 0 1 -2.2 2.2h-1a2.2 2.2 0 0 0 -1.55 .64l-.7 .7a2.2 2.2 0 0 1 -3.12 0l-.7 -.7a2.2 2.2 0 0 0 -1.55 -.64h-1a2.2 2.2 0 0 1 -2.2 -2.2v-1a2.2 2.2 0 0 0 -.64 -1.55l-.7 -.7a2.2 2.2 0 0 1 0 -3.12l.7 -.7a2.2 2.2 0 0 0 .64 -1.55v-1" />
-                                                                                    <path d="M9 12l2 2l4 -4" />
-                                                                                </svg>
+                                                                                <span className="my-auto text-black dark:text-black">
+                                                                                    <VerifiedIcon fill="currentColor" />
+                                                                                </span>
                                                                             )}
                                                                         </div>
-                                                                        <p className="text-white text-opacity-50 text-sm">
+                                                                        <p className="text-sm tracking-widest">
                                                                             {isMinima && 'MINIMA'}
                                                                             {!isMinima &&
                                                                                 isCustomTokenWithTicker &&
@@ -112,28 +104,9 @@ const TokenDetails = ({ token, display, dismiss }: any) => {
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <svg
-                                                                className="text-gray-500 hover:scale-105 hover:text-gray-600 hover:cursor-pointer hover:outline-offset-2"
-                                                                onClick={dismiss}
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                width="24"
-                                                                height="24"
-                                                                viewBox="0 0 24 24"
-                                                                strokeWidth="2"
-                                                                stroke="currentColor"
-                                                                fill="none"
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                            >
-                                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                                <path d="M18 6l-12 12" />
-                                                                <path d="M6 6l12 12" />
-                                                            </svg>
                                                         </div>
                                                         <div className="my-8 flex flex-col gap-2">
                                                             <h3 className="break-word text-white">
-                                                                {isMinima && 'Official Native Minima Token'}
-
                                                                 {!isMinima &&
                                                                     isCustomTokenWithDescription &&
                                                                     token.name.description}
@@ -146,15 +119,24 @@ const TokenDetails = ({ token, display, dismiss }: any) => {
                                                             />
                                                             <KeyValue mono title="Total Supply" value={token.total} />
                                                             <KeyValue mono title="Total Coins" value={token.coins} />
-                                                            <KeyValue mono title="Confirmed" value={token.confirmed} />
+                                                            <div className="flex items-center justify-center">
+                                                                <hr className="border border-neutral-300 dark:border-[#1B1B1B] my-1 w-full" />
+                                                                <span className="mx-4 text-center text-black dark:text-white font-bold text-[12px]">
+                                                                    Balance
+                                                                </span>
+                                                                <hr className="border border-neutral-300 dark:border-[#1B1B1B] my-1 w-full" />
+                                                            </div>
+                                                            <KeyValue mono title="Available" value={token.sendable} />
                                                             <KeyValue
                                                                 mono
-                                                                title="Unconfirmed"
-                                                                value={token.unconfirmed}
+                                                                title="Locked"
+                                                                value={new Decimal(token.confirmed)
+                                                                    .minus(token.sendable)
+                                                                    .toString()}
                                                             />
-                                                            <KeyValue mono title="Sendable" value={token.sendable} />
+                                                            <KeyValue mono title="Pending" value={token.unconfirmed} />
                                                         </div>
-                                                    </section>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </animated.div>

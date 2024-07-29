@@ -6,6 +6,7 @@ import Wallet from '../Wallet/Wallet';
 import TokenDetails from './TokenDetails';
 import BalanceInfo from './BalanceInfo';
 import Confirmation from '../../components/UI/Confirmation';
+import HelpIcon from '../../components/UI/Icons/HelpIcon';
 
 const Balance = () => {
     const { _currentNavigation, promptBalanceInfo } = useContext(appContext);
@@ -43,31 +44,19 @@ const Balance = () => {
             <TokenDetails dismiss={promptTokenDetails} display={_promptTokenDetails} token={viewingToken} />
 
             <animated.div style={springProps}>
-                <section className={styles['tokens']}>
+                <section className='mx-3'>
                     <div className="grid grid-cols-[1fr_auto] items-center">
                         <h6>Your tokens</h6>
                         <div onClick={promptBalanceInfo} className="flex items-center justify-center">
-                            <svg
-                                className="hover:animate-pulse"
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24"
-                                strokeWidth="1.5"
-                                stroke="currentColor"
-                                fill="none"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                            >
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <path d="M12 9h.01" />
-                                <path d="M11 12h1v4h1" />
-                                <path d="M12 3c7.2 0 9 1.8 9 9s-1.8 9 -9 9s-9 -1.8 -9 -9s1.8 -9 9 -9z" />
-                            </svg>
+                            <span>
+                                <HelpIcon />
+                            </span>
                         </div>
                         {/* <FetchBalanceButton /> */}
                     </div>
-                    <input onChange={handleFilterTextChange} placeholder="Search tokens" type="search" />
+                    <div className='my-3'>
+                        <input onChange={handleFilterTextChange} placeholder="Search tokens" type="search" className="rounded-full p-3 px-4 w-full focus:outline-2 focus:outline-black focus:dark:outline-neutral-600 dark:placeholder:text-neutral-600" />
+                    </div>
                     <Wallet
                         selectToken={handleViewToken}
                         filterText={filter}
