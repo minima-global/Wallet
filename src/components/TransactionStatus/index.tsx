@@ -10,13 +10,13 @@ import Lottie from 'lottie-react';
 import SecondaryButton from '../UI/SecondaryButton';
 
 const TransactionStatus = () => {
-    const { _transactionSubmitting, _transactionSuccess, _transactionPending, setTransactionSubmitting } =
+    const { _transactionError, _transactionSubmitting, _transactionSuccess, _transactionPending, setTransactionSubmitting, setTransactionError } =
         useContext(appContext);
 
     return (
         <AnimatedDialog display={_transactionSubmitting} dismiss={() => null}>
             <div className="flex justify-center">
-                {!_transactionPending && !_transactionSuccess && (
+                {!_transactionPending && !_transactionSuccess && !_transactionError && (
                     <Lottie
                         className="w-[240px] h-[240px] self-center place-self-center justify-self-center"
                         animationData={Loading}
@@ -47,6 +47,26 @@ const TransactionStatus = () => {
                         <div className="mt-8">
                             <SecondaryButton onClick={() => setTransactionSubmitting(false)} type="button">
                                 Done
+                            </SecondaryButton>
+                        </div>
+                    </div>
+                )}
+                
+                {_transactionError && (
+                    <div className="flex flex-col mt-8 mx-3">
+                        <Lottie
+                            className="w-[128px] h-[128px] self-center place-self-center justify-self-center"
+                            animationData={Failed}
+                            loop={false}
+                        />
+                        <p className="opacity-70 text-center font-bold">Transaction Failed</p>
+                        <p className="text-center font-bold break-all text-sm">{_transactionError.includes("No Coins of") ? "Insufficient funds" : _transactionError}</p>
+                        <div className="mt-8">
+                            <SecondaryButton onClick={() => {
+                                setTransactionSubmitting(false);
+                                setTransactionError(false);
+                            }} type="button">
+                                Back
                             </SecondaryButton>
                         </div>
                     </div>

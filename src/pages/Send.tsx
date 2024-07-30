@@ -1,6 +1,6 @@
 import { animated, config, useTransition } from '@react-spring/web';
 import { useContext, useEffect, useState } from 'react';
-import { useLocation,  useSearchParams } from 'react-router-dom';
+import { useLocation, useSearchParams } from 'react-router-dom';
 import SendIcon from '../components/UI/Icons/SendIcon';
 import SplitIcon from '../components/UI/Icons/SplitIcon';
 import CombineIcon from '../components/UI/Icons/CombineIcon';
@@ -17,7 +17,15 @@ import FireIcon from '../components/UI/Icons/FireIcon';
 
 const Send = () => {
     const location = useLocation();
-    const { balance: wallet, setTransactionSubmitting, setTransactionError, setTransactionPending, setTransactionSuccess } = useContext(appContext);
+    const {
+        loaded,
+        getBalance,
+        balance: wallet,
+        setTransactionSubmitting,
+        setTransactionError,
+        setTransactionPending,
+        setTransactionSuccess,
+    } = useContext(appContext);
     const [selectedOption, setSelectedOption] = useState('default');
     const [searchParams] = useSearchParams();
 
@@ -36,6 +44,12 @@ const Send = () => {
         }
     }, [searchParams]);
 
+    useEffect(() => {
+        if (loaded && loaded.current) {
+            getBalance();
+        }
+    }, [loaded]);
+
     const handleOptionChange = (event) => {
         setSelectedOption(event.target.value);
     };
@@ -45,6 +59,7 @@ const Send = () => {
         leave: { opacity: 0, transform: 'translateY(-50%) scale(0.8)' },
         config: config.default,
     });
+
 
     return transitions((styles, item) =>
         item ? (
@@ -60,7 +75,7 @@ const Send = () => {
                     <p>
                         {selectedOption === 'default' && 'Transfer tokens to a Minima address'}
                         {selectedOption === 'split' &&
-                            'Split a coin into several outputs, read more on coins and UTXOs on our docs.'}
+                            'Split your UTXOs into more UTXOs, read more on coins and UTXOs on our docs.'}
                         {selectedOption === 'combine' &&
                             'Combine coins into a singular UTXO, read more on coins and UTXOs on our docs.'}
                     </p>
@@ -84,7 +99,7 @@ const Send = () => {
                                             onChange={handleOptionChange}
                                             className="hidden"
                                         />
-                                        <span className={`${selectedOption === 'default' ? 'text-white' : ''}`}>
+                                        <span>
                                             <SendIcon fill="currentColor" />
                                         </span>
                                         <span className={`ml-2 ${selectedOption === 'default' ? 'text-white' : ''}`}>
@@ -106,7 +121,7 @@ const Send = () => {
                                             onChange={handleOptionChange}
                                             className="hidden"
                                         />
-                                        <span className={`${selectedOption === 'split' ? 'text-white' : ''}`}>
+                                        <span>
                                             <SplitIcon fill="currentColor" />
                                         </span>
                                         <span className={`ml-2 ${selectedOption === 'split' ? 'text-white' : ''}`}>
@@ -140,55 +155,126 @@ const Send = () => {
                         </div>
                     </div>
                     <Formik
-                        initialValues={{ tokens: wallet[0], amount: '', address: '', message: '', burn: '' }}
-                        onSubmit={async ({amount, address, burn, message}, {resetForm}) => {
+                        initialValues={{
+                            tokens: searchParams.get('tokenid')
+                                ? wallet.find((t: any) => t.tokenid === searchParams.get('tokenid'))
+                                : wallet[0],
+                            amount: '',
+                            address: '',
+                            message: '',
+                            burn: '',
+                        }}
+                        onSubmit={async ({ tokens, amount, address, burn, message }, { resetForm }) => {
                             setTransactionSubmitting(true);
 
-
-                            try {                              
+                            try {
                                 // Create a promise for the MDS command and await its resolution
 
                                 if (selectedOption === 'default') {
                                     await new Promise((resolve, reject) => {
-                                      (window as any).MDS.cmd(`send amount:${amount} address:${address} ${burn.length ? "burn:"+burn : ""} ${message.length ? `state:{"44":"[${encodeURIComponent(message)}]"}` : ''}`, (resp) => {
-                                        if (resp.pending) reject('PENDING');
-                                        
-                                        if (!resp.status) {
-                                          reject(resp.message ? resp.message : resp.error ? resp.error : "Failed to send!");
-                                        } else {
-                                          resolve(true);
-                                        }
-                                      });
+                                        (window as any).MDS.cmd(
+                                            `send amount:${amount} address:${address} ${
+                                                burn.length ? 'burn:' + burn : ''
+                                            } ${
+                                                message.length ? `state:{"44":"[${encodeURIComponent(message)}]"}` : ''
+                                            }`,
+                                            (resp) => {
+                                                if (resp.pending) reject('PENDING');
+
+                                                if (!resp.status) {
+                                                    reject(
+                                                        resp.message
+                                                            ? resp.message
+                                                            : resp.error
+                                                            ? resp.error
+                                                            : 'Failed to send!'
+                                                    );
+                                                } else {
+                                                    resolve(true);
+                                                }
+                                            }
+                                        );
                                     });
                                 }
 
-
                                 if (selectedOption === 'split') {
                                     // split 10
+                                    await new Promise((resolve, reject) => {
+                                        (window as any).MDS.cmd('getaddress', (res) => {
+                                            if (!res.status) reject("Could not get an address");
+
+                                            (window as any).MDS.cmd(
+                                                `send amount:${tokens.sendable} address:${res.response.miniaddress} ${
+                                                    burn.length ? 'burn:' + burn : ''
+                                                } split:10 tokenid:${tokens.tokenid}`,
+                                                (resp) => {
+                                                    if (resp.pending) reject('PENDING');
+
+                                                    if (!resp.status) {
+                                                        reject(
+                                                            resp.message
+                                                                ? resp.message
+                                                                : resp.error
+                                                                ? resp.error
+                                                                : 'Failed to send!'
+                                                        );
+                                                    } else {
+                                                        resolve(true);
+                                                    }
+                                                }
+                                            );
+                                        });
+                                    });
                                 }
                                 
                                 if (selectedOption === 'combine') {
-                                    // consolidate..
+                                    // split 10
+                                    await new Promise((resolve, reject) => {                                        
+                                        (window as any).MDS.cmd(
+                                            `consolidate ${
+                                                burn.length ? 'burn:' + burn : ''
+                                            } tokenid:${tokens.tokenid}`,
+                                            (resp) => {
+                                                if (resp.pending) reject('PENDING');
+
+                                                if (!resp.status) {
+                                                    reject(
+                                                        resp.message
+                                                            ? resp.message
+                                                            : resp.error
+                                                            ? resp.error
+                                                            : 'Failed to send!'
+                                                    );
+                                                } else {
+                                                    resolve(true);
+                                                }
+                                            }
+                                        );
+                                    });
                                 }
 
                                 setTransactionSuccess(true);
                                 await new Promise((resolve) => setTimeout(resolve, 2000));
-                                
+
                                 // reset
                                 setTransactionSubmitting(false);
                                 setTransactionSuccess(false);
                                 resetForm();
-                              } catch (error) {
+                            } catch (error) {
+                                
+                                console.error(error);
                                 if (error instanceof Error) {
-                                  setTransactionError(error.message);
+                                    setTransactionError(error.message);
                                 } else if (error === 'PENDING') {
                                     setTransactionPending(true);
                                 } else {
-                                    setTransactionError(typeof error === 'string' ? error : "An unknown error occurred");
+                                    setTransactionError(
+                                        typeof error === 'string' ? error : 'An unknown error occurred'
+                                    );
                                 }
-                              }
+                            }
                         }}
-                        validationSchema={yup.object().shape({
+                        validationSchema={selectedOption === 'default' ? yup.object().shape({
                             amount: yup
                                 .string()
                                 .required('Field required')
@@ -205,7 +291,7 @@ const Send = () => {
                                             throw new Error("You can't send nothing.");
                                         }
 
-                                        if (new Decimal(val).greaterThan(parent.token.sendable)) {
+                                        if (new Decimal(val).greaterThan(parent.tokens.sendable)) {
                                             throw new Error('Insufficient funds!');
                                         }
 
@@ -262,9 +348,18 @@ const Send = () => {
                                     }
                                 }
                             }),
-                        })}
+                        }): null}
                     >
-                        {({ values, errors, touched, isSubmitting, isValid, handleChange, handleBlur, handleSubmit }) => (
+                        {({
+                            values,
+                            errors,
+                            touched,
+                            isSubmitting,
+                            isValid,
+                            handleChange,
+                            handleBlur,
+                            handleSubmit,
+                        }) => (
                             <form onSubmit={handleSubmit}>
                                 <WalletSelect />
 
@@ -279,7 +374,7 @@ const Send = () => {
                                                 value={values.amount}
                                                 onChange={handleChange}
                                                 onBlur={handleBlur}
-                                                className="rounded p-4 w-full focus:border focus:outline-none dark:placeholder:text-neutral-600 dark:bg-[#1B1B1B]"
+                                                className="bg-white rounded p-4 w-full focus:border focus:outline-none dark:placeholder:text-neutral-600 dark:bg-[#1B1B1B]"
                                             />
                                             {errors && errors.amount && touched && touched.amount && (
                                                 <p className="text-sm mt-2 dark:text-neutral-300">{errors.amount}</p>
@@ -294,7 +389,7 @@ const Send = () => {
                                                 handleChange={handleChange}
                                                 error={errors && errors.address ? errors.address : ''}
                                             />
-                                            {errors && errors.address && touched && touched.address  && (
+                                            {errors && errors.address && touched && touched.address && (
                                                 <p className="text-sm mt-2 dark:text-neutral-300">{errors.address}</p>
                                             )}
                                         </div>
@@ -314,16 +409,18 @@ const Send = () => {
                                         </div>
                                     </>
                                 )}
-                                
-                                {selectedOption === 'split' && (
+
+                                {(selectedOption === 'split' || selectedOption === 'combine') && (
                                     <>
-                                        You have {values.tokens ? values.tokens.coins : "-"} coins
+                                        <div className='mt-4'><p className='text-sm text-center'>You currently have {values.tokens ? values.tokens.coins : '-'} coin{values.tokens && values.tokens.coins && values.tokens.coins.length > 1&&"s"}</p></div>
                                     </>
                                 )}
 
                                 <div className="mt-16">
                                     <PrimaryButton disabled={!isValid || isSubmitting} type="submit">
-                                        Transfer
+                                        {selectedOption === 'default' && 'Transfer'}
+                                        {selectedOption === 'split' && 'Split'}
+                                        {selectedOption === 'combine' && 'Combine'}
                                     </PrimaryButton>
                                 </div>
 

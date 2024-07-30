@@ -1,6 +1,5 @@
 import { useContext } from 'react';
 import { appContext } from './AppContext';
-import Dashboard from './pages/Dashboard';
 import SideDrawer from './components/SideDrawer';
 import { Grid } from '@mui/material';
 import { createPortal } from 'react-dom';

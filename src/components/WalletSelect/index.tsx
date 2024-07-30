@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect } from 'react';
 import { MinimaToken } from '../../@types/minima';
 import { appContext } from '../../AppContext';
-import { useFormikContext } from 'formik';
+import { FormikContextType, FormikValues, useFormikContext } from 'formik';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import useDrawerAnimation from '../../hooks/useDrawerAnimation';
 
@@ -10,14 +10,14 @@ import { containsText } from '../../utilities';
 import CaretIcon from '../UI/Icons/CaretIcon';
 
 const WalletSelect = () => {
-    const formik: any = useFormikContext();
+    const formik: FormikContextType<FormikValues> = useFormikContext();
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const { active, toggleDrawer, animated, springProps, dropdownRef } = useDrawerAnimation();
     const [searchText, setSearchText] = useState('');
     const { balance } = useContext(appContext);
 
-    const { token: currentSelectedToken } = formik.values;
+    const { tokens: currentSelectedToken } = formik.values;
 
     const handleSelection = (id: string) => {
         try {
@@ -39,12 +39,12 @@ const WalletSelect = () => {
 
         if (requestingToken) {
             formik.setFieldValue(
-                'token',
+                'tokens',
                 balance.find((t: any) => t.tokenid === requestingToken)
             );
         } else {
             navigate('?tokenid=0x00');
-            formik.setFieldValue('token', balance[0]);
+            formik.setFieldValue('tokens', balance[0]);
         }
 
         if (requestingAddress) {
@@ -140,7 +140,7 @@ const WalletSelect = () => {
                                 onChange={(e) => setSearchText(e.target.value)}
                                 placeholder="Search tokens"
                                 type="search"
-                                className="rounded-full p-3 px-4 w-full focus:outline-none focus:border focus:border-black focus:dark:border-neutral-600   dark:placeholder:text-neutral-600 dark:bg-[#1B1B1B]"
+                                className="bg-white rounded-full p-3 px-4 w-full focus:outline-none focus:border focus:border-black focus:dark:border-neutral-600   dark:placeholder:text-neutral-600 dark:bg-[#1B1B1B]"
                             />
                             {balance.filter(
                                 (t: MinimaToken) =>
