@@ -26,7 +26,7 @@ import Burn from '../../../../components/UI/Burn';
 import useFormatMinimaNumber from '../../../../__minima__/libs/utils/useMakeNumber';
 
 const ValueTransfer = () => {
-    const { balance: wallet, loaded } = useContext(appContext);
+    const { balance: wallet } = useContext(appContext);
     const { makeMinimaNumber } = useFormatMinimaNumber();
     const [openQrScanner, setOpenQrScanner] = React.useState(false);
     const userLockedVault = useIsVaultLocked();

@@ -10,6 +10,10 @@ import { appContext } from '../AppContext';
 import SelectAddress from '../components/SelectAddress';
 import MessageArea from '../components/MessageArea';
 import PrimaryButton from '../components/UI/PrimaryButton';
+import { Decimal } from 'decimal.js';
+
+import * as yup from 'yup';
+import FireIcon from '../components/UI/Icons/FireIcon';
 
 const Send = () => {
     const location = useLocation();
@@ -136,10 +140,85 @@ const Send = () => {
                         </div>
                     </div>
                     <Formik
-                        initialValues={{ tokens: wallet[0], amount: '', address: '', message: '' }}
+                        initialValues={{ tokens: wallet[0], amount: '', address: '', message: '', burn: '' }}
                         onSubmit={() => console.log()}
+                        validationSchema={yup.object().shape({
+                            amount: yup
+                                .string()
+                                .required('Field is required')
+                                .matches(/^\d*\.?\d+$/, 'Enter a valid number')
+                                .test('test amount', function (val) {
+                                    const { parent, path, createError } = this;
+
+                                    if (!val) {
+                                        return false;
+                                    }
+
+                                    try {
+                                        if (new Decimal(val).isZero()) {
+                                            throw new Error("You can't send nothing.");
+                                        }
+
+                                        if (new Decimal(val).greaterThan(parent.token.sendable)) {
+                                            throw new Error('Insufficient funds!');
+                                        }
+
+                                        if (new Decimal(val).greaterThan(1000000000)) {
+                                            throw new Error('Too much!');
+                                        }
+
+                                        if (new Decimal(val).decimalPlaces() > 18) {
+                                            throw new Error("You can't have more than 18 decimal places.");
+                                        }
+
+                                        return true;
+                                    } catch (error) {
+                                        if (error instanceof Error) {
+                                            return createError({ path, message: error.message });
+                                        }
+                                    }
+                                }),
+                            address: yup
+                                .string()
+                                .matches(/0|M[xX][0-9a-zA-Z]+/, 'Invalid Address.')
+                                .min(59, 'Invalid Minima address')
+                                .max(66, 'Invalid Minima address')
+                                .required('Field Required'),
+                            message: yup.string().max(255, "A message cannot exceed 255 characters"),
+                            burn: yup.number().test('test burn', function (val) {
+                                const { path, parent, createError } = this;
+
+                                if (!val) {
+                                    return true;
+                                }
+
+                                try {
+                                    if (new Decimal(val).isZero()) {
+                                        return true;
+                                    }
+
+                                    if (!parent.amount) {
+                                        return true;
+                                    }
+
+                                    if (new Decimal(val).plus(parent.amount).greaterThan(parent.token.sendable)) {
+                                        throw new Error('Insufficient funds');
+                                    }
+
+                                    if (new Decimal(val).decimalPlaces() > 18) {
+                                        throw new Error("You can't have more than 18 decimal places.");
+                                    }
+
+                                    return true;
+                                } catch (error) {
+                                    if (error instanceof Error) {
+                                        return createError({ path, message: error.message });
+                                    }
+                                }
+                            }),
+                        })}
                     >
-                        {({ values, errors, handleChange, handleBlur }) => (
+                        {({ values, errors, isSubmitting, isValid, handleChange, handleBlur }) => (
                             <form>
                                 <WalletSelect />
 
@@ -187,7 +266,26 @@ const Send = () => {
                                 </div>
 
                                 <div className="mt-16">
-                                    <PrimaryButton type="submit">Transfer</PrimaryButton>
+                                    <PrimaryButton disabled={!isValid || isSubmitting} type="submit">Transfer</PrimaryButton>
+                                </div>
+
+                                <div className="my-2 w-full flex">
+                                    <p className="text-sm my-auto dark:text-neutral-300">
+                                        Network
+                                        <br /> fee
+                                    </p>
+                                    <div className="ml-auto">
+                                        <span className="flex justify-end text-orange-300 dark:text-orange-400">
+                                            <FireIcon size={22} fill="currentColor" />
+                                        </span>
+                                        <input
+                                            id="burn"
+                                            name="burn"
+                                            value={values.burn}
+                                            placeholder="0.0"
+                                            className="bg-transparent focus:outline-none text-right max-w-max text-sm placeholder:opacity-80"
+                                        />
+                                    </div>
                                 </div>
                             </form>
                         )}
