@@ -5,6 +5,7 @@
 
   border-radius: 4px;
 
+  padding-right: 16px;
   max-height: 80px;
   overflow: hidden;
   background-color: #FFFFFF;
@@ -23,6 +24,29 @@
   transition: transform 0.1s ease-in;
 }
 
+.select div * {
+  margin: 0;
+  padding: 0;
+  text-overflow: ellipsis;
+  white-space: normal;
+  overflow: hidden;
+}
+.select div h6 {
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 19px;
+  letter-spacing: 0.02em;
+  color: #08090B;
+
+  margin-bottom: 4px;
+}
+.select div p {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 19px;
+  letter-spacing: 0.02em;
+  color: #08090B;
+}
 .select div {
   margin: auto 0;
   overflow: hidden;
@@ -38,6 +62,25 @@
   bottom: 0;
 }
 
+.dd {
+  z-index: 46;
+  background-color: #E9E9EB;
+
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  padding: 24px;
+
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  height: max-content;
+  min-height: 50vh;
+  max-height: 85vh;
+}
 .dd ul {
   margin:0;
   padding:0;
@@ -57,31 +100,6 @@
   margin: 0;
 }
 
-.dd input {
-  border: none;
-  padding: 12px 16px;
-  border-radius: 8px;
-  width: 100%;
-  
-  
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  gap: 10px;
-  align-items: center;
-
-  background: url(../../../assets/search.svg) no-repeat scroll 16px 12px;
-  background-color: #FFFFFF;
-  padding-left: 45px;
-
-  
-  font-size: 1rem;
-  font-weight: 500;
-  line-height: 22px;
-  letter-spacing: 0.01em;
-  text-align: left;
-
-}
 .dd input:focus {
   background-color: #FFFFFF;
   outline: 2px solid #3DA2FF;

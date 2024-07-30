@@ -5,7 +5,7 @@ import { useContext, useState } from 'react';
 
 import Button from '../../components/UI/Button';
 import useIsVaultLocked from '../../hooks/useIsVaultLocked';
-import WalletSelect from '../components/WalletSelect';
+import WalletSelect from '../../components/WalletSelect';
 import { appContext } from '../../AppContext';
 import Input from '../../components/UI/Input';
 import Grid from '../../components/UI/Grid';

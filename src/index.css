@@ -53,9 +53,6 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
-input:focus {
-  color: rgba(255, 255, 255, 0.87);
-}
 
 @media (prefers-color-scheme: light) {
   :root {
@@ -79,4 +76,23 @@ select {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active{
+    -webkit-box-shadow: 0 0 0 30px white inset !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover, 
+  input:-webkit-autofill:focus, 
+  input:-webkit-autofill:active{
+      -webkit-box-shadow: 0 0 0 30px #1B1B1B inset !important;
+  } 
+}
+textarea {
+  resize: none;
 }

@@ -1,14 +1,36 @@
 import { animated, config, useTransition } from '@react-spring/web';
-import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useContext, useEffect, useState } from 'react';
+import { useLocation, useSearchParams } from 'react-router-dom';
 import SendIcon from '../components/UI/Icons/SendIcon';
 import SplitIcon from '../components/UI/Icons/SplitIcon';
 import CombineIcon from '../components/UI/Icons/CombineIcon';
 import { Formik } from 'formik';
+import WalletSelect from '../components/WalletSelect';
+import { appContext } from '../AppContext';
+import SelectAddress from '../components/SelectAddress';
+import MessageArea from '../components/MessageArea';
+import PrimaryButton from '../components/UI/PrimaryButton';
 
 const Send = () => {
     const location = useLocation();
+    const { balance: wallet } = useContext(appContext);
     const [selectedOption, setSelectedOption] = useState('default');
+    const [searchParams] = useSearchParams();
+
+    // Set the mode according to the search params if any
+    useEffect(() => {
+        if (searchParams && searchParams.get('mode') && ['1', '2', '3'].includes(searchParams.get('mode')!)) {
+            setSelectedOption(
+                searchParams.get('mode') === '1'
+                    ? 'default'
+                    : searchParams.get('mode') === '2'
+                    ? 'split'
+                    : searchParams.get('mode') === '3'
+                    ? 'combine'
+                    : 'default'
+            );
+        }
+    }, [searchParams]);
 
     const handleOptionChange = (event) => {
         setSelectedOption(event.target.value);
@@ -25,10 +47,18 @@ const Send = () => {
             <animated.div style={styles}>
                 <section className="mx-3 mt-8">
                     <div className="grid grid-cols-[1fr_auto] items-center">
-                        <h6 className="font-bold tracking-wide dark:text-neutral-300">{selectedOption === 'default' && "Transfer"}{selectedOption === 'split' && "Split UTXOs"}{selectedOption === 'combine' && "Combine UTXOs"}</h6>
+                        <h6 className="font-bold tracking-wide dark:text-neutral-300">
+                            {selectedOption === 'default' && 'Transfer'}
+                            {selectedOption === 'split' && 'Split UTXOs'}
+                            {selectedOption === 'combine' && 'Combine UTXOs'}
+                        </h6>
                     </div>
                     <p>
-                    {selectedOption === 'default' && "Transfer tokens to a Minima address"}{selectedOption === 'split' && "Split a coin into several outputs, read more on coins and UTXOs on our docs."}{selectedOption === 'combine' && "Combine coins into a singular UTXO, read more on coins and UTXOs on our docs."}
+                        {selectedOption === 'default' && 'Transfer tokens to a Minima address'}
+                        {selectedOption === 'split' &&
+                            'Split a coin into several outputs, read more on coins and UTXOs on our docs.'}
+                        {selectedOption === 'combine' &&
+                            'Combine coins into a singular UTXO, read more on coins and UTXOs on our docs.'}
                     </p>
                     <div className="flex-1 flex flex-col">
                         {/* Custom Radio Buttons */}
@@ -105,8 +135,62 @@ const Send = () => {
                             </fieldset>
                         </div>
                     </div>
-                    <Formik initialValues={{  }} onSubmit={() => console.log()}>
-                        {() => <form></form>}
+                    <Formik
+                        initialValues={{ tokens: wallet[0], amount: '', address: '', message: '' }}
+                        onSubmit={() => console.log()}
+                    >
+                        {({ values, errors, handleChange, handleBlur }) => (
+                            <form>
+                                <WalletSelect />
+
+                                <div className="my-2">
+                                    <input
+                                        id="amount"
+                                        name="amount"
+                                        type="text"
+                                        placeholder="0.0"
+                                        value={values.amount}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        className="rounded p-4 w-full focus:border focus:outline-none dark:placeholder:text-neutral-600 dark:bg-[#1B1B1B]"
+                                    />
+                                    {errors && errors.amount && (
+                                        <p className="text-sm mt-2 dark:text-neutral-300">{errors.amount}</p>
+                                    )}
+                                </div>
+                                <div className="my-2">
+                                    <SelectAddress
+                                        id="address"
+                                        name="address"
+                                        value={values.address}
+                                        error={false}
+                                        handleBlur={handleBlur}
+                                        handleChange={handleChange}
+                                    />
+                                    {errors && errors.address && (
+                                        <p className="text-sm mt-2 dark:text-neutral-300">{errors.address}</p>
+                                    )}
+                                </div>
+
+                                <div className="my-2">
+                                    <MessageArea
+                                        id="message"
+                                        name="message"
+                                        value={values.message}
+                                        error={false}
+                                        handleBlur={handleBlur}
+                                        handleChange={handleChange}
+                                    />
+                                    {errors && errors.message && (
+                                        <p className="text-sm mt-2 dark:text-neutral-300">{errors.message}</p>
+                                    )}
+                                </div>
+
+                                <div className="mt-16">
+                                    <PrimaryButton type="submit">Transfer</PrimaryButton>
+                                </div>
+                            </form>
+                        )}
                     </Formik>
                 </section>
             </animated.div>

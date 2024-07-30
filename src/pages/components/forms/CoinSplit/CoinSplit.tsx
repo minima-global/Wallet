@@ -6,7 +6,7 @@ import { useContext, useState } from 'react';
 import Button from '../../../../components/UI/Button';
 import { splitCoin } from '../../../../minima/utils';
 import useIsVaultLocked from '../../../../hooks/useIsVaultLocked';
-import WalletSelect from '../../WalletSelect';
+import WalletSelect from '../../../../components/WalletSelect';
 import { appContext } from '../../../../AppContext';
 import Input from '../../../../components/UI/Input';
 import Grid from '../../../../components/UI/Grid';

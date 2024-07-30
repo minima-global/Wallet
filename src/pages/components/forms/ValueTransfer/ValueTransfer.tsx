@@ -10,7 +10,7 @@ import { callSend } from '../../../../minima/rpc-commands';
 
 import QrScanner from '../../../../shared/components/qrscanner/QrScanner';
 import useIsVaultLocked from '../../../../hooks/useIsVaultLocked';
-import WalletSelect from '../../WalletSelect';
+import WalletSelect from '../../../../components/WalletSelect';
 import { appContext } from '../../../../AppContext';
 import Input from '../../../../components/UI/Input';
 import { createPortal } from 'react-dom';
