@@ -12,7 +12,7 @@ const SideDrawer = ({ isOpen, toggleDrawer }: IProps) => {
         <div className="relative">
             {/* Persistent Drawer */}
             <div
-                className={`h-full fixed top-0 shadow-lg dark:shadow-none bg-white left-0 w-[240px] dark:bg-[#1B1B1B] dark:bg-opacity-10 dark:border-r dark:border-r-[#1B1B1B] text-white transition-transform duration-300 md:translate-x-0 ${
+                className={`z-[444] h-full fixed top-0 shadow-lg dark:shadow-none bg-white left-0 w-[240px] dark:bg-[#252525] dark:border-r dark:border-r-[#1B1B1B] text-white transition-transform duration-300 md:translate-x-0 ${
                     isOpen ? 'translate-x-0' : '-translate-x-full'
                 }`}
             >
@@ -31,7 +31,7 @@ const SideDrawer = ({ isOpen, toggleDrawer }: IProps) => {
                                     to="/dashboard/balance"
                                     className={({ isActive }) =>
                                         isActive
-                                            ? 'flex items-center rounded-full px-3 py-2 bg-black text-white  dark:bg-[#1B1B1B] dark:text-neutral-300 font-bold hover:!text-neutral-300'
+                                            ? 'flex items-center rounded-full px-3 py-2 bg-black text-white dark:bg-[#1B1B1B] dark:text-neutral-300 font-bold hover:!text-neutral-300'
                                             : 'flex items-center rounded-full px-3 py-2 dark:border dark:border-[#1B1B1B] text-neutral-400 hover:bg-[#1B1B1B] hover:dark:text-neutral-300 border dark:border-none'
                                     }
                                 >
@@ -71,27 +71,7 @@ const SideDrawer = ({ isOpen, toggleDrawer }: IProps) => {
                 onClick={toggleDrawer}
             />
 
-            <div className="flex md:hidden flex-col h-full p-4 text-black dark:text-white">
-                {/* Drawer Header */}
-                <div className="flex items-center gap-2 mb-4">
-                    <WalletBrand fill="#1B1B1B" size={24} />
-                    <h2 className="text-lg font-bold tracking-wide text-black dark:text-white">Wallet</h2>
-                </div>
-
-                {/* Main Content */}
-                <div className="flex-1 flex flex-col">
-                    <ul className="mb-4">
-                        <li>Nav 1</li>
-                        <li>Nav 2</li>
-                    </ul>
-                </div>
-
-                {/* Footer */}
-                <div className="mt-auto">
-                    <p>Minima logo etc</p>
-                    <p>Night mode toggle</p>
-                </div>
-            </div>
+            
         </div>
     );
 };
