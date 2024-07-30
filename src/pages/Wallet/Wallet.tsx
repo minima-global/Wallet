@@ -75,8 +75,8 @@ const Wallet = ({ selectToken, selectionMode = false, detailsMode = false, filte
                                         <div className="overflow-hidden grid grid-cols-[1fr_auto]">
                                             <div>
                                                 <div className="grid grid-cols-[auto_1fr]">
-                                                    <h6 className="font-bold truncate tracking-wide">Minima</h6>
-                                                    <span className='my-auto text-black dark:text-black'>
+                                                    <h6 className="font-bold truncate tracking-wide dark:text-neutral-300">Minima</h6>
+                                                    <span className='my-auto text-black dark:text-[#1B1B1B]'>
                                                         <VerifiedIcon fill="currentColor" />
                                                     </span>
                                                 </div>
@@ -89,10 +89,10 @@ const Wallet = ({ selectToken, selectionMode = false, detailsMode = false, filte
                                                                 ? '/' + makeMinimaNumber(token.unconfirmed, 2000)
                                                                 : ''
                                                         }`}
-                                                        className="truncate w-full focus:outline-none bg-transparent text-sm tracking-wider"
+                                                        className="truncate w-full focus:outline-none bg-transparent text-sm tracking-wider dark:text-neutral-300"
                                                     />
                                                 )}
-                                                {selectionMode && <p className="font-bold text-sm">MINIMA</p>}
+                                                {selectionMode && <p className="font-bold text-sm dark:text-neutral-300">MINIMA</p>}
                                             </div>
                                             {!selectionMode &&
                                                 !new Decimal(
@@ -139,7 +139,7 @@ const Wallet = ({ selectToken, selectionMode = false, detailsMode = false, filte
                                         />
                                         <div className="overflow-hidden grid grid-cols-[1fr_auto]">
                                             <div>
-                                                <h6 className="font-bold truncate">
+                                                <h6 className="font-bold truncate dark:text-neutral-300">
                                                     {'name' in token.token && typeof token.token.name === 'string'
                                                         ? token.token.name
                                                         : 'N/A'}
@@ -152,11 +152,11 @@ const Wallet = ({ selectToken, selectionMode = false, detailsMode = false, filte
                                                                 ? '/' + makeMinimaNumber(token.unconfirmed, 2000)
                                                                 : ''
                                                         }`}
-                                                        className="truncate w-full focus:outline-none bg-transparent text-sm tracking-wider"
+                                                        className="truncate w-full focus:outline-none bg-transparent text-sm tracking-wider dark:text-neutral-300"
                                                     />
                                                 )}
                                                 {selectionMode && (
-                                                    <p className="text-sm font-bold">
+                                                    <p className="text-sm font-bold dark:text-neutral-300">
                                                         {token.token && 'ticker' in token.token
                                                             ? token.token.ticker
                                                             : ''}
@@ -168,7 +168,7 @@ const Wallet = ({ selectToken, selectionMode = false, detailsMode = false, filte
                                                     new Decimal(token.confirmed).minus(token.sendable)
                                                 ).isZero() && (
                                                     <div className="flex items-start justify-center pr-1">
-                                                        <p className="text-[14px] tracking-wide font-mono">
+                                                        <p className="text-[14px] tracking-wide font-mono dark:text-neutral-300">
                                                             {makeMinimaNumber(
                                                                 new Decimal(token.confirmed)
                                                                     .minus(token.sendable)

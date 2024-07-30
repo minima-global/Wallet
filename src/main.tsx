@@ -3,12 +3,43 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import AppProvider from './AppContext';
 import App from './App';
+import * as utils from './utilities';
+import { createHashRouter, createRoutesFromElements, Route, Navigate, RouterProvider } from 'react-router-dom';
+import Dashboard from './pages/Dashboard';
+import Receive from './pages/Receive';
+import Send from './pages/Send';
+import Balance from './pages/Balance';
+
+const router = createHashRouter(
+    createRoutesFromElements(
+      <Route
+        path="/"
+        element={<App />}
+        loader={() => {
+          return localStorage.getItem(utils.getAppUID());
+        }}
+      >
+        <Route index element={<Navigate to="/dashboard" />} />
+        {/* <Route index element={<SplashScreen />} /> */}
+        {/* <Route path="introduction" element={<Intro />} /> */}
+  
+        <Route path="/dashboard" element={<Dashboard />}>
+          <Route index element={<Balance />} />
+          <Route path="receive" element={<Receive/>} />
+          <Route path="send" element={<Send />}>    
+            {/* <Route path="newcontact" element={<AddNew />} />         */}
+          </Route>
+        </Route>      
+        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+      </Route>
+    )
+  );
 
 const Main = () => {
     return (
         <React.StrictMode>
             <AppProvider>
-                <App />
+                <RouterProvider router={router} />                            
             </AppProvider>
         </React.StrictMode>
     );

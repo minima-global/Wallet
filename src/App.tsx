@@ -1,22 +1,18 @@
 import { useContext } from 'react';
-import SideMenu from './layout/SideMenu';
-import Notification from './components/UI/Notification';
 import { appContext } from './AppContext';
 import Dashboard from './pages/Dashboard';
 import SideDrawer from './components/SideDrawer';
 import { Grid } from '@mui/material';
 import { createPortal } from 'react-dom';
 import Logs from './components/UI/Logs';
+import { Outlet } from 'react-router-dom';
 
 const App = () => {
     const { openDrawer, promptMenu, openTitleBar, minidappSystemFailed, isCreatingKeys } = useContext(appContext);
     return (
         <>
-            <Notification />
-            <Dashboard />
-            <div>
-                <SideDrawer isOpen={openDrawer} toggleDrawer={promptMenu}></SideDrawer>                
-            </div>
+            <Outlet />
+            <SideDrawer isOpen={openDrawer} toggleDrawer={promptMenu}></SideDrawer>                
 
 
             {isCreatingKeys &&

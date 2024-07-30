@@ -6,3 +6,4 @@ export * from "./encodeMessage";
 export * from "./containsText";
 export * from "./fetchIPFSImageUri";
 export * from "./copyToClipboard"
+export * from "./getAppUID";

@@ -1,7 +1,7 @@
 const HelpIcon = ({ size = 22 }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    className="fill-neutral-100 dark:fill-[#1B1B1B]"
+    className="fill-neutral-100 dark:fill-[#1B1B1B] dark:text-neutral-300"
     width={size}
     height={size}
     viewBox="0 0 24 24"

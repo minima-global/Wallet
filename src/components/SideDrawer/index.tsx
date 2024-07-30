@@ -45,7 +45,7 @@ const SideDrawer = ({ isOpen, toggleDrawer }: IProps) => {
                 onClick={toggleDrawer}
             />
 
-            <div className="flex flex-col h-full p-4 text-black dark:text-white">
+            <div className="flex md:hidden flex-col h-full p-4 text-black dark:text-white">
                 {/* Drawer Header */}
                 <div className="flex items-center gap-2 mb-4">
                     <WalletBrand fill="#1B1B1B" size={24} />
