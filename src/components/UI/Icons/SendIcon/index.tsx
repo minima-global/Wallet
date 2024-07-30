@@ -1,12 +1,12 @@
 const SendIcon = ({ fill, size = 22 }) => (
     <svg
         xmlns="http://www.w3.org/2000/svg"
-        className="fill-white"
+        className="fill-white dark:fill-[#1B1B1B]"
         width={size}
         height={size}
         viewBox="0 0 24 24"
         strokeWidth="2.5"
-        stroke={fill}
+        stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
     >

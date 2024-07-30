@@ -87,6 +87,8 @@ const Receive = () => {
         }, 2500);
     };
 
+
+    return null;
     return (
         <>
             <Grid

@@ -3,6 +3,7 @@ import WalletBrand from '../UI/Icons/WalletBrand';
 import WalletIcon from '../UI/Icons/WalletIcon';
 import SendIcon from '../UI/Icons/SendIcon';
 import AppThemeSwitch from '../AppThemeSwitch';
+import ReceiveIcon from '../UI/Icons/ReceiveIcon';
 
 interface IProps {
     isOpen: boolean;
@@ -33,14 +34,14 @@ const SideDrawer = ({ isOpen, toggleDrawer }: IProps) => {
                                     className={({ isActive }) =>
                                         isActive
                                             ? 'flex items-center rounded-full px-3 py-2 bg-black text-white dark:bg-[#1B1B1B] dark:text-neutral-300 font-bold hover:!text-neutral-300'
-                                            : 'flex items-center rounded-full px-3 py-2 dark:border dark:border-[#1B1B1B] text-neutral-400 hover:bg-[#1B1B1B] hover:dark:text-neutral-300 border dark:border-none'
+                                            : 'flex items-center px-3 py-2 border dark:border-[#1B1B1B] rounded-full font-bold text-neutral-500 dark:text-neutral-600'
                                     }
                                     onClick={() => {
                                         toggleDrawer();
                                     }}
                                 >
                                     <WalletIcon fill="" size={16} />
-                                    <span className="ml-2 text-sm">Balance</span>
+                                    <span className="ml-2 text-sm tracking-wider">Balance</span>
                                 </NavLink>
                             </li>
                             <li className='mt-2'>
@@ -49,14 +50,30 @@ const SideDrawer = ({ isOpen, toggleDrawer }: IProps) => {
                                     className={({ isActive }) =>
                                         isActive
                                             ? 'flex items-center rounded-full px-3 py-2 bg-black text-white  dark:bg-[#1B1B1B] dark:text-neutral-300 font-bold hover:!text-neutral-300'
-                                            : 'flex items-center rounded-full px-3 py-2 dark:border dark:border-[#1B1B1B] text-neutral-400 hover:bg-[#1B1B1B] hover:dark:text-neutral-300 border dark:border-none'
+                                            : 'flex items-center px-3 py-2 border dark:border-[#1B1B1B] rounded-full font-bold text-neutral-500 dark:text-neutral-600'
                                     }
                                     onClick={() => {
                                         toggleDrawer();
                                     }}
                                 >
                                     <SendIcon fill="currentColor" size={16} />
-                                    <span className="ml-2 text-sm">Send</span>
+                                    <span className="ml-2 text-sm tracking-wider">Send</span>
+                                </NavLink>
+                            </li>
+                            <li className='mt-2'>
+                                <NavLink
+                                    to="/dashboard/receive"
+                                    className={({ isActive }) =>
+                                        isActive
+                                            ? 'flex items-center rounded-full px-3 py-2 bg-black text-white  dark:bg-[#1B1B1B] dark:text-neutral-300 font-bold hover:!text-neutral-300'
+                                            : 'flex items-center px-3 py-2 border dark:border-[#1B1B1B] rounded-full font-bold text-neutral-500 dark:text-neutral-600'
+                                    }
+                                    onClick={() => {
+                                        toggleDrawer();
+                                    }}
+                                >
+                                    <ReceiveIcon fill="currentColor" size={16} />
+                                    <span className="ml-2 text-sm tracking-wider">Receive</span>
                                 </NavLink>
                             </li>
                         </ul>

@@ -2,18 +2,18 @@
 const WalletIcon = ({fill, size =22}) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
+    className="fill-none"
     width={size}
     height={size}
     viewBox="0 0 24 24"
     strokeWidth="2.5"
     stroke="currentColor"
-    fill={fill}
     strokeLinecap="round"
     strokeLinejoin="round"
   >
-    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-    <path d="M17 8v-3a1 1 0 0 0 -1 -1h-10a2 2 0 0 0 0 4h12a1 1 0 0 1 1 1v3m0 4v3a1 1 0 0 1 -1 1h-12a2 2 0 0 1 -2 -2v-12" />
-    <path d="M20 12v4h-4a2 2 0 0 1 0 -4h4" />
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9.5 3h5a1.5 1.5 0 0 1 1.5 1.5a3.5 3.5 0 0 1 -3.5 3.5h-1a3.5 3.5 0 0 1 -3.5 -3.5a1.5 1.5 0 0 1 1.5 -1.5z" />
+  <path d="M4 17v-1a8 8 0 1 1 16 0v1a4 4 0 0 1 -4 4h-8a4 4 0 0 1 -4 -4z" />
   </svg>
 );
 
