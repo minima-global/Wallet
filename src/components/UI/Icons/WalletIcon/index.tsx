@@ -1,14 +1,13 @@
 
-const WalletIcon = () => (
+const WalletIcon = ({fill, size =22}) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    className="icon icon-tabler icon-tabler-wallet fill-teal-600"
-    width="24"
-    height="20"
+    width={size}
+    height={size}
     viewBox="0 0 24 24"
     strokeWidth="2.5"
-    stroke="#86efac"
-    fill="none"
+    stroke="currentColor"
+    fill={fill}
     strokeLinecap="round"
     strokeLinejoin="round"
   >

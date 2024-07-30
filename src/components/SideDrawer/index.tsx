@@ -1,5 +1,7 @@
+import { NavLink } from 'react-router-dom';
 import WalletBrand from '../UI/Icons/WalletBrand';
 import WalletIcon from '../UI/Icons/WalletIcon';
+import SendIcon from '../UI/Icons/SendIcon';
 
 interface IProps {
     isOpen: boolean;
@@ -24,8 +26,32 @@ const SideDrawer = ({ isOpen, toggleDrawer }: IProps) => {
                     {/* Main Content */}
                     <div className="flex-1 flex flex-col">
                         <ul className="mb-4">
-                            <li>Nav 1</li>
-                            <li>Nav 2</li>
+                            <li className="">
+                                <NavLink
+                                    to="/dashboard/balance"
+                                    className={({ isActive }) =>
+                                        isActive
+                                            ? 'flex items-center rounded-full px-3 py-2 bg-black text-white  dark:bg-[#1B1B1B] dark:text-neutral-300 font-bold hover:!text-neutral-300'
+                                            : 'flex items-center rounded-full px-3 py-2 dark:border dark:border-[#1B1B1B] text-neutral-400 hover:bg-[#1B1B1B] hover:dark:text-neutral-300 border dark:border-none'
+                                    }
+                                >
+                                    <WalletIcon fill="" size={16} />
+                                    <span className="ml-2 text-sm">Balance</span>
+                                </NavLink>
+                            </li>
+                            <li className='mt-2'>
+                                <NavLink
+                                    to="/dashboard/send"
+                                    className={({ isActive }) =>
+                                        isActive
+                                            ? 'flex items-center rounded-full px-3 py-2 bg-black text-white  dark:bg-[#1B1B1B] dark:text-neutral-300 font-bold hover:!text-neutral-300'
+                                            : 'flex items-center rounded-full px-3 py-2 dark:border dark:border-[#1B1B1B] text-neutral-400 hover:bg-[#1B1B1B] hover:dark:text-neutral-300 border dark:border-none'
+                                    }
+                                >
+                                    <SendIcon fill="currentColor" size={16} />
+                                    <span className="ml-2 text-sm">Send</span>
+                                </NavLink>
+                            </li>
                         </ul>
                     </div>
 

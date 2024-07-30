@@ -19,18 +19,18 @@ const router = createHashRouter(
           return localStorage.getItem(utils.getAppUID());
         }}
       >
-        <Route index element={<Navigate to="/dashboard" />} />
+        <Route index element={<Navigate to="/dashboard/balance" />} />
         {/* <Route index element={<SplashScreen />} /> */}
         {/* <Route path="introduction" element={<Intro />} /> */}
   
         <Route path="/dashboard" element={<Dashboard />}>
-          <Route index element={<Balance />} />
+          <Route path="balance" element={<Balance />} />
           <Route path="receive" element={<Receive/>} />
           <Route path="send" element={<Send />}>    
             {/* <Route path="newcontact" element={<AddNew />} />         */}
           </Route>
         </Route>      
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        <Route path="*" element={<Navigate to="/dashboard/balance" replace />} />
       </Route>
     )
   );
