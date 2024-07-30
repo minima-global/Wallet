@@ -1,11 +1,8 @@
 import { useContext, useState } from 'react';
-import styles from './Balance.module.css';
-import { useSpring, animated, config, useTransition } from 'react-spring';
+import { animated, config, useTransition } from 'react-spring';
 import { appContext } from '../../AppContext';
 import Wallet from '../Wallet/Wallet';
 import TokenDetails from './TokenDetails';
-import BalanceInfo from './BalanceInfo';
-import Confirmation from '../../components/UI/Confirmation';
 import HelpIcon from '../../components/UI/Icons/HelpIcon';
 import { useLocation } from 'react-router-dom';
 
@@ -38,8 +35,6 @@ const Balance = () => {
 
     return (
         <>
-            <BalanceInfo />
-
             <TokenDetails dismiss={promptTokenDetails} display={_promptTokenDetails} token={viewingToken} />
             {transitions((styles, item) =>
                 item ? (
@@ -47,12 +42,6 @@ const Balance = () => {
                         <section className="mx-3 mt-8">
                             <div className="grid grid-cols-[1fr_auto] items-center">
                                 <h6 className="font-bold tracking-wide dark:text-neutral-300">Your tokens</h6>
-                                <div onClick={promptBalanceInfo} className="flex items-center justify-center">
-                                    <span>
-                                        <HelpIcon />
-                                    </span>
-                                </div>
-                                {/* <FetchBalanceButton /> */}
                             </div>
                             <div className="my-3">
                                 <input

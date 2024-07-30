@@ -34,6 +34,9 @@ const SideDrawer = ({ isOpen, toggleDrawer }: IProps) => {
                                             ? 'flex items-center rounded-full px-3 py-2 bg-black text-white dark:bg-[#1B1B1B] dark:text-neutral-300 font-bold hover:!text-neutral-300'
                                             : 'flex items-center rounded-full px-3 py-2 dark:border dark:border-[#1B1B1B] text-neutral-400 hover:bg-[#1B1B1B] hover:dark:text-neutral-300 border dark:border-none'
                                     }
+                                    onClick={() => {
+                                        toggleDrawer();
+                                    }}
                                 >
                                     <WalletIcon fill="" size={16} />
                                     <span className="ml-2 text-sm">Balance</span>
@@ -47,6 +50,9 @@ const SideDrawer = ({ isOpen, toggleDrawer }: IProps) => {
                                             ? 'flex items-center rounded-full px-3 py-2 bg-black text-white  dark:bg-[#1B1B1B] dark:text-neutral-300 font-bold hover:!text-neutral-300'
                                             : 'flex items-center rounded-full px-3 py-2 dark:border dark:border-[#1B1B1B] text-neutral-400 hover:bg-[#1B1B1B] hover:dark:text-neutral-300 border dark:border-none'
                                     }
+                                    onClick={() => {
+                                        toggleDrawer();
+                                    }}
                                 >
                                     <SendIcon fill="currentColor" size={16} />
                                     <span className="ml-2 text-sm">Send</span>
@@ -58,7 +64,9 @@ const SideDrawer = ({ isOpen, toggleDrawer }: IProps) => {
                     {/* Footer */}
                     <div className="mt-auto">
                         <p>Minima logo etc</p>
-                        <p>Night mode toggle</p>
+                        <span>
+                            <img className="w-[128px]" alt="" src="./assets/minima-landscape.png" />
+                        </span>
                     </div>
                 </div>
             </div>

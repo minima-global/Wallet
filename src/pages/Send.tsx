@@ -151,7 +151,6 @@ const Send = () => {
                                 if (selectedOption === 'default') {
                                     await new Promise((resolve, reject) => {
                                       (window as any).MDS.cmd(`send amount:${amount} address:${address} ${burn.length ? "burn:"+burn : ""} ${message.length ? `state:{"44":"[${encodeURIComponent(message)}]"}` : ''}`, (resp) => {
-                                        console.log(resp);
                                         if (resp.pending) reject('PENDING');
                                         
                                         if (!resp.status) {
@@ -192,7 +191,7 @@ const Send = () => {
                         validationSchema={yup.object().shape({
                             amount: yup
                                 .string()
-                                .required('Field is required')
+                                .required('Field required')
                                 .matches(/^\d*\.?\d+$/, 'Enter a valid number')
                                 .test('test amount', function (val) {
                                     const { parent, path, createError } = this;
@@ -230,7 +229,7 @@ const Send = () => {
                                 .matches(/0|M[xX][0-9a-zA-Z]+/, 'Invalid Address.')
                                 .min(59, 'Invalid Minima address')
                                 .max(66, 'Invalid Minima address')
-                                .required('Field Required'),
+                                .required('Field required'),
                             message: yup.string().max(255, 'A message cannot exceed 255 characters'),
                             burn: yup.number().test('test burn', function (val) {
                                 const { path, parent, createError } = this;
@@ -265,7 +264,7 @@ const Send = () => {
                             }),
                         })}
                     >
-                        {({ values, errors, isSubmitting, isValid, handleChange, handleBlur, handleSubmit }) => (
+                        {({ values, errors, touched, isSubmitting, isValid, handleChange, handleBlur, handleSubmit }) => (
                             <form onSubmit={handleSubmit}>
                                 <WalletSelect />
 
@@ -282,7 +281,7 @@ const Send = () => {
                                                 onBlur={handleBlur}
                                                 className="rounded p-4 w-full focus:border focus:outline-none dark:placeholder:text-neutral-600 dark:bg-[#1B1B1B]"
                                             />
-                                            {errors && errors.amount && (
+                                            {errors && errors.amount && touched && touched.amount && (
                                                 <p className="text-sm mt-2 dark:text-neutral-300">{errors.amount}</p>
                                             )}
                                         </div>
@@ -295,7 +294,7 @@ const Send = () => {
                                                 handleChange={handleChange}
                                                 error={errors && errors.address ? errors.address : ''}
                                             />
-                                            {errors && errors.address && (
+                                            {errors && errors.address && touched && touched.address  && (
                                                 <p className="text-sm mt-2 dark:text-neutral-300">{errors.address}</p>
                                             )}
                                         </div>
