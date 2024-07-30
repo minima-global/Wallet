@@ -140,7 +140,7 @@ const WalletSelect = () => {
                                 onChange={(e) => setSearchText(e.target.value)}
                                 placeholder="Search tokens"
                                 type="search"
-                                className="rounded-full p-3 px-4 w-full focus:outline-2 focus:outline-black focus:dark:outline-neutral-600 dark:placeholder:text-neutral-600 border dark:border-none"
+                                className="rounded-full p-3 px-4 w-full focus:outline-none focus:border focus:border-black focus:dark:border-neutral-600   dark:placeholder:text-neutral-600 dark:bg-[#1B1B1B]"
                             />
                             {balance.filter(
                                 (t: MinimaToken) =>
