@@ -14,8 +14,6 @@
   font-weight: 500;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -52,23 +50,6 @@ button {
   font-family: inherit;    
   cursor: pointer;
   transition: border-color 0.25s;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #f7f7f7;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    color: rgb(148 163 184);
-  }
-
-  input:focus {
-    color: #213547;
-  }
 }
 
 

@@ -27,7 +27,10 @@ const AppProvider = ({ children }: IProps) => {
     const [appIsInWriteMode, setAppIsInWriteMode] = useState<boolean | null>(null);
     const [minidappSystemFailed, setMinidappSystemFailed] = useState<boolean | null>(null);
     const [shuttingDown, setShuttingDown] = useState<boolean | null>(null);
-
+    const [isDarkMode, setIsDarkMode] = useState(() => {
+        // Initialize state based on localStorage
+        return localStorage.getItem("dark-mode") === "true";
+      });
     
     const [_promptSetting, setPromptSettings] = useState(false);
     const [_promptBalanceInfo, setPromptBalanceInfo] = useState(false);
@@ -99,6 +102,17 @@ const AppProvider = ({ children }: IProps) => {
         decimal: '.',
         thousands: '',
     });
+
+    useEffect(() => {
+        // Apply or remove the 'dark' class on the document element
+        if (isDarkMode) {
+          document.documentElement.classList.add("dark");
+          localStorage.setItem("dark-mode", "true");
+        } else {
+          document.documentElement.classList.remove("dark");
+          localStorage.setItem("dark-mode", "false");
+        }
+      }, [isDarkMode]); // Re-run effect when isDarkMode changes
 
     useEffect(() => {
         if (!loaded.current) {
@@ -420,7 +434,9 @@ const AppProvider = ({ children }: IProps) => {
                 _transactionSubmitting, setTransactionSubmitting,
                 _transactionSuccess, setTransactionSuccess,
                 _transactionError, setTransactionError,
-                _transactionPending, setTransactionPending
+                _transactionPending, setTransactionPending,
+
+                isDarkMode, setIsDarkMode
             }}
         >
             {children}

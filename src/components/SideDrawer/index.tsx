@@ -2,6 +2,7 @@ import { NavLink } from 'react-router-dom';
 import WalletBrand from '../UI/Icons/WalletBrand';
 import WalletIcon from '../UI/Icons/WalletIcon';
 import SendIcon from '../UI/Icons/SendIcon';
+import AppThemeSwitch from '../AppThemeSwitch';
 
 interface IProps {
     isOpen: boolean;
@@ -63,7 +64,7 @@ const SideDrawer = ({ isOpen, toggleDrawer }: IProps) => {
 
                     {/* Footer */}
                     <div className="mt-auto">
-                        <p>Minima logo etc</p>
+                        <AppThemeSwitch />
                         <span>
                             <img className="w-[128px]" alt="" src="./assets/minima-landscape.png" />
                         </span>
