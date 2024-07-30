@@ -6,14 +6,17 @@ import { Grid } from '@mui/material';
 import { createPortal } from 'react-dom';
 import Logs from './components/UI/Logs';
 import { Outlet } from 'react-router-dom';
+import TransactionStatus from './components/TransactionStatus';
 
 const App = () => {
     const { openDrawer, promptMenu, openTitleBar, minidappSystemFailed, isCreatingKeys } = useContext(appContext);
     return (
         <>
             <Outlet />
-            <SideDrawer isOpen={openDrawer} toggleDrawer={promptMenu}></SideDrawer>                
 
+            <SideDrawer isOpen={openDrawer} toggleDrawer={promptMenu}></SideDrawer>  
+
+            <TransactionStatus />              
 
             {isCreatingKeys &&
                 createPortal(

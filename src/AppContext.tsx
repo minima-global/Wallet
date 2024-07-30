@@ -32,6 +32,11 @@ const AppProvider = ({ children }: IProps) => {
     const [_promptSetting, setPromptSettings] = useState(false);
     const [_promptBalanceInfo, setPromptBalanceInfo] = useState(false);
     const [_currentNavigation, setCurrentNavigation] = useState("balance");
+
+    const [_transactionSubmitting, setTransactionSubmitting] = useState(false);
+    const [_transactionSuccess, setTransactionSuccess] = useState(false);
+    const [_transactionPending, setTransactionPending] = useState(false);
+    const [_transactionError, setTransactionError] = useState<false|string>(false);
     
     const promptSettings = () => {
         setPromptSettings((prevState) => !prevState);
@@ -410,6 +415,12 @@ const AppProvider = ({ children }: IProps) => {
 
                 // maxima name
                 maximaName: _maxima,
+
+                // This is a global txn status modal.. 
+                _transactionSubmitting, setTransactionSubmitting,
+                _transactionSuccess, setTransactionSuccess,
+                _transactionError, setTransactionError,
+                _transactionPending, setTransactionPending
             }}
         >
             {children}

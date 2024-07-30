@@ -21,6 +21,8 @@ const Send = () => {
     const [selectedOption, setSelectedOption] = useState('default');
     const [searchParams] = useSearchParams();
 
+    const [loading, setLoading] = useState(false);
+
     // Set the mode according to the search params if any
     useEffect(() => {
         if (searchParams && searchParams.get('mode') && ['1', '2', '3'].includes(searchParams.get('mode')!)) {
@@ -141,7 +143,16 @@ const Send = () => {
                     </div>
                     <Formik
                         initialValues={{ tokens: wallet[0], amount: '', address: '', message: '', burn: '' }}
-                        onSubmit={() => console.log()}
+                        onSubmit={() => {
+                            setLoading(true);
+
+
+                            try {
+                                // stop
+                            } catch (error) {
+                                // log error
+                            }
+                        }}
                         validationSchema={yup.object().shape({
                             amount: yup
                                 .string()
@@ -184,7 +195,7 @@ const Send = () => {
                                 .min(59, 'Invalid Minima address')
                                 .max(66, 'Invalid Minima address')
                                 .required('Field Required'),
-                            message: yup.string().max(255, "A message cannot exceed 255 characters"),
+                            message: yup.string().max(255, 'A message cannot exceed 255 characters'),
                             burn: yup.number().test('test burn', function (val) {
                                 const { path, parent, createError } = this;
 
@@ -222,51 +233,63 @@ const Send = () => {
                             <form>
                                 <WalletSelect />
 
-                                <div className="my-2">
-                                    <input
-                                        id="amount"
-                                        name="amount"
-                                        type="text"
-                                        placeholder="0.0"
-                                        value={values.amount}
-                                        onChange={handleChange}
-                                        onBlur={handleBlur}
-                                        className="rounded p-4 w-full focus:border focus:outline-none dark:placeholder:text-neutral-600 dark:bg-[#1B1B1B]"
-                                    />
-                                    {errors && errors.amount && (
-                                        <p className="text-sm mt-2 dark:text-neutral-300">{errors.amount}</p>
-                                    )}
-                                </div>
-                                <div className="my-2">
-                                    <SelectAddress
-                                        id="address"
-                                        name="address"
-                                        value={values.address}
-                                        error={false}
-                                        handleBlur={handleBlur}
-                                        handleChange={handleChange}
-                                    />
-                                    {errors && errors.address && (
-                                        <p className="text-sm mt-2 dark:text-neutral-300">{errors.address}</p>
-                                    )}
-                                </div>
+                                {selectedOption === 'default' && (
+                                    <>
+                                        <div className="my-2">
+                                            <input
+                                                id="amount"
+                                                name="amount"
+                                                type="text"
+                                                placeholder="0.0"
+                                                value={values.amount}
+                                                onChange={handleChange}
+                                                onBlur={handleBlur}
+                                                className="rounded p-4 w-full focus:border focus:outline-none dark:placeholder:text-neutral-600 dark:bg-[#1B1B1B]"
+                                            />
+                                            {errors && errors.amount && (
+                                                <p className="text-sm mt-2 dark:text-neutral-300">{errors.amount}</p>
+                                            )}
+                                        </div>
+                                        <div className="my-2">
+                                            <SelectAddress
+                                                id="address"
+                                                name="address"
+                                                value={values.address}
+                                                handleBlur={handleBlur}
+                                                handleChange={handleChange}
+                                                error={errors && errors.address ? errors.address : ''}
+                                            />
+                                            {errors && errors.address && (
+                                                <p className="text-sm mt-2 dark:text-neutral-300">{errors.address}</p>
+                                            )}
+                                        </div>
 
-                                <div className="my-2">
-                                    <MessageArea
-                                        id="message"
-                                        name="message"
-                                        value={values.message}
-                                        error={false}
-                                        handleBlur={handleBlur}
-                                        handleChange={handleChange}
-                                    />
-                                    {errors && errors.message && (
-                                        <p className="text-sm mt-2 dark:text-neutral-300">{errors.message}</p>
-                                    )}
-                                </div>
+                                        <div className="my-2">
+                                            <MessageArea
+                                                id="message"
+                                                name="message"
+                                                value={values.message}
+                                                error={false}
+                                                handleBlur={handleBlur}
+                                                handleChange={handleChange}
+                                            />
+                                            {errors && errors.message && (
+                                                <p className="text-sm mt-2 dark:text-neutral-300">{errors.message}</p>
+                                            )}
+                                        </div>
+                                    </>
+                                )}
+                                
+                                {selectedOption === 'split' && (
+                                    <>
+                                        You have {values.tokens ? values.tokens.coins : "-"} coins
+                                    </>
+                                )}
 
                                 <div className="mt-16">
-                                    <PrimaryButton disabled={!isValid || isSubmitting} type="submit">Transfer</PrimaryButton>
+                                    <PrimaryButton disabled={!isValid || isSubmitting} type="submit">
+                                        Transfer
+                                    </PrimaryButton>
                                 </div>
 
                                 <div className="my-2 w-full flex">
@@ -282,6 +305,8 @@ const Send = () => {
                                             id="burn"
                                             name="burn"
                                             value={values.burn}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
                                             placeholder="0.0"
                                             className="bg-transparent focus:outline-none text-right max-w-max text-sm placeholder:opacity-80"
                                         />

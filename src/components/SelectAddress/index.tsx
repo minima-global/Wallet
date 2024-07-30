@@ -14,24 +14,27 @@ const SelectAddress = ({ handleChange, handleBlur, value, error, id, name }: Pro
 
 
     return (
-        <div className={`bg-white dark:bg-[#1B1B1B] rounded p-4 w-full ${_f && "border"} flex`}>
-            <input
-                id={id}
-                name={name}
-                onChange={handleChange}
-                onFocus={() => {
-                    setF(true);
-                    console.log("Set focus to true..")
-                }}
-                onBlur={(e) => {
-                    handleBlur(e);
-                    setF(false);
-                }}
-                placeholder="Minima Address"
-                className="bg-transparent focus:outline-none dark:placeholder:text-neutral-600 w-full truncate"
-                type="text"
-            />
-            <span>
+        <div className={`bg-white ${!error && "flex"} dark:bg-[#1B1B1B] rounded p-4 w-full ${_f && "border"} flex`}>
+            <div className='w-full'>
+                {(!error && !!value.length) && <p className='text-sm dark:text-neutral-300'>Minimalist</p>}
+                <input
+                    id={id}
+                    name={name}
+                    onChange={handleChange}
+                    onFocus={() => {
+                        setF(true);
+                    }}
+                    onBlur={(e) => {
+                        handleBlur(e);
+                        setF(false);
+                    }}
+                    value={value}
+                    placeholder="Minima Address"
+                    className="bg-transparent focus:outline-none dark:placeholder:text-neutral-600 w-full truncate"
+                    type="text"
+                />
+            </div>
+            <span className='ml-auto my-auto'>
                 <FavoriteIcon fill="currentColor" />
             </span>
         </div>

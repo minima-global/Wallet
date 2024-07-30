@@ -35,6 +35,7 @@ const WalletSelect = () => {
         const requestingToken = searchParams.get('tokenid');
         const requestingAmount = searchParams.get('amount');
         const requestingBurn = searchParams.get('burn');
+        const requestingAddress = searchParams.get('address');
 
         if (requestingToken) {
             formik.setFieldValue(
@@ -46,9 +47,14 @@ const WalletSelect = () => {
             formik.setFieldValue('token', balance[0]);
         }
 
+        if (requestingAddress) {
+            formik.setFieldValue('address', requestingAddress);
+        }
+
         if (requestingAmount) {
             formik.setFieldValue('amount', requestingAmount);
         }
+
 
         if (requestingBurn) {
             formik.setFieldValue('burn', requestingBurn);
