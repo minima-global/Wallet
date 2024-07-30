@@ -10,30 +10,28 @@ import Lottie from 'lottie-react';
 import SecondaryButton from '../UI/SecondaryButton';
 
 const TransactionStatus = () => {
-    const {
-        _transactionSubmitting,
-        _transactionSuccess,
-        _transactionPending,
-        setTransactionSubmitting,
-    } = useContext(appContext);
+    const { _transactionSubmitting, _transactionSuccess, _transactionPending, setTransactionSubmitting } =
+        useContext(appContext);
 
     return (
         <AnimatedDialog display={_transactionSubmitting} dismiss={() => null}>
             <div className="flex justify-center">
-                {(!_transactionPending && !_transactionSuccess) && <Lottie
-                    className="w-[240px] h-[240px] self-center place-self-center justify-self-center"
-                    animationData={Loading}
-                    loop={true}
-                />}
-                
+                {!_transactionPending && !_transactionSuccess && (
+                    <Lottie
+                        className="w-[240px] h-[240px] self-center place-self-center justify-self-center"
+                        animationData={Loading}
+                        loop={true}
+                    />
+                )}
+
                 {_transactionSuccess && (
-                    
                     <div className="flex flex-col mt-8">
                         <Lottie
                             className="w-[128px] h-[128px] self-center place-self-center justify-self-center"
                             animationData={Success}
                             loop={false}
                         />
+                        <p className="opacity-100 text-center font-bold">Transaction Successful</p>
                     </div>
                 )}
 

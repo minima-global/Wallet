@@ -1,6 +1,6 @@
 import { animated, config, useTransition } from '@react-spring/web';
 import { useContext, useEffect, useState } from 'react';
-import { useLocation, useSearchParams } from 'react-router-dom';
+import { useLocation,  useSearchParams } from 'react-router-dom';
 import SendIcon from '../components/UI/Icons/SendIcon';
 import SplitIcon from '../components/UI/Icons/SplitIcon';
 import CombineIcon from '../components/UI/Icons/CombineIcon';
@@ -17,11 +17,9 @@ import FireIcon from '../components/UI/Icons/FireIcon';
 
 const Send = () => {
     const location = useLocation();
-    const { balance: wallet } = useContext(appContext);
+    const { balance: wallet, setTransactionSubmitting, setTransactionError, setTransactionPending, setTransactionSuccess } = useContext(appContext);
     const [selectedOption, setSelectedOption] = useState('default');
     const [searchParams] = useSearchParams();
-
-    const [loading, setLoading] = useState(false);
 
     // Set the mode according to the search params if any
     useEffect(() => {
@@ -143,15 +141,53 @@ const Send = () => {
                     </div>
                     <Formik
                         initialValues={{ tokens: wallet[0], amount: '', address: '', message: '', burn: '' }}
-                        onSubmit={() => {
-                            setLoading(true);
+                        onSubmit={async ({amount, address, burn, message}, {resetForm}) => {
+                            setTransactionSubmitting(true);
 
 
-                            try {
-                                // stop
-                            } catch (error) {
-                                // log error
-                            }
+                            try {                              
+                                // Create a promise for the MDS command and await its resolution
+
+                                if (selectedOption === 'default') {
+                                    await new Promise((resolve, reject) => {
+                                      (window as any).MDS.cmd(`send amount:${amount} address:${address} ${burn.length ? "burn:"+burn : ""} ${message.length ? `state:{"44":"[${encodeURIComponent(message)}]"}` : ''}`, (resp) => {
+                                        console.log(resp);
+                                        if (resp.pending) reject('PENDING');
+                                        
+                                        if (!resp.status) {
+                                          reject(resp.message ? resp.message : resp.error ? resp.error : "Failed to send!");
+                                        } else {
+                                          resolve(true);
+                                        }
+                                      });
+                                    });
+                                }
+
+
+                                if (selectedOption === 'split') {
+                                    // split 10
+                                }
+                                
+                                if (selectedOption === 'combine') {
+                                    // consolidate..
+                                }
+
+                                setTransactionSuccess(true);
+                                await new Promise((resolve) => setTimeout(resolve, 2000));
+                                
+                                // reset
+                                setTransactionSubmitting(false);
+                                setTransactionSuccess(false);
+                                resetForm();
+                              } catch (error) {
+                                if (error instanceof Error) {
+                                  setTransactionError(error.message);
+                                } else if (error === 'PENDING') {
+                                    setTransactionPending(true);
+                                } else {
+                                    setTransactionError(typeof error === 'string' ? error : "An unknown error occurred");
+                                }
+                              }
                         }}
                         validationSchema={yup.object().shape({
                             amount: yup
@@ -229,8 +265,8 @@ const Send = () => {
                             }),
                         })}
                     >
-                        {({ values, errors, isSubmitting, isValid, handleChange, handleBlur }) => (
-                            <form>
+                        {({ values, errors, isSubmitting, isValid, handleChange, handleBlur, handleSubmit }) => (
+                            <form onSubmit={handleSubmit}>
                                 <WalletSelect />
 
                                 {selectedOption === 'default' && (

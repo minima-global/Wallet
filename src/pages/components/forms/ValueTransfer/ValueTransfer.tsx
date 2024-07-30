@@ -517,10 +517,14 @@ const ValueTransfer = () => {
                                         error={touched.amount && errors.amount ? errors.amount : false}
                                     />
 
-                                    <textarea className="p-4 dark:bg-white" rows={5}  id="message" disabled={isSubmitting} {...getFieldProps('message')} placeholder="Message (public)"></textarea>
-
-
-                                    
+                                    <textarea
+                                        className="p-4 dark:bg-white"
+                                        rows={5}
+                                        id="message"
+                                        disabled={isSubmitting}
+                                        {...getFieldProps('message')}
+                                        placeholder="Message (public)"
+                                    ></textarea>
 
                                     <Burn />
                                 </div>

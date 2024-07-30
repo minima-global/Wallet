@@ -8,7 +8,7 @@ interface Props {
     id: string;
     name: string;
 }
-const MessageArea = ({ handleChange, handleBlur, value, error, id, name }: Props) => {
+const MessageArea = ({ handleChange, handleBlur, value, id, name }: Props) => {
     const [_f, setF] = useState(false);
 
 
@@ -27,7 +27,8 @@ const MessageArea = ({ handleChange, handleBlur, value, error, id, name }: Props
                 }}
                 placeholder="Public message"
                 className="bg-transparent focus:outline-none dark:placeholder:text-neutral-600 w-full truncate"
-                rows={5}                
+                rows={5}    
+                value={value}            
             />
             <span className="mt-auto text-sm dark:text-neutral-300">
                 {value.length + "/" + 255}
