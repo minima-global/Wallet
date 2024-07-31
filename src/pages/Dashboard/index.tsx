@@ -15,7 +15,7 @@ const Dashboard = () => {
             <div>
                 <header className="md:ml-[240px] bg-[#1B1B1B] p-4" onClick={openTitleBar}>
                     <div className="flex gap-2 items-center">
-                        <span className='text-white dark:text-neutral-300' onClick={(e) => {
+                        <span className='text-white dark:text-neutral-300 block md:hidden' onClick={(e) => {
                             e.stopPropagation();
                             promptMenu();
                         }}>

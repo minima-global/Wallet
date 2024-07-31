@@ -37,9 +37,9 @@ const TokenDetails = ({ token, display, dismiss }: any) => {
             <Burn token={token} display={_promptBurn} dismiss={promptBurn} />
 
             <AnimatedDialog display={display} dismiss={dismiss}>
-                <div className="h-full grid items-center">
+                <div className="h-full grid md:items-center">
                     <div className="relative left-0 right-0 bottom-0 top-0 bg-transparent">
-                        <div className="bg-white shadow-lg dark:shadow-none dark:bg-black w-[calc(100%_-_16px)] overflow-auto mx-auto md:w-full p-4 rounded overflow-y-auto">
+                        <div className="bg-white h-full shadow-lg dark:shadow-none dark:bg-black w-full rounded-none md:w-[calc(100%_-_16px)] overflow-auto mx-auto p-4 md:rounded overflow-y-auto">
                             <div className="flex items-center justify-between mb-3">
                                 <h3 className="font-bold tracking-wide">Token Details</h3>
                                 <span onClick={dismiss}>

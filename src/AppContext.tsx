@@ -59,6 +59,7 @@ const AppProvider = ({ children }: IProps) => {
     const [balance, setBalance] = useState<MinimaToken[]>([]);
     const [history, setHistory] = useState<TxPOW[]>([]);
     const [logs, setLogs] = useState<string[]>([]);
+    const [_seedPhrase, setSeedPhrase] = useState(null);
 
     const [historyFacade, setHistoryFacade] = useState<{
         [key: string]: {
@@ -122,6 +123,9 @@ const AppProvider = ({ children }: IProps) => {
                     rpc.isWriteMode().then((appIsInWriteMode) => {
                         setAppIsInWriteMode(appIsInWriteMode);
                     });
+
+
+
                     // callAndSaveMaximaName
                     getMaximaName();
                     // callAndStoreBalance
@@ -222,8 +226,12 @@ const AppProvider = ({ children }: IProps) => {
     };
 
     const checkVaultLocked = () => {
-        rpc.isVaultLocked().then((r) => {
-            setVaultLocked(r);
+        (window as any).MDS.cmd('vault', (resp) => {
+          setVaultLocked(resp.response.locked);
+          
+          if (!resp.response.locked) {
+            setSeedPhrase(resp.response.phrase);
+          }
         });
     };
 
@@ -436,7 +444,9 @@ const AppProvider = ({ children }: IProps) => {
                 _transactionError, setTransactionError,
                 _transactionPending, setTransactionPending,
 
-                isDarkMode, setIsDarkMode
+                isDarkMode, setIsDarkMode,
+
+                _seedPhrase
             }}
         >
             {children}

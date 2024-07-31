@@ -132,9 +132,9 @@ const WalletSelect = () => {
                 {active && (
                     <animated.div
                         style={springProps}
-                        className="origin-top-right z-[50] w-full absolute right-0 mt-2 rounded-md shadow-lg bg-white dark:bg-[#1B1B1B]"
+                        className="origin-top-right z-[50] w-full absolute right-0 mt-2 rounded-md shadow-lg shadow-neutral-300 bg-white dark:bg-[#1B1B1B]"
                     >
-                        <div className="bg-white dark:bg-[#1B1B1B] rounded-lg px-4 py-3">
+                        <div className="bg-neutral-100 dark:bg-[#1B1B1B] rounded-lg px-4 py-3">
                             <input
                                 value={searchText}
                                 onChange={(e) => setSearchText(e.target.value)}

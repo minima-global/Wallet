@@ -2,7 +2,7 @@
  * Select either an url or to upload an image for all token creation forms
  */
 import React from 'react';
-import AddImage from '../../../pages/components/forms/AddImage';
+import AddImage from '../../../pages/_components/forms/AddImage';
 import FormFieldWrapper from '../FormFieldWrapper';
 import { useFormikContext } from 'formik';
 import Input from '../../../components/UI/Input';

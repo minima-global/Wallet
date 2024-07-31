@@ -7,7 +7,7 @@ import { createPortal } from 'react-dom';
 import CardContent from '../../components/UI/CardContent';
 
 import Masonry from 'react-masonry-css';
-import NFTAuthenticity from '../components/tokens/NFTAuthenticity';
+import NFTAuthenticity from '../_components/tokens/NFTAuthenticity';
 
 const breakpointColumnsObj = {
     default: 3,
