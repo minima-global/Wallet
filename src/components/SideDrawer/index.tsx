@@ -82,7 +82,7 @@ const SideDrawer = ({ isOpen, toggleDrawer }: IProps) => {
                             </li>
                             <li className="mt-2">
                                 <NavLink
-                                    to="/dashboard/tokenstudio"
+                                    to="/dashboard/transactions"
                                     className={({ isActive }) =>
                                         isActive
                                             ? 'flex items-center rounded-full px-3 py-2 bg-black text-white  dark:bg-[#1B1B1B] dark:text-neutral-300 font-bold hover:!text-neutral-300'

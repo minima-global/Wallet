@@ -9,6 +9,7 @@ import Dashboard from './pages/Dashboard';
 import Receive from './pages/Receive';
 import Send from './pages/Send';
 import Balance from './pages/Balance';
+import TokenStudio from './pages/TokenStudio';
 
 const router = createHashRouter(
     createRoutesFromElements(
@@ -29,6 +30,7 @@ const router = createHashRouter(
           <Route path="send" element={<Send />}>    
             {/* <Route path="newcontact" element={<AddNew />} />         */}
           </Route>
+          <Route path="tokenstudio" element={<TokenStudio />} />
         </Route>      
         <Route path="*" element={<Navigate to="/dashboard/balance" replace />} />
       </Route>
