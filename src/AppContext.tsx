@@ -104,6 +104,8 @@ const AppProvider = ({ children }: IProps) => {
         thousands: '',
     });
 
+    const [_hiddenTokens, setHiddenTokens] = useState<Record<string, boolean> | null>(null);;
+
     useEffect(() => {
         // Apply or remove the 'dark' class on the document element
         if (isDarkMode) {
@@ -148,6 +150,14 @@ const AppProvider = ({ children }: IProps) => {
                         const favoriteTokens: any = await sql(`SELECT * FROM cache WHERE name= 'FAVORITE_TOKENS'`);
 
                         const currFormat: any = await sql(`SELECT * FROM cache WHERE name= 'CURRENCY_FORMAT'`);
+                        
+                        const hiddenTokens: any = await sql(`SELECT * FROM cache WHERE name= 'HIDDEN_TOKENS'`);
+
+
+                        if (hiddenTokens) {
+                            setHiddenTokens(JSON.parse(hiddenTokens.DATA));
+
+                        }
 
                         if (nicknameAddresses) {
                             setDefaultAddressesWithName(JSON.parse(nicknameAddresses.DATA));
@@ -323,6 +333,24 @@ const AppProvider = ({ children }: IProps) => {
             await sql(`UPDATE cache SET data = '${JSON.stringify(updatedFormat)}' WHERE name = 'CURRENCY_FORMAT'`);
         }
     };
+    
+    const hideToken = async (tokenid: string) => {
+        const updatedData = {
+            ..._hiddenTokens,
+            [tokenid]: true
+        };
+
+        // update nicknames
+        setHiddenTokens(updatedData);
+
+        const hidden = await sql(`SELECT * FROM cache WHERE name = 'HIDDEN_TOKENS'`);
+
+        if (!hidden) {
+            await sql(`INSERT INTO cache (name, data) VALUES ('HIDDEN_TOKENS', '${JSON.stringify(updatedData)}')`);
+        } else {
+            await sql(`UPDATE cache SET data = '${JSON.stringify(updatedData)}' WHERE name = 'HIDDEN_TOKENS'`);
+        }
+    };
 
     const editNickname = async (address: string, nickname: string) => {
         const updatedNicknames = {
@@ -401,7 +429,11 @@ const AppProvider = ({ children }: IProps) => {
                 isMobile: mode === 'mobile',
 
                 loading,
-                balance,
+                balance: balance.filter(b => {
+                    const id = b.tokenid;
+
+                    return _hiddenTokens ? !_hiddenTokens[id] : false;
+                }),
                 NFTs,
                 simpleAddresses,
                 history,
@@ -446,7 +478,10 @@ const AppProvider = ({ children }: IProps) => {
 
                 isDarkMode, setIsDarkMode,
 
-                _seedPhrase
+                _seedPhrase,
+
+                _hiddenTokens,
+                hideToken
             }}
         >
             {children}

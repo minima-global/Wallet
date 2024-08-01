@@ -1,17 +1,18 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import Wallet from '../Wallet/Wallet';
 import TokenDetails from './TokenDetails';
 import { useLocation } from 'react-router-dom';
 import AnimatePageIn from '../../components/UI/Animations/AnimatePageIn';
+import { appContext } from '../../AppContext';
 
 const Balance = () => {
     const [filter, setFilterText] = useState('');
     const [_promptTokenDetails, setPromptTokenDetails] = useState(false);
     const [viewingToken, setViewingToken] = useState(null);
-
+    const { _hiddenTokens } = useContext(appContext);
     const location = useLocation();
     const promptTokenDetails = () => {
-        setPromptTokenDetails((prevState) => !prevState);
+        setPromptTokenDetails(false);
     };
 
     const handleFilterTextChange = (evt) => {
@@ -20,9 +21,10 @@ const Balance = () => {
 
     const handleViewToken = (token: any) => {
         setViewingToken(token);
-        promptTokenDetails();
+        setPromptTokenDetails(true);
     };
 
+    console.log(Object.values(_hiddenTokens).length);
     return (
         <>
             <TokenDetails dismiss={promptTokenDetails} display={_promptTokenDetails} token={viewingToken} />
@@ -38,6 +40,14 @@ const Balance = () => {
                             type="search"
                             className="bg-white rounded-full p-3 px-4 w-full focus:outline-none focus:border focus:border-black focus:dark:border-neutral-600 dark:placeholder:text-neutral-600 dark:bg-[#1B1B1B]"
                         />
+                    </div>
+                    <div className='flex justify-end'>
+                        {Object.keys(_hiddenTokens).length > 0 &&
+                        <button type="button" className="text-[#1B1B1B] font-bold hover:opacity-80 dark:text-neutral-300 hover:dark:text-neutral-400 text-sm text-right hover:cursor-pointer border p-0">
+                            View hidden ({Object.keys(_hiddenTokens).length})
+                        </button>
+
+                        }
                     </div>
                     <Wallet
                         selectToken={handleViewToken}

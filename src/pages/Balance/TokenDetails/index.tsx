@@ -8,13 +8,22 @@ import Decimal from 'decimal.js';
 import FireIcon from '../../../components/UI/Icons/FireIcon';
 import AnimatedDialog from '../../../components/UI/AnimatedDialog';
 import Burn from '../Burn';
+import SecondaryButton from '../../../components/UI/SecondaryButton';
+import PrimaryButton from '../../../components/UI/PrimaryButton';
+import Hide from '../Hide';
 
 const TokenDetails = ({ token, display, dismiss }: any) => {
     const [_promptBurn, setPromptBurn] = useState(false);
+    const [_promptHide, setPromptHide] = useState(false);
 
     const promptBurn = () => {
         dismiss();
         setPromptBurn(prevState => !prevState);
+    }
+
+    const promptHide = () => {
+        dismiss();
+        setPromptHide(prevState => !prevState);
     }
 
     if (!token) {
@@ -35,6 +44,10 @@ const TokenDetails = ({ token, display, dismiss }: any) => {
     return (
         <>
             <Burn token={token} display={_promptBurn} dismiss={promptBurn} />
+            <Hide token={token} display={_promptHide} dismiss={promptHide} fullDismiss={() => {
+                setPromptHide(false);
+                dismiss();
+            }} />
 
             <AnimatedDialog display={display} dismiss={dismiss}>
                 <div className="h-full grid md:items-center">
@@ -119,7 +132,7 @@ const TokenDetails = ({ token, display, dismiss }: any) => {
                                     <KeyValue mono title="Pending" value={token.unconfirmed} />
                                 </div>
 
-                                <div className={`grid grid-cols-[1fr,_3fr] gap-2 ${isMinima && '!grid-cols-1'}`}>
+                                <div className={`grid grid-cols-[1fr,_2fr,_3fr] gap-2 ${isMinima && '!grid-cols-1'}`}>
                                     {!isMinima && (
                                         <button
                                             onClick={promptBurn}
@@ -129,12 +142,19 @@ const TokenDetails = ({ token, display, dismiss }: any) => {
                                             <FireIcon size={22} fill="currentColor" />
                                         </button>
                                     )}
-                                    <button
-                                        type="button"
-                                        className="bg-teal-500 text-white dark:text-[#1B1B1B] dark:bg-teal-800 font-bold tracking-wider w-full"
+                                    {!isMinima && (
+                                        <SecondaryButton
+                                            onClick={promptHide}
+                                            type="button"
+                                        >
+                                            Hide
+                                        </SecondaryButton>
+                                    )}
+                                    <PrimaryButton
+                                        type="button"                                        
                                     >
                                         Transfer
-                                    </button>
+                                    </PrimaryButton>
                                 </div>
                             </div>
                         </div>
