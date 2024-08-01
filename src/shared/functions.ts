@@ -69,12 +69,12 @@ export const insufficientFundsError = (msg: string) => {
 };
 
 export const isValidURLAll = (urlString: string) => {
+    
     try {
         new URL(urlString);
         return true;
-    } catch (err) {
-        console.error(err);
-        return false;
+    } catch (error) {
+        throw error;
     }
 };
 
@@ -84,7 +84,7 @@ export const isValidURLSecureOnly = (urlString: string) => {
         return url.protocol === 'https:';
     } catch (err) {
         console.error(err);
-        return false;
+        throw err;
     }
 };
 

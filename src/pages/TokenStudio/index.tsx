@@ -21,7 +21,7 @@ import PreviewToken from '../../components/PreviewToken';
 import RubbishIcon from '../../components/UI/Icons/RubbishIcon';
 import UploadIcon from '../../components/UI/Icons/UploadIcon';
 import WebIcon from '../../components/UI/Icons/WebIcon';
-import { isValidURLSecureOnly } from '../../shared/functions';
+import { isValidURLAll, isValidURLSecureOnly } from '../../shared/functions';
 
 const TokenStudio = () => {
     const location = useLocation();
@@ -37,20 +37,6 @@ const TokenStudio = () => {
     const [selectedOption, setSelectedOption] = useState('default');
     const [imageUploadOption, setImageUploadOption] = useState<'file' | 'url' | null>(null);
     const [searchParams] = useSearchParams();
-
-    const [, setFile] = useState<File | null>(null);
-    const [, setImageDataUrl] = useState('');
-
-    /**
-     * Handles the file input for when the user wants to select an image
-     * @param {string} imageDataUrl
-     * @param {File} file
-     * creds to dynamitesushi & neil shah
-     */
-    const onImageChange = (imageDataUrl: string, file: File) => {
-        setImageDataUrl(imageDataUrl);
-        setFile(file);
-    };
 
     // Set the mode according to the search params if any
     useEffect(() => {
@@ -91,89 +77,6 @@ const TokenStudio = () => {
                     {selectedOption === 'custom' && 'Create a custom token with an image'}
                     {selectedOption === 'nft' && 'Create a non-fungible token'}
                 </p>
-                <div className="flex-1 flex flex-col">
-                    {/* Custom Radio Buttons */}
-                    <div className="my-3">
-                        <fieldset>
-                            <div className="grid grid-cols-3 gap-2">
-                                <label
-                                    className={`justify-center text-sm p-4 flex-col rounded-lg sm:roundd-full sm:flex-row flex items-center transition-all ${
-                                        selectedOption === 'default'
-                                            ? 'bg-black dark:bg-black font-bold'
-                                            : 'bg-neutral-200 dark:bg-[#1B1B1B]'
-                                    }`}
-                                >
-                                    <input
-                                        type="radio"
-                                        name="option"
-                                        value="default"
-                                        checked={selectedOption === 'default'}
-                                        onChange={(e) => handleOptionChange('form', e)}
-                                        className="hidden"
-                                    />
-                                    <span className={`${selectedOption === 'default' && 'text-white'}`}>
-                                        <SimpleTokenIcon fill="currentColor" size={20} />
-                                    </span>
-                                    <span className={`ml-2 ${selectedOption === 'default' ? 'text-white' : ''}`}>
-                                        Simple
-                                    </span>
-                                </label>
-                                <label
-                                    className={`justify-center text-sm flex-col rounded-lg sm:roundd-full sm:flex-row p-4 flex items-center transition-all ${
-                                        selectedOption === 'custom'
-                                            ? 'bg-black dark:bg-black font-bold'
-                                            : 'bg-neutral-200 dark:bg-[#1B1B1B]'
-                                    }`}
-                                >
-                                    <input
-                                        type="radio"
-                                        name="option"
-                                        value="custom"
-                                        checked={selectedOption === 'custom'}
-                                        onChange={(e) => {
-                                            handleOptionChange('form', e);
-
-                                            setImageUploadOption(null);
-                                        }}
-                                        className="hidden"
-                                    />
-                                    <span className={`${selectedOption === 'custom' && 'text-white'}`}>
-                                        <CustomTokenIcon fill="currentColor" size={20} />
-                                    </span>
-                                    <span className={`ml-2 ${selectedOption === 'custom' ? 'text-white' : ''}`}>
-                                        Custom
-                                    </span>
-                                </label>
-                                <label
-                                    className={`justify-center text-sm flex-col rounded-lg sm:roundd-full sm:flex-row p-4 flex items-center transition-all ${
-                                        selectedOption === 'nft'
-                                            ? 'bg-black dark:bg-black font-bold'
-                                            : 'bg-neutral-200 dark:bg-[#1B1B1B]'
-                                    }`}
-                                >
-                                    <input
-                                        type="radio"
-                                        name="option"
-                                        value="nft"
-                                        checked={selectedOption === 'nft'}
-                                        onChange={(e) => {
-                                            handleOptionChange('form', e);
-
-                                            setImageUploadOption(null);
-                                        }}
-                                        className="hidden"
-                                    />
-                                    <span className={`${selectedOption === 'nft' ? 'text-white' : ''}`}>
-                                        <NonFungibleIcon fill="currentColor" size={20} />
-                                    </span>
-                                    <span className={`ml-2 ${selectedOption === 'nft' ? 'text-white' : ''}`}>
-                                        Non-fungible
-                                    </span>
-                                </label>
-                            </div>
-                        </fieldset>
-                    </div>
-                </div>
                 <Formik
                     initialValues={{
                         name: '',
@@ -182,9 +85,13 @@ const TokenStudio = () => {
                         url: '',
                         ticker: '',
                         description: '',
+                        owner: '',
                         webvalidation: '',
                     }}
-                    onSubmit={async ({ amount, name, burn, url, ticker, description, webvalidation }, { resetForm }) => {
+                    onSubmit={async (
+                        { amount, name, burn, url, ticker, description, webvalidation, owner },
+                        { resetForm }
+                    ) => {
                         setTransactionSubmitting(true);
 
                         try {
@@ -217,11 +124,20 @@ const TokenStudio = () => {
 
                             if (selectedOption === 'custom') {
                                 await new Promise((resolve, reject) => {
+                                    const token = {
+                                        name: name,
+                                        url: encodeURIComponent(url),
+                                        description: description,
+                                        ticker: ticker,
+                                        webvalidate: webvalidation,
+                                    };
+
                                     (window as any).MDS.cmd(
-                                        `tokencreate amount:${amount} name:${name} ${
+                                        `tokencreate decimals:8 amount:${amount} name:"${JSON.stringify(token)}" ${
                                             burn.length ? 'burn:' + burn : ''
                                         }`,
                                         (resp) => {
+                                            console.log(resp);
                                             if (resp.pending) reject('PENDING');
 
                                             if (!resp.status) {
@@ -241,6 +157,37 @@ const TokenStudio = () => {
                             }
 
                             if (selectedOption === 'nft') {
+                                await new Promise((resolve, reject) => {
+                                    const token = {
+                                        name: name,
+                                        url: encodeURIComponent(url),
+                                        description: description,
+                                        owner: owner,
+                                        webvalidate: webvalidation,
+                                    };
+
+                                    (window as any).MDS.cmd(
+                                        `tokencreate decimals:0 amount:${amount} name:"${JSON.stringify(token)}" ${
+                                            burn.length ? 'burn:' + burn : ''
+                                        }`,
+                                        (resp) => {
+                                            console.log(resp);
+                                            if (resp.pending) reject('PENDING');
+
+                                            if (!resp.status) {
+                                                reject(
+                                                    resp.message
+                                                        ? resp.message
+                                                        : resp.error
+                                                        ? resp.error
+                                                        : 'Failed to send!'
+                                                );
+                                            } else {
+                                                resolve(true);
+                                            }
+                                        }
+                                    );
+                                });
                             }
 
                             setTransactionSuccess(true);
@@ -262,9 +209,17 @@ const TokenStudio = () => {
                         }
                     }}
                     validationSchema={yup.object().shape({
-                        name: yup.string()
+                        name: yup
+                            .string()
                             .required('This field is required')
                             .matches(/^[^\\;]+$/, 'Invalid characters.'),
+                        owner:
+                            selectedOption !== 'default' &&
+                            selectedOption !== 'custom' &&
+                            yup
+                                .string()
+                                .matches(/^[^\\;]+$/, 'Invalid characters.')
+                                .max(255),
                         amount: yup
                             .string()
                             .required('Field required')
@@ -282,7 +237,7 @@ const TokenStudio = () => {
                                     }
 
                                     if (new Decimal(val).decimalPlaces() > 1) {
-                                        throw new Error("You can't mint a token with decimal places")
+                                        throw new Error("You can't mint a token with decimal places");
                                     }
 
                                     if (new Decimal(val).lessThan(1)) {
@@ -300,6 +255,38 @@ const TokenStudio = () => {
                                     }
                                 }
                             }),
+                        url:
+                            selectedOption !== 'default' &&
+                            yup
+                                .string()
+                                .trim()
+                                .test('check-my-url', 'Enter a valid URL', function (val) {
+                                    const { path, createError } = this;
+
+                                    if (!val) {
+                                        return true;
+                                    }
+
+                                    try {
+                                        if (val.substring(0, 'data:image'.length) === 'data:image') {
+                                            return true;
+                                        }
+
+                                        if (!isValidURLAll(val)) {
+                                            throw new Error('Enter a valid URL');
+                                        }
+
+                                        return true;
+                                    } catch (error) {
+                                        if (error instanceof Error) {
+                                            return createError({ path, message: error.message });
+                                        }
+                                        return createError({
+                                            path,
+                                            message: 'Enter a valid URL',
+                                        });
+                                    }
+                                }),
                         burn: yup.number().test('test burn', function (val) {
                             const { path, parent, createError } = this;
 
@@ -331,15 +318,20 @@ const TokenStudio = () => {
                                 }
                             }
                         }),
-                        description: selectedOption !== 'default' && yup.string().min(0).max(255, 'Maximum 255 characters allowed.'),
-                        ticker: (selectedOption !== 'default' && selectedOption !== 'nft') && yup
-                            .string()
-                            .min(0)
-                            .max(5, 'Maximum 5 characters allowed.')
-                            .matches(/^[^\\;]+$/, 'Invalid characters.'),
-                        webvalidation: selectedOption !== 'default' && yup
-                            .string()
-                            .test('check-my-webvalidator', 'Invalid Url, must be https', function (val) {
+                        description:
+                            selectedOption !== 'default' &&
+                            yup.string().min(0).max(255, 'Maximum 255 characters allowed.'),
+                        ticker:
+                            selectedOption !== 'default' &&
+                            selectedOption !== 'nft' &&
+                            yup
+                                .string()
+                                .min(0)
+                                .max(5, 'Maximum 5 characters allowed.')
+                                .matches(/^[^\\;]+$/, 'Invalid characters.'),
+                        webvalidation:
+                            selectedOption !== 'default' &&
+                            yup.string().test('check-my-webvalidator', 'Invalid Url, must be https', function (val) {
                                 const { path, createError } = this;
 
                                 if (!val) {
@@ -348,20 +340,17 @@ const TokenStudio = () => {
 
                                 try {
                                     if (!isValidURLSecureOnly(val)) {
-                                        throw new Error("Invalid URL, must be https")
+                                        throw new Error('Invalid URL, must be https');
                                     }
-                                    
+
                                     return true;
-                                    
                                 } catch (error) {
-                                    
                                     if (error instanceof Error) {
                                         return createError({ path, message: error.message });
                                     }
 
-                                    return createError({path, message: "Invalid Url"})
+                                    return createError({ path, message: 'Invalid Url' });
                                 }
-
                             }),
                     })}
                 >
@@ -378,6 +367,104 @@ const TokenStudio = () => {
                     }) => (
                         <form onSubmit={handleSubmit}>
                             <>
+                                <div className="flex-1 flex flex-col">
+                                    {/* Custom Radio Buttons */}
+                                    <div className="my-3">
+                                        <fieldset>
+                                            <div className="grid grid-cols-3 gap-2">
+                                                <label
+                                                    className={`justify-center text-sm p-4 flex-col rounded-lg sm:roundd-full sm:flex-row flex items-center transition-all ${
+                                                        selectedOption === 'default'
+                                                            ? 'bg-black dark:bg-black font-bold'
+                                                            : 'bg-neutral-200 dark:bg-[#1B1B1B]'
+                                                    }`}
+                                                >
+                                                    <input
+                                                        type="radio"
+                                                        name="option"
+                                                        value="default"
+                                                        checked={selectedOption === 'default'}
+                                                        onChange={(e) => handleOptionChange('form', e)}
+                                                        className="hidden"
+                                                    />
+                                                    <span className={`${selectedOption === 'default' && 'text-white'}`}>
+                                                        <SimpleTokenIcon fill="currentColor" size={20} />
+                                                    </span>
+                                                    <span
+                                                        className={`ml-2 ${
+                                                            selectedOption === 'default' ? 'text-white' : ''
+                                                        }`}
+                                                    >
+                                                        Simple
+                                                    </span>
+                                                </label>
+                                                <label
+                                                    className={`justify-center text-sm flex-col rounded-lg sm:roundd-full sm:flex-row p-4 flex items-center transition-all ${
+                                                        selectedOption === 'custom'
+                                                            ? 'bg-black dark:bg-black font-bold'
+                                                            : 'bg-neutral-200 dark:bg-[#1B1B1B]'
+                                                    }`}
+                                                >
+                                                    <input
+                                                        type="radio"
+                                                        name="option"
+                                                        value="custom"
+                                                        checked={selectedOption === 'custom'}
+                                                        onChange={(e) => {
+                                                            handleOptionChange('form', e);
+
+                                                            setImageUploadOption(null);
+                                                            setFieldValue('url', '');
+                                                        }}
+                                                        className="hidden"
+                                                    />
+                                                    <span className={`${selectedOption === 'custom' && 'text-white'}`}>
+                                                        <CustomTokenIcon fill="currentColor" size={20} />
+                                                    </span>
+                                                    <span
+                                                        className={`ml-2 ${
+                                                            selectedOption === 'custom' ? 'text-white' : ''
+                                                        }`}
+                                                    >
+                                                        Custom
+                                                    </span>
+                                                </label>
+                                                <label
+                                                    className={`justify-center text-sm flex-col rounded-lg sm:roundd-full sm:flex-row p-4 flex items-center transition-all ${
+                                                        selectedOption === 'nft'
+                                                            ? 'bg-black dark:bg-black font-bold'
+                                                            : 'bg-neutral-200 dark:bg-[#1B1B1B]'
+                                                    }`}
+                                                >
+                                                    <input
+                                                        type="radio"
+                                                        name="option"
+                                                        value="nft"
+                                                        checked={selectedOption === 'nft'}
+                                                        onChange={(e) => {
+                                                            handleOptionChange('form', e);
+
+                                                            setImageUploadOption(null);
+                                                            setFieldValue('url', '');
+                                                        }}
+                                                        className="hidden"
+                                                    />
+                                                    <span className={`${selectedOption === 'nft' ? 'text-white' : ''}`}>
+                                                        <NonFungibleIcon fill="currentColor" size={20} />
+                                                    </span>
+                                                    <span
+                                                        className={`ml-2 ${
+                                                            selectedOption === 'nft' ? 'text-white' : ''
+                                                        }`}
+                                                    >
+                                                        Non-fungible
+                                                    </span>
+                                                </label>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </div>
+
                                 {selectedOption === 'default' && (
                                     <>
                                         <div className="my-2">
@@ -461,7 +548,9 @@ const TokenStudio = () => {
                                                     <fieldset>
                                                         <div className="grid grid-cols-2 gap-2">
                                                             <label
-                                                                className={`${selectedOption === 'nft' && "opacity-50"} justify-center text-sm p-4 flex-col rounded-lg sm:roundd-full sm:flex-row flex items-center transition-all ${
+                                                                className={`${
+                                                                    selectedOption === 'nft' && 'opacity-50'
+                                                                } justify-center text-sm p-4 flex-col rounded-lg sm:roundd-full sm:flex-row flex items-center transition-all ${
                                                                     imageUploadOption === 'file'
                                                                         ? 'bg-black dark:bg-black font-bold'
                                                                         : 'bg-neutral-200 dark:bg-[#1B1B1B]'
@@ -641,6 +730,30 @@ const TokenStudio = () => {
                                                     {errors && errors.ticker && touched && touched.ticker && (
                                                         <p className="text-sm mt-2 dark:text-neutral-300">
                                                             {errors.ticker}
+                                                        </p>
+                                                    )}
+                                                </div>
+                                            )}
+                                            
+                                            {selectedOption === 'nft' && (
+                                                <div className="my-2">
+                                                    <label className="text-sm opacity-70 dark:text-neutral-300">
+                                                        Creator's Name
+                                                    </label>
+
+                                                    <input
+                                                        id="owner"
+                                                        name="owner"
+                                                        type="text"
+                                                        placeholder="Creator Name"
+                                                        value={values.owner}
+                                                        onChange={handleChange}
+                                                        onBlur={handleBlur}
+                                                        className="bg-white rounded p-4 w-full focus:border focus:outline-none dark:placeholder:text-neutral-600 dark:bg-[#1B1B1B]"
+                                                    />
+                                                    {errors && errors.owner && touched && touched.owner && (
+                                                        <p className="text-sm mt-2 dark:text-neutral-300">
+                                                            {errors.owner}
                                                         </p>
                                                     )}
                                                 </div>

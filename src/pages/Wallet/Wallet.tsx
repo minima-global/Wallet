@@ -132,7 +132,7 @@ const Wallet = ({ selectToken, selectionMode = false, detailsMode = false, filte
                                             alt="token-icon"
                                             src={
                                                 'url' in token.token && token.token.url.length
-                                                    ? token.token.url
+                                                    ? decodeURIComponent(token.token.url)
                                                     : `https://robohash.org/${token.tokenid}`
                                             }
                                             className="bg-[#080A0B] w-[56px] min-w-[56px] h-[56px] min-h-[56px]"

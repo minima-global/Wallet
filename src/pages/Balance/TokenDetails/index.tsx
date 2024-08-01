@@ -53,7 +53,7 @@ const TokenDetails = ({ token, display, dismiss }: any) => {
                                             {!isMinima && isCustomTokenWithUrl && (
                                                 <img
                                                     alt="token-icon"
-                                                    src={token.token.url}
+                                                    src={decodeURIComponent(token.token.url)}
                                                     className="bg-black dark:bg-[#1B1B1B] w-[56px] min-w-[56px] h-[56px] min-h-[56px]"
                                                 />
                                             )}
