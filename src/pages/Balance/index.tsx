@@ -4,16 +4,25 @@ import TokenDetails from './TokenDetails';
 import { useLocation } from 'react-router-dom';
 import AnimatePageIn from '../../components/UI/Animations/AnimatePageIn';
 import { appContext } from '../../AppContext';
+import AnimatedDialog from '../../components/UI/AnimatedDialog';
+import CloseIcon from '../../components/UI/Icons/CloseIcon';
+import Decimal from 'decimal.js';
+import LockedIcon from '../../components/UI/Icons/LockedIcon';
+import useFormatMinimaNumber from '../../__minima__/libs/utils/useMakeNumber';
+
+import * as utils from '../../utilities';
+import HiddenTokens from './HiddenTokens';
 
 const Balance = () => {
     const [filter, setFilterText] = useState('');
     const [_promptTokenDetails, setPromptTokenDetails] = useState(false);
     const [viewingToken, setViewingToken] = useState(null);
-    const { _hiddenTokens } = useContext(appContext);
+    const { hiddenBalance,  promptHiddenTokens } = useContext(appContext);
     const location = useLocation();
     const promptTokenDetails = () => {
         setPromptTokenDetails(false);
     };
+
 
     const handleFilterTextChange = (evt) => {
         setFilterText(evt.target.value);
@@ -24,10 +33,10 @@ const Balance = () => {
         setPromptTokenDetails(true);
     };
 
-    console.log(Object.values(_hiddenTokens).length);
     return (
         <>
             <TokenDetails dismiss={promptTokenDetails} display={_promptTokenDetails} token={viewingToken} />
+            <HiddenTokens />
             <AnimatePageIn display={location.pathname === '/dashboard/balance'}>
                 <section className="mx-3 mt-8">
                     <div className="grid grid-cols-[1fr_auto] items-center">
@@ -41,13 +50,16 @@ const Balance = () => {
                             className="bg-white rounded-full p-3 px-4 w-full focus:outline-none focus:border focus:border-black focus:dark:border-neutral-600 dark:placeholder:text-neutral-600 dark:bg-[#1B1B1B]"
                         />
                     </div>
-                    <div className='flex justify-end'>
-                        {Object.keys(_hiddenTokens).length > 0 &&
-                        <button type="button" className="text-[#1B1B1B] font-bold hover:opacity-80 dark:text-neutral-300 hover:dark:text-neutral-400 text-sm text-right hover:cursor-pointer border p-0">
-                            View hidden ({Object.keys(_hiddenTokens).length})
-                        </button>
-
-                        }
+                    <div className="flex justify-end">
+                        {hiddenBalance && hiddenBalance.length > 0 && (
+                            <button
+                                onClick={promptHiddenTokens}
+                                type="button"
+                                className="text-[#1B1B1B] font-bold hover:opacity-80 dark:text-neutral-300 hover:dark:text-neutral-400 text-sm text-right hover:cursor-pointer border p-0"
+                            >
+                                View hidden ({hiddenBalance && hiddenBalance.length})
+                            </button>
+                        )}
                     </div>
                     <Wallet
                         selectToken={handleViewToken}

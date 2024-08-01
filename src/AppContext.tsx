@@ -34,6 +34,7 @@ const AppProvider = ({ children }: IProps) => {
     
     const [_promptSetting, setPromptSettings] = useState(false);
     const [_promptBalanceInfo, setPromptBalanceInfo] = useState(false);
+    const [_promptHiddenTokens, setPromptHiddenTokens] = useState(false);
     const [_currentNavigation, setCurrentNavigation] = useState("balance");
 
     const [_transactionSubmitting, setTransactionSubmitting] = useState(false);
@@ -316,6 +317,10 @@ const AppProvider = ({ children }: IProps) => {
         });
     };
 
+    const promptHiddenTokens = () => {
+        setPromptHiddenTokens((prevState) => !prevState);
+    };
+
     const updateCurrencyFormat = async (decimal: string, thousands: string) => {
         const updatedFormat = {
             decimal,
@@ -334,10 +339,10 @@ const AppProvider = ({ children }: IProps) => {
         }
     };
     
-    const hideToken = async (tokenid: string) => {
+    const hideToken = async (tokenid: string, toggle = true) => {
         const updatedData = {
             ..._hiddenTokens,
-            [tokenid]: true
+            [tokenid]: toggle
         };
 
         // update nicknames
@@ -408,6 +413,8 @@ const AppProvider = ({ children }: IProps) => {
             value={{
                 _promptBalanceInfo,
                 promptBalanceInfo,
+
+                _promptHiddenTokens, setPromptHiddenTokens, promptHiddenTokens,
                 
                 _promptSetting,
                 promptSettings,
@@ -433,6 +440,11 @@ const AppProvider = ({ children }: IProps) => {
                     const id = b.tokenid;
 
                     return _hiddenTokens ? !_hiddenTokens[id] : false;
+                }),
+                hiddenBalance: balance.filter(b => {
+                    const id = b.tokenid;
+
+                    return _hiddenTokens ? _hiddenTokens[id] === true : false;
                 }),
                 NFTs,
                 simpleAddresses,

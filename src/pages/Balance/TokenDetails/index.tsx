@@ -1,7 +1,6 @@
-import { createPortal } from 'react-dom';
-import { config } from 'react-spring';
+
 import KeyValue from '../../../components/UI/KeyValue';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import CloseIcon from '../../../components/UI/Icons/CloseIcon';
 import VerifiedIcon from '../../../components/UI/Icons/VerifiedIcon';
 import Decimal from 'decimal.js';
