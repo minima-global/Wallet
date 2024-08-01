@@ -21,6 +21,8 @@ import PreviewToken from '../../components/PreviewToken';
 import RubbishIcon from '../../components/UI/Icons/RubbishIcon';
 import UploadIcon from '../../components/UI/Icons/UploadIcon';
 import WebIcon from '../../components/UI/Icons/WebIcon';
+import { isValidURLSecureOnly } from '../../shared/functions';
+
 const TokenStudio = () => {
     const location = useLocation();
     const {
@@ -109,7 +111,7 @@ const TokenStudio = () => {
                                         onChange={(e) => handleOptionChange('form', e)}
                                         className="hidden"
                                     />
-                                    <span className={`${selectedOption === 'default' && "text-white"}`}>
+                                    <span className={`${selectedOption === 'default' && 'text-white'}`}>
                                         <SimpleTokenIcon fill="currentColor" size={20} />
                                     </span>
                                     <span className={`ml-2 ${selectedOption === 'default' ? 'text-white' : ''}`}>
@@ -128,10 +130,14 @@ const TokenStudio = () => {
                                         name="option"
                                         value="custom"
                                         checked={selectedOption === 'custom'}
-                                        onChange={(e) => handleOptionChange('form', e)}
+                                        onChange={(e) => {
+                                            handleOptionChange('form', e);
+
+                                            setImageUploadOption(null);
+                                        }}
                                         className="hidden"
                                     />
-                                    <span className={`${selectedOption === 'custom' && "text-white"}`}>
+                                    <span className={`${selectedOption === 'custom' && 'text-white'}`}>
                                         <CustomTokenIcon fill="currentColor" size={20} />
                                     </span>
                                     <span className={`ml-2 ${selectedOption === 'custom' ? 'text-white' : ''}`}>
@@ -150,7 +156,11 @@ const TokenStudio = () => {
                                         name="option"
                                         value="nft"
                                         checked={selectedOption === 'nft'}
-                                        onChange={(e) => handleOptionChange('form', e)}
+                                        onChange={(e) => {
+                                            handleOptionChange('form', e);
+
+                                            setImageUploadOption(null);
+                                        }}
                                         className="hidden"
                                     />
                                     <span className={`${selectedOption === 'nft' ? 'text-white' : ''}`}>
@@ -174,7 +184,7 @@ const TokenStudio = () => {
                         description: '',
                         webvalidation: '',
                     }}
-                    onSubmit={async ({ amount, name, burn }, { resetForm }) => {
+                    onSubmit={async ({ amount, name, burn, url, ticker, description, webvalidation }, { resetForm }) => {
                         setTransactionSubmitting(true);
 
                         try {
@@ -205,10 +215,32 @@ const TokenStudio = () => {
                                 });
                             }
 
-                            if (selectedOption === 'split') {
+                            if (selectedOption === 'custom') {
+                                await new Promise((resolve, reject) => {
+                                    (window as any).MDS.cmd(
+                                        `tokencreate amount:${amount} name:${name} ${
+                                            burn.length ? 'burn:' + burn : ''
+                                        }`,
+                                        (resp) => {
+                                            if (resp.pending) reject('PENDING');
+
+                                            if (!resp.status) {
+                                                reject(
+                                                    resp.message
+                                                        ? resp.message
+                                                        : resp.error
+                                                        ? resp.error
+                                                        : 'Failed to send!'
+                                                );
+                                            } else {
+                                                resolve(true);
+                                            }
+                                        }
+                                    );
+                                });
                             }
 
-                            if (selectedOption === 'combine') {
+                            if (selectedOption === 'nft') {
                             }
 
                             setTransactionSuccess(true);
@@ -230,6 +262,9 @@ const TokenStudio = () => {
                         }
                     }}
                     validationSchema={yup.object().shape({
+                        name: yup.string()
+                            .required('This field is required')
+                            .matches(/^[^\\;]+$/, 'Invalid characters.'),
                         amount: yup
                             .string()
                             .required('Field required')
@@ -243,19 +278,19 @@ const TokenStudio = () => {
 
                                 try {
                                     if (new Decimal(val).isZero()) {
-                                        throw new Error("You can't mint zero tokens.");
+                                        throw new Error("You can't mint zero tokens");
+                                    }
+
+                                    if (new Decimal(val).decimalPlaces() > 1) {
+                                        throw new Error("You can't mint a token with decimal places")
                                     }
 
                                     if (new Decimal(val).lessThan(1)) {
-                                        throw new Error("You can't mint less than 1 token.");
+                                        throw new Error("You can't mint less than 1 token");
                                     }
 
                                     if (new Decimal(val).greaterThan(1000000000)) {
                                         throw new Error('Too much!');
-                                    }
-
-                                    if (new Decimal(val).decimalPlaces() > 18) {
-                                        throw new Error("You can't have more than 18 decimal places.");
                                     }
 
                                     return true;
@@ -296,6 +331,38 @@ const TokenStudio = () => {
                                 }
                             }
                         }),
+                        description: selectedOption !== 'default' && yup.string().min(0).max(255, 'Maximum 255 characters allowed.'),
+                        ticker: (selectedOption !== 'default' && selectedOption !== 'nft') && yup
+                            .string()
+                            .min(0)
+                            .max(5, 'Maximum 5 characters allowed.')
+                            .matches(/^[^\\;]+$/, 'Invalid characters.'),
+                        webvalidation: selectedOption !== 'default' && yup
+                            .string()
+                            .test('check-my-webvalidator', 'Invalid Url, must be https', function (val) {
+                                const { path, createError } = this;
+
+                                if (!val) {
+                                    return true;
+                                }
+
+                                try {
+                                    if (!isValidURLSecureOnly(val)) {
+                                        throw new Error("Invalid URL, must be https")
+                                    }
+                                    
+                                    return true;
+                                    
+                                } catch (error) {
+                                    
+                                    if (error instanceof Error) {
+                                        return createError({ path, message: error.message });
+                                    }
+
+                                    return createError({path, message: "Invalid Url"})
+                                }
+
+                            }),
                     })}
                 >
                     {({
@@ -382,267 +449,285 @@ const TokenStudio = () => {
                                 )}
 
                                 {(selectedOption === 'custom' || selectedOption === 'nft') && (
-                                    <div className="my-4">
-                                        <div className="flex-1 flex flex-col">
-                                            {!imageUploadOption && (
-                                                <p className="text-center dark:text-neutral-300 animate-pulse mb-3">
-                                                    Choose image upload method
-                                                </p>
-                                            )}
-                                            <div>
-                                                <fieldset>
-                                                    <div className="grid grid-cols-2 gap-2">
-                                                        <label
-                                                            className={`justify-center text-sm p-4 flex-col rounded-lg sm:roundd-full sm:flex-row flex items-center transition-all ${
-                                                                imageUploadOption === 'file'
-                                                                    ? 'bg-black dark:bg-black font-bold'
-                                                                    : 'bg-neutral-200 dark:bg-[#1B1B1B]'
-                                                            }`}
-                                                        >
-                                                            <input
-                                                                type="radio"
-                                                                name="option"
-                                                                value="file"
-                                                                checked={imageUploadOption === 'file'}
-                                                                onChange={(e) => {
-                                                                    handleOptionChange('imageUpload', e);
+                                    <>
+                                        <div className="my-4">
+                                            <div className="flex-1 flex flex-col">
+                                                {!imageUploadOption && (
+                                                    <p className="text-center dark:text-neutral-300 animate-pulse mb-3">
+                                                        Choose image upload method
+                                                    </p>
+                                                )}
+                                                <div>
+                                                    <fieldset>
+                                                        <div className="grid grid-cols-2 gap-2">
+                                                            <label
+                                                                className={`${selectedOption === 'nft' && "opacity-50"} justify-center text-sm p-4 flex-col rounded-lg sm:roundd-full sm:flex-row flex items-center transition-all ${
+                                                                    imageUploadOption === 'file'
+                                                                        ? 'bg-black dark:bg-black font-bold'
+                                                                        : 'bg-neutral-200 dark:bg-[#1B1B1B]'
+                                                                }`}
+                                                            >
+                                                                <input
+                                                                    type="radio"
+                                                                    name="option"
+                                                                    disabled={selectedOption === 'nft'}
+                                                                    value="file"
+                                                                    checked={imageUploadOption === 'file'}
+                                                                    onChange={(e) => {
+                                                                        handleOptionChange('imageUpload', e);
 
-                                                                    if (values.url.length) {
-                                                                        setFieldValue('url', '');
-                                                                    }
-                                                                }}
-                                                                className="hidden"
-                                                            />
-                                                            <span className={`${imageUploadOption === 'file' && "text-white"}`}>
-                                                                <UploadIcon fill="currentColor" size={20} />
-                                                            </span>
-                                                            <span
-                                                                className={`ml-2 ${
-                                                                    imageUploadOption === 'file' ? 'text-white' : ''
+                                                                        if (values.url.length) {
+                                                                            setFieldValue('url', '');
+                                                                        }
+                                                                    }}
+                                                                    className="hidden"
+                                                                />
+                                                                <span
+                                                                    className={`${
+                                                                        imageUploadOption === 'file' && 'text-white'
+                                                                    }`}
+                                                                >
+                                                                    <UploadIcon fill="currentColor" size={20} />
+                                                                </span>
+                                                                <span
+                                                                    className={`ml-2 ${
+                                                                        imageUploadOption === 'file' ? 'text-white' : ''
+                                                                    }`}
+                                                                >
+                                                                    Upload File
+                                                                </span>
+                                                            </label>
+                                                            <label
+                                                                className={`justify-center text-sm flex-col rounded-lg sm:roundd-full sm:flex-row p-4 flex items-center transition-all ${
+                                                                    imageUploadOption === 'url'
+                                                                        ? 'bg-black dark:bg-black font-bold'
+                                                                        : 'bg-neutral-200 dark:bg-[#1B1B1B]'
                                                                 }`}
                                                             >
-                                                                Upload File
-                                                            </span>
-                                                        </label>
-                                                        <label
-                                                            className={`justify-center text-sm flex-col rounded-lg sm:roundd-full sm:flex-row p-4 flex items-center transition-all ${
-                                                                imageUploadOption === 'url'
-                                                                    ? 'bg-black dark:bg-black font-bold'
-                                                                    : 'bg-neutral-200 dark:bg-[#1B1B1B]'
-                                                            }`}
-                                                        >
-                                                            <input
-                                                                type="radio"
-                                                                name="option"
-                                                                value="url"
-                                                                checked={imageUploadOption === 'url'}
-                                                                onChange={(e) => {
-                                                                    handleOptionChange('imageUpload', e);
+                                                                <input
+                                                                    type="radio"
+                                                                    name="option"
+                                                                    value="url"
+                                                                    checked={imageUploadOption === 'url'}
+                                                                    onChange={(e) => {
+                                                                        handleOptionChange('imageUpload', e);
 
-                                                                    if (values.url.length) {
-                                                                        setFieldValue('url', '');
-                                                                    }
-                                                                }}
-                                                                className="hidden"
-                                                            />
-                                                            <span
-                                                                className={`${
-                                                                    imageUploadOption === 'url' ? 'text-white' : ''
-                                                                }`}
-                                                            >
-                                                                <WebIcon fill="currentColor" size={20} />
-                                                            </span>
-                                                            <span
-                                                                className={`ml-2 ${
-                                                                    imageUploadOption === 'url' ? 'text-white' : ''
-                                                                }`}
-                                                            >
-                                                                URL
-                                                            </span>
-                                                        </label>
-                                                    </div>
-                                                </fieldset>
+                                                                        if (values.url.length) {
+                                                                            setFieldValue('url', '');
+                                                                        }
+                                                                    }}
+                                                                    className="hidden"
+                                                                />
+                                                                <span
+                                                                    className={`${
+                                                                        imageUploadOption === 'url' ? 'text-white' : ''
+                                                                    }`}
+                                                                >
+                                                                    <WebIcon fill="currentColor" size={20} />
+                                                                </span>
+                                                                <span
+                                                                    className={`ml-2 ${
+                                                                        imageUploadOption === 'url' ? 'text-white' : ''
+                                                                    }`}
+                                                                >
+                                                                    URL
+                                                                </span>
+                                                            </label>
+                                                        </div>
+                                                    </fieldset>
+                                                </div>
                                             </div>
-                                        </div>
 
-                                        <div className="relative my-6">
-                                            {values.url && (
-                                                <div className="grid grid-cols-[1fr_auto] items-center justify-center gap-4">
-                                                    <PreviewToken
-                                                        name={values.name}
-                                                        amount={values.amount}
-                                                        url={values.url}
+                                            <div className="relative my-6">
+                                                {values.url && (
+                                                    <div className="grid grid-cols-[1fr_auto] items-center justify-center gap-4">
+                                                        <PreviewToken
+                                                            name={values.name}
+                                                            amount={values.amount}
+                                                            url={values.url}
+                                                        />
+                                                        <span
+                                                            onClick={() => setFieldValue('url', '')}
+                                                            className="flex justify-center bg-neutral-200 hover:bg-neutral-300 dark:hover:bg-black dark:bg-[#1B1B1B] p-4 rounded-lg"
+                                                        >
+                                                            <RubbishIcon fill="currentColor" />
+                                                        </span>
+                                                    </div>
+                                                )}
+                                            </div>
+                                            {imageUploadOption === 'file' && <AddImage />}
+                                            {imageUploadOption === 'url' && (
+                                                <div className="my-2">
+                                                    <label className="text-sm opacity-70 dark:text-neutral-300">
+                                                        Image URL
+                                                    </label>
+
+                                                    <input
+                                                        id="url"
+                                                        name="url"
+                                                        type="text"
+                                                        placeholder="Image URL"
+                                                        value={values.url}
+                                                        onChange={handleChange}
+                                                        onBlur={handleBlur}
+                                                        className="bg-white rounded p-4 w-full focus:border focus:outline-none dark:placeholder:text-neutral-600 dark:bg-[#1B1B1B]"
                                                     />
-                                                    <span
-                                                        onClick={() => setFieldValue('url', '')}
-                                                        className="flex justify-center bg-neutral-200 hover:bg-neutral-300 dark:hover:bg-black dark:bg-[#1B1B1B] p-4 rounded-lg"
-                                                    >
-                                                        <RubbishIcon fill="currentColor" />
-                                                    </span>
+                                                    {errors && errors.url && touched && touched.url && (
+                                                        <p className="text-sm mt-2 dark:text-neutral-300">
+                                                            {errors.url}
+                                                        </p>
+                                                    )}
                                                 </div>
                                             )}
                                         </div>
-                                        {imageUploadOption === 'file' && <AddImage />}
-                                        {imageUploadOption === 'url' && (
+                                        <AnimatePageIn display={imageUploadOption !== null}>
                                             <div className="my-2">
                                                 <label className="text-sm opacity-70 dark:text-neutral-300">
-                                                    Image URL
+                                                    Amount to mint
                                                 </label>
-
                                                 <input
-                                                    id="url"
-                                                    name="url"
+                                                    id="amount"
+                                                    name="amount"
                                                     type="text"
-                                                    placeholder="Image URL"
-                                                    value={values.url}
+                                                    placeholder="0.0"
+                                                    value={values.amount}
                                                     onChange={handleChange}
                                                     onBlur={handleBlur}
                                                     className="bg-white rounded p-4 w-full focus:border focus:outline-none dark:placeholder:text-neutral-600 dark:bg-[#1B1B1B]"
                                                 />
-                                                {errors && errors.url && touched && touched.url && (
-                                                    <p className="text-sm mt-2 dark:text-neutral-300">{errors.url}</p>
+                                                {errors && errors.amount && touched && touched.amount && (
+                                                    <p className="text-sm mt-2 dark:text-neutral-300">
+                                                        {errors.amount}
+                                                    </p>
                                                 )}
                                             </div>
-                                        )}
-                                    </div>
-                                )}                                
-                                <AnimatePageIn display={imageUploadOption !== null}>
-                                    <div className="my-2">
-                                        <label className="text-sm opacity-70 dark:text-neutral-300">
-                                            Amount to mint
-                                        </label>
-                                        <input
-                                            id="amount"
-                                            name="amount"
-                                            type="text"
-                                            placeholder="0.0"
-                                            value={values.amount}
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
-                                            className="bg-white rounded p-4 w-full focus:border focus:outline-none dark:placeholder:text-neutral-600 dark:bg-[#1B1B1B]"
-                                        />
-                                        {errors && errors.amount && touched && touched.amount && (
-                                            <p className="text-sm mt-2 dark:text-neutral-300">{errors.amount}</p>
-                                        )}
-                                    </div>
 
-                                    <div className="my-2">
-                                        <label className="text-sm opacity-70 dark:text-neutral-300">Token name</label>
+                                            <div className="my-2">
+                                                <label className="text-sm opacity-70 dark:text-neutral-300">
+                                                    Token name
+                                                </label>
 
-                                        <input
-                                            id="name"
-                                            name="name"
-                                            type="text"
-                                            placeholder="Token Name"
-                                            value={values.name}
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
-                                            className="bg-white rounded p-4 w-full focus:border focus:outline-none dark:placeholder:text-neutral-600 dark:bg-[#1B1B1B]"
-                                        />
-                                        {errors && errors.name && touched && touched.name && (
-                                            <p className="text-sm mt-2 dark:text-neutral-300">{errors.name}</p>
-                                        )}
-                                    </div>
+                                                <input
+                                                    id="name"
+                                                    name="name"
+                                                    type="text"
+                                                    placeholder="Token Name"
+                                                    value={values.name}
+                                                    onChange={handleChange}
+                                                    onBlur={handleBlur}
+                                                    className="bg-white rounded p-4 w-full focus:border focus:outline-none dark:placeholder:text-neutral-600 dark:bg-[#1B1B1B]"
+                                                />
+                                                {errors && errors.name && touched && touched.name && (
+                                                    <p className="text-sm mt-2 dark:text-neutral-300">{errors.name}</p>
+                                                )}
+                                            </div>
 
-                                    {selectedOption === 'custom' && (
-                                        <div className="my-2">
-                                            <label className="text-sm opacity-70 dark:text-neutral-300">
-                                                Ticker Symbol
-                                            </label>
+                                            {selectedOption === 'custom' && (
+                                                <div className="my-2">
+                                                    <label className="text-sm opacity-70 dark:text-neutral-300">
+                                                        Ticker Symbol
+                                                    </label>
 
-                                            <input
-                                                id="ticker"
-                                                name="ticker"
-                                                type="text"
-                                                placeholder="Token Ticker Symbol (e.g MINIMA, BTC, ETH)"
-                                                value={values.ticker}
-                                                onChange={handleChange}
-                                                onBlur={handleBlur}
-                                                className="bg-white rounded p-4 w-full focus:border focus:outline-none dark:placeholder:text-neutral-600 dark:bg-[#1B1B1B]"
-                                            />
-                                            {errors && errors.name && touched && touched.name && (
-                                                <p className="text-sm mt-2 dark:text-neutral-300">{errors.name}</p>
+                                                    <input
+                                                        id="ticker"
+                                                        name="ticker"
+                                                        type="text"
+                                                        placeholder="Token Ticker Symbol (e.g MINIMA, BTC, ETH)"
+                                                        value={values.ticker}
+                                                        onChange={handleChange}
+                                                        onBlur={handleBlur}
+                                                        className="bg-white rounded p-4 w-full focus:border focus:outline-none dark:placeholder:text-neutral-600 dark:bg-[#1B1B1B]"
+                                                    />
+                                                    {errors && errors.ticker && touched && touched.ticker && (
+                                                        <p className="text-sm mt-2 dark:text-neutral-300">
+                                                            {errors.ticker}
+                                                        </p>
+                                                    )}
+                                                </div>
                                             )}
-                                        </div>
-                                    )}
 
-                                    {(selectedOption === 'custom' || selectedOption === 'nft') && (
-                                        <>
-                                            <div className="my-2">
-                                                <label className="text-sm opacity-70 dark:text-neutral-300">
-                                                    Description
-                                                </label>
-                                                <MessageArea
-                                                    id="description"
-                                                    name="description"
-                                                    value={values.description}
-                                                    error={false}
-                                                    handleBlur={handleBlur}
-                                                    handleChange={handleChange}
-                                                    placeholder="Token Description"
-                                                />
-                                                {errors && errors.description && (
-                                                    <p className="text-sm mt-2 dark:text-neutral-300">
-                                                        {errors.description}
-                                                    </p>
-                                                )}
+                                            {(selectedOption === 'custom' || selectedOption === 'nft') && (
+                                                <>
+                                                    <div className="my-2">
+                                                        <label className="text-sm opacity-70 dark:text-neutral-300">
+                                                            Description
+                                                        </label>
+                                                        <MessageArea
+                                                            id="description"
+                                                            name="description"
+                                                            value={values.description}
+                                                            error={false}
+                                                            handleBlur={handleBlur}
+                                                            handleChange={handleChange}
+                                                            placeholder="Token Description"
+                                                        />
+                                                        {errors && errors.description && (
+                                                            <p className="text-sm mt-2 dark:text-neutral-300">
+                                                                {errors.description}
+                                                            </p>
+                                                        )}
+                                                    </div>
+
+                                                    <div className="my-2">
+                                                        <label className="text-sm opacity-70 dark:text-neutral-300">
+                                                            Token Authenticity
+                                                        </label>
+
+                                                        <input
+                                                            id="webvalidation"
+                                                            name="webvalidation"
+                                                            type="text"
+                                                            placeholder="Token Authenticity URL"
+                                                            value={values.webvalidation}
+                                                            onChange={handleChange}
+                                                            onBlur={handleBlur}
+                                                            className="bg-white rounded p-4 w-full focus:border focus:outline-none dark:placeholder:text-neutral-600 dark:bg-[#1B1B1B]"
+                                                        />
+                                                        {errors &&
+                                                            errors.webvalidation &&
+                                                            touched &&
+                                                            touched.webvalidation && (
+                                                                <p className="text-sm mt-2 dark:text-neutral-300">
+                                                                    {errors.webvalidation}
+                                                                </p>
+                                                            )}
+
+                                                        <p className="text-[12px] dark:text-neutral-400 text-left">
+                                                            Hosting a .txt file on your webpage with the tokenid of this
+                                                            token after it is minted will validate its authenticity
+                                                        </p>
+                                                    </div>
+                                                </>
+                                            )}
+                                            <div className="mt-16">
+                                                <PrimaryButton disabled={!isValid || isSubmitting} type="submit">
+                                                    Mint
+                                                </PrimaryButton>
                                             </div>
 
-                                            <div className="my-2">
-                                                <label className="text-sm opacity-70 dark:text-neutral-300">
-                                                    Token Authenticity
-                                                </label>
-
-                                                <input
-                                                    id="webvalidation"
-                                                    name="webvalidation"
-                                                    type="text"
-                                                    placeholder="Token Authenticity URL"
-                                                    value={values.webvalidation}
-                                                    onChange={handleChange}
-                                                    onBlur={handleBlur}
-                                                    className="bg-white rounded p-4 w-full focus:border focus:outline-none dark:placeholder:text-neutral-600 dark:bg-[#1B1B1B]"
-                                                />
-                                                {errors && errors.webvalidation && touched && touched.webvalidation && (
-                                                    <p className="text-sm mt-2 dark:text-neutral-300">
-                                                        {errors.webvalidation}
-                                                    </p>
-                                                )}
-
-                                                <p className="text-[12px] dark:text-neutral-400 text-left">
-                                                    Hosting a .txt file on your webpage with the tokenid of this token
-                                                    after it is minted will validate its authenticity
+                                            <div className="my-2 w-full flex">
+                                                <p className="text-sm my-auto dark:text-neutral-300">
+                                                    Network
+                                                    <br /> fee
                                                 </p>
+                                                <div className="ml-auto">
+                                                    <span className="flex justify-end text-orange-300 dark:text-orange-400">
+                                                        <FireIcon size={22} fill="currentColor" />
+                                                    </span>
+                                                    <input
+                                                        id="burn"
+                                                        name="burn"
+                                                        value={values.burn}
+                                                        onChange={handleChange}
+                                                        onBlur={handleBlur}
+                                                        placeholder="0.0"
+                                                        className="bg-transparent focus:outline-none text-right max-w-max text-sm placeholder:opacity-80"
+                                                    />
+                                                </div>
                                             </div>
-                                        </>
-                                    )}
-                                    <div className="mt-16">
-                                        <PrimaryButton disabled={!isValid || isSubmitting} type="submit">
-                                            Mint
-                                        </PrimaryButton>
-                                    </div>
-
-                                    <div className="my-2 w-full flex">
-                                        <p className="text-sm my-auto dark:text-neutral-300">
-                                            Network
-                                            <br /> fee
-                                        </p>
-                                        <div className="ml-auto">
-                                            <span className="flex justify-end text-orange-300 dark:text-orange-400">
-                                                <FireIcon size={22} fill="currentColor" />
-                                            </span>
-                                            <input
-                                                id="burn"
-                                                name="burn"
-                                                value={values.burn}
-                                                onChange={handleChange}
-                                                onBlur={handleBlur}
-                                                placeholder="0.0"
-                                                className="bg-transparent focus:outline-none text-right max-w-max text-sm placeholder:opacity-80"
-                                            />
-                                        </div>
-                                    </div>
-                                </AnimatePageIn>
+                                        </AnimatePageIn>
+                                    </>
+                                )}
                             </>
                         </form>
                     )}
