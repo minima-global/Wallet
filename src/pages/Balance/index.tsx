@@ -36,7 +36,7 @@ const Balance = () => {
                             onChange={handleFilterTextChange}
                             placeholder="Search tokens"
                             type="search"
-                            className="bg-white rounded-full p-3 px-4 w-full focus:outline-none focus:border focus:border-black focus:dark:border-neutral-600   dark:placeholder:text-neutral-600 dark:bg-[#1B1B1B]"
+                            className="bg-white rounded-full p-3 px-4 w-full focus:outline-none focus:border focus:border-black focus:dark:border-neutral-600 dark:placeholder:text-neutral-600 dark:bg-[#1B1B1B]"
                         />
                     </div>
                     <Wallet

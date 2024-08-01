@@ -7,8 +7,9 @@ interface Props {
     error: false | string;
     id: string;
     name: string;
+    placeholder?: string; // optional, defaults to "Public Message" if not provided.
 }
-const MessageArea = ({ handleChange, handleBlur, value, id, name }: Props) => {
+const MessageArea = ({ handleChange, handleBlur, value, id, name, placeholder = "Public Message" }: Props) => {
     const [_f, setF] = useState(false);
 
 
@@ -25,7 +26,7 @@ const MessageArea = ({ handleChange, handleBlur, value, id, name }: Props) => {
                     handleBlur(e);
                     setF(false);
                 }}
-                placeholder="Public message"
+                placeholder={placeholder}
                 className="bg-transparent focus:outline-none dark:placeholder:text-neutral-600 w-full truncate"
                 rows={5}    
                 value={value}            

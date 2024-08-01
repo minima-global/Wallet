@@ -64,3 +64,21 @@ input:-webkit-autofill:active{
 textarea {
   resize: none;
 }
+
+.avatar {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #D1D1D1;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 60px;
+  padding-left: 2px;
+  padding-bottom: 2px;
+  min-width: 56px;
+  background: rgba(0,0,0,0.1);
+}

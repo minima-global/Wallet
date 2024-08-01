@@ -66,7 +66,7 @@ const Wallet = ({ selectToken, selectionMode = false, detailsMode = false, filte
                                                 ? selectToken(token)
                                                 : () => null
                                         }
-                                        className={`grid grid-cols-[auto_1fr] items-center gap-2 bg-white dark:bg-black mb-2 rounded ${
+                                        className={`grid grid-cols-[auto_1fr] items-center gap-2 bg-white dark:bg-[#1B1B1B] mb-2 rounded ${
                                             selectionMode ? 'hover:bg-teal-500 border-teal-500 border' : ''
                                         }`}
                                         key={token.tokenid}
@@ -123,7 +123,7 @@ const Wallet = ({ selectToken, selectionMode = false, detailsMode = false, filte
                                                 ? selectToken(token)
                                                 : () => null
                                         }
-                                        className={`grid grid-cols-[auto_1fr] items-center gap-2 bg-white dark:bg-black mb-2 rounded ${
+                                        className={`grid grid-cols-[auto_1fr] items-center gap-2 bg-white dark:bg-[#1B1B1B] mb-2 rounded ${
                                             selectionMode ? 'hover:bg-teal-500 border-teal-500 border' : ''
                                         }`}
                                         key={token.tokenid}

@@ -1,4 +1,8 @@
-import React, { ReactNode } from 'react';
+import { FormikContextType, FormikValues, useFormikContext } from 'formik';
+import React, { ReactNode, useRef } from 'react';
+import UploadIcon from '../../../components/UI/Icons/UploadIcon';
+import RubbishIcon from '../../../components/UI/Icons/RubbishIcon';
+import PreviewToken from '../../../components/PreviewToken';
 
 function isString(myString: string | ArrayBuffer | null): myString is string {
     return (myString as string).length !== undefined; // ArrayBuffer has byteLength property not length
@@ -13,11 +17,12 @@ interface IProps {
     onImageChange?: any;
     children?: ReactNode;
     id?: string;
-    formik: any;
 }
 
-const AddImage = ({ onImageChange = () => {}, formik }: IProps) => {
-    const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
+const AddImage = ({ onImageChange = () => {} }: IProps) => {
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const formik: FormikContextType<FormikValues> = useFormikContext();
+    const [_, setSelectedFile] = React.useState<File | null>(null);
 
     const handleCapture = ({ target }: any) => {
         setSelectedFile(target.files[0]);
@@ -45,41 +50,20 @@ const AddImage = ({ onImageChange = () => {}, formik }: IProps) => {
             };
         });
     };
+
     return (
         <>
-            {formik.values.url && selectedFile ? (
-                <div className="relative">
-                    <img alt="" src={formik.values.url} />
 
-                    <div>
-                        <p className="text-black text-sm">{selectedFile.name}</p>
-                    </div>
 
-                    <svg
-                        onClick={() => formik.setFieldValue('url', '')}
-                        className="absolute right-0 top-0"
-                        xmlns="http://www.w3.org/2000/svg"
-                        height="24"
-                        viewBox="0 -960 960 960"
-                        width="24"
-                    >
-                        <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z" />
-                    </svg>
-                </div>
-            ) : (
-                <div className="bg-slate-200 bg-opacity-80 rounded max-w-max flex flex-col justify-center items-center py-12 px-12 hover:bg-opacity-50 hover:cursor-pointer">
-                    <svg
-                        className="fill-black"
-                        xmlns="http://www.w3.org/2000/svg"
-                        height="24"
-                        viewBox="0 -960 960 960"
-                        width="24"
-                    >
-                        <path d="M440-320v-326L336-542l-56-58 200-200 200 200-56 58-104-104v326h-80ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z" />
-                    </svg>
-                    <p className="text-black text-sm">Click here to upload</p>
-                </div>
-            )}
+            <div
+                onClick={() => fileInputRef.current?.click()}
+                className="bg-neutral-200 hover:cursor-pointer hover:bg-neutral-300 hover:dark:bg-black text-[#1B1B1B] dark:bg-[#1B1B1B] gap-1 p-2 py-4 flex justify-center items-center dark:text-neutral-300 rounded"
+            >
+                <span>
+                    <UploadIcon fill="currentColor" size={20} />
+                </span>
+                <p className="text-sm font-bold">{!formik.values.url.length && "Click here to upload"} {!!formik.values.url.length && "Upload another file"}</p>
+            </div>
 
             <input
                 disabled={formik.isSubmitting}
@@ -88,10 +72,15 @@ const AddImage = ({ onImageChange = () => {}, formik }: IProps) => {
                 type="file"
                 key={formik.values.url}
                 hidden
-                accept="image/*"
+                accept="image/png, image/jpeg, image/jpg, image/svg+xml"
                 onChange={handleCapture}
                 onBlur={formik.handleBlur}
+                ref={fileInputRef}
             />
+
+            <p className="text-[12px] dark:text-neutral-400 text-center">
+                Image formats accepted are png, jpeg, jpg, svg (all files are compressed &{' '}
+            </p>
         </>
     );
 };
