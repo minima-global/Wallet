@@ -62,7 +62,7 @@ const AddressItem: React.FC<AddressItemProps> = ({
                 >
                     {({ values, handleSubmit, handleChange }) => (
                         <form
-                            className="flex justify-center gap-1"
+                            className="flex justify-center"
                             onClick={(e) => {
                                 e.stopPropagation();
                                 
@@ -75,10 +75,10 @@ const AddressItem: React.FC<AddressItemProps> = ({
                             value={values.nickname}
                             onChange={handleChange}
                                 placeholder="Enter nickname"
-                                className="bg-transparent px-4 border rounded-full focus:outline focus:outline-[#1B1B1B] dark:focus:outline-neutral-300"
+                                className="bg-white dark:bg-[#1B1B1B] dark:border-neutral-500 px-4 border rounded-full focus:outline placeholder:text-neutral-500 rounded-r-none focus:outline-[#1B1B1B] dark:focus:outline-neutral-300"
                             />
-                            <div className="max-w-[70px]">
-                                <PrimaryButton onClick={() => {}} extraClass="!bg-[#1B1B1B]" type="submit">
+                            <div className="flex-shrink-0">
+                                <PrimaryButton onClick={() => {}} extraClass="!bg-neutral-300 dark:!bg-neutral-500 py-2 ml-0 rounded-l-none" type="submit">
                                     <span className='dark:text-neutral-300'>
                                     <DoneIcon fill="currentColor" size={24} />
                                     </span>

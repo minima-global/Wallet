@@ -18,15 +18,17 @@ const SideDrawer = ({ isOpen, toggleDrawer }: IProps) => {
         <div className="relative">
             {/* Persistent Drawer */}
             <div
-                className={`z-[444] h-full fixed top-0 shadow-lg dark:shadow-none bg-white left-0 w-[240px] dark:bg-[#252525] dark:border-r dark:border-r-[#1B1B1B] text-white transition-transform duration-300 md:translate-x-0 ${
+                className={`z-[444] h-full fixed top-0 border-r dark:shadow-none bg-neutral-100 left-0 w-[240px] dark:bg-[#252525] dark:border-r dark:border-r-[#1B1B1B] text-white transition-transform duration-300 md:translate-x-0 ${
                     isOpen ? 'translate-x-0' : '-translate-x-full'
                 }`}
             >
                 <div className="flex flex-col h-full p-4 text-black dark:text-white">
                     {/* Drawer Header */}
                     <div className="flex items-center gap-2 mb-4">
-                        <WalletBrand fill="#1B1B1B" size={24} />
-                        <h2 className="text-lg font-bold tracking-wide text-black dark:text-white">Wallet</h2>
+                        <div className='mb-2'>
+                            <WalletBrand fill="#1B1B1B" size={30} />
+                        </div>
+                        <h2 className="text-lg font-bold tracking-wide text-[#1B1B1B] dark:text-neutral-200">Wallet</h2>
                     </div>
 
                     {/* Main Content */}
@@ -130,11 +132,11 @@ const SideDrawer = ({ isOpen, toggleDrawer }: IProps) => {
                             </li>
                         </ul>
                         <div className="flex items-center justify-center">
-                            <hr className="border border-neutral-300 dark:border-[#1B1B1B] my-1 w-full" />
-                            <span className="mx-4 text-center text-black dark:text-white font-bold text-[12px]">
+                            <hr className="border border-neutral-300 dark:border-neutral-600 my-1 w-full" />
+                            <span className="mx-4 text-center text-black dark:text-neutral-500 font-bold text-[12px]">
                                 <SettingsIcon fill="currentColor" />
                             </span>
-                            <hr className="border border-neutral-300 dark:border-[#1B1B1B] my-1 w-full" />
+                            <hr className="border border-neutral-300 dark:border-neutral-600 my-1 w-full" />
                         </div>
                     </div>
 

@@ -21,13 +21,9 @@ const AnimatedDialog = ({ children, display, extraClass, dismiss }: AnimatedDial
 
     // Determine the animation styles based on screen size
     const transitions = useTransition(display, {
-        from: isMdUp
-            ? { opacity: 0, transform: 'translateY(-50%) scale(0.8)' }
-            : { opacity: 0, transform: 'translateY(100%) scale(1)' },
+        from: { opacity: 0, transform: 'translateY(100%) scale(1)' },
         enter: { opacity: 1, transform: 'translateY(0%) scale(1)' },
-        leave: isMdUp
-            ? { opacity: 0, transform: 'translateY(-50%) scale(0.8)' }
-            : { opacity: 0, transform: 'translateY(+150%) scale(1)' },
+        leave: { opacity: 0, transform: 'translateY(+150%) scale(1)' },
         onRest: () => {
             if (!display) setShow(false);
         },
@@ -54,7 +50,7 @@ const AnimatedDialog = ({ children, display, extraClass, dismiss }: AnimatedDial
         {show && (
           <div
             onClick={dismiss}
-            className="fixed backdrop-blur-sm left-0 right-0 top-0 bottom-0 z-[21] bg-white/30 dark:bg-black/30"
+            className="fixed backdrop-blur-sm left-0 right-0 top-0 bottom-0 z-[21] bg-neutral-200/100 dark:bg-black/90"
           />
         )}
       </>

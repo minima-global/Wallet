@@ -1,23 +1,9 @@
 import { useContext, useEffect, useRef, useState } from 'react';
-import { copy } from '../shared/functions';
 import QRCode from 'react-qr-code';
-import CardContent from '../components/UI/CardContent';
 import { Scripts } from '../@types/minima';
-import Grid from '../components/UI/Grid';
 import { appContext } from '../AppContext';
-import { createPortal } from 'react-dom';
-import Input from '../components/UI/Input';
-import Button from '../components/UI/Button';
-import { Formik } from 'formik';
-import * as Yup from 'yup';
-import * as utils from '../shared/utils';
-import getCurrentNodeVersion from '../minima/commands/getCurrentVersion';
-
-import * as rpc from '../__minima__/libs/RPC';
-import KeyValue from '../components/UI/KeyValue';
 import AnimatePageIn from '../components/UI/Animations/AnimatePageIn';
 import { useLocation } from 'react-router-dom';
-
 import Loading from '../components/UI/Lottie/Loading.json';
 import Lottie from 'lottie-react';
 import PrivateKey from './_components/PrivateKey';
@@ -31,10 +17,7 @@ import AddressItem from './_components/ReceiveAddressItem';
 const Receive = () => {
     const location = useLocation();
 
-    const {
-        simpleAddresses,
-        _nicknameAddress,
-    } = useContext(appContext);
+    const { simpleAddresses, _nicknameAddress } = useContext(appContext);
     const [address, setAddress] = useState<Scripts | null>(null);
     const [showFullList, setShowFullList] = useState(false);
     const [filterText, setFilterText] = useState('');
@@ -75,7 +58,6 @@ const Receive = () => {
         }
     }, [simpleAddresses]);
 
-
     const filteredAddresses = (simpleAddresses as Scripts[]).filter(
         (a) =>
             a.miniaddress.includes(filterText) ||
@@ -87,44 +69,40 @@ const Receive = () => {
     return (
         <>
             <AnimatedDialog display={showFullList} dismiss={() => setShowFullList(false)}>
-                <div className="h-full grid md:items-center">
-                    <div className="relative left-0 right-0 bottom-0 top-0 bg-transparent">
-                        <div className="bg-neutral-100 h-full shadow-lg dark:shadow-none dark:bg-black w-full rounded-none md:w-[calc(100%_-_16px)]  mx-auto p-4 px-0 md:rounded md:max-w-[560px] overflow-hidden">
-                            <div className="flex items-center justify-between mb-3 px-3">
-                                <h3 className="font-bold tracking-wide">Default Addresses</h3>
-                                <span onClick={() => setShowFullList(false)}>
-                                    <CloseIcon fill="currentColor" />
-                                </span>
-                            </div>
+                <div className="modal-content">
+                <div className="flex items-center justify-between p-4 border-b border-[#1B1B1B] dark:border-neutral-600">
+                        <h3 className="font-bold text-lg">Your Addresses</h3>
+                        <button onClick={() => setShowFullList(false)} aria-label="Close">
+                            <CloseIcon fill="currentColor" />
+                        </button>
+                    </div>
 
-                            <div className="my-3 px-3">
-                                <input
-                                    onChange={handleFilterTextChange}
-                                    placeholder="Search address"
-                                    type="search"
-                                    className="bg-white rounded-full p-3 px-4 w-full focus:outline-none focus:border focus:border-black focus:dark:border-neutral-600   dark:placeholder:text-neutral-600 dark:bg-[#1B1B1B]"
+                    <div className="my-3 px-3">
+                        <input
+                            onChange={handleFilterTextChange}
+                            placeholder="Search address"
+                            type="search"
+                            className="bg-white rounded-full p-3 px-4 w-full focus:outline-none focus:border focus:border-black focus:dark:border-neutral-600  dark:placeholder:text-neutral-600 dark:bg-[#1B1B1B]"
+                        />
+                    </div>
+                    <div className="flex-1 overflow-y-auto p-4 md:p-0">
+                        <ul className="overflow-y-auto">
+                            {!filteredAddresses.length && (
+                                <li className="truncate mb-2 px-4 p-4 first:mt-2 text-black hover:bg-slate-50 hover:cursor-pointer">
+                                    <h1 className="text-center font-medium">No results found</h1>
+                                </li>
+                            )}
+                            {filteredAddresses.map((a) => (
+                                <AddressItem
+                                    key={a.address}
+                                    address={a}
+                                    setAddress={setAddress}
+                                    filterText={filterText}
+                                    setFilterText={setFilterText}
+                                    setShowFullList={setShowFullList}
                                 />
-                            </div>
-                            <div className="overflow-y-auto h-[760px] md:h-[240px]">
-                                <ul className="overflow-y-auto">
-                                    {!filteredAddresses.length && (
-                                        <li className="truncate mb-2 px-4 p-4 first:mt-2 text-black hover:bg-slate-50 hover:cursor-pointer">
-                                            <h1 className="text-center font-medium">No results found</h1>
-                                        </li>
-                                    )}
-                                    {filteredAddresses.map((a) => (
-                                        <AddressItem
-                                            key={a.address}
-                                            address={a}
-                                            setAddress={setAddress}
-                                            filterText={filterText}
-                                            setFilterText={setFilterText}
-                                            setShowFullList={setShowFullList}
-                                        />
-                                    ))}
-                                </ul>
-                            </div>
-                        </div>
+                            ))}
+                        </ul>
                     </div>
                 </div>
             </AnimatedDialog>

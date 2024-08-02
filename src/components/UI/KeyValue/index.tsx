@@ -23,7 +23,7 @@ const KeyValue = ({ title, value, help, clipboard, mono = false, truncate = true
 
     return (
         <>
-            <div className={`rounded-lg grid grid-rows-2 md:grid-rows-1 md:grid-cols-[120px_1fr] border dark:border-[#1B1B1B] md:gap-2 items-center dark:bg-[#1B1B1B] dark:bg-opacity-60`}>
+            <div className={`rounded-lg grid grid-rows-2 md:grid-rows-1 md:grid-cols-[120px_1fr] bg-neutral-300 border dark:border-[#1B1B1B] md:gap-2 items-center dark:bg-[#1B1B1B] dark:bg-opacity-60`}>
                 <div className='truncate dark:border-r dark:border-r-neutral-800'>
                     <h3 className="text-center truncate p-2 font-bold bg-neutral-100 text-sm dark:bg-[#1B1B1B] dark:bg-opacity-10">{title}</h3>
                 </div>
@@ -35,7 +35,7 @@ const KeyValue = ({ title, value, help, clipboard, mono = false, truncate = true
                     }
                     
                     {!truncate &&
-                    <p className={`px-2 md:p-0 text-center md:text-left text-sm break-word ${mono && 'font-mono'}`}>
+                    <p className={` px-2 md:p-0 text-center md:text-left text-sm break-word ${mono && 'font-mono'}`}>
                         {value}
                     </p>                    
                 

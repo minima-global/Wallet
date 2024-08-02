@@ -34,7 +34,8 @@ const Burn = ({ display, token, dismiss }: IProps) => {
                             </span> */}
                         </div>
                         <div>
-                            Do you want to burn this token?  How about you hide it instead?
+                            Do you want to burn this token?
+                            <p className='text-sm dark:text-neutral-300'>You can hide it instead.</p>
 
                             <div className='grid grid-cols-2'>
                                 <div></div>

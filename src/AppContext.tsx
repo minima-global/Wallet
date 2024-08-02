@@ -450,6 +450,7 @@ const AppProvider = ({ children }: IProps) => {
                 simpleAddresses,
                 history,
                 historyFacade,
+                setHistoryFacade,
                 historyDetails,
                 getHistory,
                 getBalance,

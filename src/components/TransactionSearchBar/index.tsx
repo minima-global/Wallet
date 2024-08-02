@@ -7,14 +7,14 @@ const TransactionSearchBar = () => {
     const [show, setShow] = useState(false);
 
     return (
-        <div className={`relative flex items-center ${show && "min-w-[95%]"}`}>
+        <div className={`relative flex items-center ${show && "min-w-[92%]"}`}>
             <AnimateExpandIn display={show}>
                 <div className="bg-white rounded-full p-3 px-4 flex items-center gap-3 w-full dark:bg-[#1B1B1B]">
                     <span>
                         <SearchIcon fill="currentColor" />
                     </span>
                     <input
-                        placeholder="Search tokens"
+                        placeholder="Search transaction"
                         type="search"
                         className="w-full focus:outline-none bg-transparent dark:placeholder:text-neutral-600"
                     />

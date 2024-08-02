@@ -4,44 +4,36 @@ import AnimatePageIn from '../../components/UI/Animations/AnimatePageIn';
 import { useLocation } from 'react-router-dom';
 import TransactionSearchBar from '../../components/TransactionSearchBar';
 import SearchIcon from '../../components/UI/Icons/SearchIcon';
+import SecondaryButton from '../../components/UI/SecondaryButton';
+import { appContext } from '../../AppContext';
+import useTransactionHistory from './hooks';
+import Lottie from 'lottie-react';
+
+import Loading from '../../components/UI/Lottie/Loading.json';
+import Detail from './Detail';
 
 const Transactions = () => {
     const location = useLocation();
-    const [filterText, setFilterText] = useState('');
 
-    const [viewKey, setViewKey] = useState(false);
-    const [remainingTime, setRemainingTime] = useState(5000);
-    const [held, setHeld] = useState(false);
-    const timeoutRef: any = useRef(null);
+    const { historyFacade, historyDetails, history, getHistory, loaded } = useContext(appContext);
+    const { createElement } = useTransactionHistory();
 
-    const handleFilterTextChange = (evt) => {
-        setFilterText(evt.target.value);
-    };
+    const [viewTxpow, setViewTxpow] = useState<string | false>(false);
 
-    const handleStart = () => {
-        timeoutRef.current = setInterval(() => {
-            setRemainingTime((prevTime) => {
-                if (prevTime <= 0) {
-                    clearInterval(timeoutRef.current);
-                    setHeld(true);
-                    setViewKey(true);
-                    return 0;
-                }
-                return prevTime - 1000;
-            });
-        }, 1000);
-        setHeld(true);
-    };
+    console.log(historyFacade);
 
-    const handleEnd = () => {
-        setViewKey(false);
-        clearInterval(timeoutRef.current);
-        setRemainingTime(5000);
-        setHeld(false);
-    };
+    useEffect(() => {
+        if (loaded.current) {
+            setTimeout(() => {
+                getHistory();
+            }, 2000);
+        }
+    }, [loaded]);
 
     return (
         <>
+            <Detail txpowid={viewTxpow} dismiss={() => setViewTxpow(false)} />
+
             <AnimatePageIn display={location.pathname.includes('/dashboard/transactions')}>
                 <div className="mx-3 mt-8">
                     <div className="grid grid-cols-[1fr_auto] items-center">
@@ -52,18 +44,26 @@ const Transactions = () => {
                         <div className="flex items-center overflow-auto hide-scrollbar gap-2 w-full">
                             <TransactionSearchBar />
                             <div className="flex flex-shrink-0 gap-2">
-                                <button type="button" className="bg-[#1B1B1B]">
-                                    ooo
-                                </button>
-                                <button type="button" className="bg-[#1B1B1B]">
-                                    ooo
-                                </button>
-                                <button type="button" className="bg-[#1B1B1B]">
-                                    ooo
-                                </button>
+                                <SecondaryButton onClick={() => null} type="button">
+                                    Hide
+                                </SecondaryButton>
+                                <SecondaryButton onClick={() => null} type="button">
+                                    Download
+                                </SecondaryButton>
                             </div>
                         </div>
                     </div>
+
+                    {!historyFacade && (
+                        <div className="flex justify-center">
+                            <Lottie
+                                className="w-[64px] h-[64px] self-center place-self-center justify-self-center"
+                                animationData={Loading}
+                                loop={true}
+                            />
+                        </div>
+                    )}
+                    {historyFacade && <div className="space-y-4">{createElement(setViewTxpow)}</div>}
                 </div>
             </AnimatePageIn>
         </>
