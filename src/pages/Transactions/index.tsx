@@ -9,12 +9,14 @@ import Lottie from 'lottie-react';
 
 import Loading from '../../components/UI/Lottie/Loading.json';
 import Detail from './Detail';
+import FilterBy from './FilterBy';
 
 const Transactions = () => {
     const location = useLocation();
 
     const { historyFacade, getHistory, loaded } = useContext(appContext);
-    const { filterText, filteredElements, viewTxpow, setViewTxpow } = useTransactionHistory();
+    const { filterText, filteredElements, viewTxpow, setViewTxpow, filterBy } = useTransactionHistory();
+    const [promptFilterBy, setPromptFilterBy] = useState(false);
 
     useEffect(() => {
         if (viewTxpow) {
@@ -32,6 +34,8 @@ const Transactions = () => {
 
     return (
         <>
+            <FilterBy display={promptFilterBy} dismiss={() => setPromptFilterBy(false)} />
+
             <Detail txpowid={viewTxpow} dismiss={() => setViewTxpow(false)} />
 
             <AnimatePageIn display={location.pathname.includes('/dashboard/transactions')}>
@@ -44,7 +48,7 @@ const Transactions = () => {
                         <div className="flex items-center overflow-auto hide-scrollbar gap-2 w-full">
                             <TransactionSearchBar />
                             <div className="flex flex-shrink-0 gap-2">
-                                <SecondaryButton onClick={() => null} type="button">
+                                <SecondaryButton onClick={() => setPromptFilterBy(true)} type="button">
                                     Filter By
                                 </SecondaryButton>
                                 <SecondaryButton onClick={() => null} type="button">
@@ -68,7 +72,7 @@ const Transactions = () => {
                     )}
 
                     {historyFacade && <div className="space-y-4">{filteredElements ? filteredElements : null}</div>}
-                    {!!filterText.length && filteredElements.length === 0 && (
+                    {(!!filterText.length || filterBy !== null) && filteredElements.length === 0 && (
                         <p className="text-[#1B1B1B] text-sm dark:text-neutral-300 text-center">No results found</p>
                     )}
                 </div>

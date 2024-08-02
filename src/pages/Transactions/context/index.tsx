@@ -73,7 +73,7 @@ export const TransactionHistoryProvider: React.FC<{ children: ReactNode }> = ({ 
 
     return (
         <TransactionHistoryContext.Provider
-            value={{ viewTxpow, filterText, setViewTxpow, filteredElements, setFilterText }}
+            value={{ viewTxpow, filterText, filterBy, setFilterBy, setViewTxpow, filteredElements, setFilterText }}
         >
             {children}
         </TransactionHistoryContext.Provider>
