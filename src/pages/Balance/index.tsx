@@ -24,7 +24,7 @@ const Balance = () => {
     };
 
 
-    const handleFilterTextChange = (evt) => {
+    const handleFilterTextChange = (evt: any) => {
         setFilterText(evt.target.value);
     };
 

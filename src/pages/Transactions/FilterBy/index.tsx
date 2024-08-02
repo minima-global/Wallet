@@ -15,7 +15,7 @@ const FilterBy = ({ display, dismiss }: Props) => {
 
     const [filterBy, setMyFilter] = useState<'Value Transfer' | 'Custom' | 'Token Creation' | null>(null);
 
-    const handleOptionChange = (event) => {
+    const handleOptionChange = (event: any) => {
         if (event.target.value === filterBy) {
             return setMyFilter(null);            
         } 

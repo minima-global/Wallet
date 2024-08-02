@@ -1,5 +1,5 @@
 
-const WalletIcon = ({fill, size =22}) => (
+const WalletIcon = ({fill, size =22}: any) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     className="fill-none"

@@ -72,7 +72,7 @@ const FormImageUrlSelect = () => {
                                 },
                             }}
                         >
-                            <AddImage onImageChange={onImageChange} />
+                            {/* <AddImage onImageChange={onImageChange} /> */}
                         </Box>
                     }
                     help=""

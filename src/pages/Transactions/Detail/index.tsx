@@ -41,7 +41,7 @@ const Detail = ({ txpowid, dismiss }: Props) => {
         setTransaction(historyDetails.find((t: any) => t.txpowid === txpowid));
     }, [txpowid]);
 
-    const handleOptionChange = (event) => {
+    const handleOptionChange = (event: any) => {
         setSelectedOption(event.target.value);
     };
 

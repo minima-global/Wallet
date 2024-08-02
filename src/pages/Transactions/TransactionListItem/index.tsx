@@ -3,7 +3,7 @@ import { format } from 'date-fns';
 import CustomTokenIcon from '../../../components/UI/Icons/CustomTokenIcon';
 import { useTransactionHistory } from '../context';
 
-const TransactionListItem = ({ transaction }) => {
+const TransactionListItem = ({ transaction }: any) => {
 
     const { setViewTxpow } = useTransactionHistory();
     const { makeMinimaNumber } = useFormatMinimaNumber();

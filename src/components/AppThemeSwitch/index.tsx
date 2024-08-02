@@ -7,7 +7,7 @@ const AppThemeSwitch = () => {
   const {isDarkMode, setIsDarkMode} = useContext(appContext);
 
   // Handler for the switch change event
-  const handleSwitchChange = (e) => {
+  const handleSwitchChange = (e: any) => {
     setIsDarkMode(e.target.checked);
   };
 

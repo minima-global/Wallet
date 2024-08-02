@@ -4,7 +4,7 @@ import useFormatMinimaNumber from '../../../__minima__/libs/utils/useMakeNumber'
 import LockedIcon from '../Icons/LockedIcon';
 
 
-const TokenListItem = ({ token }) => {
+const TokenListItem = ({ token }: any) => {
     const { makeMinimaNumber} = useFormatMinimaNumber();
 
 

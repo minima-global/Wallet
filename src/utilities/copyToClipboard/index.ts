@@ -1,4 +1,4 @@
-export function copyToClipboard(text) {
+export function copyToClipboard(text: string) {
   // Check for Clipboard API support
   if (navigator.clipboard) {
     navigator.clipboard

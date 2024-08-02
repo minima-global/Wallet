@@ -1,4 +1,4 @@
-const MenuIcon = ({ fill, size =22 }) => (
+const MenuIcon = ({ fill, size =22 }: any) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     className="icon icon-tabler icon-tabler-wallet fill-teal-600"

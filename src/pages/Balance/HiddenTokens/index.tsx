@@ -24,7 +24,7 @@ const HiddenTokens = () => {
         setPromptHide((prevState) => !prevState);
     };
 
-    const handleFilterTextChange = (evt) => {
+    const handleFilterTextChange = (evt: any) => {
         setFilterText(evt.target.value);
     };
 
@@ -55,7 +55,7 @@ const HiddenTokens = () => {
 
                     <div className="my-3 px-3">
                         <input
-                            onChange={(e) => handleFilterTextChange('hidden', e)}
+                            onChange={(e) => handleFilterTextChange(e)}
                             placeholder="Search token"
                             type="search"
                             className="bg-white rounded-full p-3 px-4 w-full focus:outline-none focus:border focus:border-black focus:dark:border-neutral-600   dark:placeholder:text-neutral-600 dark:bg-[#1B1B1B]"
@@ -84,7 +84,7 @@ const HiddenTokens = () => {
                                             filterText
                                         ) || utils.containsText(t.tokenid, filterText)
                                 )
-                                .map((token) => (
+                                .map((token: any) => (
                                     <div key={token.tokenid} className="grid grid-cols-[1fr_auto] mb-2">
                                         <TokenListItem key={token.tokenid} token={token} />
 

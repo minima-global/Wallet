@@ -20,7 +20,7 @@ const PrivateKey = ({ fullAddress = false }) => {
   };
 
   // Event handler for key down
-  const handleKeyDown = (event) => {
+  const handleKeyDown = (event: any) => {
     // Check if Ctrl key and C key are pressed simultaneously
     if ((event.ctrlKey || event.metaKey) && event.key === "c") {
       handleCopy();

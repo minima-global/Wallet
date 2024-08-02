@@ -27,7 +27,7 @@ const Receive = () => {
     const [held, setHeld] = useState(false);
     const timeoutRef: any = useRef(null);
 
-    const handleFilterTextChange = (evt) => {
+    const handleFilterTextChange = (evt: any) => {
         setFilterText(evt.target.value);
     };
     const handleStart = () => {

@@ -15,7 +15,7 @@ const Burn = ({ display, token, dismiss }: IProps) => {
     const [loading, setLoading] = useState(false);
     
     const handleBurn = () => {
-        (window as any).MDS.cmd(`send amount:${token.sendable} address:0xFF tokenid:${token.tokenid}`, (resp) => {
+        (window as any).MDS.cmd(`send amount:${token.sendable} address:0xFF tokenid:${token.tokenid}`, (resp: any) => {
             if (resp.status) {                
                 dismiss();
             }

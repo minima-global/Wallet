@@ -59,7 +59,7 @@ const TokenStudio = () => {
         }
     }, [loaded]);
 
-    const handleOptionChange = (mode, event) => {
+    const handleOptionChange = (mode: string, event: any) => {
         if (mode === 'form') {
             return setSelectedOption(event.target.value);
         }
@@ -103,7 +103,7 @@ const TokenStudio = () => {
                                         `tokencreate amount:${amount} name:${name} ${
                                             burn.length ? 'burn:' + burn : ''
                                         }`,
-                                        (resp) => {
+                                        (resp: any) => {
                                             if (resp.pending) reject('PENDING');
 
                                             if (!resp.status) {
@@ -136,7 +136,7 @@ const TokenStudio = () => {
                                         `tokencreate decimals:8 amount:${amount} name:"${JSON.stringify(token)}" ${
                                             burn.length ? 'burn:' + burn : ''
                                         }`,
-                                        (resp) => {
+                                        (resp: any) => {
                                             console.log(resp);
                                             if (resp.pending) reject('PENDING');
 
@@ -170,7 +170,7 @@ const TokenStudio = () => {
                                         `tokencreate decimals:0 amount:${amount} name:"${JSON.stringify(token)}" ${
                                             burn.length ? 'burn:' + burn : ''
                                         }`,
-                                        (resp) => {
+                                        (resp: any) => {
                                             console.log(resp);
                                             if (resp.pending) reject('PENDING');
 
@@ -215,16 +215,18 @@ const TokenStudio = () => {
                             .matches(/^[^\\;]+$/, 'Invalid characters.'),
                         owner:
                             selectedOption !== 'default' &&
-                            selectedOption !== 'custom' &&
+                            selectedOption !== 'custom' ?
                             yup
                                 .string()
                                 .matches(/^[^\\;]+$/, 'Invalid characters.')
-                                .max(255),
+                                .max(255) : yup.string().nullable(),
                         amount: yup
                             .string()
                             .required('Field required')
                             .matches(/^\d*\.?\d+$/, 'Enter a valid number')
+                                      //@ts-ignore
                             .test('test amount', function (val) {
+                                      //@ts-ignore
                                 const { parent, path, createError } = this;
 
                                 if (!val) {
@@ -256,7 +258,7 @@ const TokenStudio = () => {
                                 }
                             }),
                         url:
-                            selectedOption !== 'default' &&
+                            selectedOption !== 'default' ?
                             yup
                                 .string()
                                 .trim()
@@ -286,7 +288,8 @@ const TokenStudio = () => {
                                             message: 'Enter a valid URL',
                                         });
                                     }
-                                }),
+                                }) : yup.string().nullable(),
+                                      //@ts-ignore
                         burn: yup.number().test('test burn', function (val) {
                             const { path, parent, createError } = this;
 

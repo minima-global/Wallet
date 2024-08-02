@@ -35,12 +35,12 @@ export const TransactionHistoryProvider: React.FC<{ children: ReactNode }> = ({ 
                 : '';
 
             let filteredTransactions = transactions.filter(
-                (t) => t.txpowid.includes(filterText) || t.tokenName.includes(filterText) || t.tokenid.includes(filterText)
+                (t:any) => t.txpowid.includes(filterText) || t.tokenName.includes(filterText) || t.tokenid.includes(filterText)
             );
 
             if (filterBy) {
                 filteredTransactions = filteredTransactions.filter(
-                    (t) => t.type.includes(filterBy)
+                    (t:any) => t.type.includes(filterBy)
                 );
             }
 
@@ -58,7 +58,7 @@ export const TransactionHistoryProvider: React.FC<{ children: ReactNode }> = ({ 
                             <hr className="border-[0.1px] border-neutral-300 dark:border-neutral-600 my-1 w-full" />
                         </div>
                         <ul className="flex flex-col gap-4">
-                            {filteredTransactions.map((t) => (
+                            {filteredTransactions.map((t: any) => (
                                 <TransactionListItem
                                     key={t.txpowid}
                                     transaction={t}

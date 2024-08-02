@@ -50,7 +50,7 @@ const Send = () => {
         }
     }, [loaded]);
 
-    const handleOptionChange = (event) => {
+    const handleOptionChange = (event: any) => {
         setSelectedOption(event.target.value);
     };
 
@@ -93,7 +93,7 @@ const Send = () => {
                                         `send amount:${amount} address:${address} ${
                                             burn.length ? 'burn:' + burn : ''
                                         } ${message.length ? `state:{"44":"[${encodeURIComponent(message)}]"}` : ''}`,
-                                        (resp) => {
+                                        (resp: any) => {
                                             if (resp.pending) reject('PENDING');
 
                                             if (!resp.status) {
@@ -116,15 +116,15 @@ const Send = () => {
                                 // split 10
                                 await new Promise((resolve, reject) => {
                                     console.log(tokens.sendable);
-                                    (window as any).MDS.cmd('balance', (resb) => {
-                                        (window as any).MDS.cmd('getaddress', (res) => {
+                                    (window as any).MDS.cmd('balance', (resb: any) => {
+                                        (window as any).MDS.cmd('getaddress', (res: any) => {
                                             if (!res.status) reject('Could not get an address');
     
                                             (window as any).MDS.cmd(
                                                 `send amount:${resb.response[0].sendable} address:${res.response.miniaddress} ${
                                                     burn.length ? 'burn:' + burn : ''
                                                 } split:10 tokenid:${tokens.tokenid}`,
-                                                (resp) => {
+                                                (resp: any) => {
                                                     if (resp.pending) reject('PENDING');
     
                                                     if (!resp.status) {
@@ -151,7 +151,7 @@ const Send = () => {
                                 await new Promise((resolve, reject) => {
                                     (window as any).MDS.cmd(
                                         `consolidate ${burn.length ? 'burn:' + burn : ''} tokenid:${tokens.tokenid}`,
-                                        (resp) => {
+                                        (resp: any) => {
                                             if (resp.pending) reject('PENDING');
 
                                             if (!resp.status) {
@@ -195,6 +195,7 @@ const Send = () => {
                                       .string()
                                       .required('Field required')
                                       .matches(/^\d*\.?\d+$/, 'Enter a valid number')
+                                      //@ts-ignore
                                       .test('test amount', function (val) {
                                           const { parent, path, createError } = this;
 
@@ -240,6 +241,7 @@ const Send = () => {
                             selectedOption === 'default'
                                 ? yup.string().max(255, 'A message cannot exceed 255 characters')
                                 : yup.string().nullable(),
+                                      //@ts-ignore
                         burn: yup.number().test('test burn', function (val) {
                             const { path, parent, createError } = this;
 

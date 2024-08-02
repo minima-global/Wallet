@@ -1,4 +1,3 @@
-import OfflineBoltIcon from '@mui/icons-material/OfflineBolt';
 import { Stack, Typography } from '@mui/material';
 const MiningCog = ({ isMining }: any) => {
     return (
@@ -12,7 +11,7 @@ const MiningCog = ({ isMining }: any) => {
             <Typography className="fade-in-fade-out" color="inherit" variant="caption">
                 Mining TxPoW
             </Typography>
-            <OfflineBoltIcon className="fade-in-fade-out" fontSize="medium" color="secondary" />
+            {/* <OfflineBoltIcon className="fade-in-fade-out" fontSize="medium" color="secondary" /> */}
         </Stack>
     );
 };

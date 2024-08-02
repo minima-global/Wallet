@@ -1,4 +1,4 @@
-const RefreshIcon = ({ fill, extraClass }) => (
+const RefreshIcon = ({ fill, extraClass }: any) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     className={`icon icon-tabler icon-tabler-heart-filled ${extraClass && extraClass}`}

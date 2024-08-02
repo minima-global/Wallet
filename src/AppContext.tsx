@@ -237,7 +237,7 @@ const AppProvider = ({ children }: IProps) => {
     };
 
     const checkVaultLocked = () => {
-        (window as any).MDS.cmd('vault', (resp) => {
+        (window as any).MDS.cmd('vault', (resp: any) => {
           setVaultLocked(resp.response.locked);
           
           if (!resp.response.locked) {
@@ -436,16 +436,16 @@ const AppProvider = ({ children }: IProps) => {
                 isMobile: mode === 'mobile',
 
                 loading,
-                balance: balance.filter(b => {
+                balance: _hiddenTokens ? balance.filter(b => {
                     const id = b.tokenid;
 
-                    return _hiddenTokens ? !_hiddenTokens[id] : false;
-                }),
-                hiddenBalance: balance.filter(b => {
+                    return !_hiddenTokens[id];
+                }) : balance,
+                hiddenBalance: _hiddenTokens ? balance.filter(b => {
                     const id = b.tokenid;
 
-                    return _hiddenTokens ? _hiddenTokens[id] === true : false;
-                }),
+                    return _hiddenTokens[id];
+                }) : [],
                 NFTs,
                 simpleAddresses,
                 history,
