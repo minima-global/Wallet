@@ -137,7 +137,7 @@ const TokenDetails = ({ token, display, dismiss }: any) => {
                                     <button
                                         onClick={promptBurn}
                                         type="button"
-                                        className="bg-orange-400 text-white dark:text-[#1B1B1B] dark:bg-orange-800 font-bold tracking-wider w-full flex justify-center"
+                                        className="bg-orange-500 text-white dark:text-[#1B1B1B] dark:bg-neutral-100 font-bold tracking-wider w-full flex justify-center"
                                     >
                                         <FireIcon size={22} fill="currentColor" />
                                     </button>

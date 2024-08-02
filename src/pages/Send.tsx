@@ -418,7 +418,7 @@ const Send = () => {
                                     <br /> fee
                                 </p>
                                 <div className="ml-auto">
-                                    <span className="flex justify-end text-orange-300 dark:text-orange-400">
+                                    <span className="flex justify-end text-orange-500 dark:text-orange-400">
                                         <FireIcon size={22} fill="currentColor" />
                                     </span>
                                     <input
@@ -428,7 +428,7 @@ const Send = () => {
                                         onChange={handleChange}
                                         onBlur={handleBlur}
                                         placeholder="0.0"
-                                        className="bg-transparent focus:outline-none text-right max-w-max text-sm placeholder:opacity-80"
+                                        className="placeholder:font-mono placeholder:text-neutral-500 bg-transparent focus:outline-none text-right max-w-max text-sm dark:placeholder:text-neutral-400"
                                     />
                                 </div>
                             </div>

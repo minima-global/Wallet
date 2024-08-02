@@ -19,6 +19,13 @@ const Transactions = () => {
     const { createElement } = useTransactionHistory();
 
     const [viewTxpow, setViewTxpow] = useState<string | false>(false);
+    
+
+    useEffect(() => {
+        if (viewTxpow) {
+            document.body.classList.add("overflow-hidden")
+        }
+    }, [viewTxpow])
 
     useEffect(() => {
         if (loaded.current) {
