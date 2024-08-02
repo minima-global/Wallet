@@ -1,10 +1,8 @@
-import { useNavigate } from 'react-router-dom';
-import useFormatMinimaNumber from '../../../__minima__/libs/utils/useMakeNumber';
 import { format } from 'date-fns';
+import useFormatMinimaNumber from '../../../__minima__/libs/utils/useMakeNumber';
 import CustomTokenIcon from '../../../components/UI/Icons/CustomTokenIcon';
 
 const TransactionListItem = ({ transaction, viewTxpow }) => {
-    const navigate = useNavigate();
     const { makeMinimaNumber } = useFormatMinimaNumber();
 
     const t = transaction;

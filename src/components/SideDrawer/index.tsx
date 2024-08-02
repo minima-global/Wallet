@@ -8,31 +8,35 @@ import StudioIcon from '../UI/Icons/StudioIcon';
 import ActivityIcon from '../UI/Icons/ActivityIcon';
 import SettingsIcon from '../UI/Icons/SettingsIcon';
 import CollectionIcon from '../UI/Icons/CollectionIcon';
+import MinimaLandscape from '../UI/Icons/MinimaLandscape';
+import { useContext } from 'react';
+import { appContext } from '../../AppContext';
 
 interface IProps {
     isOpen: boolean;
     toggleDrawer: () => void;
 }
 const SideDrawer = ({ isOpen, toggleDrawer }: IProps) => {
+    const {isDarkMode} = useContext(appContext);
     return (
         <div className="relative">
             {/* Persistent Drawer */}
             <div
-                className={`z-[444] h-full fixed top-0 border-r dark:shadow-none bg-neutral-100 left-0 w-[240px] dark:bg-[#252525] dark:border-r dark:border-r-[#1B1B1B] text-white transition-transform duration-300 md:translate-x-0 ${
+                className={`z-[444] h-full fixed top-0 dark:shadow-none bg-neutral-100 left-0 w-[240px] dark:bg-[#252525] dark:border-r dark:border-r-[#1B1B1B] text-white transition-transform duration-300 md:translate-x-0 ${
                     isOpen ? 'translate-x-0' : '-translate-x-full'
                 }`}
             >
-                <div className="flex flex-col h-full p-4 text-black dark:text-white">
+                <div className="flex flex-col h-full">
                     {/* Drawer Header */}
-                    <div className="flex items-center gap-2 mb-4">
-                        <div className='mb-2'>
+                    <div className="flex items-center gap-2 bg-[#1B1B1B] h-[52px] px-4 border-r border-[#1B1B1B] dark:border-none">
+                        <div className=''>
                             <WalletBrand fill="#1B1B1B" size={30} />
                         </div>
-                        <h2 className="text-lg font-bold tracking-wide text-[#1B1B1B] dark:text-neutral-200">Wallet</h2>
+                        <h2 className="text-lg font-bold tracking-wide text-neutral-200">Wallet</h2>
                     </div>
 
                     {/* Main Content */}
-                    <div className="flex-1 flex flex-col">
+                    <div className="flex-1 flex flex-col border-r dark:border-none px-4 py-4">
                         <ul className="mb-4">
                             <li className="">
                                 <NavLink
@@ -142,10 +146,12 @@ const SideDrawer = ({ isOpen, toggleDrawer }: IProps) => {
 
                     {/* Footer */}
                     <div className="mt-auto">
-                        <AppThemeSwitch />
-                        <span>
-                            <img className="w-[128px]" alt="" src="./assets/minima-landscape.png" />
-                        </span>
+                        <div className='flex justify-center my-4'>
+                            <AppThemeSwitch />
+                        </div>
+                        <div className='px-4 pb-4'>
+                            <MinimaLandscape fill={isDarkMode ? '#737373': '#1B1B1B'} size={124} />
+                        </div>
                     </div>
                 </div>
             </div>

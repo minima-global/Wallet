@@ -15,12 +15,10 @@ import Detail from './Detail';
 const Transactions = () => {
     const location = useLocation();
 
-    const { historyFacade, historyDetails, history, getHistory, loaded } = useContext(appContext);
+    const { historyFacade, getHistory, loaded } = useContext(appContext);
     const { createElement } = useTransactionHistory();
 
     const [viewTxpow, setViewTxpow] = useState<string | false>(false);
-
-    console.log(historyFacade);
 
     useEffect(() => {
         if (loaded.current) {

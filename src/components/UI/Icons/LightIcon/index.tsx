@@ -4,7 +4,7 @@ const LightIcon = ({ size = 24 }) => (
     height={size}
     width={size}
     viewBox="0 0 24 24"
-    strokeWidth="1.5"
+    strokeWidth="2.5"
     stroke="currentColor"
     fill="none"
     strokeLinecap="round"
