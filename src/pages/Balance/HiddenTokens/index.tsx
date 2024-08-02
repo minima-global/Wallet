@@ -88,7 +88,7 @@ const HiddenTokens = () => {
                                                 ) || utils.containsText(t.tokenid, filterText)
                                         )
                                         .map((token) => (
-                                            <div className="grid grid-cols-[1fr_auto] mb-2">
+                                            <div key={token.tokenid} className="grid grid-cols-[1fr_auto] mb-2">
                                                 <TokenListItem key={token.tokenid} token={token} />
 
                                                 <span
@@ -97,7 +97,7 @@ const HiddenTokens = () => {
                                                         promptHide();
                                                         setPromptHiddenTokens(false);
                                                     }}
-                                                    className="flex justify-center bg-neutral-200 hover:bg-neutral-300 dark:hover:bg-black dark:bg-[#1B1B1B] p-4 rounded-lg rounded-l-none"
+                                                    className="flex justify-center bg-neutral-200 hover:bg-neutral-300 dark:bg-[#1B1B1B] p-4 rounded-lg rounded-l-none dark:hover:bg-opacity-50"
                                                 >
                                                     <ShowIcon fill="currentColor" />
                                                 </span>

@@ -10,6 +10,7 @@ import Receive from './pages/Receive';
 import Send from './pages/Send';
 import Balance from './pages/Balance';
 import TokenStudio from './pages/TokenStudio';
+import Transactions from './pages/Transactions';
 
 const router = createHashRouter(
     createRoutesFromElements(
@@ -27,9 +28,8 @@ const router = createHashRouter(
         <Route path="/dashboard" element={<Dashboard />}>
           <Route path="balance" element={<Balance />} />
           <Route path="receive" element={<Receive/>} />
-          <Route path="send" element={<Send />}>    
-            {/* <Route path="newcontact" element={<AddNew />} />         */}
-          </Route>
+          <Route path="transactions" element={<Transactions />} />    
+          <Route path="send" element={<Send />} />
           <Route path="tokenstudio" element={<TokenStudio />} />
         </Route>      
         <Route path="*" element={<Navigate to="/dashboard/balance" replace />} />
