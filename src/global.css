@@ -25,3 +25,30 @@
     display: flex;
     flex-direction: column;
   }
+
+
+  /* Add this to your global CSS file or create a custom plugin */
+@layer base {
+  input[type='search']::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  input[type='search']::-ms-clear {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+
+  input[type='search']::-ms-reveal {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+
+  input[type='search']::-moz-clear {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+}

@@ -1,5 +1,4 @@
-import { useContext, useEffect, useRef, useState } from 'react';
-import QRCode from 'react-qr-code';
+import { useContext, useEffect,  useState } from 'react';
 import AnimatePageIn from '../../components/UI/Animations/AnimatePageIn';
 import { useLocation } from 'react-router-dom';
 import TransactionSearchBar from '../../components/TransactionSearchBar';
@@ -16,10 +15,10 @@ const Transactions = () => {
     const location = useLocation();
 
     const { historyFacade, getHistory, loaded } = useContext(appContext);
-    const { createElement } = useTransactionHistory();
+    const { createElement, filterText } = useTransactionHistory();
 
     const [viewTxpow, setViewTxpow] = useState<string | false>(false);
-    
+
 
     useEffect(() => {
         if (viewTxpow) {
@@ -49,6 +48,9 @@ const Transactions = () => {
                         <div className="flex items-center overflow-auto hide-scrollbar gap-2 w-full">
                             <TransactionSearchBar />
                             <div className="flex flex-shrink-0 gap-2">
+                                <SecondaryButton onClick={() => null} type="button">
+                                    Filter By
+                                </SecondaryButton>
                                 <SecondaryButton onClick={() => null} type="button">
                                     Hide
                                 </SecondaryButton>

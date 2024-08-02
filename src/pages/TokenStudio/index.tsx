@@ -319,18 +319,18 @@ const TokenStudio = () => {
                             }
                         }),
                         description:
-                            selectedOption !== 'default' &&
-                            yup.string().min(0).max(255, 'Maximum 255 characters allowed.'),
+                            selectedOption !== 'default' ?
+                            yup.string().min(0).max(255, 'Maximum 255 characters allowed.') : yup.string().nullable(),
                         ticker:
-                            selectedOption !== 'default' &&
-                            selectedOption !== 'nft' &&
+                            (selectedOption !== 'default' &&
+                            selectedOption !== 'nft') ?
                             yup
                                 .string()
                                 .min(0)
                                 .max(5, 'Maximum 5 characters allowed.')
-                                .matches(/^[^\\;]+$/, 'Invalid characters.'),
+                                .matches(/^[^\\;]+$/, 'Invalid characters.') : yup.string().nullable(),
                         webvalidation:
-                            selectedOption !== 'default' &&
+                            selectedOption !== 'default' ?
                             yup.string().test('check-my-webvalidator', 'Invalid Url, must be https', function (val) {
                                 const { path, createError } = this;
 
@@ -351,7 +351,7 @@ const TokenStudio = () => {
 
                                     return createError({ path, message: 'Invalid Url' });
                                 }
-                            }),
+                            }) : yup.string().nullable(),
                     })}
                 >
                     {({

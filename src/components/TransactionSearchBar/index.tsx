@@ -2,8 +2,10 @@ import { useState } from 'react';
 import AnimateExpandIn from '../UI/Animations/AnimateExpandIn';
 import SearchIcon from '../UI/Icons/SearchIcon';
 import CloseIcon from '../UI/Icons/CloseIcon';
+import useTransactionHistory from '../../pages/Transactions/hooks';
 
 const TransactionSearchBar = () => {
+    const { setFilterText, filterText } = useTransactionHistory();
     const [show, setShow] = useState(false);
 
     return (
@@ -14,8 +16,12 @@ const TransactionSearchBar = () => {
                         <SearchIcon fill="currentColor" />
                     </span>
                     <input
-                        placeholder="Search transaction"
+                        placeholder="Search transaction id"
                         type="search"
+                        onChange={(e) => {
+                            setFilterText(e.target.value)
+                        }}
+                        value={filterText}
                         className="w-full focus:outline-none bg-transparent dark:placeholder:text-neutral-600"
                     />
                     <span onClick={() => setShow(false)}>

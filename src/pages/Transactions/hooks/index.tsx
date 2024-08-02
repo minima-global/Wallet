@@ -1,7 +1,6 @@
-import { Fragment, useContext, useState } from 'react';
+import { Fragment, useContext, useState, useMemo } from 'react';
 import { appContext } from '../../../AppContext';
 import { format, isSameWeek, isSameYear } from 'date-fns';
-import { useNavigate } from 'react-router-dom';
 import TransactionListItem from '../TransactionListItem';
 
 const formatDate = (timeMilli: string, shouldShowWeekDay: boolean, shouldDisplayYear: boolean) => {
@@ -12,7 +11,6 @@ const formatDate = (timeMilli: string, shouldShowWeekDay: boolean, shouldDisplay
 };
 const useTransactionHistory = () => {
     const { historyFacade } = useContext(appContext);
-    const navigate = useNavigate();
     const [filterText, setFilterText] = useState('');
 
     const createElement = (setViewTxpow: (arg0: string) => any) => {
@@ -26,11 +24,9 @@ const useTransactionHistory = () => {
                   )
                 : '';
 
-            const filteredTransactions = transactions.filter(
-                (t) => t.txpowid.includes(filterText) || t.tokenName.includes(filterText)
-            );
+            
 
-            if (filteredTransactions.length === 0) return null;
+            if (transactions.length === 0) return null;
 
             return (
                 <Fragment key={key}>
@@ -43,7 +39,7 @@ const useTransactionHistory = () => {
                             <hr className="border-[0.1px] border-neutral-300 dark:border-neutral-600 my-1 w-full" />
                         </div>
                         <ul className="flex flex-col gap-4">
-                            {filteredTransactions.map((t) => (
+                            {transactions.map((t) => (
                                 <TransactionListItem viewTxpow={(id: string) => setViewTxpow(id)} key={t.txpowid} transaction={t} />
                             ))}
                         </ul>
@@ -53,7 +49,7 @@ const useTransactionHistory = () => {
         });
     };
 
-    return { createElement, setFilterText };
+    return { filterText, createElement, setFilterText };
 };
 
 export default useTransactionHistory;

@@ -71,81 +71,6 @@ const Send = () => {
                     {selectedOption === 'combine' &&
                         'Combine coins into a singular UTXO, read more on coins and UTXOs on our docs.'}
                 </p>
-                <div className="flex-1 flex flex-col">
-                    {/* Custom Radio Buttons */}
-                    <div className="my-3">
-                        <fieldset>
-                            <div className="grid grid-cols-3 gap-2">
-                                <label
-                                    className={`justify-center text-sm p-4 flex-col rounded-lg sm:roundd-full sm:flex-row flex items-center transition-all ${
-                                        selectedOption === 'default'
-                                            ? 'bg-black dark:bg-black font-bold'
-                                            : 'bg-neutral-200 dark:bg-[#1B1B1B]'
-                                    }`}
-                                >
-                                    <input
-                                        type="radio"
-                                        name="option"
-                                        value="default"
-                                        checked={selectedOption === 'default'}
-                                        onChange={handleOptionChange}
-                                        className="hidden"
-                                    />
-                                    <span>
-                                        <SendIcon fill="currentColor" />
-                                    </span>
-                                    <span className={`ml-2 ${selectedOption === 'default' ? 'text-white' : ''}`}>
-                                        Default
-                                    </span>
-                                </label>
-                                <label
-                                    className={`justify-center text-sm flex-col rounded-lg sm:roundd-full sm:flex-row p-4 flex items-center transition-all ${
-                                        selectedOption === 'split'
-                                            ? 'bg-black dark:bg-black font-bold'
-                                            : 'bg-neutral-200 dark:bg-[#1B1B1B]'
-                                    }`}
-                                >
-                                    <input
-                                        type="radio"
-                                        name="option"
-                                        value="split"
-                                        checked={selectedOption === 'split'}
-                                        onChange={handleOptionChange}
-                                        className="hidden"
-                                    />
-                                    <span>
-                                        <SplitIcon fill="currentColor" />
-                                    </span>
-                                    <span className={`ml-2 ${selectedOption === 'split' ? 'text-white' : ''}`}>
-                                        Split
-                                    </span>
-                                </label>
-                                <label
-                                    className={`justify-center text-sm flex-col rounded-lg sm:roundd-full sm:flex-row p-4 flex items-center transition-all ${
-                                        selectedOption === 'combine'
-                                            ? 'bg-black dark:bg-black font-bold'
-                                            : 'bg-neutral-200 dark:bg-[#1B1B1B]'
-                                    }`}
-                                >
-                                    <input
-                                        type="radio"
-                                        name="option"
-                                        value="combine"
-                                        checked={selectedOption === 'combine'}
-                                        onChange={handleOptionChange}
-                                        className="hidden"
-                                    />
-                                    <span className={`${selectedOption === 'combine' ? 'text-white' : ''}`}>
-                                        <CombineIcon fill="currentColor" />
-                                    </span>
-                                    <span className={`ml-2 ${selectedOption === 'combine' ? 'text-white' : ''}`}>
-                                        Combine
-                                    </span>
-                                </label>
-                            </div>
-                        </fieldset>
-                    </div>
-                </div>
                 <Formik
                     initialValues={{
                         tokens: searchParams.get('tokenid')
@@ -190,29 +115,33 @@ const Send = () => {
                             if (selectedOption === 'split') {
                                 // split 10
                                 await new Promise((resolve, reject) => {
-                                    (window as any).MDS.cmd('getaddress', (res) => {
-                                        if (!res.status) reject('Could not get an address');
-
-                                        (window as any).MDS.cmd(
-                                            `send amount:${tokens.sendable} address:${res.response.miniaddress} ${
-                                                burn.length ? 'burn:' + burn : ''
-                                            } split:10 tokenid:${tokens.tokenid}`,
-                                            (resp) => {
-                                                if (resp.pending) reject('PENDING');
-
-                                                if (!resp.status) {
-                                                    reject(
-                                                        resp.message
-                                                            ? resp.message
-                                                            : resp.error
-                                                            ? resp.error
-                                                            : 'Failed to send!'
-                                                    );
-                                                } else {
-                                                    resolve(true);
+                                    console.log(tokens.sendable);
+                                    (window as any).MDS.cmd('balance', (resb) => {
+                                        (window as any).MDS.cmd('getaddress', (res) => {
+                                            if (!res.status) reject('Could not get an address');
+    
+                                            (window as any).MDS.cmd(
+                                                `send amount:${resb.response[0].sendable} address:${res.response.miniaddress} ${
+                                                    burn.length ? 'burn:' + burn : ''
+                                                } split:10 tokenid:${tokens.tokenid}`,
+                                                (resp) => {
+                                                    if (resp.pending) reject('PENDING');
+    
+                                                    if (!resp.status) {
+                                                        reject(
+                                                            resp.message
+                                                                ? resp.message
+                                                                : resp.error
+                                                                ? resp.error
+                                                                : 'Failed to send!'
+                                                        );
+                                                    } else {
+                                                        resolve(true);
+                                                    }
                                                 }
-                                            }
-                                        );
+                                            );
+                                        });
+
                                     });
                                 });
                             }
@@ -259,10 +188,10 @@ const Send = () => {
                             }
                         }
                     }}
-                    validationSchema={
-                        selectedOption === 'default'
-                            ? yup.object().shape({
-                                  amount: yup
+                    validationSchema={yup.object().shape({
+                        amount:
+                            selectedOption === 'default'
+                                ? yup
                                       .string()
                                       .required('Field required')
                                       .matches(/^\d*\.?\d+$/, 'Enter a valid number')
@@ -296,51 +225,148 @@ const Send = () => {
                                                   return createError({ path, message: error.message });
                                               }
                                           }
-                                      }),
-                                  address: yup
+                                      })
+                                : yup.string().nullable(),
+                        address:
+                            selectedOption === 'default'
+                                ? yup
                                       .string()
                                       .matches(/0|M[xX][0-9a-zA-Z]+/, 'Invalid Address.')
                                       .min(59, 'Invalid Minima address')
                                       .max(66, 'Invalid Minima address')
-                                      .required('Field required'),
-                                  message: yup.string().max(255, 'A message cannot exceed 255 characters'),
-                                  burn: yup.number().test('test burn', function (val) {
-                                      const { path, parent, createError } = this;
+                                      .required('Field required')
+                                : yup.string().nullable(),
+                        message:
+                            selectedOption === 'default'
+                                ? yup.string().max(255, 'A message cannot exceed 255 characters')
+                                : yup.string().nullable(),
+                        burn: yup.number().test('test burn', function (val) {
+                            const { path, parent, createError } = this;
 
-                                      if (!val) {
-                                          return true;
-                                      }
+                            if (!val) {
+                                return true;
+                            }
 
-                                      try {
-                                          if (new Decimal(val).isZero()) {
-                                              return true;
-                                          }
+                            try {
+                                if (new Decimal(val).isZero()) {
+                                    return true;
+                                }
 
-                                          if (!parent.amount) {
-                                              return true;
-                                          }
+                                if (!parent.amount) {
+                                    return true;
+                                }
 
-                                          if (new Decimal(val).plus(parent.amount).greaterThan(parent.token.sendable)) {
-                                              throw new Error('Insufficient funds');
-                                          }
+                                if (new Decimal(val).plus(parent.amount).greaterThan(parent.token.sendable)) {
+                                    throw new Error('Insufficient funds');
+                                }
 
-                                          if (new Decimal(val).decimalPlaces() > 18) {
-                                              throw new Error("You can't have more than 18 decimal places.");
-                                          }
+                                if (new Decimal(val).decimalPlaces() > 18) {
+                                    throw new Error("You can't have more than 18 decimal places.");
+                                }
 
-                                          return true;
-                                      } catch (error) {
-                                          if (error instanceof Error) {
-                                              return createError({ path, message: error.message });
-                                          }
-                                      }
-                                  }),
-                              })
-                            : null
-                    }
+                                return true;
+                            } catch (error) {
+                                if (error instanceof Error) {
+                                    return createError({ path, message: error.message });
+                                }
+                            }
+                        }),
+                    })}
                 >
-                    {({ values, errors, touched, isSubmitting, isValid, handleChange, handleBlur, handleSubmit }) => (
+                    {({ values, errors, touched, isSubmitting, isValid, handleChange, handleBlur, handleSubmit, resetForm }) => (
                         <form onSubmit={handleSubmit}>
+                            <div className="flex-1 flex flex-col">
+                                {/* Custom Radio Buttons */}
+                                <div className="my-3">
+                                    <fieldset>
+                                        <div className="grid grid-cols-3 gap-2">
+                                            <label
+                                                className={`justify-center text-sm p-4 flex-col rounded-lg sm:roundd-full sm:flex-row flex items-center transition-all ${
+                                                    selectedOption === 'default'
+                                                        ? 'bg-black dark:bg-black font-bold'
+                                                        : 'bg-neutral-200 dark:bg-[#1B1B1B]'
+                                                }`}
+                                            >
+                                                <input
+                                                    type="radio"
+                                                    name="option"
+                                                    value="default"
+                                                    checked={selectedOption === 'default'}
+                                                    onChange={handleOptionChange}
+                                                    className="hidden"
+                                                />
+                                                <span>
+                                                    <SendIcon fill="currentColor" />
+                                                </span>
+                                                <span
+                                                    className={`ml-2 ${
+                                                        selectedOption === 'default' ? 'text-white' : ''
+                                                    }`}
+                                                >
+                                                    Default
+                                                </span>
+                                            </label>
+                                            <label
+                                                className={`justify-center text-sm flex-col rounded-lg sm:roundd-full sm:flex-row p-4 flex items-center transition-all ${
+                                                    selectedOption === 'split'
+                                                        ? 'bg-black dark:bg-black font-bold'
+                                                        : 'bg-neutral-200 dark:bg-[#1B1B1B]'
+                                                }`}
+                                            >
+                                                <input
+                                                    type="radio"
+                                                    name="option"
+                                                    value="split"
+                                                    checked={selectedOption === 'split'}
+                                                    onChange={(e) => {
+                                                        handleOptionChange(e);
+                                                        resetForm();
+                                                    }}
+                                                    className="hidden"
+                                                />
+                                                <span>
+                                                    <SplitIcon fill="currentColor" />
+                                                </span>
+                                                <span
+                                                    className={`ml-2 ${selectedOption === 'split' ? 'text-white' : ''}`}
+                                                >
+                                                    Split
+                                                </span>
+                                            </label>
+                                            <label
+                                                className={`justify-center text-sm flex-col rounded-lg sm:roundd-full sm:flex-row p-4 flex items-center transition-all ${
+                                                    selectedOption === 'combine'
+                                                        ? 'bg-black dark:bg-black font-bold'
+                                                        : 'bg-neutral-200 dark:bg-[#1B1B1B]'
+                                                }`}
+                                            >
+                                                <input
+                                                    type="radio"
+                                                    name="option"
+                                                    value="combine"
+                                                    checked={selectedOption === 'combine'}
+                                                    onChange={(e) => {
+                                                        handleOptionChange(e);
+                                                        resetForm();
+                                                    }}
+                                                    className="hidden"
+                                                />
+                                                <span className={`${selectedOption === 'combine' ? 'text-white' : ''}`}>
+                                                    <CombineIcon fill="currentColor" />
+                                                </span>
+                                                <span
+                                                    className={`ml-2 ${
+                                                        selectedOption === 'combine' ? 'text-white' : ''
+                                                    }`}
+                                                >
+                                                    Combine
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+
                             <WalletSelect />
 
                             {selectedOption === 'default' && (
