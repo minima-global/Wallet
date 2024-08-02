@@ -1,11 +1,10 @@
-import { useContext, useEffect,  useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import AnimatePageIn from '../../components/UI/Animations/AnimatePageIn';
 import { useLocation } from 'react-router-dom';
 import TransactionSearchBar from '../../components/TransactionSearchBar';
-import SearchIcon from '../../components/UI/Icons/SearchIcon';
 import SecondaryButton from '../../components/UI/SecondaryButton';
 import { appContext } from '../../AppContext';
-import useTransactionHistory from './hooks';
+import { TransactionHistoryProvider, useTransactionHistory } from './context';
 import Lottie from 'lottie-react';
 
 import Loading from '../../components/UI/Lottie/Loading.json';
@@ -15,16 +14,13 @@ const Transactions = () => {
     const location = useLocation();
 
     const { historyFacade, getHistory, loaded } = useContext(appContext);
-    const { createElement, filterText } = useTransactionHistory();
-
-    const [viewTxpow, setViewTxpow] = useState<string | false>(false);
-
+    const { filterText, filteredElements, viewTxpow, setViewTxpow } = useTransactionHistory();
 
     useEffect(() => {
         if (viewTxpow) {
-            document.body.classList.add("overflow-hidden")
+            document.body.classList.add('overflow-hidden');
         }
-    }, [viewTxpow])
+    }, [viewTxpow]);
 
     useEffect(() => {
         if (loaded.current) {
@@ -70,7 +66,11 @@ const Transactions = () => {
                             />
                         </div>
                     )}
-                    {historyFacade && <div className="space-y-4">{createElement(setViewTxpow)}</div>}
+
+                    {historyFacade && <div className="space-y-4">{filteredElements ? filteredElements : null}</div>}
+                    {!!filterText.length && filteredElements.length === 0 && (
+                        <p className="text-[#1B1B1B] text-sm dark:text-neutral-300 text-center">No results found</p>
+                    )}
                 </div>
             </AnimatePageIn>
         </>

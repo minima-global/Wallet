@@ -11,6 +11,7 @@ import Send from './pages/Send';
 import Balance from './pages/Balance';
 import TokenStudio from './pages/TokenStudio';
 import Transactions from './pages/Transactions';
+import { TransactionHistoryProvider } from './pages/Transactions/context';
 
 const router = createHashRouter(
     createRoutesFromElements(
@@ -28,7 +29,7 @@ const router = createHashRouter(
         <Route path="/dashboard" element={<Dashboard />}>
           <Route path="balance" element={<Balance />} />
           <Route path="receive" element={<Receive/>} />
-          <Route path="transactions" element={<Transactions />} />    
+          <Route path="transactions" element={<TransactionHistoryProvider><Transactions /></TransactionHistoryProvider>} />    
           <Route path="send" element={<Send />} />
           <Route path="tokenstudio" element={<TokenStudio />} />
         </Route>      

@@ -2,7 +2,8 @@ import { useState } from 'react';
 import AnimateExpandIn from '../UI/Animations/AnimateExpandIn';
 import SearchIcon from '../UI/Icons/SearchIcon';
 import CloseIcon from '../UI/Icons/CloseIcon';
-import useTransactionHistory from '../../pages/Transactions/hooks';
+import { useTransactionHistory } from '../../pages/Transactions/context';
+
 
 const TransactionSearchBar = () => {
     const { setFilterText, filterText } = useTransactionHistory();
@@ -16,7 +17,7 @@ const TransactionSearchBar = () => {
                         <SearchIcon fill="currentColor" />
                     </span>
                     <input
-                        placeholder="Search transaction id"
+                        placeholder="Search transaction by id, tokenid or token name"
                         type="search"
                         onChange={(e) => {
                             setFilterText(e.target.value)

@@ -1,8 +1,11 @@
-import { format } from 'date-fns';
 import useFormatMinimaNumber from '../../../__minima__/libs/utils/useMakeNumber';
+import { format } from 'date-fns';
 import CustomTokenIcon from '../../../components/UI/Icons/CustomTokenIcon';
+import { useTransactionHistory } from '../context';
 
-const TransactionListItem = ({ transaction, viewTxpow }) => {
+const TransactionListItem = ({ transaction }) => {
+
+    const { setViewTxpow } = useTransactionHistory();
     const { makeMinimaNumber } = useFormatMinimaNumber();
 
     const t = transaction;
@@ -10,7 +13,7 @@ const TransactionListItem = ({ transaction, viewTxpow }) => {
     return (
         <li
             key={t.txpowid}
-            onClick={() => viewTxpow(t.txpowid)}
+            onClick={() => setViewTxpow(t.txpowid)}
             className="dark:bg-transparent px-4 flex gap-2 first:mt-4 hover:bg-white hover:bg-opacity-50 hover:dark:bg-[#1B1B1B] hover:py-2 transition-all"
         >
             <div>
