@@ -376,7 +376,7 @@ const TokenStudio = () => {
                                         <fieldset>
                                             <div className="grid grid-cols-3 gap-2">
                                                 <label
-                                                    className={`justify-center text-sm p-4 flex-col rounded-lg sm:roundd-full sm:flex-row flex items-center transition-all ${
+                                                    className={`text-center justify-center text-sm p-4 flex-col rounded-lg sm:roundd-full sm:flex-row flex items-center transition-all ${
                                                         selectedOption === 'default'
                                                             ? 'bg-black dark:bg-black font-bold'
                                                             : 'bg-neutral-200 dark:bg-[#1B1B1B]'
@@ -394,7 +394,7 @@ const TokenStudio = () => {
                                                         <SimpleTokenIcon fill="currentColor" size={20} />
                                                     </span>
                                                     <span
-                                                        className={`ml-2 ${
+                                                        className={`ml-0 md:ml-2 ${
                                                             selectedOption === 'default' ? 'text-white' : ''
                                                         }`}
                                                     >
@@ -402,7 +402,7 @@ const TokenStudio = () => {
                                                     </span>
                                                 </label>
                                                 <label
-                                                    className={`justify-center text-sm flex-col rounded-lg sm:roundd-full sm:flex-row p-4 flex items-center transition-all ${
+                                                    className={`text-center justify-center text-sm flex-col rounded-lg sm:roundd-full sm:flex-row p-4 flex items-center transition-all ${
                                                         selectedOption === 'custom'
                                                             ? 'bg-black dark:bg-black font-bold'
                                                             : 'bg-neutral-200 dark:bg-[#1B1B1B]'
@@ -425,7 +425,7 @@ const TokenStudio = () => {
                                                         <CustomTokenIcon fill="currentColor" size={20} />
                                                     </span>
                                                     <span
-                                                        className={`ml-2 ${
+                                                        className={`ml-0 md:ml-2 ${
                                                             selectedOption === 'custom' ? 'text-white' : ''
                                                         }`}
                                                     >
@@ -433,7 +433,7 @@ const TokenStudio = () => {
                                                     </span>
                                                 </label>
                                                 <label
-                                                    className={`justify-center text-sm flex-col rounded-lg sm:roundd-full sm:flex-row p-4 flex items-center transition-all ${
+                                                    className={`text-center justify-center text-sm flex-col rounded-lg sm:roundd-full sm:flex-row p-4 flex items-center transition-all ${
                                                         selectedOption === 'nft'
                                                             ? 'bg-black dark:bg-black font-bold'
                                                             : 'bg-neutral-200 dark:bg-[#1B1B1B]'
@@ -456,7 +456,7 @@ const TokenStudio = () => {
                                                         <NonFungibleIcon fill="currentColor" size={20} />
                                                     </span>
                                                     <span
-                                                        className={`ml-2 ${
+                                                        className={`ml-0 md:ml-2 ${
                                                             selectedOption === 'nft' ? 'text-white' : ''
                                                         }`}
                                                     >

@@ -83,7 +83,7 @@ const Detail = ({ txpowid, dismiss }: Props) => {
                                         className={`justify-center text-sm p-4 flex-col rounded-lg sm:roundd-full sm:flex-row flex items-center transition-all ${
                                             selectedOption === 'default'
                                                 ? 'bg-black dark:bg-black font-bold'
-                                                : 'bg-neutral-200 dark:bg-[#1B1B1B]'
+                                                : 'bg-neutral-100 dark:bg-[#1B1B1B]'
                                         }`}
                                     >
                                         <input
@@ -105,7 +105,7 @@ const Detail = ({ txpowid, dismiss }: Props) => {
                                         className={`justify-center text-sm flex-col rounded-lg sm:roundd-full sm:flex-row p-4 flex items-center transition-all ${
                                             selectedOption === 'inputsoutputs'
                                                 ? 'bg-black dark:bg-black font-bold'
-                                                : 'bg-neutral-200 dark:bg-[#1B1B1B]'
+                                                : 'bg-neutral-100 dark:bg-[#1B1B1B]'
                                         } ${
                                             _transaction && !_transaction.inputs.length
                                                 ? 'opacity-50 cursor-not-allowed'
@@ -136,7 +136,7 @@ const Detail = ({ txpowid, dismiss }: Props) => {
                                         className={`justify-center text-sm flex-col rounded-lg sm:roundd-full sm:flex-row p-4 flex items-center transition-all ${
                                             selectedOption === 'state'
                                                 ? 'bg-black dark:bg-black font-bold'
-                                                : 'bg-neutral-200 dark:bg-[#1B1B1B]'
+                                                : 'bg-neutral-100 dark:bg-[#1B1B1B]'
                                         } ${
                                             _transaction && !_transaction.stateVars.length
                                                 ? 'opacity-50 cursor-not-allowed'
@@ -163,7 +163,7 @@ const Detail = ({ txpowid, dismiss }: Props) => {
                                         className={`justify-center text-sm flex-col rounded-lg sm:roundd-full sm:flex-row p-4 flex items-center transition-all ${
                                             selectedOption === 'json'
                                                 ? 'bg-black dark:bg-black font-bold'
-                                                : 'bg-neutral-200 dark:bg-[#1B1B1B]'
+                                                : 'bg-neutral-100 dark:bg-[#1B1B1B]'
                                         }`}
                                     >
                                         <input
@@ -322,7 +322,7 @@ const Detail = ({ txpowid, dismiss }: Props) => {
                                                 <KeyValue title="Type" value={i.type + ''} />
                                                 
                                                 <KeyValue
-                                                    truncate={false}
+                                                    truncate={true}
                                                     clipboard
                                                     title="Data"
                                                     value={i.data.replace(/[\[\]]+/gi, ' ')}

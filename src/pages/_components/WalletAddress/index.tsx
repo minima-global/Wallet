@@ -45,7 +45,7 @@ const WalletAddress = ({ _address }: Props) => {
           onKeyDown={handleKeyDown}
           onDoubleClick={handleDoubleClick}
           onBlur={() => setF(false)}
-          className="p-2 text-left font-bold rounded-full focus:bg-teal-200 pr-10 truncate focus:outline-teal-600 dark:focus:text-black px-3 pr-8 text-sm !w-max !max-w-max bg-teal-300"
+          className={`p-2 text-left font-bold rounded-full focus:bg-teal-200 truncate focus:outline-teal-600 dark:focus:text-black px-3 pr-8 text-sm !w-max !max-w-max bg-neutral-300 ${copied && "bg-teal-500"}`}
           value={_address ? _address : "N/A"}
         />
       )}
@@ -56,7 +56,7 @@ const WalletAddress = ({ _address }: Props) => {
           onKeyDown={handleKeyDown}
           onDoubleClick={handleDoubleClick}
           onFocus={() => setF(true)}
-          className="p-2 text-left font-bold rounded-full focus:bg-teal-200 focus:outline-teal-600 dark:focus:text-black px-3 pr-8 text-sm !w-max !max-w-max bg-teal-300"
+          className="p-2 text-left font-bold rounded-full focus:bg-teal-200 focus:outline-teal-600 dark:focus:text-black px-3 pr-8 text-sm !w-max !max-w-max bg-neutral-200"
           value={
             _address
               ? _address.substring(0, 8) +

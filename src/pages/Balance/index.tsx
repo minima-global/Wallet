@@ -4,13 +4,7 @@ import TokenDetails from './TokenDetails';
 import { useLocation } from 'react-router-dom';
 import AnimatePageIn from '../../components/UI/Animations/AnimatePageIn';
 import { appContext } from '../../AppContext';
-import AnimatedDialog from '../../components/UI/AnimatedDialog';
-import CloseIcon from '../../components/UI/Icons/CloseIcon';
-import Decimal from 'decimal.js';
-import LockedIcon from '../../components/UI/Icons/LockedIcon';
-import useFormatMinimaNumber from '../../__minima__/libs/utils/useMakeNumber';
 
-import * as utils from '../../utilities';
 import HiddenTokens from './HiddenTokens';
 
 const Balance = () => {

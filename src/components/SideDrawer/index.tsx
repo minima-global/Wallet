@@ -22,7 +22,7 @@ const SideDrawer = ({ isOpen, toggleDrawer }: IProps) => {
         <div className="relative">
             {/* Persistent Drawer */}
             <div
-                className={`z-[444] h-full fixed top-0 dark:shadow-none bg-neutral-100 left-0 w-[240px] dark:bg-[#252525] dark:border-r dark:border-r-[#1B1B1B] text-white transition-transform duration-300 md:translate-x-0 ${
+                className={`z-[444] h-full fixed top-0 dark:shadow-none bg-neutral-200 left-0 w-[240px] dark:bg-[#252525] dark:border-r dark:border-r-[#1B1B1B] text-white transition-transform duration-300 md:translate-x-0 ${
                     isOpen ? 'translate-x-0' : '-translate-x-full'
                 }`}
             >
@@ -44,7 +44,7 @@ const SideDrawer = ({ isOpen, toggleDrawer }: IProps) => {
                                     className={({ isActive }) =>
                                         isActive
                                             ? 'flex items-center rounded-full px-3 py-2 bg-black text-white dark:bg-[#1B1B1B] dark:text-neutral-300 font-bold hover:!text-neutral-300'
-                                            : 'flex items-center px-3 py-2 border dark:border-[#1B1B1B] rounded-full font-bold text-neutral-500 dark:text-neutral-600'
+                                            : 'bg-neutral-100 dark:bg-transparent flex items-center px-3 py-2 border dark:border-[#1B1B1B] rounded-full font-bold text-neutral-500 dark:text-neutral-600'
                                     }
                                     onClick={() => {
                                         toggleDrawer();
@@ -60,7 +60,7 @@ const SideDrawer = ({ isOpen, toggleDrawer }: IProps) => {
                                     className={({ isActive }) =>
                                         isActive
                                             ? 'flex items-center rounded-full px-3 py-2 bg-black text-white  dark:bg-[#1B1B1B] dark:text-neutral-300 font-bold hover:!text-neutral-300'
-                                            : 'flex items-center px-3 py-2 border dark:border-[#1B1B1B] rounded-full font-bold text-neutral-500 dark:text-neutral-600'
+                                            : 'bg-neutral-100 dark:bg-transparent flex items-center px-3 py-2 border dark:border-[#1B1B1B] rounded-full font-bold text-neutral-500 dark:text-neutral-600'
                                     }
                                     onClick={() => {
                                         toggleDrawer();
@@ -76,7 +76,7 @@ const SideDrawer = ({ isOpen, toggleDrawer }: IProps) => {
                                     className={({ isActive }) =>
                                         isActive
                                             ? 'flex items-center rounded-full px-3 py-2 bg-black text-white  dark:bg-[#1B1B1B] dark:text-neutral-300 font-bold hover:!text-neutral-300'
-                                            : 'flex items-center px-3 py-2 border dark:border-[#1B1B1B] rounded-full font-bold text-neutral-500 dark:text-neutral-600'
+                                            : 'bg-neutral-100 dark:bg-transparent flex items-center px-3 py-2 border dark:border-[#1B1B1B] rounded-full font-bold text-neutral-500 dark:text-neutral-600'
                                     }
                                     onClick={() => {
                                         toggleDrawer();
@@ -92,7 +92,7 @@ const SideDrawer = ({ isOpen, toggleDrawer }: IProps) => {
                                     className={({ isActive }) =>
                                         isActive
                                             ? 'flex items-center rounded-full px-3 py-2 bg-black text-white  dark:bg-[#1B1B1B] dark:text-neutral-300 font-bold hover:!text-neutral-300'
-                                            : 'flex items-center px-3 py-2 border dark:border-[#1B1B1B] rounded-full font-bold text-neutral-500 dark:text-neutral-600'
+                                            : 'bg-neutral-100 dark:bg-transparent flex items-center px-3 py-2 border dark:border-[#1B1B1B] rounded-full font-bold text-neutral-500 dark:text-neutral-600'
                                     }
                                     onClick={() => {
                                         toggleDrawer();
@@ -108,7 +108,7 @@ const SideDrawer = ({ isOpen, toggleDrawer }: IProps) => {
                                     className={({ isActive }) =>
                                         isActive
                                             ? 'flex items-center rounded-full px-3 py-2 bg-black text-white  dark:bg-[#1B1B1B] dark:text-neutral-300 font-bold hover:!text-neutral-300'
-                                            : 'flex items-center px-3 py-2 border dark:border-[#1B1B1B] rounded-full font-bold text-neutral-500 dark:text-neutral-600'
+                                            : 'bg-neutral-100 dark:bg-transparent flex items-center px-3 py-2 border dark:border-[#1B1B1B] rounded-full font-bold text-neutral-500 dark:text-neutral-600'
                                     }
                                     onClick={() => {
                                         toggleDrawer();
@@ -124,7 +124,7 @@ const SideDrawer = ({ isOpen, toggleDrawer }: IProps) => {
                                     className={({ isActive }) =>
                                         isActive
                                             ? 'flex items-center rounded-full px-3 py-2 bg-black text-white  dark:bg-[#1B1B1B] dark:text-neutral-300 font-bold hover:!text-neutral-300'
-                                            : 'flex items-center px-3 py-2 border dark:border-[#1B1B1B] rounded-full font-bold text-neutral-500 dark:text-neutral-600'
+                                            : 'bg-neutral-100 dark:bg-transparent flex items-center px-3 py-2 border dark:border-[#1B1B1B] rounded-full font-bold text-neutral-500 dark:text-neutral-600'
                                     }
                                     onClick={() => {
                                         toggleDrawer();

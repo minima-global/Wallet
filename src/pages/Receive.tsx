@@ -164,7 +164,7 @@ const Receive = () => {
                                         </div>
                                         <button
                                             onClick={() => handleEnd()}
-                                            className="w-full dark:bg-violet-600 text-white font-bold"
+                                            className="bg-[#1B1B1B] w-full dark:bg-black text-neutral-100 font-bold"
                                         >
                                             Done
                                         </button>

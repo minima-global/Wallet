@@ -1,15 +1,24 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import Decimal from 'decimal.js';
 import useFormatMinimaNumber from '../../../__minima__/libs/utils/useMakeNumber';
 import LockedIcon from '../Icons/LockedIcon';
+import TokenDetails from '../../../pages/Balance/TokenDetails';
+import { appContext } from '../../../AppContext';
 
 
 const TokenListItem = ({ token }: any) => {
     const { makeMinimaNumber} = useFormatMinimaNumber();
+    const [_promptTokenDetails, setPromptTokenDetails] = useState(false);
 
 
     return (
-        <li
+
+        <>
+        <TokenDetails dismiss={() => setPromptTokenDetails(false)} display={_promptTokenDetails} token={token} />
+        <li 
+            onClick={() => {
+                setPromptTokenDetails(true);
+            }}
             className={`grid grid-cols-[auto_1fr] items-center gap-2 bg-white dark:bg-[#1B1B1B] rounded rounded-r-none`}
             key={token.tokenid}
         >
@@ -34,19 +43,10 @@ const TokenListItem = ({ token }: any) => {
                         }`}
                         className="truncate w-full focus:outline-none bg-transparent text-sm tracking-wider dark:text-neutral-300"
                     />
-                </div>
-                {!new Decimal(new Decimal(token.confirmed).minus(token.sendable)).isZero() && (
-                    <div className="flex items-start justify-center pr-1">
-                        <p className="text-[14px] tracking-wide font-mono dark:text-neutral-300">
-                            {makeMinimaNumber(new Decimal(token.confirmed).minus(token.sendable).toFixed(3), 2000)}
-                        </p>
-                        <span>
-                            <LockedIcon fill="currentColor" />
-                        </span>
-                    </div>
-                )}
+                </div>                
             </div>
         </li>
+        </>
     );
 };
 

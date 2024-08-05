@@ -1,5 +1,5 @@
 import KeyValue from '../../../components/UI/KeyValue';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import CloseIcon from '../../../components/UI/Icons/CloseIcon';
 import VerifiedIcon from '../../../components/UI/Icons/VerifiedIcon';
 import Decimal from 'decimal.js';
@@ -9,8 +9,10 @@ import Burn from '../Burn';
 import SecondaryButton from '../../../components/UI/SecondaryButton';
 import PrimaryButton from '../../../components/UI/PrimaryButton';
 import Hide from '../Hide';
+import { appContext } from '../../../AppContext';
 
 const TokenDetails = ({ token, display, dismiss }: any) => {
+    const { _hiddenTokens } = useContext(appContext);
     const [_promptBurn, setPromptBurn] = useState(false);
     const [_promptHide, setPromptHide] = useState(false);
 
@@ -144,7 +146,8 @@ const TokenDetails = ({ token, display, dismiss }: any) => {
                                 )}
                                 {!isMinima && (
                                     <SecondaryButton onClick={promptHide} type="button">
-                                        Hide
+                                        {_hiddenTokens[token.tokenid] && "Unhide"}
+                                        {!_hiddenTokens[token.tokenid] && "Hide"}
                                     </SecondaryButton>
                                 )}
                                 <PrimaryButton type="button">Transfer</PrimaryButton>

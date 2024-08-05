@@ -283,7 +283,7 @@ const Send = () => {
                                     <fieldset>
                                         <div className="grid grid-cols-3 gap-2">
                                             <label
-                                                className={`justify-center text-sm p-4 flex-col rounded-lg sm:roundd-full sm:flex-row flex items-center transition-all ${
+                                                className={`text-center justify-center text-sm p-4 flex-col rounded-lg sm:roundd-full sm:flex-row flex items-center transition-all ${
                                                     selectedOption === 'default'
                                                         ? 'bg-black dark:bg-black font-bold'
                                                         : 'bg-neutral-200 dark:bg-[#1B1B1B]'
@@ -301,7 +301,7 @@ const Send = () => {
                                                     <SendIcon fill="currentColor" />
                                                 </span>
                                                 <span
-                                                    className={`ml-2 ${
+                                                    className={`ml-0 md:ml-2 ${
                                                         selectedOption === 'default' ? 'text-white' : ''
                                                     }`}
                                                 >
@@ -309,7 +309,7 @@ const Send = () => {
                                                 </span>
                                             </label>
                                             <label
-                                                className={`justify-center text-sm flex-col rounded-lg sm:roundd-full sm:flex-row p-4 flex items-center transition-all ${
+                                                className={`text-center justify-center text-sm flex-col rounded-lg sm:roundd-full sm:flex-row p-4 flex items-center transition-all ${
                                                     selectedOption === 'split'
                                                         ? 'bg-black dark:bg-black font-bold'
                                                         : 'bg-neutral-200 dark:bg-[#1B1B1B]'
@@ -330,13 +330,13 @@ const Send = () => {
                                                     <SplitIcon fill="currentColor" />
                                                 </span>
                                                 <span
-                                                    className={`ml-2 ${selectedOption === 'split' ? 'text-white' : ''}`}
+                                                    className={`ml-0 md:ml-2 ${selectedOption === 'split' ? 'text-white' : ''}`}
                                                 >
                                                     Split
                                                 </span>
                                             </label>
                                             <label
-                                                className={`justify-center text-sm flex-col rounded-lg sm:roundd-full sm:flex-row p-4 flex items-center transition-all ${
+                                                className={`text-center justify-center text-sm flex-col rounded-lg sm:roundd-full sm:flex-row p-4 flex items-center transition-all ${
                                                     selectedOption === 'combine'
                                                         ? 'bg-black dark:bg-black font-bold'
                                                         : 'bg-neutral-200 dark:bg-[#1B1B1B]'
@@ -357,7 +357,7 @@ const Send = () => {
                                                     <CombineIcon fill="currentColor" />
                                                 </span>
                                                 <span
-                                                    className={`ml-2 ${
+                                                    className={`ml-0 md:ml-2 ${
                                                         selectedOption === 'combine' ? 'text-white' : ''
                                                     }`}
                                                 >
