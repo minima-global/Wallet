@@ -23,7 +23,7 @@ const KeyValue = ({ title, value, help, clipboard, mono = false, truncate = true
 
     return (
         <>
-            <div className={`rounded-lg grid grid-rows-1 grid-cols-[120px_1fr] bg-neutral-300 border dark:border-[#1B1B1B] md:gap-2 items-center dark:bg-[#1B1B1B] dark:bg-opacity-60`}>
+            <div className={`rounded-lg grid grid-rows-1 grid-cols-[80px_1fr] md:grid-cols-[120px_1fr] bg-neutral-50 border dark:border-[#1B1B1B] md:gap-2 items-center dark:bg-[#1B1B1B] dark:bg-opacity-10`}>
                 <div className='truncate dark:border-r dark:border-r-neutral-800'>
                     <h3 className="text-center truncate p-2 font-bold bg-neutral-100 text-sm dark:bg-[#1B1B1B] dark:bg-opacity-10">{title}</h3>
                 </div>
@@ -31,11 +31,11 @@ const KeyValue = ({ title, value, help, clipboard, mono = false, truncate = true
                     
                     
                     {truncate &&                    
-                    <input readOnly value={value} className={`truncate px-2 md:p-0 text-center md:text-left text-sm break-word ${mono && 'font-mono'} bg-transparent focus:outline-none w-full`}/>
+                        <input readOnly value={value} className={`truncate px-2 md:p-0 text-center md:text-left text-sm break-word ${mono && 'font-mono'} bg-transparent focus:outline-none w-full`}/>
                     }
                     
                     {!truncate &&
-                    <p className={` px-2 md:p-0 text-center md:text-left text-sm break-word ${mono && 'font-mono'}`}>
+                    <p className={`px-2 md:p-0 text-center md:text-left text-sm break-word ${mono && 'font-mono'}`}>
                         {value}
                     </p>                    
                 
@@ -43,7 +43,7 @@ const KeyValue = ({ title, value, help, clipboard, mono = false, truncate = true
                     {clipboard && (
                         <div
                             onClick={handleCopyClick}
-                            className="hover:bg-teal-400 hover:dark:bg-neutral-200 text-neutral-100 dark:text-black flex relative p-0 m-0 hover:cursor-pointer text-sm bg-teal-500 dark:bg-neutral-300 h-full w-[48px] items-center justify-center px-2 rounded-r"
+                            className="hover:bg-teal-400 hover:dark:bg-neutral-200 text-neutral-100 dark:text-black ml-4 flex relative p-0 m-0 hover:cursor-pointer text-sm bg-teal-500 dark:bg-neutral-300 h-full w-[48px] items-center justify-center px-2 rounded-r"
                         >
                             <svg
                                 onInput={() => {}}

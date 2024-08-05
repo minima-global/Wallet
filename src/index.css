@@ -21,13 +21,14 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
-
-  overflow-y: overlay;
+  overflow-y: auto;
 }
 
-body {
+body, html {
   margin: 0;
   padding: 0;  
+
+  height: 100%;
 }
 
 
