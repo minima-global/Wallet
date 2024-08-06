@@ -1,7 +1,6 @@
 import { ReactElement, useEffect, useState } from 'react';
 import { animated, useTransition, config } from 'react-spring';
 import { createPortal } from 'react-dom';
-import { useMediaQuery } from '@mui/material';
 
 interface AnimatedDialogProps {
     children: ReactElement;
@@ -13,8 +12,6 @@ interface AnimatedDialogProps {
 const AnimatedDialog = ({ children, display, extraClass, dismiss }: AnimatedDialogProps) => {
     const [show, setShow] = useState(display);
 
-    // Custom hook to detect screen size
-    const isMdUp = useMediaQuery('(min-width: 768px)');
     useEffect(() => {
         if (display) setShow(true);
     }, [display]);

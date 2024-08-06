@@ -12,6 +12,7 @@ import Balance from './pages/Balance';
 import TokenStudio from './pages/TokenStudio';
 import Transactions from './pages/Transactions';
 import { TransactionHistoryProvider } from './pages/Transactions/context';
+import Collections from './pages/Collections';
 
 const router = createHashRouter(
     createRoutesFromElements(
@@ -32,6 +33,7 @@ const router = createHashRouter(
           <Route path="transactions" element={<TransactionHistoryProvider><Transactions /></TransactionHistoryProvider>} />    
           <Route path="send" element={<Send />} />
           <Route path="tokenstudio" element={<TokenStudio />} />
+          <Route path="collections" element={<Collections />} />
         </Route>      
         <Route path="*" element={<Navigate to="/dashboard/balance" replace />} />
       </Route>

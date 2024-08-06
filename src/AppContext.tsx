@@ -10,7 +10,6 @@ import extractHistoryDetails from './shared/utils/_txpowHelperFunctions/extractH
 
 import * as utils from './utilities';
 
-
 export const appContext = createContext({} as any);
 
 interface IProps {
@@ -26,33 +25,36 @@ const AppProvider = ({ children }: IProps) => {
     const [isCreatingKeys, setCreatingKeys] = useState(false);
     const [appIsInWriteMode, setAppIsInWriteMode] = useState<boolean | null>(null);
     const [minidappSystemFailed, setMinidappSystemFailed] = useState<boolean | null>(null);
+
     const [shuttingDown, setShuttingDown] = useState<boolean | null>(null);
     const [isDarkMode, setIsDarkMode] = useState(() => {
         // Initialize state based on localStorage
-        return localStorage.getItem("dark-mode") === "true";
-      });
-    
+        return localStorage.getItem('dark-mode') === 'true';
+    });
+
+    const [_promptMining, setPromptMining] = useState(false);
+
     const [_promptSetting, setPromptSettings] = useState(false);
     const [_promptBalanceInfo, setPromptBalanceInfo] = useState(false);
     const [_promptHiddenTokens, setPromptHiddenTokens] = useState(false);
-    const [_currentNavigation, setCurrentNavigation] = useState("balance");
+    const [_currentNavigation, setCurrentNavigation] = useState('balance');
 
     const [_transactionSubmitting, setTransactionSubmitting] = useState(false);
     const [_transactionSuccess, setTransactionSuccess] = useState(false);
     const [_transactionPending, setTransactionPending] = useState(false);
-    const [_transactionError, setTransactionError] = useState<false|string>(false);
-    
+    const [_transactionError, setTransactionError] = useState<false | string>(false);
+
     const promptSettings = () => {
         setPromptSettings((prevState) => !prevState);
     };
-    
+
     const promptBalanceInfo = () => {
-    setPromptBalanceInfo((prevState) => !prevState);
+        setPromptBalanceInfo((prevState) => !prevState);
     };
 
-    const promptNavigation = (nav:string) => {
+    const promptNavigation = (nav: string) => {
         setCurrentNavigation(nav);
-    }
+    };
 
     // RPC DATA
     const [_maxima, setMaxima] = useState('');
@@ -105,18 +107,18 @@ const AppProvider = ({ children }: IProps) => {
         thousands: '',
     });
 
-    const [_hiddenTokens, setHiddenTokens] = useState<Record<string, boolean> | null>(null);;
+    const [_hiddenTokens, setHiddenTokens] = useState<Record<string, boolean> | null>(null);
 
     useEffect(() => {
         // Apply or remove the 'dark' class on the document element
         if (isDarkMode) {
-          document.documentElement.classList.add("dark");
-          localStorage.setItem("dark-mode", "true");
+            document.documentElement.classList.add('dark');
+            localStorage.setItem('dark-mode', 'true');
         } else {
-          document.documentElement.classList.remove("dark");
-          localStorage.setItem("dark-mode", "false");
+            document.documentElement.classList.remove('dark');
+            localStorage.setItem('dark-mode', 'false');
         }
-      }, [isDarkMode]); // Re-run effect when isDarkMode changes
+    }, [isDarkMode]); // Re-run effect when isDarkMode changes
 
     useEffect(() => {
         if (!loaded.current) {
@@ -126,8 +128,6 @@ const AppProvider = ({ children }: IProps) => {
                     rpc.isWriteMode().then((appIsInWriteMode) => {
                         setAppIsInWriteMode(appIsInWriteMode);
                     });
-
-
 
                     // callAndSaveMaximaName
                     getMaximaName();
@@ -151,13 +151,11 @@ const AppProvider = ({ children }: IProps) => {
                         const favoriteTokens: any = await sql(`SELECT * FROM cache WHERE name= 'FAVORITE_TOKENS'`);
 
                         const currFormat: any = await sql(`SELECT * FROM cache WHERE name= 'CURRENCY_FORMAT'`);
-                        
-                        const hiddenTokens: any = await sql(`SELECT * FROM cache WHERE name= 'HIDDEN_TOKENS'`);
 
+                        const hiddenTokens: any = await sql(`SELECT * FROM cache WHERE name= 'HIDDEN_TOKENS'`);
 
                         if (hiddenTokens) {
                             setHiddenTokens(JSON.parse(hiddenTokens.DATA));
-
                         }
 
                         if (nicknameAddresses) {
@@ -224,6 +222,9 @@ const AppProvider = ({ children }: IProps) => {
                 if (msg.event === 'MDSFAIL') {
                     setMinidappSystemFailed(true);
                 }
+                if (msg.event === 'MINING') {
+                    setPromptMining(msg.data.mining);
+                }
             });
         }
     }, [loaded]);
@@ -238,11 +239,11 @@ const AppProvider = ({ children }: IProps) => {
 
     const checkVaultLocked = () => {
         (window as any).MDS.cmd('vault', (resp: any) => {
-          setVaultLocked(resp.response.locked);
-          
-          if (!resp.response.locked) {
-            setSeedPhrase(resp.response.phrase);
-          }
+            setVaultLocked(resp.response.locked);
+
+            if (!resp.response.locked) {
+                setSeedPhrase(resp.response.phrase);
+            }
         });
     };
 
@@ -338,11 +339,11 @@ const AppProvider = ({ children }: IProps) => {
             await sql(`UPDATE cache SET data = '${JSON.stringify(updatedFormat)}' WHERE name = 'CURRENCY_FORMAT'`);
         }
     };
-    
+
     const hideToken = async (tokenid: string, toggle = true) => {
         const updatedData = {
             ..._hiddenTokens,
-            [tokenid]: toggle
+            [tokenid]: toggle,
         };
 
         // update nicknames
@@ -414,14 +415,15 @@ const AppProvider = ({ children }: IProps) => {
                 _promptBalanceInfo,
                 promptBalanceInfo,
 
-                _promptHiddenTokens, setPromptHiddenTokens, promptHiddenTokens,
-                
+                _promptHiddenTokens,
+                setPromptHiddenTokens,
+                promptHiddenTokens,
+
                 _promptSetting,
                 promptSettings,
 
                 _currentNavigation,
                 promptNavigation,
-               
 
                 _transferType,
                 selectTransferType,
@@ -436,16 +438,21 @@ const AppProvider = ({ children }: IProps) => {
                 isMobile: mode === 'mobile',
 
                 loading,
-                balance: _hiddenTokens ? balance.filter(b => {
-                    const id = b.tokenid;
+                balance: _hiddenTokens
+                    ? balance.filter((b) => {
+                          const id = b.tokenid;
 
-                    return !_hiddenTokens[id];
-                }) : balance,
-                hiddenBalance: _hiddenTokens ? balance.filter(b => {
-                    const id = b.tokenid;
+                          return !_hiddenTokens[id];
+                      })
+                    : balance,
+                hiddenBalance: _hiddenTokens
+                    ? balance.filter((b) => {
+                          const id = b.tokenid;
 
-                    return _hiddenTokens[id];
-                }) : [],
+                          return _hiddenTokens[id];
+                      })
+                    : [],
+                // collections: NFTs.filter(b => b. === 0),
                 NFTs,
                 simpleAddresses,
                 history,
@@ -483,18 +490,25 @@ const AppProvider = ({ children }: IProps) => {
                 // maxima name
                 maximaName: _maxima,
 
-                // This is a global txn status modal.. 
-                _transactionSubmitting, setTransactionSubmitting,
-                _transactionSuccess, setTransactionSuccess,
-                _transactionError, setTransactionError,
-                _transactionPending, setTransactionPending,
+                // This is a global txn status modal..
+                _transactionSubmitting,
+                setTransactionSubmitting,
+                _transactionSuccess,
+                setTransactionSuccess,
+                _transactionError,
+                setTransactionError,
+                _transactionPending,
+                setTransactionPending,
 
-                isDarkMode, setIsDarkMode,
+                isDarkMode,
+                setIsDarkMode,
 
                 _seedPhrase,
 
                 _hiddenTokens,
-                hideToken
+                hideToken,
+
+                _promptMining,
             }}
         >
             {children}
