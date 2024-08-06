@@ -48,7 +48,7 @@ const AddressItem: React.FC<AddressItemProps> = ({
         >
             {edit && (
                 <Formik
-                    initialValues={{ nickname: _nicknameAddress[address.miniaddress] || "Untitled" }}
+                    initialValues={{ nickname: _nicknameAddress[address.miniaddress] || 'Untitled' }}
                     onSubmit={(data) => {
                         const { nickname } = data;
                         editNickname(address.miniaddress, nickname.replaceAll("'", ' '));
@@ -60,30 +60,25 @@ const AddressItem: React.FC<AddressItemProps> = ({
                             .max(255, "A nickname can't be longer than 255 characters"),
                     })}
                 >
-                    {({ values, handleSubmit, handleChange }) => (
+                    {({ errors, values, handleSubmit, handleChange }) => (
                         <form
                             className="flex justify-center"
                             onClick={(e) => {
                                 e.stopPropagation();
-                                
                             }}
                             onSubmit={handleSubmit}
                         >
-                            <input
-                            id="nickname"
-                            name="nickname"
-                            value={values.nickname}
-                            onChange={handleChange}
-                                placeholder="Enter nickname"
-                                className="bg-white dark:bg-[#1B1B1B] dark:border-neutral-500 px-4 border rounded-full focus:outline placeholder:text-neutral-500 rounded-r-none focus:outline-[#1B1B1B] dark:focus:outline-neutral-300"
-                            />
-                            <div className="flex-shrink-0">
-                                <PrimaryButton onClick={() => {}} extraClass="!bg-neutral-300 dark:!bg-neutral-500 py-2 ml-0 rounded-l-none" type="submit">
-                                    <span className='dark:text-neutral-300'>
-                                    <DoneIcon fill="currentColor" size={24} />
-                                    </span>
-                                </PrimaryButton>
-                            </div>
+                            <div className="flex bg-white pl-2 dark:bg-[#1B1B1B] dark:border dark:border-neutral-800">
+                                <input
+                                    id="nickname"
+                                    name="nickname"
+                                    value={values.nickname}
+                                    onChange={handleChange}
+                                    placeholder="Enter nickname"
+                                    className="bg-transparent focus:outline-none placeholder:text-neutral-500 text-sm"
+                                />
+                                <button disabled={!!(errors && errors.nickname)} type="submit" className='text-sm font-bold text-[#1B1B1B] bg-neutral-100 dark:bg-black dark:text-neutral-300 disabled:text-neutral-300 disabled:dark:bg-opacity-50 dark:disabled:text-[#1B1B1B] rounded-none'>Done</button>
+                            </div>                            
                         </form>
                     )}
                 </Formik>
@@ -91,7 +86,9 @@ const AddressItem: React.FC<AddressItemProps> = ({
 
             {!edit && (
                 <div className="flex justify-center gap-1">
-                    <h1 className="font-bold truncate text-center">{_nicknameAddress[address.miniaddress] || 'Untitled address'}</h1>
+                    <h1 className="font-bold truncate text-center">
+                        {_nicknameAddress[address.miniaddress] || 'Untitled address'}
+                    </h1>
 
                     <span
                         onClick={(e) => {

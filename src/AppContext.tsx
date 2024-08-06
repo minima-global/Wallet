@@ -26,6 +26,8 @@ const AppProvider = ({ children }: IProps) => {
     const [appIsInWriteMode, setAppIsInWriteMode] = useState<boolean | null>(null);
     const [minidappSystemFailed, setMinidappSystemFailed] = useState<boolean | null>(null);
 
+    const [_addressBook, setAddressBook] = useState<{[key: string]: string}>({});
+
     const [shuttingDown, setShuttingDown] = useState<boolean | null>(null);
     const [isDarkMode, setIsDarkMode] = useState(() => {
         // Initialize state based on localStorage
@@ -33,7 +35,11 @@ const AppProvider = ({ children }: IProps) => {
     });
 
     const [_promptMining, setPromptMining] = useState(false);
-
+    
+    const [_promptFavorites, setPromptFavorites] = useState(false);
+    const [_promptAccountNameUpdate, setPromptAccountNameUpdate] = useState(false);
+    const [_promptAddressBookAdd, setPromptAddressBookAdd] = useState(false);
+    
     const [_promptSetting, setPromptSettings] = useState(false);
     const [_promptBalanceInfo, setPromptBalanceInfo] = useState(false);
     const [_promptHiddenTokens, setPromptHiddenTokens] = useState(false);
@@ -153,6 +159,13 @@ const AppProvider = ({ children }: IProps) => {
                         const currFormat: any = await sql(`SELECT * FROM cache WHERE name= 'CURRENCY_FORMAT'`);
 
                         const hiddenTokens: any = await sql(`SELECT * FROM cache WHERE name= 'HIDDEN_TOKENS'`);
+
+                        // Get all user's saved addresses
+                        const addressBook: any = await sql(`SELECT * FROM cache WHERE name = 'ADDRESSBOOK'`);
+
+                        if (addressBook) {
+                            setAddressBook(JSON.parse(addressBook.DATA));
+                        }
 
                         if (hiddenTokens) {
                             setHiddenTokens(JSON.parse(hiddenTokens.DATA));
@@ -401,8 +414,32 @@ const AppProvider = ({ children }: IProps) => {
         }
     };
 
+    const updateAddressBook = async (address: string, nickname: string) => {
+        const updatedData = {
+            ..._addressBook,
+            [address]: nickname,
+        };
+
+        setAddressBook(updatedData);
+
+        const rows = await sql(`SELECT * FROM cache WHERE name = 'ADDRESSBOOK'`);
+
+        if (!rows) {
+            await sql(`INSERT INTO cache (name, data) VALUES ('ADDRESSBOOK', '${JSON.stringify(updatedData)}')`);
+        } else {
+            await sql(`UPDATE cache SET data = '${JSON.stringify(updatedData)}' WHERE name = 'ADDRESSBOOK'`);
+        }
+
+        setPromptAccountNameUpdate(false);
+        setPromptAddressBookAdd(false);
+    };
+
     const promptMenu = () => {
         setOpenDrawer((prevState) => !prevState);
+    };
+    
+    const promptFavorites = () => {
+        setPromptFavorites((prevState) => !prevState);
     };
 
     const selectTransferType = (transferType: 'value' | 'split' | 'consolidate') => {
@@ -509,6 +546,11 @@ const AppProvider = ({ children }: IProps) => {
                 hideToken,
 
                 _promptMining,
+                _promptFavorites, 
+                updateAddressBook,
+                setPromptFavorites,
+                promptFavorites,
+                _addressBook
             }}
         >
             {children}
