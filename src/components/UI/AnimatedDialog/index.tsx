@@ -34,7 +34,7 @@ const AnimatedDialog = ({ children, display, extraClass, dismiss }: AnimatedDial
                         item ? (
                             <animated.div
                                 style={styles}
-                                className="fixed left-0 right-0 bottom-0 top-0 md:grid md:grid-cols-[1fr_minmax(0,_560px)_1fr] md:ml-[240px] z-[22]"
+                                className="fixed left-0 right-0 bottom-0 top-[54px] md:grid md:grid-cols-[1fr_minmax(0,_560px)_1fr] md:ml-[240px] z-[22]"
                             >
                                 <div />
                                 <div className={`z-[23] h-full ${extraClass && extraClass}`}>{children}</div>

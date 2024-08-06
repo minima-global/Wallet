@@ -52,3 +52,35 @@
     height: 0;
   }
 }
+
+.nft-scrolling-container {
+  overflow: hidden;
+  width: 100%;
+  height: 180px; /* Adjust height as needed */
+  position: relative;
+}
+
+.nft-scrolling-content {
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  white-space: nowrap;
+}
+
+.nft-item {
+  display: inline-block;
+  margin: 0 10px; /* Adjust margin as needed */
+  text-align: center;
+}
+
+.nft-item img {
+  width: 150px; /* Adjust width as needed */
+  height: auto;
+  border-radius: 10px; /* Optional for rounded corners */
+}
+
+.view-all-button {
+  transition: all 0.3s ease-in-out;
+  width: 100%; /* Ensure it spans the full width */
+  box-sizing: border-box; /* Include padding and border in width */
+}

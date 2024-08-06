@@ -22,7 +22,7 @@ const SideDrawer = ({ isOpen, toggleDrawer }: IProps) => {
         <div className="relative">
             {/* Persistent Drawer */}
             <div
-                className={`z-[19] h-full fixed top-0 dark:shadow-none bg-neutral-200 left-0 w-[240px] dark:bg-[#252525] dark:border-r dark:border-r-[#1B1B1B] text-white transition-transform duration-300 md:translate-x-0 ${
+                className={`z-[444] h-full fixed top-0 dark:shadow-none bg-neutral-200 left-0 w-[240px] dark:bg-[#252525] dark:border-r dark:border-r-[#1B1B1B] text-white transition-transform duration-300 md:translate-x-0 ${
                     isOpen ? 'translate-x-0' : '-translate-x-full'
                 }`}
             >
@@ -158,7 +158,7 @@ const SideDrawer = ({ isOpen, toggleDrawer }: IProps) => {
 
             {/* Overlay for small screens */}
             <div
-                className={`fixed top-0 left-0 w-full h-full bg-black opacity-50 md:hidden ${
+                className={`fixed z-[443] top-0 left-0 w-full h-full bg-black opacity-50 md:hidden ${
                     isOpen ? 'block' : 'hidden'
                 }`}
                 onClick={toggleDrawer}
