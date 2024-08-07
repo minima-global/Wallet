@@ -17,14 +17,7 @@ interface IProps {
 }
 var balanceInterval: ReturnType<typeof setInterval>;
 
-interface HistoryState {
-    txpows: any[]; // Replace `any` with the actual type if possible
-    details: any[]; // Replace `any` with the actual type if possible
-    size: number;
-}
 const AppProvider = ({ children }: IProps) => {
-    // track if history already loaded..
-    const historyLoaded = useRef(false);
     const loaded = useRef(false);
     const [loading, setLoading] = useState(false);
     const [_transferType, setTransferType] = useState<'value' | 'split' | 'consolidate'>('value');
@@ -72,10 +65,6 @@ const AppProvider = ({ children }: IProps) => {
     const [_maxima, setMaxima] = useState('');
     const [NFTs, setNFTs] = useState<Coin[]>([]);
     const [balance, setBalance] = useState<MinimaToken[]>([]);
-
-    const [history, setHistory] = useState<HistoryState>({ txpows: [], details: [], size: 0 });
-
-    const [hasMore, setHasMore] = useState(true);
 
     const [logs, setLogs] = useState<string[]>([]);
     const [_seedPhrase, setSeedPhrase] = useState(null);
@@ -282,22 +271,6 @@ const AppProvider = ({ children }: IProps) => {
         rpc.getScripts().then((scripts) => {
             const allSimpleAddresses = scripts.filter((s) => s.simple && s.default);
             setSimpleAddresses(allSimpleAddresses);
-        });
-    };
-
-    const getHistory = (max = 20, offset = 0): Promise<any> => {
-        return new Promise((resolve, reject) => {
-            (window as any).MDS.cmd(`history max:${max} offset:${offset}`, (resp: any) => {
-                if (resp.status) {
-                    console.log(resp.response);
-                    resolve({
-                        txpows: resp.response.txpows,
-                        details: resp.response.details,
-                    });
-                } else {
-                    reject(new Error('Failed to fetch history'));
-                }
-            });
         });
     };
 
@@ -509,11 +482,9 @@ const AppProvider = ({ children }: IProps) => {
                 NFTs,
                 simpleAddresses,
                 history,
-                setHistory,
                 historyFacade,
                 setHistoryFacade,
                 historyDetails,
-                getHistory,
                 getBalance,
 
                 logs,
@@ -529,7 +500,6 @@ const AppProvider = ({ children }: IProps) => {
                 avgBurn,
                 // check if loaded..
                 loaded,
-                historyLoaded,
 
                 // Cache
                 _favoriteTokens,
@@ -569,10 +539,7 @@ const AppProvider = ({ children }: IProps) => {
                 updateAddressBook,
                 setPromptFavorites,
                 promptFavorites,
-                _addressBook,
-
-                hasMore,
-                setHasMore,
+                _addressBook
             }}
         >
             {children}

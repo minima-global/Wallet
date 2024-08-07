@@ -3,7 +3,6 @@ import AnimatePageIn from '../../components/UI/Animations/AnimatePageIn';
 import { useLocation } from 'react-router-dom';
 import TransactionSearchBar from '../../components/TransactionSearchBar';
 import SecondaryButton from '../../components/UI/SecondaryButton';
-import { appContext } from '../../AppContext';
 import { useTransactionHistory } from './context';
 import Lottie from 'lottie-react';
 import Loading from '../../components/UI/Lottie/Loading.json';
@@ -12,13 +11,8 @@ import FilterBy from './FilterBy';
 
 const Transactions = () => {
     const location = useLocation();
-
-    const { getHistory, loaded, hasMore, setHasMore, setHistory, historyLoaded } = useContext(appContext);
-    const { filterText, filteredElements, viewTxpow, setViewTxpow, filterBy } = useTransactionHistory();
+    const { loading, filterLoading, filterText, filteredElements, viewTxpow, triggerLoadingMore, setViewTxpow, filterBy, hasMore } = useTransactionHistory();
     const [promptFilterBy, setPromptFilterBy] = useState(false);
-    const [loading, setLoading] = useState(false);
-    const [offset, setOffset] = useState(0);
-    const [limit] = useState(20); // Number of items to fetch per request
 
     useEffect(() => {
         if (viewTxpow) {
@@ -28,78 +22,6 @@ const Transactions = () => {
         }
     }, [viewTxpow]);
 
-    // fetch history first time loading page and then not again
-    useEffect(() => {
-        if (!historyLoaded.current && (loaded && loaded.current)) {
-            getHistory(limit, offset)
-                .then((response: any) => {
-                    console.log(response);
-                    setHistory(response);
-                    historyLoaded.current = true; // Set to true after the first load
-                })
-                .catch((error: any) => {
-                    console.error('Error fetching history:', error);
-                });
-        }
-    }, [loaded, limit, offset]);
-
-    // load more transactions on scroll to bottom event
-    const loadMoreTransactions = useCallback(() => {
-        if (loading || !hasMore) return; // Prevent loading if already loading or no more items
-    
-        setLoading(true);
-        getHistory(limit, offset)
-            .then((response: any) => {
-                const { txpows, details } = response;
-    
-                // Deduplicate txpows and details
-                setHistory((prev: any) => {
-                    const existingTxpows = new Set(prev.txpows.map((txpow: any) => txpow.txpowid));
-                    const newTxpows = txpows.filter((txpow: any) => !existingTxpows.has(txpow.txpowid));
-                    const newDetails = newTxpows.map((txpow: any) => details[txpows.indexOf(txpow)]);
-    
-                    return {
-                        txpows: [...prev.txpows, ...newTxpows],
-                        details: [...prev.details, ...newDetails],
-                    };
-                });
-    
-                // Check if more items are available
-                setHasMore(txpows.length >= limit);
-                setOffset(prev => prev + limit);
-                setLoading(false);
-            })
-            .catch((error: any) => {
-                console.error('Error fetching history:', error);
-                setLoading(false);
-            });
-    }, [loading, hasMore, limit, offset]);
-    
-    // load more transactions when scrolling to bottom of screen...
-    const handleScroll = useCallback(
-        debounce(() => {
-            const bottom =
-                window.innerHeight + document.documentElement.scrollTop >= document.documentElement.offsetHeight - 50; // 50px from bottom
-            if (bottom) {
-                loadMoreTransactions();
-            }
-        }, 300), // Adjust debounce time as needed
-        [loadMoreTransactions]
-    );
-
-    useEffect(() => {
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, [handleScroll]);
-
-    // Slow down the API calls.. 
-    function debounce(func: Function, wait: number) {
-        let timeout: NodeJS.Timeout;
-        return (...args: any[]) => {
-            clearTimeout(timeout);
-            timeout = setTimeout(() => func(...args), wait);
-        };
-    }
     return (
         <>
             <FilterBy display={promptFilterBy} dismiss={() => setPromptFilterBy(false)} />
@@ -126,6 +48,12 @@ const Transactions = () => {
                             </div>
                         </div>
                     </div>
+                    {filterLoading && (
+                        <div className="flex justify-center flex-col my-4 items-center">
+                            <Lottie className="animate-spin w-[64px] h-[64px]" animationData={Loading} loop={true} />
+                            <p className='text-[#1B1B1B] animate-pulse text-sm dark:text-neutral-300 text-center'>Searching...</p>
+                        </div>
+                    )}
                     {filteredElements && filteredElements.length > 0 && (
                         <div className="space-y-4">{filteredElements}</div>
                     )}
@@ -133,9 +61,9 @@ const Transactions = () => {
                         <p className="text-[#1B1B1B] text-sm dark:text-neutral-300 text-center">No results found</p>
                     )}
                     {loading && (
-                        <div className="flex justify-center mt-4">
-                            <Lottie className="w-[64px] h-[64px]" animationData={Loading} loop={true} />
-                            Loading more...
+                        <div className="flex justify-center flex-col mt-4 items-center">
+                            <Lottie className="animate-spin w-[64px] h-[64px]" animationData={Loading} loop={true} />
+                            <p className='text-[#1B1B1B] text-sm dark:text-neutral-300 text-center animate-pulse'>Loading more...</p>
                         </div>
                     )}
                     {!hasMore && !filterText.length && (
@@ -144,8 +72,9 @@ const Transactions = () => {
                                 No more transactions to load
                             </p>
                         </div>
-                    )}{' '}
-                    {/* Optional: Show message when no more items */}
+                    )}
+
+                    {hasMore && !loading && <div className='mb-4 flex justift-center'><SecondaryButton onClick={triggerLoadingMore} type="button">Load More</SecondaryButton></div>}                    
                 </div>
             </AnimatePageIn>
         </>
