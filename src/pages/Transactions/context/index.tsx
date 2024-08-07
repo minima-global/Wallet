@@ -36,25 +36,8 @@ export const TransactionHistoryProvider: React.FC<{ children: ReactNode }> = ({ 
         // Filter details based on the indices of filtered txpows
         const filteredDetails = history.details.filter((_, index) => filteredIndices.includes(index));
 
-        // Combine txpows and details into a single array for sorting
-        const combined = filteredTxpows.map((txpow, index) => ({
-            txpow,
-            detail: filteredDetails[index],
-        }));
-
-        // Sort combined array by date (assuming txpow has a timeMilli property)
-        combined.sort((a, b) => {
-            const dateA = new Date(parseInt(a.txpow.timeMilli));
-            const dateB = new Date(parseInt(b.txpow.timeMilli));
-            return dateB.getTime() - dateA.getTime(); // Sort descending
-        });
-
-        // Unpack combined array back into txpows and details
-        const sortedTxpows = combined.map((item) => item.txpow);
-        const sortedDetails = combined.map((item) => item.detail);
-
         // Split data by date for display
-        const historyFacade = splitDataByDate(sortedTxpows, sortedDetails);
+        const historyFacade = splitDataByDate(filteredTxpows, filteredDetails);
 
         return Object.keys(historyFacade)
             .map((key) => {
