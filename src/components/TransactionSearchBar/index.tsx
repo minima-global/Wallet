@@ -17,15 +17,18 @@ const TransactionSearchBar = () => {
                         <SearchIcon fill="currentColor" />
                     </span>
                     <input
-                        placeholder="Search transaction by id, tokenid or token name"
+                        placeholder="Search transaction id"
                         type="search"
                         onChange={(e) => {
                             setFilterText(e.target.value)
                         }}
                         value={filterText}
-                        className="w-full focus:outline-none bg-transparent dark:placeholder:text-neutral-600"
+                        className="w-full focus:outline-none bg-transparent dark:placeholder:text-neutral-600 truncate"
                     />
-                    <span onClick={() => setShow(false)}>
+                    <span onClick={() => {
+                        setShow(false);
+                        setFilterText('');
+                    }}>
                         <CloseIcon fill="currentColor" />
                     </span>
                 </div>

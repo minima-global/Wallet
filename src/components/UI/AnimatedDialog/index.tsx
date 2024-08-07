@@ -16,10 +16,8 @@ const AnimatedDialog = ({ children, display, extraClass, dismiss }: AnimatedDial
         if (display) {
           setShow(true);
           document.body.classList.add('overflow-hidden');
-          document.getElementById('content-holder')!.classList.add('overflow-hidden');          
         } else {
           document.body.classList.remove('overflow-hidden');
-          document.getElementById('content-holder')!.classList.remove('overflow-hidden');
         }
     
         return () => {

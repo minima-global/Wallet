@@ -17,7 +17,14 @@ interface IProps {
 }
 var balanceInterval: ReturnType<typeof setInterval>;
 
+interface HistoryState {
+    txpows: any[]; // Replace `any` with the actual type if possible
+    details: any[]; // Replace `any` with the actual type if possible
+    size: number;
+}
 const AppProvider = ({ children }: IProps) => {
+    // track if history already loaded..
+    const historyLoaded = useRef(false);
     const loaded = useRef(false);
     const [loading, setLoading] = useState(false);
     const [_transferType, setTransferType] = useState<'value' | 'split' | 'consolidate'>('value');
@@ -26,7 +33,7 @@ const AppProvider = ({ children }: IProps) => {
     const [appIsInWriteMode, setAppIsInWriteMode] = useState<boolean | null>(null);
     const [minidappSystemFailed, setMinidappSystemFailed] = useState<boolean | null>(null);
 
-    const [_addressBook, setAddressBook] = useState<{[key: string]: string}>({});
+    const [_addressBook, setAddressBook] = useState<{ [key: string]: string }>({});
 
     const [shuttingDown, setShuttingDown] = useState<boolean | null>(null);
     const [isDarkMode, setIsDarkMode] = useState(() => {
@@ -35,11 +42,10 @@ const AppProvider = ({ children }: IProps) => {
     });
 
     const [_promptMining, setPromptMining] = useState(false);
-    
     const [_promptFavorites, setPromptFavorites] = useState(false);
     const [_promptAccountNameUpdate, setPromptAccountNameUpdate] = useState(false);
     const [_promptAddressBookAdd, setPromptAddressBookAdd] = useState(false);
-    
+
     const [_promptSetting, setPromptSettings] = useState(false);
     const [_promptBalanceInfo, setPromptBalanceInfo] = useState(false);
     const [_promptHiddenTokens, setPromptHiddenTokens] = useState(false);
@@ -66,7 +72,11 @@ const AppProvider = ({ children }: IProps) => {
     const [_maxima, setMaxima] = useState('');
     const [NFTs, setNFTs] = useState<Coin[]>([]);
     const [balance, setBalance] = useState<MinimaToken[]>([]);
-    const [history, setHistory] = useState<TxPOW[]>([]);
+
+    const [history, setHistory] = useState<HistoryState>({ txpows: [], details: [], size: 0 });
+
+    const [hasMore, setHasMore] = useState(true);
+
     const [logs, setLogs] = useState<string[]>([]);
     const [_seedPhrase, setSeedPhrase] = useState(null);
 
@@ -275,13 +285,19 @@ const AppProvider = ({ children }: IProps) => {
         });
     };
 
-    const getHistory = () => {
-        (window as any).MDS.cmd('history', (resp: any) => {
-            if (resp.status) {
-                setHistoryFacade(splitDataByDate(resp.response.txpows, resp.response.details));
-                setHistoryDetails(extractHistoryDetails(resp.response.txpows, resp.response.details));
-                setHistory(resp.response.txpows);
-            }
+    const getHistory = (max = 20, offset = 0): Promise<any> => {
+        return new Promise((resolve, reject) => {
+            (window as any).MDS.cmd(`history max:${max} offset:${offset}`, (resp: any) => {
+                if (resp.status) {
+                    console.log(resp.response);
+                    resolve({
+                        txpows: resp.response.txpows,
+                        details: resp.response.details,
+                    });
+                } else {
+                    reject(new Error('Failed to fetch history'));
+                }
+            });
         });
     };
 
@@ -437,7 +453,7 @@ const AppProvider = ({ children }: IProps) => {
     const promptMenu = () => {
         setOpenDrawer((prevState) => !prevState);
     };
-    
+
     const promptFavorites = () => {
         setPromptFavorites((prevState) => !prevState);
     };
@@ -493,6 +509,7 @@ const AppProvider = ({ children }: IProps) => {
                 NFTs,
                 simpleAddresses,
                 history,
+                setHistory,
                 historyFacade,
                 setHistoryFacade,
                 historyDetails,
@@ -510,7 +527,9 @@ const AppProvider = ({ children }: IProps) => {
                 promptMenu,
 
                 avgBurn,
+                // check if loaded..
                 loaded,
+                historyLoaded,
 
                 // Cache
                 _favoriteTokens,
@@ -546,11 +565,14 @@ const AppProvider = ({ children }: IProps) => {
                 hideToken,
 
                 _promptMining,
-                _promptFavorites, 
+                _promptFavorites,
                 updateAddressBook,
                 setPromptFavorites,
                 promptFavorites,
-                _addressBook
+                _addressBook,
+
+                hasMore,
+                setHasMore,
             }}
         >
             {children}
