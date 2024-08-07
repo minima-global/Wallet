@@ -41,7 +41,7 @@ const Dashboard = () => {
                     </div>
                 </div>
             </header>
-            <main className="h-[calc(100%_-_52px)] md:ml-[240px] dark:text-opacity-80 min-h-screen">
+            <main className="h-[calc(100%_-_52px)] md:ml-[240px] dark:text-opacity-80">
                 <ContentGrid>
                     <Outlet />
                 </ContentGrid>
