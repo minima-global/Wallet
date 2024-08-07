@@ -57,7 +57,7 @@ const Transactions = () => {
                     {filteredElements && filteredElements.length > 0 && (
                         <div className="space-y-4">{filteredElements}</div>
                     )}
-                    {(filterText.length > 0 || filterBy !== null) && filteredElements.length === 0 && (
+                    {(filterText.length > 0 || filterBy !== null) && filteredElements.length === 0 && !filterLoading && (
                         <p className="text-[#1B1B1B] text-sm dark:text-neutral-300 text-center">No results found</p>
                     )}
                     {loading && (
@@ -74,7 +74,7 @@ const Transactions = () => {
                         </div>
                     )}
 
-                    {hasMore && !loading && <div className='mb-4 flex justift-center'><SecondaryButton onClick={triggerLoadingMore} type="button">Load More</SecondaryButton></div>}                    
+                    {hasMore && !filterLoading && !filterText.length && filteredElements && !loading && <div className='mb-4 flex justift-center'><SecondaryButton onClick={triggerLoadingMore} type="button">Load More</SecondaryButton></div>}                    
                 </div>
             </AnimatePageIn>
         </>

@@ -37,8 +37,6 @@ export const TransactionHistoryProvider: React.FC<{ children: ReactNode }> = ({ 
     const [limit] = useState(20); // Number of items to fetch per request
     const [hasMore, setHasMore] = useState(true);
 
-    const [trigger, setTrigger] = useState(false);
-
     const [filterText, setFilterText] = useState<string>('');
     const [filterBy, setFilterBy] = useState<'Value Transfer' | 'Custom' | 'Token Creation' | null>(null);
 

@@ -3,6 +3,7 @@ import CustomTokenIcon from '../../../components/UI/Icons/CustomTokenIcon';
 
 const TransactionListItem = ({ preprocessedAmount, transaction, setViewTxpow }: any) => {
     const t = transaction;
+
     return (
         <li
             key={t.txpowid}
@@ -25,11 +26,11 @@ const TransactionListItem = ({ preprocessedAmount, transaction, setViewTxpow }: 
                         <CustomTokenIcon fill="currentColor" size={26} />
                     </span>
                 )}
-                {t.type === 'Custom' && (
+                {t.type.includes('Custom') && (
                     <div className="border-2 border-[#1B1B1B] dark:border-neutral-300 dark:text-neutral-300 rounded-full w-[45px] h-[45px] flex justify-center items-center text-sm tracking-wide font-bold">
                         MISC
                     </div>
-                )}
+                )}                
             </div>
             <div className="overflow-hidden flex-grow ml-4">
                 <h1 className="text-[#1B1B1B] dark:text-neutral-300 font-bold tracking-widest truncate">
