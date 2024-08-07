@@ -21,7 +21,7 @@
     max-height: 100vh; /* Ensure the modal doesn't exceed 90% of the viewport height */
     
     z-index: 2;
-    overflow: hidden;
+    /* overflow: hidden; */
     display: flex;
     flex-direction: column;
   }

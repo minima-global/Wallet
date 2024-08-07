@@ -2,23 +2,20 @@ import { useContext, useState } from 'react';
 import { appContext } from '../../../AppContext';
 import AnimatedDialog from '../../../components/UI/AnimatedDialog';
 import CloseIcon from '../../../components/UI/Icons/CloseIcon';
-import useFormatMinimaNumber from '../../../__minima__/libs/utils/useMakeNumber';
 import TokenListItem from '../../../components/UI/TokenListItem';
 
 import * as utils from '../../../utilities';
 import Hide from '../Hide';
-import RubbishIcon from '../../../components/UI/Icons/RubbishIcon';
 import ShowIcon from '../../../components/UI/Icons/ShowIcon';
 
 const HiddenTokens = () => {
     const [filterText, setFilterText] = useState('');
-    const { makeMinimaNumber } = useFormatMinimaNumber();
 
     const [tokenToHide, setTokenToHide] = useState(null);
     const [_promptHide, setPromptHide] = useState(false);
 
     const { _promptHiddenTokens, setPromptHiddenTokens, hideToken } = useContext(appContext);
-    const { _hiddenTokens, hiddenBalance } = useContext(appContext);
+    const {  hiddenBalance } = useContext(appContext);
 
     const promptHide = () => {
         setPromptHide((prevState) => !prevState);
@@ -61,8 +58,8 @@ const HiddenTokens = () => {
                             className="bg-white rounded-full p-3 px-4 w-full focus:outline-none focus:border focus:border-black focus:dark:border-neutral-600   dark:placeholder:text-neutral-600 dark:bg-[#1B1B1B]"
                         />
                     </div>
-                    <div className="flex-1 overflow-y-auto px-3 md:px-0">
-                        <ul className="overflow-y-auto">
+                    <div className="flex-1 px-3 md:px-0">
+                        <ul>
                             {!hiddenBalance.filter(
                                 (t: any) =>
                                     utils.containsText(

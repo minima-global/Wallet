@@ -13,8 +13,19 @@ const AnimatedDialog = ({ children, display, extraClass, dismiss }: AnimatedDial
     const [show, setShow] = useState(display);
 
     useEffect(() => {
-        if (display) setShow(true);
-    }, [display]);
+        if (display) {
+          setShow(true);
+          document.body.classList.add('overflow-hidden');
+          document.getElementById('content-holder')!.classList.add('overflow-hidden');          
+        } else {
+          document.body.classList.remove('overflow-hidden');
+          document.getElementById('content-holder')!.classList.remove('overflow-hidden');
+        }
+    
+        return () => {
+          document.body.classList.remove('overflow-hidden');
+        };
+      }, [display]);
 
     // Determine the animation styles based on screen size
     const transitions = useTransition(display, {
@@ -34,20 +45,23 @@ const AnimatedDialog = ({ children, display, extraClass, dismiss }: AnimatedDial
                         item ? (
                             <animated.div
                                 style={styles}
-                                className="fixed left-0 right-0 bottom-0 top-[54px] md:grid md:grid-cols-[1fr_minmax(0,_560px)_1fr] md:ml-[240px] z-[22]"
+                                className="fixed top-[54px] right-0 left-0 bottom-0 md:grid md:grid-cols-[1fr_minmax(0,_560px)_1fr] md:ml-[240px] z-[22] overflow-y-scroll"
                             >
                                 <div />
                                 <div className={`z-[23] h-full ${extraClass && extraClass}`}>{children}</div>
                                 <div />
-                                <div
-                                    onClick={dismiss}
-                                    className="fixed backdrop-blur-sm left-0 right-0 top-0 bottom-0 z-[1] bg-neutral-200/100 dark:bg-black/90"
-                                />
                             </animated.div>
                         ) : null
                     ),
                     document.body
                 )}
+
+            {show && (
+                <div
+                    onClick={dismiss}
+                    className="fixed backdrop-blur-sm left-0 right-0 top-[54px] bottom-0 z-[21] bg-neutral-200/100 dark:bg-black/90"
+                />
+            )}
         </>
     );
 };

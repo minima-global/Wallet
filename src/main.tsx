@@ -13,6 +13,7 @@ import TokenStudio from './pages/TokenStudio';
 import Transactions from './pages/Transactions';
 import { TransactionHistoryProvider } from './pages/Transactions/context';
 import Collections from './pages/Collections';
+import ScrollToTop from './components/UI/ScrollToTop';
 
 const router = createHashRouter(
     createRoutesFromElements(
@@ -26,7 +27,7 @@ const router = createHashRouter(
         <Route index element={<Navigate to="/dashboard/balance" />} />
         {/* <Route index element={<SplashScreen />} /> */}
         {/* <Route path="introduction" element={<Intro />} /> */}
-  
+        
         <Route path="/dashboard" element={<Dashboard />}>
           <Route path="balance" element={<Balance />} />
           <Route path="receive" element={<Receive/>} />

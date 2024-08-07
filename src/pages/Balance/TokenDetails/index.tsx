@@ -56,13 +56,13 @@ const TokenDetails = ({ token, display, dismiss }: any) => {
 
             <AnimatedDialog display={display} dismiss={dismiss}>
                 <div className="modal-content">
-                <div className="flex items-center justify-between p-4 border-b border-[#1B1B1B] dark:border-neutral-600">
+                    <div className="flex items-center justify-between p-4 border-b border-[#1B1B1B] dark:border-neutral-600">
                         <h3 className="font-bold text-lg">Token Details</h3>
                         <button onClick={dismiss} aria-label="Close">
                             <CloseIcon fill="currentColor" />
                         </button>
                     </div>
-                    <div className="mt-6 mx-3 md:mx-0 overflow-y-auto">
+                    <div className="mt-6 mx-3 md:mx-0">
                         <div className="grid grid-cols-[1fr_auto] items-center">
                             <div className="flex items-center">
                                 <div className="grid grid-cols-[auto_1fr] gap-2 bg-neutral-100 dark:bg-[#1B1B1B] dark:bg-opacity-50 w-full">
@@ -146,8 +146,8 @@ const TokenDetails = ({ token, display, dismiss }: any) => {
                                 )}
                                 {!isMinima && (
                                     <SecondaryButton onClick={promptHide} type="button">
-                                        {_hiddenTokens[token.tokenid] && "Unhide"}
-                                        {!_hiddenTokens[token.tokenid] && "Hide"}
+                                        {_hiddenTokens[token.tokenid] && 'Unhide'}
+                                        {!_hiddenTokens[token.tokenid] && 'Hide'}
                                     </SecondaryButton>
                                 )}
                                 <PrimaryButton type="button">Transfer</PrimaryButton>

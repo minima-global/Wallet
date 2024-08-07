@@ -25,10 +25,8 @@ const Transactions = () => {
     }, [viewTxpow]);
 
     useEffect(() => {
-        if (loaded.current) {
-            setTimeout(() => {
-                getHistory();
-            }, 2000);
+        if (loaded.current) {            
+            getHistory();
         }
     }, [loaded]);
 
@@ -71,7 +69,7 @@ const Transactions = () => {
                         </div>
                     )}
 
-                    {historyFacade && <div className="space-y-4">{filteredElements ? filteredElements : null}</div>}
+                    {historyFacade && <div className="space-y-4 overflow-y-scroll">{filteredElements ? filteredElements : null}</div>}
                     {(!!filterText.length || filterBy !== null) && filteredElements.length === 0 && (
                         <p className="text-[#1B1B1B] text-sm dark:text-neutral-300 text-center">No results found</p>
                     )}

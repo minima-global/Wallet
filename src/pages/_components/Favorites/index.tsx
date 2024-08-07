@@ -33,15 +33,15 @@ const Favorites = ({_promptAddNew, setPromptAddNew}: Props) => {
     // Filter out and sort entries based on the filterText
     const filteredEntries = _addressBook
         ? Object.entries(_addressBook)
-            .filter(([key, value]) => key.includes(filterText) || value.includes(filterText))
-            .sort(([keyA, valueA], [keyB, valueB]) => valueA.localeCompare(valueB))
+            .filter(([key, value]) => key.includes(filterText) || (value as any).includes(filterText))
+            .sort(([keyA, valueA], [keyB, valueB]) => (valueA as any).localeCompare(valueB))
         : [];
 
     // Group entries by their starting alphabet
     const groupedEntries = filteredEntries.reduce((acc, [address, name]) => {
-        const alphabet = name.charAt(0).toUpperCase();
+        const alphabet = (name as any).charAt(0).toUpperCase();
         if (!acc[alphabet]) acc[alphabet] = [];
-        acc[alphabet].push([address, name]);
+        acc[alphabet].push([address, (name as any)]);
         return acc;
     }, {} as Record<string, [string, string][]>);
 

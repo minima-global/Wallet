@@ -10,9 +10,9 @@ import NFTScrollingSection from './NFTScrollingSection';
 const Collections = () => {
     const location = useLocation();
     const { balance } = useContext(appContext);
-    const [selectedNFT, setSelectedNFT] = useState<NFT | null>(null);
+    const [selectedNFT, setSelectedNFT] = useState<any | null>(null);
 
-    const handleNFTClick = (nft: NFT) => {
+    const handleNFTClick = (nft: any) => {
       setSelectedNFT(nft);
     };
   
@@ -35,11 +35,11 @@ const Collections = () => {
 
                 <div className="mt-4 mb-8">
                 <div className="p-4 px-0 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 gap-6">
-                    <NFTCard onClick={() => handleNFTClick(nfts[0])} image="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExNzR2dGo3N2tlOTgxd3Qwcm1lcHU1Y2FncWM0eWZwd3hmM2tzNTVwdiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Bn0JzrZxWfTKU/giphy.gif" owner="me" key="1" name="amazing" />
-                    <NFTCard onClick={() => handleNFTClick(nfts[0])} image="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExeGNqZzRwZ2ljc3NjZnZuY3g0YnBiZXVmNXAydGZxaTFyaTNva3lwZiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/1USKMDPjuH4ovL7J5h/giphy.gif" owner="me" key="1" name="amazing" />
-                    <NFTCard onClick={() => handleNFTClick(nfts[0])} image="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExNzR2dGo3N2tlOTgxd3Qwcm1lcHU1Y2FncWM0eWZwd3hmM2tzNTVwdiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Bn0JzrZxWfTKU/giphy.gif" owner="me" key="1" name="amazing" />
-                    <NFTCard onClick={() => handleNFTClick(nfts[0])} image="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExNzR2dGo3N2tlOTgxd3Qwcm1lcHU1Y2FncWM0eWZwd3hmM2tzNTVwdiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Bn0JzrZxWfTKU/giphy.gif" owner="me" key="1" name="amazing" />
-                    <NFTCard onClick={() => handleNFTClick(nfts[0])} image="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExNzR2dGo3N2tlOTgxd3Qwcm1lcHU1Y2FncWM0eWZwd3hmM2tzNTVwdiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Bn0JzrZxWfTKU/giphy.gif" owner="me" key="1" name="amazing" />
+                    <NFTCard  image="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExNzR2dGo3N2tlOTgxd3Qwcm1lcHU1Y2FncWM0eWZwd3hmM2tzNTVwdiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Bn0JzrZxWfTKU/giphy.gif" owner="me" key="1" name="amazing" />
+                    <NFTCard  image="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExeGNqZzRwZ2ljc3NjZnZuY3g0YnBiZXVmNXAydGZxaTFyaTNva3lwZiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/1USKMDPjuH4ovL7J5h/giphy.gif" owner="me" key="1" name="amazing" />
+                    <NFTCard  image="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExNzR2dGo3N2tlOTgxd3Qwcm1lcHU1Y2FncWM0eWZwd3hmM2tzNTVwdiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Bn0JzrZxWfTKU/giphy.gif" owner="me" key="1" name="amazing" />
+                    <NFTCard  image="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExNzR2dGo3N2tlOTgxd3Qwcm1lcHU1Y2FncWM0eWZwd3hmM2tzNTVwdiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Bn0JzrZxWfTKU/giphy.gif" owner="me" key="1" name="amazing" />
+                    <NFTCard  image="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExNzR2dGo3N2tlOTgxd3Qwcm1lcHU1Y2FncWM0eWZwd3hmM2tzNTVwdiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Bn0JzrZxWfTKU/giphy.gif" owner="me" key="1" name="amazing" />
                     
                     
                 </div>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSpring, animated } from 'react-spring';
 
-const NFTScrollingSection = ({ nfts }) => {
+const NFTScrollingSection = ({ nfts }: any) => {
     const [reverse, setReverse] = useState(false);
 
     const styles = useSpring({
@@ -15,7 +15,7 @@ const NFTScrollingSection = ({ nfts }) => {
         <div className="nft-scrolling-container bg-[#1B1B1B] rounded-lg hover:opacity-100 transition-all hover:h-[180px] group relative">
             <p className="text-sm p-2 text-neutral-200 dark:text-neutral-500 font-bold">Favorites</p>
             <animated.div style={styles} className="nft-scrolling-content">
-                {nfts.map((nft, index) => (
+                {nfts.map((nft: any, index: any) => (
                     <div key={index} className="nft-item">
                         <img src={nft.image} alt={nft.name} />
                         {/* <p>{nft.name}</p> */}

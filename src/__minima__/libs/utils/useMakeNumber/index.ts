@@ -21,7 +21,7 @@ const useFormatMinimaNumber = () => {
                 _currencyFormat
             );
         } catch (error) {
-            console.error(error);
+            // console.error(error);
             return 0;
         }
     };

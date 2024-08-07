@@ -3,6 +3,7 @@ import React, { createContext, useContext, useMemo, useState, ReactNode } from '
 import { format, isSameWeek, isSameYear } from 'date-fns';
 import TransactionListItem from '../TransactionListItem';
 import { appContext } from '../../../AppContext';
+import useFormatMinimaNumber from '../../../__minima__/libs/utils/useMakeNumber';
 
 const formatDate = (timeMilli: string, shouldShowWeekDay: boolean, shouldDisplayYear: boolean) => {
     return format(
@@ -17,6 +18,7 @@ const TransactionHistoryContext = createContext<any | undefined>(undefined);
 // Create provider
 export const TransactionHistoryProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const { historyFacade } = useContext(appContext);
+    const { makeMinimaNumber } = useFormatMinimaNumber();
     const [filterText, setFilterText] = useState<string>('');
     const [filterBy, setFilterBy] = useState<'Value Transfer' | 'Custom' | 'Token Creation' | null>(null);
     const [viewTxpow, setViewTxpow] = useState<string | false>(false);
@@ -44,7 +46,6 @@ export const TransactionHistoryProvider: React.FC<{ children: ReactNode }> = ({ 
                 );
             }
 
-            console.log('ftxns',filteredTransactions);
             if (filteredTransactions.length === 0) return null;
 
             return (
@@ -62,6 +63,8 @@ export const TransactionHistoryProvider: React.FC<{ children: ReactNode }> = ({ 
                                 <TransactionListItem
                                     key={t.txpowid}
                                     transaction={t}
+                                    preprocessedAmount={makeMinimaNumber(t.amount, 3)}
+                                    setViewTxpow={setViewTxpow}
                                 />
                             ))}
                         </ul>

@@ -5,10 +5,10 @@ interface NFTCardProps {
     image: string;
     name: string;
     owner: string;
-    onClick: () => void;
+
   }
   
-const NFTCard = ({ image, name, owner, onClick }: NFTCardProps) => {
+const NFTCard = ({ image, name, owner }: NFTCardProps) => {
   
     const [hovered, setHovered] = React.useState(false);
 
@@ -21,7 +21,7 @@ const NFTCard = ({ image, name, owner, onClick }: NFTCardProps) => {
     <div
     onMouseEnter={() => setHovered(true)}
     onMouseLeave={() => setHovered(false)}
-    onClick={onClick}
+    
     
     className="bg-neutral-100 dark:bg-[#1B1B1B] border border-gray-200 dark:border-[#1B1B1B] rounded-lg shadow-md overflow-hidden transition-transform transform hover:-translate-y-1">
       <img src={image} alt={name} className="w-full h-48 object-cover" />
