@@ -30,6 +30,8 @@ const Send = () => {
     const [selectedOption, setSelectedOption] = useState('default');
     const [searchParams] = useSearchParams();
 
+    const [_promptAddNew, setPromptAddNew] = useState(false);
+
     // Set the mode according to the search params if any
     useEffect(() => {
         if (searchParams && searchParams.get('mode') && ['1', '2', '3'].includes(searchParams.get('mode')!)) {
@@ -414,6 +416,8 @@ const Send = () => {
                                             )}
                                         </div>
                                         <div className="my-2">
+                                            
+
                                             <SelectAddress
                                                 id="address"
                                                 name="address"
@@ -485,6 +489,7 @@ const Send = () => {
                                         />
                                     </div>
                                 </div>
+                                <Favorites _promptAddNew={_promptAddNew} setPromptAddNew={setPromptAddNew} />
                             </form>                        
                         )}
                     </Formik>

@@ -8,11 +8,14 @@ import Lottie from 'lottie-react';
 import Loading from '../../components/UI/Lottie/Loading.json';
 import Detail from './Detail';
 import FilterBy from './FilterBy';
+import Hide from './Hide';
 
 const Transactions = () => {
     const location = useLocation();
     const { loading, filterLoading, filterText, filteredElements, viewTxpow, triggerLoadingMore, setViewTxpow, filterBy, hasMore } = useTransactionHistory();
+
     const [promptFilterBy, setPromptFilterBy] = useState(false);
+    const [promptHideBy, setPromptHideBy] = useState(false);
 
     useEffect(() => {
         if (viewTxpow) {
@@ -22,10 +25,13 @@ const Transactions = () => {
         }
     }, [viewTxpow]);
 
+    console.log('transactions page rendered..');
+
     return (
         <>
             <FilterBy display={promptFilterBy} dismiss={() => setPromptFilterBy(false)} />
-            <Detail txpowid={viewTxpow} dismiss={() => setViewTxpow(false)} />
+            <Hide display={promptHideBy} dismiss={() => setPromptHideBy(false)} />
+            {/* <Detail txpowid={viewTxpow} dismiss={() => setViewTxpow(false)} /> */}
 
             <AnimatePageIn display={location.pathname.includes('/dashboard/transactions')}>
                 <div className="mx-3 mt-8">
@@ -39,7 +45,7 @@ const Transactions = () => {
                                 <SecondaryButton onClick={() => setPromptFilterBy(true)} type="button">
                                     Filter By
                                 </SecondaryButton>
-                                <SecondaryButton onClick={() => null} type="button">
+                                <SecondaryButton onClick={() => setPromptHideBy(true)} type="button">
                                     Hide
                                 </SecondaryButton>
                                 <SecondaryButton onClick={() => null} type="button">

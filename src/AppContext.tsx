@@ -1,11 +1,9 @@
-import { createContext, useRef, useState, useEffect, ReactElement } from 'react';
+import { createContext, useRef, useState, useEffect, ReactElement, useCallback } from 'react';
 
 import * as rpc from './__minima__/libs/RPC';
 import { makeTokenImage } from './shared/functions';
 import { Coin, MinimaToken, Scripts } from './@types/minima';
 import { sql } from './__minima__/libs/SQL';
-import { TxPOW } from './types/minima';
-import splitDataByDate from './shared/utils/_txpowHelperFunctions/splitDataByDate';
 import extractHistoryDetails from './shared/utils/_txpowHelperFunctions/extractHistoryDetails';
 
 import * as utils from './utilities';
@@ -15,11 +13,12 @@ export const appContext = createContext({} as any);
 interface IProps {
     children: ReactElement;
 }
-var balanceInterval: ReturnType<typeof setInterval>;
 
 const AppProvider = ({ children }: IProps) => {
     const loaded = useRef(false);
+    const balanceInterval = useRef<NodeJS.Timeout | null>(null);
     const [loading, setLoading] = useState(false);
+
     const [_transferType, setTransferType] = useState<'value' | 'split' | 'consolidate'>('value');
     const [mode, setMode] = useState('desktop');
     const [isCreatingKeys, setCreatingKeys] = useState(false);
@@ -65,6 +64,7 @@ const AppProvider = ({ children }: IProps) => {
     const [_maxima, setMaxima] = useState('');
     const [NFTs, setNFTs] = useState<Coin[]>([]);
     const [balance, setBalance] = useState<MinimaToken[]>([]);
+    const [hiddenBalance, setHiddenBalance] = useState<MinimaToken[]>([]);
 
     const [logs, setLogs] = useState<string[]>([]);
     const [_seedPhrase, setSeedPhrase] = useState(null);
@@ -113,6 +113,7 @@ const AppProvider = ({ children }: IProps) => {
     });
 
     const [_hiddenTokens, setHiddenTokens] = useState<Record<string, boolean> | null>(null);
+    const [_hiddenTransactions, setHiddenTransactions] = useState<Record<'id' | 'amount', string> | null>(null);
 
     useEffect(() => {
         // Apply or remove the 'dark' class on the document element
@@ -124,6 +125,12 @@ const AppProvider = ({ children }: IProps) => {
             localStorage.setItem('dark-mode', 'false');
         }
     }, [isDarkMode]); // Re-run effect when isDarkMode changes
+
+    useEffect(() => {
+        if (loaded && loaded.current) {
+            getBalance();
+        }
+    }, [loaded, _hiddenTokens])
 
     useEffect(() => {
         if (!loaded.current) {
@@ -159,7 +166,10 @@ const AppProvider = ({ children }: IProps) => {
 
                         const hiddenTokens: any = await sql(`SELECT * FROM cache WHERE name= 'HIDDEN_TOKENS'`);
 
-                        // Get all user's saved addresses
+                        const hiddenTransactions: any = await sql(
+                            `SELECT * FROM cache WHERE name= 'HIDDEN_TRANSACTIONS'`
+                        );
+
                         const addressBook: any = await sql(`SELECT * FROM cache WHERE name = 'ADDRESSBOOK'`);
 
                         if (addressBook) {
@@ -168,6 +178,10 @@ const AppProvider = ({ children }: IProps) => {
 
                         if (hiddenTokens) {
                             setHiddenTokens(JSON.parse(hiddenTokens.DATA));
+                        }
+
+                        if (hiddenTransactions) {
+                            setHiddenTransactions(JSON.parse(hiddenTransactions.DATA));
                         }
 
                         if (nicknameAddresses) {
@@ -186,29 +200,10 @@ const AppProvider = ({ children }: IProps) => {
 
                 if (msg.event === 'NEWBLOCK') {
                     // new block
-
-                    get50BlockBurnAvg();
+                    // get50BlockBurnAvg();
                 }
                 if (msg.event === 'NEWBALANCE') {
-                    setNotificationMessage(
-                        <>
-                            <svg
-                                className="fill-black"
-                                xmlns="http://www.w3.org/2000/svg"
-                                height="24"
-                                viewBox="0 -960 960 960"
-                                width="24"
-                            >
-                                <path d="M160-200v-80h80v-280q0-83 50-147.5T420-792v-28q0-25 17.5-42.5T480-880q25 0 42.5 17.5T540-820v28q80 20 130 84.5T720-560v280h80v80H160Zm320-300Zm0 420q-33 0-56.5-23.5T400-160h160q0 33-23.5 56.5T480-80ZM320-280h320v-280q0-66-47-113t-113-47q-66 0-113 47t-47 113v280Z" />
-                            </svg>
-                            <h1 className="text-black">Your balance has updated!</h1>
-                        </>
-                    );
-                    setTimeout(() => setNotificationMessage(false), 2500);
-                    // balance noti
-                    // callAndStoreBalance
                     getBalance();
-                    // callAndStoreNFTs
                     getTokens();
                 }
                 if (msg.event === 'MINIMALOG') {
@@ -274,38 +269,58 @@ const AppProvider = ({ children }: IProps) => {
         });
     };
 
-    const getBalance = async () => {
+    const getBalance = useCallback(async () => {
         setLoading(true);
-        await rpc.getMinimaBalance().then((b) => {
-            b.map(async (t) => {
-                if (t.token.url && t.token.url.startsWith('<artimage>', 0)) {
-                    t.token.url = makeTokenImage(t.token.url, t.tokenid);
+        console.log('hiddenTokens', _hiddenTokens);
+        try {
+            const balances = await rpc.getMinimaBalance();
+    
+            // Process each token's URL if necessary
+            for (const token of balances) {
+                if (token.token.url) {
+                    if (token.token.url.startsWith('<artimage>')) {
+                        token.token.url = makeTokenImage(token.token.url, token.tokenid);
+                    } else if (token.token.url.startsWith('https://ipfs.io/ipns/')) {
+                        token.token.url = await utils.fetchIPFSImageUri(token.token.url);
+                    }
                 }
-
-                if (t.token.url && t.token.url.startsWith('https://ipfs.io/ipns/')) {
-                    t.token.url = await utils.fetchIPFSImageUri(t.token.url);
-                }
-            });
-
-            const walletNeedsUpdating = !!b.find((t) => t.unconfirmed !== '0');
-
-            if (!walletNeedsUpdating) {
-                window.clearInterval(balanceInterval);
             }
-
+    
+            // Filter out hidden tokens
+            const filteredBalance = _hiddenTokens
+                ? balances.filter((t) => !_hiddenTokens[t.tokenid])
+                : balances;
+            
+                // Filter out hidden tokens
+            const _hiddenBalance = _hiddenTokens
+                ? balances.filter((t) => _hiddenTokens[t.tokenid])
+                : [];
+    
+            // Check if wallet needs updating
+            const walletNeedsUpdating = filteredBalance.some((token) => token.unconfirmed !== '0');
+    
             if (walletNeedsUpdating) {
-                setBalance(b);
-                if (!balanceInterval) {
-                    balanceInterval = setInterval(() => {
-                        getBalance();
-                    }, 10000);
+                setBalance(filteredBalance);
+                setHiddenBalance(_hiddenBalance);
+    
+                if (!balanceInterval.current) {
+                    balanceInterval.current = setInterval(getBalance, 10000);
+                }
+            } else {
+                if (balanceInterval.current) {
+                    clearInterval(balanceInterval.current);
+                    balanceInterval.current = null;
                 }
             }
-
-            setBalance(b);
+    
+            setBalance(filteredBalance);
+            setHiddenBalance(_hiddenBalance);
+        } catch (error) {
+            console.error('Error fetching balance:', error);
+        } finally {
             setLoading(false);
-        });
-    };
+        }
+    }, [_hiddenTokens]);
 
     const getTokens = async () => {
         await rpc.getTokens().then((tokens) => {
@@ -357,6 +372,26 @@ const AppProvider = ({ children }: IProps) => {
             await sql(`INSERT INTO cache (name, data) VALUES ('HIDDEN_TOKENS', '${JSON.stringify(updatedData)}')`);
         } else {
             await sql(`UPDATE cache SET data = '${JSON.stringify(updatedData)}' WHERE name = 'HIDDEN_TOKENS'`);
+        }
+    };
+
+    const hideTransactionsLike = async (key: 'id' | 'amount', value: string) => {
+        const updatedData = {
+            ..._hiddenTransactions,
+            [key]: value,
+        };
+
+        // update nicknames
+        setHiddenTransactions(updatedData as Record<'id' | 'amount', string>);
+
+        const hidden = await sql(`SELECT * FROM cache WHERE name = 'HIDDEN_TRANSACTIONS'`);
+
+        if (!hidden) {
+            await sql(
+                `INSERT INTO cache (name, data) VALUES ('HIDDEN_TRANSACTIONS', '${JSON.stringify(updatedData)}')`
+            );
+        } else {
+            await sql(`UPDATE cache SET data = '${JSON.stringify(updatedData)}' WHERE name = 'HIDDEN_TRANSACTIONS'`);
         }
     };
 
@@ -464,21 +499,8 @@ const AppProvider = ({ children }: IProps) => {
                 isMobile: mode === 'mobile',
 
                 loading,
-                balance: _hiddenTokens
-                    ? balance.filter((b) => {
-                          const id = b.tokenid;
-
-                          return !_hiddenTokens[id];
-                      })
-                    : balance,
-                hiddenBalance: _hiddenTokens
-                    ? balance.filter((b) => {
-                          const id = b.tokenid;
-
-                          return _hiddenTokens[id];
-                      })
-                    : [],
-                // collections: NFTs.filter(b => b. === 0),
+                balance,
+                hiddenBalance,
                 NFTs,
                 simpleAddresses,
                 history,
@@ -533,13 +555,16 @@ const AppProvider = ({ children }: IProps) => {
 
                 _hiddenTokens,
                 hideToken,
+                _hiddenTransactions,
+                setHiddenTransactions,
+                hideTransactionsLike,
 
                 _promptMining,
                 _promptFavorites,
                 updateAddressBook,
                 setPromptFavorites,
                 promptFavorites,
-                _addressBook
+                _addressBook,
             }}
         >
             {children}

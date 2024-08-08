@@ -16,7 +16,7 @@ interface Props {
 const SelectAddress = ({ handleChange, handleBlur, value, error, id, name }: Props) => {
     const [_f, setF] = useState(false);
     const { setPromptFavorites, _addressBook } = useContext(appContext);
-    const [_promptAddNew, setPromptAddNew] = useState(false);
+
 
     return (
         <>
@@ -50,14 +50,13 @@ const SelectAddress = ({ handleChange, handleBlur, value, error, id, name }: Pro
                 <div className='flex flex-col gap-1'>
                  {!!value.length && !error && !_addressBook[value] && <span className="ml-auto my-auto" onClick={() => {
                     setPromptFavorites(true);
-                    setPromptAddNew(true);
+                    // setPromptAddNew(true);
                  }}><AddIcon fill="currentColor" /></span>}
                 <span className="ml-auto my-auto" onClick={() => setPromptFavorites(true)}>                    
                     <FavoriteIcon fill="currentColor" />
                 </span>
                 </div>
             </div>
-            <Favorites _promptAddNew={_promptAddNew} setPromptAddNew={setPromptAddNew} />
         </>
     );
 };

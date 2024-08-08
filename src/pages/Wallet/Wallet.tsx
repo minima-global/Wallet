@@ -1,12 +1,13 @@
-import React, { useContext, useState } from 'react';
+import { useContext } from 'react';
 import { appContext } from '../../AppContext';
 import useFormatMinimaNumber from '../../__minima__/libs/utils/useMakeNumber';
-import Spinner from '../../components/UI/Spinner';
 
 import * as utils from '../../utilities';
 import Decimal from 'decimal.js';
 import LockedIcon from '../../components/UI/Icons/LockedIcon';
 import VerifiedIcon from '../../components/UI/Icons/VerifiedIcon';
+import Lottie from 'lottie-react';
+import Loading from '../../components/UI/Lottie/Loading.json';
 
 interface IProps {
     selectionMode: boolean;
@@ -17,6 +18,14 @@ interface IProps {
 const Wallet = ({ selectToken, selectionMode = false, detailsMode = false, filterText }: IProps) => {
     const { makeMinimaNumber } = useFormatMinimaNumber();
     const { balance, loading } = useContext(appContext);
+
+    if (loading) {
+        return (
+            <div className="flex justify-center flex-col my-4 items-center">
+                <Lottie className="w-[64px] h-[64px]" animationData={Loading} loop={true} />
+            </div>
+        );
+    }
 
     if (!balance) {
         return (
@@ -44,7 +53,6 @@ const Wallet = ({ selectToken, selectionMode = false, detailsMode = false, filte
 
     return (
         <div>
-            <div className="mb-3">{loading && <Spinner />}</div>
             {balance.length > 0 && (
                 <>
                     <ul className="">
@@ -75,12 +83,14 @@ const Wallet = ({ selectToken, selectionMode = false, detailsMode = false, filte
                                         <div className="overflow-hidden grid grid-cols-[1fr_auto]">
                                             <div>
                                                 <div className="grid grid-cols-[auto_1fr]">
-                                                    <h6 className="font-bold truncate tracking-wide dark:text-neutral-300">Minima</h6>
-                                                    <span className='my-auto text-black dark:text-[#1B1B1B]'>
+                                                    <h6 className="font-bold truncate tracking-wide dark:text-neutral-300">
+                                                        Minima
+                                                    </h6>
+                                                    <span className="my-auto text-black dark:text-[#1B1B1B]">
                                                         <VerifiedIcon fill="currentColor" />
                                                     </span>
                                                 </div>
-                                                
+
                                                 {!selectionMode && (
                                                     <input
                                                         readOnly
@@ -92,7 +102,9 @@ const Wallet = ({ selectToken, selectionMode = false, detailsMode = false, filte
                                                         className="truncate w-full focus:outline-none bg-transparent text-sm tracking-wider dark:text-neutral-300"
                                                     />
                                                 )}
-                                                {selectionMode && <p className="font-bold text-sm dark:text-neutral-300">MINIMA</p>}
+                                                {selectionMode && (
+                                                    <p className="font-bold text-sm dark:text-neutral-300">MINIMA</p>
+                                                )}
                                             </div>
                                             {!selectionMode &&
                                                 !new Decimal(

@@ -17,7 +17,7 @@ import AddressItem from './_components/ReceiveAddressItem';
 const Receive = () => {
     const location = useLocation();
 
-    const { simpleAddresses, _nicknameAddress } = useContext(appContext);
+    const { simpleAddresses, _nicknameAddress, vaultLocked } = useContext(appContext);
     const [address, setAddress] = useState<Scripts | null>(null);
     const [showFullList, setShowFullList] = useState(false);
     const [filterText, setFilterText] = useState('');
@@ -137,16 +137,19 @@ const Receive = () => {
                                 </div>
                                 {!viewKey && (
                                     <button
+                                        disabled={!!vaultLocked}
                                         onMouseDown={handleStart}
                                         onMouseUp={handleEnd}
                                         onMouseLeave={handleEnd}
                                         onTouchStart={handleStart}
                                         onTouchEnd={handleEnd}
-                                        className="mt-2 font-bold w-full max-w-[200px] rounded-lg text-white bg-purple-600"
+                                        className="mt-2 font-bold w-full max-w-[200px] rounded-lg text-white bg-purple-600 disabled:opacity-30"
                                     >
-                                        {held
+                                        
+
+                                        {!vaultLocked ? (held
                                             ? `Hold to reveal... (${Math.ceil(remainingTime / 1000)}s)`
-                                            : `View seed phrase`}
+                                            : `View seed phrase`) : "Vault locked"}
                                     </button>
                                 )}
                                 {viewKey && (

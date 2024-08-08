@@ -8,7 +8,7 @@ const AnimatePageIn = ({ display, children }: Props) => {
         config: config.default,
     });
 
-    return transitions((styles, item) => (item && <animated.div id="content-holder" style={styles}>{children}</animated.div>));
+    return transitions((styles, item) => (item && <animated.div style={styles}>{children}</animated.div>));
 };
 
 export default AnimatePageIn;

@@ -4,7 +4,7 @@ const SearchIcon = ({ fill, size = 22 }: any) => (
     width={size}
     height={size}
     viewBox="0 0 24 24"
-    strokeWidth="1.5"
+    strokeWidth="2.5"
     stroke={fill}
     fill="none"
     strokeLinecap="round"

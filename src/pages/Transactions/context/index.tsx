@@ -39,6 +39,7 @@ export const TransactionHistoryProvider: React.FC<{ children: ReactNode }> = ({ 
 
     const [filterText, setFilterText] = useState<string>('');
     const [filterBy, setFilterBy] = useState<'Value Transfer' | 'Custom' | 'Token Creation' | null>(null);
+    const [hideBy, setHideBy] = useState<Record<'id' | 'address', string> | null>(null);
 
     const [viewTxpow, setViewTxpow] = useState<string | false>(false);
     const [filteredElements, setFilteredElements] = useState<JSX.Element[]>([]);
@@ -54,7 +55,7 @@ export const TransactionHistoryProvider: React.FC<{ children: ReactNode }> = ({ 
                     console.error('Error fetching history:', error);
                 });
         }
-    }, [loaded, limit, offset]);
+    }, [loaded]);
 
     const getHistory = (max = 20, offset = 0): Promise<any> => {
         return new Promise((resolve, reject) => {

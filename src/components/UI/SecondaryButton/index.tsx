@@ -12,7 +12,7 @@ const SecondaryButton = ({ disabled, extraClass, onClick, children, type }: IPro
         <button
             onClick={onClick}
             disabled={!!disabled}
-            className={`bg-transparent border border-neutral-300 text-[#1B1B1B] dark:border-[#1B1B1B]  dark:text-neutral-200 hover:border-neutral-400 dark:bg-[#1B1B1B] font-bold tracking-wider w-full dark:hover:border-neutral-600 truncate min-w-max 4 ${extraClass && extraClass}`}
+            className={`bg-transparent border border-neutral-300 text-[#1B1B1B] dark:border-[#1B1B1B]  dark:text-neutral-200 hover:border-neutral-400 dark:bg-[#1B1B1B] font-bold tracking-wider w-full dark:hover:border-neutral-600 truncate min-w-max 4 disabled:opacity-70 disabled:dark:opacity-30 ${extraClass && extraClass}`}
             type={type}
         >
             {children}

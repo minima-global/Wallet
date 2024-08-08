@@ -2,22 +2,19 @@ import { useState } from 'react';
 import AnimateExpandIn from '../UI/Animations/AnimateExpandIn';
 import SearchIcon from '../UI/Icons/SearchIcon';
 import CloseIcon from '../UI/Icons/CloseIcon';
-import { useTransactionHistory } from '../../pages/Transactions/context';
 
-
-const TransactionSearchBar = () => {
-    const { setFilterText, filterText } = useTransactionHistory();
+const BalanceSearchBar = ({filterText, setFilterText}: any) => {
     const [show, setShow] = useState(false);
 
     return (
-        <div className={`relative flex items-center ${show && "min-w-[92%]"}`}>
+        <div className={`flex items-center ${show && "min-w-[92%]"}`}>
             <AnimateExpandIn display={show}>
                 <div className="bg-white rounded-full p-3 px-4 flex items-center gap-3 w-full dark:bg-[#1B1B1B]">
                     <span>
                         <SearchIcon fill="currentColor" />
                     </span>
                     <input
-                        placeholder="Search transaction id"
+                        placeholder="Search token"
                         type="search"
                         onChange={(e) => {
                             setFilterText(e.target.value)
@@ -45,4 +42,4 @@ const TransactionSearchBar = () => {
     );
 };
 
-export default TransactionSearchBar;
+export default BalanceSearchBar;

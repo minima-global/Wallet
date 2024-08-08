@@ -14,16 +14,16 @@ const AnimatedDialog = ({ children, display, extraClass, dismiss }: AnimatedDial
 
     useEffect(() => {
         if (display) {
-          setShow(true);
-          document.body.classList.add('overflow-hidden');
+            setShow(true);
+            document.body.classList.add('overflow-hidden');
         } else {
-          document.body.classList.remove('overflow-hidden');
+            document.body.classList.remove('overflow-hidden');
         }
-    
+
         return () => {
-          document.body.classList.remove('overflow-hidden');
+            document.body.classList.remove('overflow-hidden');
         };
-      }, [display]);
+    }, [display]);
 
     // Determine the animation styles based on screen size
     const transitions = useTransition(display, {
@@ -53,12 +53,12 @@ const AnimatedDialog = ({ children, display, extraClass, dismiss }: AnimatedDial
                     ),
                     document.body
                 )}
-
+                
             {show && (
-                <div
+                createPortal(<div
                     onClick={dismiss}
                     className="fixed backdrop-blur-sm left-0 right-0 top-[54px] bottom-0 z-[21] bg-neutral-200/100 dark:bg-black/90"
-                />
+                />, document.body)
             )}
         </>
     );
