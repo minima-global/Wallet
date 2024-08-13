@@ -120,7 +120,7 @@ const CreateNFTForm = () => {
                         };
 
                         try {
-                            const resp = await rpc.createToken(token, formData.amount, 0);
+                            const resp = await rpc.createToken(token, formData.amount, 0, formData.burn);
 
                             setLoading(false);
                             setStep(resp);

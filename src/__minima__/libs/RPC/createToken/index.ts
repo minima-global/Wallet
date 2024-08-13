@@ -1,6 +1,6 @@
 import getSuitableImage from '../../../../shared/utils/imagehandler/getSuitableImage';
 
-export const createToken = async (data: any, amount: string, decimals: number): Promise<2 | 3> => {
+export const createToken = async (data: any, amount: string, decimals: number, burn: string): Promise<2 | 3> => {
     return new Promise(async (resolve, reject) => {
         if (data.url.startsWith('data:image/', 0)) {
             const compressedImage = await getSuitableImage(data.url);
@@ -14,7 +14,7 @@ export const createToken = async (data: any, amount: string, decimals: number): 
         }
 
         (window as any).MDS.cmd(
-            `tokencreate name:"${JSON.stringify(data)}" amount:"${amount}" decimals:"${decimals}`,
+            `tokencreate name:"${JSON.stringify(data)}" amount:"${amount}" decimals:"${decimals}" ${burn.length ? "burn:"+burn : ""}`,
             (resp: any) => {
                 if (!resp.status && !resp.pending)
                     reject(
