@@ -82,7 +82,7 @@ const TokenCreation = () => {
                     };
 
                     try {
-                        const resp = await rpc.createToken(token, formData.amount, 8);
+                        const resp = await rpc.createToken(token, formData.amount, 8, formData.burn);
 
                         setLoading(false);
                         setStep(resp);

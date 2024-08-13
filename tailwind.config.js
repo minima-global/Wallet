@@ -18,6 +18,5 @@ export default {
                 fadeIn7: 'fadeIn 7s',
             },
         },
-    },
-    plugins: [require('flowbite/plugin')],
+    }
 };
