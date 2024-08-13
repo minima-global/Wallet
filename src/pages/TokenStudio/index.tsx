@@ -285,7 +285,7 @@ const TokenStudio = () => {
                                     }
                                 }) : yup.string().nullable(),
                                       //@ts-ignore
-                        burn: yup.number().test('test burn', function (val) {
+                        burn: yup.string().matches(/^\d*\.?\d+$/, 'Enter a valid number').test('test burn', function (val) {
                             const { path, parent, createError } = this;
 
                             if (!val) {
@@ -301,7 +301,7 @@ const TokenStudio = () => {
                                     return true;
                                 }
 
-                                if (new Decimal(val).plus(parent.amount).greaterThan(parent.token.sendable)) {
+                                if (new Decimal(val).plus(parent.amount).greaterThan(wallet[0].sendable)) {
                                     throw new Error('Insufficient funds');
                                 }
 
@@ -509,6 +509,9 @@ const TokenStudio = () => {
                                                 Mint
                                             </PrimaryButton>
                                         </div>
+                                        
+
+                                        {errors && errors.burn && <p className='text-sm text-center mt-3 text-neutral-600 dark:text-orange-300'>{errors.burn}</p>}
 
                                         <div className="my-2 w-full flex">
                                             <p className="text-sm my-auto dark:text-neutral-300">
@@ -526,7 +529,7 @@ const TokenStudio = () => {
                                                     onChange={handleChange}
                                                     onBlur={handleBlur}
                                                     placeholder="0.0"
-                                                    className="placeholder:font-mono placeholder:text-neutral-500 bg-transparent focus:outline-none text-right max-w-max text-sm dark:placeholder:text-neutral-400"
+                                                    className={`placeholder:font-mono placeholder:text-neutral-500 bg-transparent focus:outline-none text-right max-w-max text-sm dark:placeholder:text-neutral-400 ${errors && errors.burn ? "underline underline-red-500 text-red-500" : ""}`}
                                                 />
                                             </div>
                                         </div>
@@ -816,6 +819,8 @@ const TokenStudio = () => {
                                                 </PrimaryButton>
                                             </div>
 
+                                            {errors && errors.burn && <p className='text-sm text-center mt-3 text-neutral-600 dark:text-orange-300'>{errors.burn}</p>}
+                                            
                                             <div className="my-2 w-full flex">
                                                 <p className="text-sm my-auto dark:text-neutral-300">
                                                     Network
@@ -832,7 +837,7 @@ const TokenStudio = () => {
                                                         onChange={handleChange}
                                                         onBlur={handleBlur}
                                                         placeholder="0.0"
-                                                        className="placeholder:font-mono placeholder:text-neutral-500 bg-transparent focus:outline-none text-right max-w-max text-sm dark:placeholder:text-neutral-400"
+                                                        className={`placeholder:font-mono placeholder:text-neutral-500 bg-transparent focus:outline-none text-right max-w-max text-sm dark:placeholder:text-neutral-400 ${errors && errors.burn ? "underline underline-red-500 text-red-500" : ""}`}
                                                     />
                                                 </div>
                                             </div>
