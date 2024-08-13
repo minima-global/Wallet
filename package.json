@@ -1,6 +1,6 @@
 {
     "name": "magnum",
-    "version": "3.0.2-beta",
+    "version": "3.0.3-beta",
     "private": true,
     "type": "module",
     "description": "Exchange tokens with Minimalists",

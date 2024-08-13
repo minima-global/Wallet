@@ -301,7 +301,8 @@ const TokenStudio = () => {
                                     return true;
                                 }
 
-                                if (new Decimal(val).plus(parent.amount).greaterThan(wallet[0].sendable)) {
+                                
+                                if (new Decimal(val).greaterThan(wallet[0].sendable)) {
                                     throw new Error('Insufficient funds');
                                 }
 
