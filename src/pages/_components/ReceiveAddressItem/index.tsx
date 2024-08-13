@@ -2,8 +2,6 @@ import React, { useState, FocusEvent, useContext } from 'react';
 import truncateString from '../../../shared/utils/truncateString';
 import { Scripts } from '../../../@types/minima';
 import EditIcon from '../../../components/UI/Icons/EditIcon';
-import PrimaryButton from '../../../components/UI/PrimaryButton';
-import DoneIcon from '../../../components/UI/Icons/DoneIcon';
 import { appContext } from '../../../AppContext';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
