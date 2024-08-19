@@ -136,3 +136,7 @@
 
 - Added IPFS Uri Support for tokens
 - Added Maxima name as default name for Creator's name on NFT Creation form
+
+##### [2.45.0] - 16 August 24 
+
+- Burn hotfix on NFT/token creation
