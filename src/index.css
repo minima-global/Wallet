@@ -1,71 +1,68 @@
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Roboto+Mono:wght@400&display=swap');
 
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --background-color: #0D0E10; 
-  --globalnav-background: rgba(22, 22, 23, .2);
-  --inset: rgba(255,255,255,0.2);
-  --globalnav-backdrop-filter: saturate(180%) blur(10px);
-  --globalnav-backdrop-filter-level-two: saturate(180%) blur(20px);
-  --background-image: url(./assets/images/LM.jpeg);
+    --background-color: #0d0e10;
+    --globalnav-background: rgba(22, 22, 23, 0.2);
+    --inset: rgba(255, 255, 255, 0.2);
+    --globalnav-backdrop-filter: saturate(180%) blur(10px);
+    --globalnav-backdrop-filter-level-two: saturate(180%) blur(20px);
+    --background-image: url(./assets/images/LM.jpeg);
 
-  --status-red: #FF627E;
-  --status-green: #00CBB6;
-  --status-green-5: #E1FFF1;
-  --core-grey: #91919D;
-  --core-grey-5: #F9F9FA;
-  --core-grey-10: #F4F4F5;
-  --core-grey-20: #E9E9EB;
-  --core-grey-60: #BDBDC4;
-  --core-grey-80: #A7A7B0;
-  --core-grey-100: #D9D9D9;
-  --core-grey-150: #D3D3D8;
-  --core-black-100: #08090B;
-  --core-black-150: #363A3F;
-  --core-black-contrast: #17191C;
-  --core-black-contrast-2: #282B2E;
-  --core-black-contrast-3: #464C4F;
+    --status-red: #ff627e;
+    --status-green: #00cbb6;
+    --status-green-5: #e1fff1;
+    --core-grey: #91919d;
+    --core-grey-5: #f9f9fa;
+    --core-grey-10: #f4f4f5;
+    --core-grey-20: #e9e9eb;
+    --core-grey-60: #bdbdc4;
+    --core-grey-80: #a7a7b0;
+    --core-grey-100: #d9d9d9;
+    --core-grey-150: #d3d3d8;
+    --core-black-100: #08090b;
+    --core-black-150: #363a3f;
+    --core-black-contrast: #17191c;
+    --core-black-contrast-2: #282b2e;
+    --core-black-contrast-3: #464c4f;
 
-  --brand-color: #3DA2FF;
+    --brand-color: #3da2ff;
 }
 
 .green-good {
-  color: var(--status-green);
+    color: var(--status-green);
 }
 .bg-green-good {
-  background-color: var(--status-green-5);
+    background-color: var(--status-green-5);
 }
 .red-bad {
-  color: var(--status-red);
+    color: var(--status-red);
 }
 
 .bg-bad {
-  background: var(--status-red);
+    background: var(--status-red);
 }
-
 
 .text-disabled {
-  color: var(--core-black-contrast-3);
+    color: var(--core-black-contrast-3);
 }
 
-
 .form-success-message {
-  color: var(--status-green);
-  font-weight: 600;
+    color: var(--status-green);
+    font-weight: 600;
 }
 
 .bg-core-grey-10 {
-  background-color: var(--core-grey-10);
+    background-color: var(--core-grey-10);
 }
 
 body {
     margin: 0;
-    color: #08090B;
-    height: 100%; 
+    color: #08090b;
+    height: 100%;
     min-height: -webkit-fill-available;
     font-weight: 500;
     letter-spacing: 0.3px;
@@ -78,86 +75,100 @@ body {
     background-repeat: no-repeat;
     background-size: cover;
     overflow: hidden;
-  }
-
+}
 
 select {
-  -webkit-appearance: none;
-  appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
 }
 
 .active {
-  color: #FFFFFF;
-  fill: #FFA010;
-  padding: 8px; 
-  background-color: var(--core-black-100);
+    color: #ffffff;
+    fill: #ffa010;
+    padding: 8px;
+    background-color: var(--core-black-100);
 }
 
 .temporary-pulse {
-  -webkit-animation-iteration-count: 3;
-  animation-iteration-count: 3;
+    -webkit-animation-iteration-count: 3;
+    animation-iteration-count: 3;
 }
 
 .arrow-active {
-  transform: rotate(180deg);
-  transition: transform 0.2s ease-in;
+    transform: rotate(180deg);
+    transition: transform 0.2s ease-in;
 }
 .arrow-passive {
-  transform: rotate(0deg);
-  transition: transform 0.2s ease-in;
+    transform: rotate(0deg);
+    transition: transform 0.2s ease-in;
 }
 
 .accordion-content {
-  overflow: hidden;
-  overflow-y: overlay;
-  max-height: 1000px;
-  transition: max-height 1s ease-in-out;
+    overflow: hidden;
+    overflow-y: overlay;
+    max-height: 1000px;
+    transition: max-height 1s ease-in-out;
 }
 
-.accordion-content[aria-expanded="true"] {
-  max-height: 0px;
-  transition: max-height 0.5s cubic-bezier(0, 1, 0, 1);
+.accordion-content[aria-expanded='true'] {
+    max-height: 0px;
+    transition: max-height 0.5s cubic-bezier(0, 1, 0, 1);
 }
-
 
 /* Hide scrollbar for Chrome, Safari and Opera */
 #card-content::-webkit-scrollbar {
-  display: none;
+    display: none;
 }
 
 /* Hide scrollbar for IE, Edge and Firefox */
 #card-content {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
 }
 
 ::-webkit-scrollbar-track {
-  background-color: #f1f1f1; /* Set the color of the scrollbar track */
+    background-color: #f1f1f1; /* Set the color of the scrollbar track */
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #888; /* Set the color of the scrollbar thumb */
-  border-radius: 6px; /* Set the border-radius of the scrollbar thumb */
+    background-color: #888; /* Set the color of the scrollbar thumb */
+    border-radius: 6px; /* Set the border-radius of the scrollbar thumb */
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: #555; /* Set the color of the scrollbar thumb on hover */
+    background-color: #555; /* Set the color of the scrollbar thumb on hover */
 }
-
 
 .my-masonry-grid {
-  display: -webkit-box; /* Not needed if autoprefixing */
-  display: -ms-flexbox; /* Not needed if autoprefixing */
-  display: flex;
-  margin-left: -30px; /* gutter size offset */
-  width: auto;
+    display: -webkit-box; /* Not needed if autoprefixing */
+    display: -ms-flexbox; /* Not needed if autoprefixing */
+    display: flex;
+    margin-left: -30px; /* gutter size offset */
+    width: auto;
 }
 .my-masonry-grid_column {
-  padding-left: 30px; /* gutter size */
-  background-clip: padding-box;
+    padding-left: 30px; /* gutter size */
+    background-clip: padding-box;
 }
 
 /* Style your items */
-.my-masonry-grid_column > div { /* change div to reference your elements you put in <Masonry> */
-  margin-bottom: 15px;
+.my-masonry-grid_column > div {
+    /* change div to reference your elements you put in <Masonry> */
+    margin-bottom: 15px;
+}
+
+/* For WebKit browsers (Chrome, Safari, Edge) */
+input[type='search']::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+/* For Mozilla Firefox */
+input[type='search'] {
+    -moz-appearance: textfield;
+}
+
+/* Optionally, remove the default search icon for WebKit browsers */
+input[type='search']::-webkit-search-decoration {
+    -webkit-appearance: none;
 }

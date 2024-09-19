@@ -1,6 +1,6 @@
 {
     "name": "wallet",
-    "version": "2.45.0",
+    "version": "2.46.0",
     "private": true,
     "type": "module",
     "description": "Exchange tokens with Minimalists",

@@ -28,7 +28,7 @@
 
 - dev changes
   - CRA -> vite for quicker development
-  
+
 ##### [2.34.0] - 10 October 23
 
 - Fix layout with Inputs, Outputs in txn history details
@@ -52,7 +52,7 @@
 
 - Update consolidate, coin split link
 - Success message on consolidate : remove Check coins property of your token
-- Burn info keep only Last 10 and last 50 
+- Burn info keep only Last 10 and last 50
 - Stop propagation when tapping hamburger menu
 - Untitled address (from N/A)
 - Add scrollbar to address list
@@ -63,7 +63,7 @@
 
 ##### [2.34.9] - 13 October 23
 
-- Fix .length error in NFTs 
+- Fix .length error in NFTs
 - Clean up logs
 
 ##### [2.34.10] - 18 October 23
@@ -111,7 +111,7 @@
 - Important truncated info is now scroll-able and can be copied throughout the app
 - Clicking outside overlaying not-so-important dialogs are now closed
 
-##### [2.37.4] - 29 November 23 
+##### [2.37.4] - 29 November 23
 
 - Cut off overlaying content in Locked section
 - Validation UI fixed
@@ -123,7 +123,7 @@
 - NFT Page now supports Masonry CSS Grid
 - NFT Detail updated
 
-##### [2.37.6] - 30 November 23 
+##### [2.37.6] - 30 November 23
 
 - Tweak NFT page design
 - Update NFT default images
@@ -132,11 +132,15 @@
 - Clicking token amount info on Send page now shows token info
 - Make token info backdrop click close dialog
 
-##### [2.38.0] - 30 November 23 
+##### [2.38.0] - 30 November 23
 
 - Added IPFS Uri Support for tokens
 - Added Maxima name as default name for Creator's name on NFT Creation form
 
-##### [2.45.0] - 16 August 24 
+##### [2.45.0] - 16 August 24
 
 - Burn hotfix on NFT/token creation
+
+##### [2.45.0] - 19 September 24
+
+- Tweak design

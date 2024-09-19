@@ -91,44 +91,14 @@ const TokenDetail = () => {
                 {viewingToken && (
                     <CardContent
                         header={
-                            <div className="bg-white flex gap-4 rounded-lg">
+                            <div className="flex space-x-2 hover:bg-slate-100 hover:cursor-pointer border border-neutral-200 bg-neutral-50 rounded-lg mb-4 whitespace-nowrap">
                                 {viewingToken.tokenid === '0x00' && (
-                                    <div className="relative">
-                                        <svg
-                                            className="absolute right-1 bottom-2"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            height="16"
-                                            viewBox="0 -960 960 960"
-                                            width="16"
-                                        >
-                                            <path
-                                                fill="#3DA2FF"
-                                                d="m344-60-76-128-144-32 14-148-98-112 98-112-14-148 144-32 76-128 136 58 136-58 76 128 144 32-14 148 98 112-98 112 14 148-144 32-76 128-136-58-136 58Zm94-278 226-226-56-58-170 170-86-84-56 56 142 142Z"
-                                            />
-                                        </svg>
-                                        <svg
-                                            className="rounded-l-lg min-h-[80px] min-w-[80px]"
-                                            width="80"
-                                            height="80"
-                                            viewBox="0 0 80 81"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <rect
-                                                width="80"
-                                                height="80"
-                                                transform="translate(0 0.550781)"
-                                                fill="#08090B"
-                                            />
-                                            <path
-                                                d="M52.3627 30.187L50.5506 37.9909L48.2331 28.5753L40.1133 25.3689L37.9178 34.8015L35.9836 23.7402L27.8638 20.5508L19.5 56.5508H28.3691L30.9305 45.4895L32.8646 56.5508H41.7512L43.9292 47.1182L46.2467 56.5508H55.1158L60.5 33.3764L52.3627 30.187Z"
-                                                fill="white"
-                                            />
-                                        </svg>
+                                    <div className="aspect-square w-12 h-12 overflow-hidden rounded-l-md">
+                                        <img className="w-full h-full" src="./assets/token.svg" />
                                     </div>
                                 )}
                                 {viewingToken.tokenid !== '0x00' && (
-                                    <div className="relative">
+                                    <div className="aspect-square w-12 h-12 overflow-hidden rounded-l-md">
                                         <img
                                             onClick={() =>
                                                 'url' in viewingToken.token &&
@@ -137,7 +107,7 @@ const TokenDetail = () => {
                                                     ? setFullScreenView(true)
                                                     : null
                                             }
-                                            className={`max-w-[80px] max-h-[80px] w-[80px] h-[80px] rounded-l-lg min-h-[80px] min-w-[80px] ${
+                                            className={`w-full h-full rounded-l-md ${
                                                 'url' in viewingToken.token &&
                                                 viewingToken.token.url.length &&
                                                 viewingToken.token.url.includes('https')
@@ -161,23 +131,25 @@ const TokenDetail = () => {
                                 )}
 
                                 <div className="my-auto overflow-x-hidden">
-                                    {viewingToken.tokenid === '0x00' && (
-                                        <h6 className="text-lg font-bold text-black">Minima</h6>
-                                    )}
+                                    {viewingToken.tokenid === '0x00' && <h6 className="font-bold truncate">Minima</h6>}
                                     {viewingToken.tokenid !== '0x00' && (
-                                        <h6 className="text-lg font-bold text-black truncate">
+                                        <h6 className="font-bold truncate">
                                             {viewingToken && 'name' in viewingToken.token
                                                 ? viewingToken.token.name
                                                 : 'Name not available'}
                                         </h6>
                                     )}
-                                    {viewingToken.tokenid === '0x00' && <p className="text-sm text-black">MINIMA</p>}
+                                    {viewingToken.tokenid === '0x00' && (
+                                        <p className="font-bold text-sm text-neutral-500 truncate">MINIMA</p>
+                                    )}
                                     {viewingToken.tokenid !== '0x00' && (
                                         <>
                                             {viewingToken &&
                                                 'ticker' in viewingToken.token &&
                                                 !!viewingToken.token.ticker.length && (
-                                                    <p className="text-sm text-black">{viewingToken.token.ticker}</p>
+                                                    <p className="font-bold text-sm text-neutral-500 truncate">
+                                                        {viewingToken.token.ticker}
+                                                    </p>
                                                 )}
                                             {viewingToken &&
                                                 'ticker' in viewingToken.token &&
