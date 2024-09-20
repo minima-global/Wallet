@@ -144,3 +144,8 @@
 ##### [2.45.0] - 19 September 24
 
 - Tweak design
+
+##### [2.45.1] - 20 September 24
+
+- Token balance info updated
+- Additional design tweaks

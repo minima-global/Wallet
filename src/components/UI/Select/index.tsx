@@ -18,7 +18,7 @@ const Select = ({ current, setCurrent, def, options }: IProps) => {
     return (
         <div>
             <div
-                className="bg-neutral-100 p-4 text-black font-light rounded flex justify-between items-center"
+                className="bg-white px-3 py-2 font-bold text-black rounded flex justify-between items-center hover:bg-neutral-50"
                 onClick={() => setToggle((prevState) => !prevState)}
             >
                 <h1>{current !== null ? current : 'Select option'}</h1>

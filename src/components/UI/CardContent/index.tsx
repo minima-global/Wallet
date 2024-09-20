@@ -10,7 +10,7 @@ const CardContent = ({ header, content, className, onClick }: IProps) => {
     return (
         <div
             onClick={onClick}
-            className={`flex h-max flex-col gap-4 mx-4 rounded bg-white bg-opacity-90 p-4 shadow-sm mb-4 ${
+            className={`flex h-max flex-col gap-4 mx-4 rounded bg-neutral-100 p-4 shadow-sm mb-4 ${
                 className ? className : ''
             }`}
         >
