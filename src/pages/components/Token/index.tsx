@@ -1,5 +1,6 @@
 import { Decimal } from 'decimal.js';
 import NFTAuthenticity from '../tokens/NFTAuthenticity';
+import useFormatMinimaNumber from '../../../__minima__/libs/utils/useMakeNumber';
 
 interface TokenProps {
     t: {
@@ -19,9 +20,7 @@ interface TokenProps {
 }
 
 export default function Token({ t, setTokenInformation, handleClick }: TokenProps) {
-    const makeMinimaNumber = (value: string, decimals: number) => {
-        return new Decimal(value).toFixed(decimals);
-    };
+    const { makeMinimaNumber } = useFormatMinimaNumber();
 
     return (
         <li
