@@ -149,3 +149,7 @@
 
 - Token balance info updated
 - Additional design tweaks
+
+##### [2.45.2] - 23 September 24
+
+- additional design tweaks

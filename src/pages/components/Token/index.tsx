@@ -37,7 +37,7 @@ export default function Token({ t, setTokenInformation, handleClick }: TokenProp
                         <img
                             className="w-full h-full object-cover"
                             alt="token-icon"
-                            src={t.token?.url?.length ? t.token.url : `https://robohash.org/${t.tokenid}`}
+                            src={t.token?.url?.length ? decodeURIComponent(t.token.url) : `https://robohash.org/${t.tokenid}`}
                         />
                         {t.tokenid !== '0x00' && t.token?.webvalidate && !!t.token.webvalidate.length && (
                             <NFTAuthenticity tokenid={t.tokenid} />
@@ -60,7 +60,7 @@ export default function Token({ t, setTokenInformation, handleClick }: TokenProp
                     className="flex items-center space-x-1"
                 >
                     <p className="text-xs">
-                        {makeMinimaNumber(new Decimal(t.confirmed).minus(t.sendable).toString(), 3)}
+                        {new Decimal(t.confirmed).minus(t.sendable).isZero() ? "-" : makeMinimaNumber(new Decimal(t.confirmed).minus(t.sendable).toString(), 1)}
                     </p>
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
