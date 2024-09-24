@@ -221,12 +221,12 @@ const AppProvider = ({ children }: IProps) => {
     const getBalance = async () => {
         await rpc.getMinimaBalance().then((b) => {
             b.map(async (t) => {
-                if (t.token.url && t.token.url.startsWith('<artimage>', 0)) {
-                    t.token.url = makeTokenImage(t.token.url, t.tokenid);
+                if (t.token.url && decodeURIComponent(t.token.url).startsWith('<artimage>', 0)) {
+                    t.token.url = makeTokenImage(decodeURIComponent(t.token.url), t.tokenid);
                 }
 
-                if (t.token.url && t.token.url.startsWith('https://ipfs.io/ipns/')) {
-                    t.token.url = await fetchIPFSImageUri(t.token.url);
+                if (t.token.url && decodeURIComponent(t.token.url).startsWith('https://ipfs.io/ipns/')) {
+                    t.token.url = await fetchIPFSImageUri(decodeURIComponent(t.token.url));
                 }
             });
 
@@ -252,8 +252,8 @@ const AppProvider = ({ children }: IProps) => {
     const getTokens = async () => {
         await rpc.getTokens().then((tokens) => {
             const t = tokens.map((t: any) => {
-                if ('url' in t.name && t.name.url && t.name.url.startsWith('<artimage>', 0)) {
-                    t.name.url = makeTokenImage(t.name.url, t.tokenid);
+                if ('url' in t.name && t.name.url && decodeURIComponent(t.token.url).startsWith('<artimage>', 0)) {
+                    t.name.url = makeTokenImage(decodeURIComponent(t.token.url), t.tokenid);
                 }
 
                 return t;

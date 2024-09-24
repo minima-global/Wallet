@@ -87,7 +87,7 @@ const NFTs = () => {
                                             {'url' in showDetail.name && !!showDetail.name.url.length && (
                                                 <img
                                                     className="h-[378px] w-[378px] object-cover"
-                                                    src={showDetail.name.url}
+                                                    src={decodeURIComponent(showDetail.name.url)}
                                                     alt={`my_NFT_${showDetail.tokenid}`}
                                                 />
                                             )}
@@ -246,7 +246,7 @@ const NFTs = () => {
                                                     {'url' in w.name && !!w.name.url.length && (
                                                         <img
                                                             className="w-[-webkit-fill-available]"
-                                                            src={w.name.url}
+                                                            src={decodeURIComponent(w.name.url)}
                                                             alt=""
                                                         />
                                                     )}
@@ -335,7 +335,7 @@ const NFTs = () => {
                                                     {'url' in w.name && !!w.name.url.length && (
                                                         <img
                                                             className="w-[-webkit-fill-available]"
-                                                            src={w.name.url}
+                                                            src={decodeURIComponent(w.name.url)}
                                                             alt=""
                                                         />
                                                     )}

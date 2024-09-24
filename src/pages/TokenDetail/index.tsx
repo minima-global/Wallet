@@ -74,7 +74,7 @@ const TokenDetail = () => {
                                                         alt="token-icon"
                                                         src={
                                                             'url' in viewingToken.token && viewingToken.token.url.length
-                                                                ? viewingToken.token.url
+                                                                ? decodeURIComponent(viewingToken.token.url)
                                                                 : `https://robohash.org/${viewingToken.tokenid}`
                                                         }
                                                     />
@@ -103,7 +103,7 @@ const TokenDetail = () => {
                                             onClick={() =>
                                                 'url' in viewingToken.token &&
                                                 viewingToken.token.url.length &&
-                                                viewingToken.token.url.includes('https')
+                                                decodeURIComponent(viewingToken.token.url).includes('https')
                                                     ? setFullScreenView(true)
                                                     : null
                                             }
@@ -117,7 +117,7 @@ const TokenDetail = () => {
                                             alt="token-icon"
                                             src={
                                                 'url' in viewingToken.token && viewingToken.token.url.length
-                                                    ? viewingToken.token.url
+                                                    ? decodeURIComponent(viewingToken.token.url)
                                                     : `https://robohash.org/${viewingToken.tokenid}`
                                             }
                                         />

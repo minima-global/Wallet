@@ -153,3 +153,7 @@
 ##### [2.45.5] - 23 September 24
 
 - additional design tweaks
+
+##### [2.45.6] - 24 September 24
+
+- decode urls
