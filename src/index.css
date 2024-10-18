@@ -74,7 +74,7 @@ body {
     background-image: var(--background-image);
     background-repeat: no-repeat;
     background-size: cover;
-    overflow: hidden;
+    overflow-y: auto;
 }
 
 select {

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { MinimaToken } from '../../../@types/minima';
@@ -8,11 +8,13 @@ import CardContent from '../../../components/UI/CardContent';
 
 import Token from '../Token';
 import TokenHelp from '../../../components/UI/TokenHelp';
+import { Search, X } from 'lucide-react';
 
 const Wallet = () => {
     const navigate = useNavigate();
     const { balance } = useContext(appContext);
-    const [filterText, setFilterText] = React.useState('');
+
+    const [searchTerm, setSearchTerm] = useState('');
 
     const [tokenInformation, setTokenInformation] = React.useState<
         false | { confirmed: string; sendable: string; unconfirmed: string }
@@ -37,13 +39,32 @@ const Wallet = () => {
             {balance.length > 0 && (
                 <CardContent
                     header={
-                        <input
-                            value={filterText}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilterText(e.target.value)}
-                            type="search"
-                            className="focus:outline-none border hover:border-neutral-200 px-4 py-3 rounded-md bg-neutral-50 "
-                            placeholder="Search by token name or id"
-                        />
+                        <div className="relative">
+                            <input
+                                type="text"
+                                placeholder="Search tokens"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="w-full px-4 py-3 pl-10 pr-10 bg-white text-base text-gray-900 rounded
+                   border border-gray-300
+                   focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+                   transition-all duration-200 ease-in-out"
+                                aria-label="Search tokens"
+                            />
+                            <Search
+                                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5"
+                                aria-hidden="true"
+                            />
+                            {searchTerm && (
+                                <button
+                                    onClick={() => setSearchTerm('')}
+                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
+                                    aria-label="Clear search"
+                                >
+                                    <X className="h-5 w-5" />
+                                </button>
+                            )}
+                        </div>
                     }
                     content={
                         <>
@@ -59,8 +80,8 @@ const Wallet = () => {
                                         (t: MinimaToken) =>
                                             containsText(
                                                 t.tokenid === '0x00' ? t.token : 'name' in t.token ? t.token.name : '',
-                                                filterText
-                                            ) || containsText(t.tokenid, filterText)
+                                                searchTerm
+                                            ) || containsText(t.tokenid, searchTerm)
                                     )
                                     .map((t: MinimaToken) => (
                                         <Token
@@ -77,8 +98,8 @@ const Wallet = () => {
                                     (t: MinimaToken) =>
                                         containsText(
                                             t.tokenid === '0x00' ? t.token : 'name' in t.token ? t.token.name : '',
-                                            filterText
-                                        ) || containsText(t.tokenid, filterText)
+                                            searchTerm
+                                        ) || containsText(t.tokenid, searchTerm)
                                 ).length && (
                                     <div className="flex justify-center">
                                         <span className="text-center text-sm">No results found</span>

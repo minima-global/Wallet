@@ -15,6 +15,7 @@ import getCurrentNodeVersion from '../minima/commands/getCurrentVersion';
 
 import * as rpc from '../__minima__/libs/RPC';
 import KeyValue from '../components/UI/KeyValue';
+import { Search } from 'lucide-react';
 
 const Receive = () => {
     const {
@@ -272,7 +273,6 @@ const Receive = () => {
                                                 }
                                             >
                                                 <CardContent
-                                                    onClick={(e: any) => e.stopPropagation()}
                                                     header={<></>}
                                                     content={
                                                         <>
@@ -401,7 +401,6 @@ const Receive = () => {
                                                 }
                                             >
                                                 <CardContent
-                                                    onClick={(e: any) => e.stopPropagation()}
                                                     header={<></>}
                                                     content={
                                                         <>
@@ -755,18 +754,48 @@ const Receive = () => {
                                     className="accordion-content rounded bg-white h-[250px] divide-y-1"
                                 >
                                     <li className="mx-4 my-2">
-                                        <Input
-                                            extraClass="text-center md:text-left"
-                                            id="search"
-                                            name="search"
-                                            disabled={false}
-                                            value={filterText}
-                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                                                setFilterText(e.target.value)
-                                            }
-                                            type="search"
-                                            placeholder="Search nickname/address"
-                                        />
+                                        <div className="relative">
+                                            <input
+                                                id="search"
+                                                name="search"
+                                                type="search"
+                                                placeholder="Search nickname/address"
+                                                value={filterText}
+                                                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                                                    setFilterText(e.target.value)
+                                                }
+                                                className="w-full px-4 py-3 pl-10 bg-white text-base text-gray-900 rounded
+                                                            border border-gray-300
+                                                            focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+                                                            transition-all duration-200 ease-in-out
+                                                            text-center md:text-left"
+                                                aria-label="Search by nickname or address"
+                                            />
+                                            <Search
+                                                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5"
+                                                aria-hidden="true"
+                                            />
+                                            {filterText && (
+                                                <button
+                                                    onClick={() => setFilterText('')}
+                                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
+                                                    aria-label="Clear search"
+                                                >
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        className="h-5 w-5"
+                                                        viewBox="0 0 20 20"
+                                                        fill="currentColor"
+                                                    >
+                                                        <path
+                                                            fillRule="evenodd"
+                                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                                            clipRule="evenodd"
+                                                        />
+                                                    </svg>
+                                                </button>
+                                            )}
+                                        </div>
                                     </li>
                                     {!(simpleAddresses as Scripts[]).filter(
                                         (a) =>
@@ -832,3 +861,4 @@ const validationSchema = () => {
             .required('Field Required'),
     });
 };
+

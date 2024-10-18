@@ -1,26 +1,29 @@
 import { ReactElement } from 'react';
 
-interface IProps {
-    header: ReactElement;
-    content: ReactElement;
-    className?: string;
-    onClick?: any;
+interface CardContentProps {
+  header: ReactElement;
+  content: ReactElement;
+  className?: string;
+  onClick?: () => void;
 }
-const CardContent = ({ header, content, className, onClick }: IProps) => {
-    return (
-        <div
-            onClick={onClick}
-            className={`flex h-max flex-col gap-4 mx-4 rounded bg-neutral-100 p-4 shadow-sm mb-4 ${
-                className ? className : ''
-            }`}
-        >
-            {header}
-            <div className="divide-y-2" />
-            <div id="card-content" className="h-max">
-                {content}
-            </div>
-        </div>
-    );
-};
 
-export default CardContent;
+export default function CardContent({ header, content, className, onClick }: CardContentProps) {
+  return (
+    <div
+      onClick={onClick}
+      className={`bg-white rounded-lg h-max shadow-md overflow-hidden my-4 mx-4 sm:mx-0 transition-all duration-300 ease-in-out ${
+        className || ''
+      }`}
+    >
+      <div className="p-4 sm:p-6">
+        <div className="mb-6">
+          {header}
+        </div>
+        <div className="h-px bg-gray-200 w-full mb-6" />
+        <div id="card-content" className="h-max">
+          {content}
+        </div>
+      </div>
+    </div>
+  );
+}

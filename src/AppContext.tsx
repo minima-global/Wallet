@@ -29,13 +29,12 @@ const AppProvider = ({ children }: IProps) => {
     const [history, setHistory] = useState<TxPOW[]>([]);
     const [logs, setLogs] = useState<string[]>([]);
 
-
     const [_promptTransactionDetails, setPromptTransactionDetails] = useState<any>(false);
     const [_maxHistory, setMaxHistory] = useState(20);
     const [_currentPage, setCurrentPage] = useState(1);
     const [_historyTransactions, setHistoryTransactions] = useState([]);
     const [_historyDetails, setHistoryDetails] = useState([]);
-    
+
     const [simpleAddresses, setSimpleAddresses] = useState<Scripts[]>([]);
     const [avgBurn, setAvgBurn] = useState(0);
     const [vaultLocked, setVaultLocked] = useState<null | boolean>(null);
@@ -83,7 +82,7 @@ const AppProvider = ({ children }: IProps) => {
                         const favoriteTokens: any = await sql(`SELECT * FROM cache WHERE name= 'FAVORITE_TOKENS'`);
 
                         const currFormat: any = await sql(`SELECT * FROM cache WHERE name= 'CURRENCY_FORMAT'`);
-                        
+
                         if (nicknameAddresses) {
                             setDefaultAddressesWithName(JSON.parse(nicknameAddresses.DATA));
                         }
@@ -190,7 +189,7 @@ const AppProvider = ({ children }: IProps) => {
     const getHistory = () => {
         const offSet = _currentPage - 1;
 
-        (window as any).MDS.cmd(`history max:${_maxHistory} offset:${offSet*20}`, (resp: any) => {
+        (window as any).MDS.cmd(`history max:${_maxHistory} offset:${offSet * 20}`, (resp: any) => {
             if (resp.status) {
                 setHistoryTransactions(resp.response.txpows);
                 setHistoryDetails(resp.response.details);
@@ -249,17 +248,25 @@ const AppProvider = ({ children }: IProps) => {
         });
     };
 
-    const getTokens = async () => {
-        await rpc.getTokens().then((tokens) => {
-            const t = tokens.map((t: any) => {
-                if ('url' in t.name && t.name.url && decodeURIComponent(t.token.url).startsWith('<artimage>', 0)) {
-                    t.name.url = makeTokenImage(decodeURIComponent(t.token.url), t.tokenid);
-                }
+    const getTokens = () => {
+        (window as any).MDS.cmd('balance tokendetails:true', (resp: any) => {
+            if (!resp.status) {
+                console.error("Failed to fetch tokens");
+            }
 
-                return t;
-            });
-            setNFTs(t);
-        });
+            // Filter out tokens where tokenid is not '0x00' and decimals are 0 in the details
+            const nonFungible = resp.response
+                .filter((t: any) => t.tokenid !== '0x00' && t.details && t.details.decimals === 0)
+                .map((t) => {
+                    if (t.token?.url && t.token.url.startsWith('<artimage>', 0)) {
+                        t.token.url = makeTokenImage(t.token.url, t.tokenid);
+                    }
+
+                    return t;
+                });
+
+            setNFTs(nonFungible);
+        });       
     };
 
     const updateCurrencyFormat = async (decimal: string, thousands: string) => {
@@ -325,7 +332,7 @@ const AppProvider = ({ children }: IProps) => {
 
     const promptTransactionDetails = (state: any) => {
         setPromptTransactionDetails(state);
-    }
+    };
 
     return (
         <appContext.Provider
@@ -341,14 +348,14 @@ const AppProvider = ({ children }: IProps) => {
 
                 _promptTransactionDetails,
                 promptTransactionDetails,
-                
+
                 balance,
                 NFTs,
                 simpleAddresses,
                 history,
                 _historyDetails,
                 _historyTransactions,
-                
+
                 getBalance,
 
                 _currentPage,

@@ -371,11 +371,11 @@ const TokenCreation = () => {
                             )}
 
                         <CardContent
-                            header={<></>}
+                            header={<><FormImageUrlSelect /></>}
                             content={
                                 <form onSubmit={handleSubmit}>
                                     <div className="flex flex-col gap-2">
-                                        <FormImageUrlSelect />
+                                        
 
                                         <Input
                                             id="name"

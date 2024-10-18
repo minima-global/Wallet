@@ -1,63 +1,88 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
-interface IProps {
-    current: string | null;
-    setCurrent: any;
-    def?: string;
-    options?: string[];
+interface SelectProps {
+  current: string | null;
+  setCurrent: (value: string) => void;
+  def?: string;
+  options?: string[];
 }
-const Select = ({ current, setCurrent, def, options }: IProps) => {
-    const [toggle, setToggle] = useState(false);
 
-    useEffect(() => {
-        if (def) {
-            setCurrent(def);
-        }
-    }, [def]);
+export default function Select({ current, setCurrent, def, options }: SelectProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const selectRef = useRef<HTMLDivElement>(null);
 
-    return (
-        <div>
-            <div
-                className="bg-white px-3 py-2 font-bold text-black rounded flex justify-between items-center hover:bg-neutral-50"
-                onClick={() => setToggle((prevState) => !prevState)}
+  useEffect(() => {
+    if (def) {
+      setCurrent(def);
+    }
+  }, [def, setCurrent]);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (selectRef.current && !selectRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  return (
+    <div ref={selectRef} className="relative">
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        className={`
+          w-full px-4 py-3 bg-white text-base text-gray-900 rounded
+          border border-gray-300
+          focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+          transition-all duration-200 ease-in-out
+          flex justify-between items-center
+        `}
+        aria-haspopup="listbox"
+        aria-expanded={isOpen}
+      >
+        <span>{current !== null ? current : 'Select option'}</span>
+        <svg
+          className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${isOpen ? 'transform rotate-180' : ''}`}
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+        </svg>
+      </button>
+      {isOpen && options && (
+        <ul
+          className={`
+            absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg
+            max-h-60 overflow-auto
+            transition-all duration-200 ease-in-out
+          `}
+          role="listbox"
+        >
+          {options.map((option) => (
+            <li
+              key={option}
+              className={`
+                px-4 py-2 cursor-pointer
+                ${option === current ? 'bg-blue-100 text-blue-800' : 'text-gray-900 hover:bg-gray-100'}
+              `}
+              onClick={() => {
+                setCurrent(option);
+                setIsOpen(false);
+              }}
+              role="option"
+              aria-selected={option === current}
             >
-                <h1>{current !== null ? current : 'Select option'}</h1>
-                <svg
-                    className={`my-auto fill-gray-500 ${toggle ? 'arrow-active' : ''}`}
-                    width="32"
-                    height="33"
-                    viewBox="0 0 32 33"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                    <mask id="mask0_2226_53255" maskUnits="userSpaceOnUse" x="0" y="0" width="32" height="33">
-                        <rect y="0.550781" width="32" height="32" fill="#D9D9D9" />
-                    </mask>
-                    <g mask="url(#mask0_2226_53255)">
-                        <path
-                            d="M16.0004 20.6172L8.4668 13.0508L9.6668 11.8844L16.0004 18.2172L22.334 11.8844L23.534 13.0844L16.0004 20.6172Z"
-                            fill="#08090B"
-                        />
-                    </g>
-                </svg>
-            </div>
-            <ul aria-expanded={!toggle} className="accordion-content bg-white">
-                {options &&
-                    options.map((o) => (
-                        <li
-                            key={Math.random()}
-                            className={`hover:bg-slate-100 p-4 ${o === current ? 'bg-slate-100' : ''}`}
-                            onClick={() => {
-                                setCurrent(o);
-                                setToggle(false);
-                            }}
-                        >
-                            {o}
-                        </li>
-                    ))}
-            </ul>
-        </div>
-    );
-};
-
-export default Select;
+              {option}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}

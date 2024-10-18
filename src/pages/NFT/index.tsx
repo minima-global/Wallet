@@ -1,428 +1,325 @@
-import { useContext, useState } from 'react';
 
+import { useState, useContext, useMemo, ReactElement, useEffect } from 'react';
 import { appContext } from '../../AppContext';
-
-import Grid from '../../components/UI/Grid';
-import { createPortal } from 'react-dom';
-import Button from '../../components/UI/Button';
-import KeyValue from '../../components/UI/KeyValue';
 import { useNavigate } from 'react-router-dom';
-import CardContent from '../../components/UI/CardContent';
-
 import Masonry from 'react-masonry-css';
-import NFTAuthenticity from '../components/tokens/NFTAuthenticity';
+import useIsMinimaBrowser from '../../hooks/useIsMinimaBrowser';
+import { Search, X, CheckCircle, ExternalLink } from 'lucide-react';
+import Grid from '../../components/UI/Grid';
+
+type NFT = {
+  token: {
+    name: string;
+    url: string;
+    description: string;
+    owner: string;
+    webvalidate?: string;
+    [key: string]: any;
+  };
+  tokenid: string;
+  confirmed: string;
+  unconfirmed: string;
+  sendable: string;
+  coins: string;
+  total: string;
+  details: {
+    decimals: number;
+    script: string;
+    totalamount: string;
+    scale: string;
+    created: string;
+  };
+};
 
 const breakpointColumnsObj = {
-    default: 3,
-    1100: 3,
-    700: 2,
-    500: 1,
+  default: 3,
+  1100: 3,
+  700: 2,
+  500: 1,
 };
 
-const NFTs = () => {
-    const navigate = useNavigate();
-    const [selectedTab, setSelectedTab] = useState(0);
-    const [showDetail, setShowDetail] = useState<any | false>(false);
-    const { NFTs, setOpenDrawer, toggleFavourite, _favoriteTokens } = useContext(appContext);
+const Avatar = ({ src }: { src: string }) => (
+  <img src={src} alt="Avatar" className="w-8 h-8 rounded-full" />
+);
 
-    const handleTabClick = (index: number) => {
-        setSelectedTab(index);
-    };
-    return (
-        <Grid
-            variant="lg"
-            title={
-                <>
-                    <svg
-                        onClick={(e: any) => {
-                            e.stopPropagation();
-                            setOpenDrawer(true);
-                        }}
-                        className="block md:hidden fill-white"
-                        xmlns="http://www.w3.org/2000/svg"
-                        height="24"
-                        viewBox="0 -960 960 960"
-                        width="24"
-                    >
-                        <path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z" />
-                    </svg>
-                    Non-fungible Tokens
-                </>
-            }
+const NFTCard = ({ nft, onFavoriteToggle, isFavorite, isVerified }: { nft: NFT; onFavoriteToggle: () => void; isFavorite: boolean; isVerified: boolean }) => (
+  <div className="w-full bg-white rounded-lg overflow-hidden shadow-lg transition-shadow hover:shadow-xl flex flex-col h-full">
+    <div className="aspect-square relative">
+      <img
+        src={nft.token.url || `https://robohash.org/${nft.tokenid}`}
+        alt={nft.token.name}
+        className="w-full h-full object-cover"
+      />
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          onFavoriteToggle();
+        }}
+        className="absolute top-2 right-2 p-2 bg-white bg-opacity-70 rounded-full hover:bg-opacity-100 transition-all duration-200 focus:outline-none"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className={`h-6 w-6 ${isFavorite ? 'text-red-500' : 'text-gray-400'}`}
+          fill={isFavorite ? 'currentColor' : 'none'}
+          viewBox="0 0 24 24"
+          stroke="currentColor"
         >
-            <div className="flex flex-col gap-1">
-                {showDetail &&
-                    createPortal(
-                        <div
-                            onClick={() => setShowDetail(false)}
-                            className="ml-0 md:ml-[240px] absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 animate-fadeIn"
-                        >
-                            <Grid
-                                variant="lg"
-                                title={
-                                    <>
-                                        <svg
-                                            className="fill-white hover:cursor-pointer"
-                                            onClick={(e: any) => {
-                                                e.stopPropagation();
-                                                setShowDetail(false);
-                                            }}
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            height="24"
-                                            viewBox="0 -960 960 960"
-                                            width="24"
-                                        >
-                                            <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
-                                        </svg>
-                                        NFT Details
-                                    </>
-                                }
-                            >
-                                <div
-                                    onClick={(e: any) => e.stopPropagation()}
-                                    className="grid grid-cols-1 md:grid-cols-[1fr_1fr] bg-white rounded mx-8 my-4 h-max py-4 px-4 md:px-0 md:py-0 gap-2"
-                                >
-                                    <div className="flex justify-center items-start md:items-center">
-                                        <div className="rounded border">
-                                            {'url' in showDetail.name && !!showDetail.name.url.length && (
-                                                <img
-                                                    className="h-[378px] w-[378px] object-cover"
-                                                    src={decodeURIComponent(showDetail.name.url)}
-                                                    alt={`my_NFT_${showDetail.tokenid}`}
-                                                />
-                                            )}
-                                            {(!showDetail.name.url ||
-                                                ('url' in showDetail.name && showDetail.name.url.length === 0)) && (
-                                                <h3 className="h-[378px] w-[378px] flex items-center justify-center text-slate-400">
-                                                    No image set
-                                                </h3>
-                                            )}
-                                        </div>
-                                    </div>
-                                    <div className="px-4 md:px-0 py-4 overflow-auto grid grid-rows-[2fr_1fr]">
-                                        <div className="grid grid-rows-[1fr_1fr]">
-                                            <div>
-                                                <div className="animate-fadeIn text-inherit font-bold truncate w-full grid grid-cols-[auto_1fr] gap-1">
-                                                    <h1 className="font-bold truncate text-left text-black text-xl">
-                                                        {'name' in showDetail.name && showDetail.name.name}
-                                                        {!('name' in showDetail.name) && 'N/A'}
-                                                    </h1>
-                                                    <div className="relative">
-                                                        {showDetail.name.webvalidate &&
-                                                            showDetail.name.webvalidate.length && (
-                                                                <NFTAuthenticity
-                                                                    relative
-                                                                    tokenid={showDetail.tokenid}
-                                                                />
-                                                            )}
-                                                    </div>
-                                                </div>
-                                                <p className="p-0 m-0 lowercase text-slate-500">
-                                                    @
-                                                    {'owner' in showDetail.name && showDetail.name.owner.length
-                                                        ? showDetail.name.owner
-                                                        : 'anon'}
-                                                </p>
-                                                <p className="whitespace-normal break-word">
-                                                    {'description' in showDetail.name &&
-                                                    showDetail.name.description.length
-                                                        ? showDetail.name.description
-                                                        : 'No description'}
-                                                </p>
-                                            </div>
-                                            <div>
-                                                {('external_url' in showDetail.name ||
-                                                    'webvalidate' in showDetail.name) && (
-                                                    <h3 className="font-extrabold text-lg">Extra data</h3>
-                                                )}
-                                                {'external_url' in showDetail.name && (
-                                                    <div>
-                                                        <h6>External Url</h6>
-                                                        {showDetail.name.external_url.length ? (
-                                                            <a
-                                                                className="text-blue-500"
-                                                                target="_blank"
-                                                                href={showDetail.name.external_url}
-                                                            >
-                                                                {showDetail.name.external_url}
-                                                            </a>
-                                                        ) : (
-                                                            <p className="text-sm text-slate-500">None set</p>
-                                                        )}
-                                                    </div>
-                                                )}
-                                                {'webvalidate' in showDetail.name && (
-                                                    <div>
-                                                        <h6>Webvalidate</h6>
-                                                        {showDetail.name.webvalidate.length ? (
-                                                            <a
-                                                                className="text-blue-500"
-                                                                target="_blank"
-                                                                href={showDetail.name.webvalidate}
-                                                            >
-                                                                {showDetail.name.webvalidate}
-                                                            </a>
-                                                        ) : (
-                                                            <p className="text-sm text-slate-500">None set</p>
-                                                        )}
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </div>
-                                        <div className="flex items-end mr-4">
-                                            <button
-                                                onClick={() => navigate('/send?tokenid=' + showDetail.tokenid)}
-                                                className="bg-black hover:bg-opacity-90 w-full rounded-lg p-4 text-white h-max"
-                                            >
-                                                Transfer
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </Grid>
-                        </div>,
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+        </svg>
+      </button>
+      {isVerified && (
+        <div className="absolute bottom-2 left-2 bg-white bg-opacity-70 rounded-full p-1">
+          <CheckCircle className="h-5 w-5 text-green-500" />
+        </div>
+      )}
+    </div>
+    <div className="p-4 flex-grow flex flex-col justify-between">
+      <div className="space-y-3">
+        <h2 className="font-bold text-lg text-black truncate">{nft.token.name}</h2>
+        <div className="flex items-center">
+          <Avatar src="./assets/token.svg" />
+          <p className="flex-grow text-neutral-800 pl-2 truncate">@{nft.token.owner || 'anon'}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+);
 
-                        document.body
-                    )}
+interface IProps {
+  title: ReactElement;
+  children: ReactElement;
+  variant: 'sm' | 'lg';
+}
 
-                <CardContent
-                    header={
-                        <>
-                            <div className="flex justify-between items-center">
-                                <div className="flex gap-2">
-                                    <div className="bg-opacity-50 bg-white px-4 py-2">
-                                        <h6 className="text-black opacity-60 text-sm">Total Collected</h6>
-                                        <p className="text-black">{NFTs.length}</p>
-                                    </div>
-                                    <div className="bg-opacity-50 bg-white px-4 py-2">
-                                        <h6 className="text-black opacity-60 text-sm">Total Favorited</h6>
-                                        <p className="text-black">{_favoriteTokens.length}</p>
-                                    </div>
-                                </div>
-                                <button
-                                    onClick={() => navigate('createnft')}
-                                    className={`flex text-sm text-black font-semibold hover:cursor-pointer hover:opacity-90 border-2 border-black rounded-lg py-2 px-4 hover:bg-black hover:text-white hover:fill-[#363AFF] transition-all delay-50 `}
-                                >
-                                    Create
-                                </button>
-                            </div>
-                            <div className="flex gap-2">
-                                <button
-                                    onClick={() => handleTabClick(0)}
-                                    className={`flex text-sm text-black font-semibold hover:cursor-pointer hover:opacity-90 border-2 border-black rounded-lg py-2 px-4 hover:bg-black hover:text-white hover:fill-[#363AFF] transition-all delay-50 ${
-                                        selectedTab === 0 ? 'bg-black text-white' : ''
-                                    }`}
-                                >
-                                    Collection
-                                </button>
-                                <button
-                                    onClick={() => handleTabClick(1)}
-                                    className={`flex text-sm text-black font-semibold hover:cursor-pointer hover:opacity-90 border-2 border-black rounded-lg py-2 px-4 hover:bg-black hover:text-white hover:fill-[#363AFF] transition-all delay-50 ${
-                                        selectedTab === 1 ? 'bg-black text-white' : ''
-                                    }`}
-                                >
-                                    Favorites
-                                </button>
-                            </div>
-                        </>
-                    }
-                    content={
-                        <>
-                            {selectedTab === 0 && (
-                                <Masonry
-                                    breakpointCols={breakpointColumnsObj}
-                                    className="my-masonry-grid"
-                                    columnClassName="my-masonry-grid_column"
-                                >
-                                    {NFTs &&
-                                        !!NFTs.length &&
-                                        NFTs.map((w: any) => (
-                                            <div
-                                                onClick={() => setShowDetail(w)}
-                                                key={`my_NFT_${w.tokenid}`}
-                                                className="rounded bg-white hover:scale-95 delay-90 transition duration-300 ease-in-out"
-                                            >
-                                                <div className="relative group">
-                                                    {'url' in w.name && !!w.name.url.length && (
-                                                        <img
-                                                            className="w-[-webkit-fill-available]"
-                                                            src={decodeURIComponent(w.name.url)}
-                                                            alt=""
-                                                        />
-                                                    )}
-                                                    {(('url' in w.name && !w.name.url.length) || !w.name.url) && (
-                                                        <div>
-                                                            <img
-                                                                className="w-[-webkit-fill-available]"
-                                                                alt="token-icon"
-                                                                src={`https://robohash.org/${w.tokenid}`}
-                                                            />
-                                                        </div>
-                                                    )}
 
-                                                    <div className="absolute group-hover:grid hidden animate-fadeIn bottom-0 text-inherit font-bold truncate w-full grid-cols-[1fr_auto]">
-                                                        <h3 className="pl-2">
-                                                            {'name' in w.name ? w.name.name : 'N/A'}
-                                                        </h3>
+export default function NFTDisplay() {
+  const navigate = useNavigate();
+  const [showDetail, setShowDetail] = useState<NFT | null>(null);
+  const { NFTs, toggleFavourite, _favoriteTokens, setOpenDrawer } = useContext(appContext);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [activeTab, setActiveTab] = useState<'all' | 'favorites'>('all');
+  const [verifiedTokens, setVerifiedTokens] = useState<string[]>([]);
 
-                                                        {w.name.webvalidate && w.name.webvalidate.length && (
-                                                            <NFTAuthenticity tokenid={w.tokenid} />
-                                                        )}
-                                                    </div>
-                                                </div>
+  useEffect(() => {
+    NFTs.forEach((nft) => {
+      if (nft.token.webvalidate && nft.token.webvalidate.length) {
+        (window as any).MDS.cmd(`tokenvalidate tokenid:${nft.tokenid}`, function(resp) {
+          if (resp.response && resp.response.valid) {
+            setVerifiedTokens((prev) => [...prev, nft.tokenid]);
+          }
+        });
+      }
+    });
+  }, [NFTs]);
 
-                                                <div className="bg-white p-4">
-                                                    <div className="grid grid-cols-[1fr_auto] gap-1">
-                                                        <h3 className="lowercase font-semibold truncate">
-                                                            @
-                                                            {'owner' in w.name && w.name.owner.length
-                                                                ? w.name.owner
-                                                                : 'anon'}
-                                                        </h3>
-                                                        <div>
-                                                            {_favoriteTokens.includes(w.tokenid) && (
-                                                                <svg
-                                                                    onClick={(e: any) => {
-                                                                        e.stopPropagation();
-                                                                        toggleFavourite(w.tokenid);
-                                                                    }}
-                                                                    className="fill-blue-400"
-                                                                    xmlns="http://www.w3.org/2000/svg"
-                                                                    height="24"
-                                                                    viewBox="0 -960 960 960"
-                                                                    width="24"
-                                                                >
-                                                                    <path d="m479.761-109-63.5-57.022q-101.957-91.717-168.555-158.434-66.597-66.718-105.717-119.816-39.12-53.098-54.74-97.815Q71.63-586.804 71.63-634q0-97.587 65.272-162.978 65.272-65.392 162.859-65.392 51.761 0 98.522 21.044 46.76 21.043 81.478 59.847 34.717-38.804 81.478-59.847Q608-862.37 659.761-862.37q97.587 0 163.098 65.392Q888.37-731.587 888.37-634q0 46.957-15.5 91.674-15.5 44.717-54.739 97.696-39.24 52.978-105.957 119.815-66.717 66.837-168.913 158.793L479.761-109Z" />
-                                                                </svg>
-                                                            )}
-                                                            {!_favoriteTokens.includes(w.tokenid) && (
-                                                                <svg
-                                                                    onClick={(e: any) => {
-                                                                        e.stopPropagation();
-                                                                        toggleFavourite(w.tokenid);
-                                                                    }}
-                                                                    className="hover:cursor-pointer hover:animate-pulse hover:fill-red-600"
-                                                                    xmlns="http://www.w3.org/2000/svg"
-                                                                    height="24"
-                                                                    viewBox="0 -960 960 960"
-                                                                    width="24"
-                                                                >
-                                                                    <path d="M440-501Zm0 381L313-234q-72-65-123.5-116t-85-96q-33.5-45-49-87T40-621q0-94 63-156.5T260-840q52 0 99 22t81 62q34-40 81-62t99-22q81 0 136 45.5T831-680h-85q-18-40-53-60t-73-20q-51 0-88 27.5T463-660h-46q-31-45-70.5-72.5T260-760q-57 0-98.5 39.5T120-621q0 33 14 67t50 78.5q36 44.5 98 104T440-228q26-23 61-53t56-50l9 9 19.5 19.5L605-283l9 9q-22 20-56 49.5T498-172l-58 52Zm280-160v-120H600v-80h120v-120h80v120h120v80H800v120h-80Z" />
-                                                                </svg>
-                                                            )}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        ))}
-                                </Masonry>
-                            )}
-                            {selectedTab === 1 && (
-                                <Masonry
-                                    breakpointCols={breakpointColumnsObj}
-                                    className="my-masonry-grid"
-                                    columnClassName="my-masonry-grid_column"
-                                >
-                                    {_favoriteTokens &&
-                                        !!_favoriteTokens.length &&
-                                        NFTs.filter((t: any) => _favoriteTokens.includes(t.tokenid)).map((w: any) => (
-                                            <div
-                                                onClick={() => setShowDetail(w)}
-                                                key={`my_NFT_${w.tokenid}`}
-                                                className="rounded bg-white hover:scale-95 delay-90 transition duration-300 ease-in-out"
-                                            >
-                                                <div className="relative group">
-                                                    {'url' in w.name && !!w.name.url.length && (
-                                                        <img
-                                                            className="w-[-webkit-fill-available]"
-                                                            src={decodeURIComponent(w.name.url)}
-                                                            alt=""
-                                                        />
-                                                    )}
-                                                    {(('url' in w.name && !w.name.url.length) || !w.name.url) && (
-                                                        <div>
-                                                            <img
-                                                                className="w-[-webkit-fill-available]"
-                                                                alt="token-icon"
-                                                                src={`https://robohash.org/${w.tokenid}`}
-                                                            />
-                                                        </div>
-                                                    )}
+  const filteredNFTs = useMemo(() => {
+    let nfts = activeTab === 'all' ? NFTs : NFTs.filter(nft => _favoriteTokens.includes(nft.tokenid));
+    if (searchTerm) {
+      nfts = nfts.filter(nft => 
+        nft.token.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        nft.token.owner.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+    return nfts;
+  }, [NFTs, _favoriteTokens, activeTab, searchTerm]);
 
-                                                    <div className="absolute group-hover:grid hidden animate-fadeIn bottom-0 text-inherit font-bold truncate w-full grid-cols-[1fr_auto]">
-                                                        <h3 className="pl-2">
-                                                            {'name' in w.name ? w.name.name : 'N/A'}
-                                                        </h3>
+  const getExtraMetadata = (token: NFT['token']) => {
+    const defaultKeys = ['name', 'url', 'description', 'owner', 'webvalidate'];
+    return Object.entries(token).filter(([key]) => !defaultKeys.includes(key));
+  };
 
-                                                        {w.name.webvalidate && w.name.webvalidate.length && (
-                                                            <NFTAuthenticity tokenid={w.tokenid} />
-                                                        )}
-                                                    </div>
-                                                </div>
+  const formatValue = (value: any) => {
+    if (typeof value === 'object') {
+      return JSON.stringify(value);
+    } else if (typeof value === 'string' && value.length > 0) {
+      return value;
+    } else {
+      return '-';
+    }
+  };
 
-                                                <div className="bg-white p-4">
-                                                    <div className="grid grid-cols-[1fr_auto] gap-1">
-                                                        <h3 className="lowercase font-semibold truncate">
-                                                            @
-                                                            {'owner' in w.name && w.name.owner.length
-                                                                ? w.name.owner
-                                                                : 'anon'}
-                                                        </h3>
-                                                        <div>
-                                                            {_favoriteTokens.includes(w.tokenid) && (
-                                                                <svg
-                                                                    onClick={(e: any) => {
-                                                                        e.stopPropagation();
-                                                                        toggleFavourite(w.tokenid);
-                                                                    }}
-                                                                    className="fill-blue-400"
-                                                                    xmlns="http://www.w3.org/2000/svg"
-                                                                    height="24"
-                                                                    viewBox="0 -960 960 960"
-                                                                    width="24"
-                                                                >
-                                                                    <path d="m479.761-109-63.5-57.022q-101.957-91.717-168.555-158.434-66.597-66.718-105.717-119.816-39.12-53.098-54.74-97.815Q71.63-586.804 71.63-634q0-97.587 65.272-162.978 65.272-65.392 162.859-65.392 51.761 0 98.522 21.044 46.76 21.043 81.478 59.847 34.717-38.804 81.478-59.847Q608-862.37 659.761-862.37q97.587 0 163.098 65.392Q888.37-731.587 888.37-634q0 46.957-15.5 91.674-15.5 44.717-54.739 97.696-39.24 52.978-105.957 119.815-66.717 66.837-168.913 158.793L479.761-109Z" />
-                                                                </svg>
-                                                            )}
-                                                            {!_favoriteTokens.includes(w.tokenid) && (
-                                                                <svg
-                                                                    onClick={(e: any) => {
-                                                                        e.stopPropagation();
-                                                                        toggleFavourite(w.tokenid);
-                                                                    }}
-                                                                    className="hover:cursor-pointer hover:animate-pulse hover:fill-red-600"
-                                                                    xmlns="http://www.w3.org/2000/svg"
-                                                                    height="24"
-                                                                    viewBox="0 -960 960 960"
-                                                                    width="24"
-                                                                >
-                                                                    <path d="M440-501Zm0 381L313-234q-72-65-123.5-116t-85-96q-33.5-45-49-87T40-621q0-94 63-156.5T260-840q52 0 99 22t81 62q34-40 81-62t99-22q81 0 136 45.5T831-680h-85q-18-40-53-60t-73-20q-51 0-88 27.5T463-660h-46q-31-45-70.5-72.5T260-760q-57 0-98.5 39.5T120-621q0 33 14 67t50 78.5q36 44.5 98 104T440-228q26-23 61-53t56-50l9 9 19.5 19.5L605-283l9 9q-22 20-56 49.5T498-172l-58 52Zm280-160v-120H600v-80h120v-120h80v120h120v80H800v120h-80Z" />
-                                                                </svg>
-                                                            )}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        ))}
-                                </Masonry>
-                            )}
-
-                            {selectedTab === 0 && NFTs.length === 0 && (
-                                <div className="text-center">
-                                    <p>No NFTs yet</p>
-                                </div>
-                            )}
-                            {selectedTab === 1 && _favoriteTokens.length === 0 && (
-                                <div className="text-center">
-                                    <p>No favorites yet</p>
-                                </div>
-                            )}
-                        </>
-                    }
-                />
+  const content = (
+    <div className="bg-white rounded-lg shadow-md mx-4 sm:mx-0 overflow-hidden my-4">
+      <div className="p-4 sm:p-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+          <div className="flex flex-wrap gap-4">
+            <div className="bg-gray-100 px-4 py-2 rounded">
+              <p className="text-sm text-gray-500">Total Collected</p>
+              <p className="font-bold text-black">{NFTs.length}</p>
             </div>
-        </Grid>
-    );
-};
+            <div className="bg-gray-100 px-4 py-2 rounded">
+              <p className="text-sm text-gray-500">Total Favorited</p>
+              <p className="font-bold text-black">{_favoriteTokens.length}</p>
+            </div>
+          </div>
+          <button
+            onClick={() => navigate('createnft')}
+            className="w-full sm:w-auto bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+          >
+            Create
+          </button>
+        </div>
 
-export default NFTs;
+        <div className="mb-6">
+          <div className="flex space-x-4 mb-4">
+            <button
+              onClick={() => setActiveTab('all')}
+              className={`px-4 py-2 rounded-lg ${
+                activeTab === 'all'
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              All
+            </button>
+            <button
+              onClick={() => setActiveTab('favorites')}
+              className={`px-4 py-2 rounded-lg ${
+                activeTab === 'favorites'
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              Favorites
+            </button>
+          </div>
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Search NFTs..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full bg-gray-100 border-2 border-gray-300 rounded-full px-5 py-3 pl-12 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 ease-in-out"
+            />
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
+            {searchTerm && (
+              <button
+                onClick={() => setSearchTerm('')}
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            )}
+          </div>
+        </div>
+
+        <Masonry
+          breakpointCols={breakpointColumnsObj}
+          className="my-masonry-grid"
+          columnClassName="my-masonry-grid_column"
+        >
+          {filteredNFTs.map((nft: NFT) => (
+            <div key={nft.tokenid} onClick={() => setShowDetail(nft)} className="mb-4">
+              <NFTCard
+                nft={nft}
+                onFavoriteToggle={() => toggleFavourite(nft.tokenid)}
+                isFavorite={_favoriteTokens.includes(nft.tokenid)}
+                isVerified={verifiedTokens.includes(nft.tokenid)}
+              />
+            </div>
+          ))}
+        </Masonry>
+
+        {filteredNFTs.length === 0 && (
+          <div className="text-center py-10">
+            <p className="text-gray-500 text-lg">No favorites yet</p>
+          </div>
+        )}
+      </div>
+
+      {showDetail && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg p-6 max-w-lg w-full max-h-[90vh] overflow-y-auto md:ml-[240px] transition-all duration-300">
+            <div className="flex justify-between items-start mb-4">
+              <h2 className="text-xl font-bold text-black">{showDetail.token.name}</h2>
+              <button onClick={() => setShowDetail(null)} className="text-gray-500 hover:text-gray-700">
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+            <div className="mb-4 rounded overflow-hidden">
+              <div className="relative pt-[100%]">
+                <img
+                  src={showDetail.token.url || `https://robohash.org/${showDetail.tokenid}`}
+                  alt={showDetail.token.name}
+                  className="absolute inset-0 w-full h-full object-contain"
+                />
+              </div>
+            </div>
+            <div className="flex items-center mb-4">
+              <p className="text-lg font-semibold text-black mr-2">{showDetail.token.name}</p>
+              {verifiedTokens.includes(showDetail.tokenid) && (
+                <div className="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full flex items-center">
+                  <CheckCircle className="h-4 w-4 mr-1" />
+                  Verified
+                </div>
+              )}
+            </div>
+            <p className="mb-2 text-black">{showDetail.token.description}</p>
+            <p className="text-sm text-gray-500 mb-4">Owner: @{showDetail.token.owner || 'anon'}</p>
+            {showDetail.token.webvalidate && (
+              <div className="mb-4">
+                <h3 className="text-lg font-semibold mb-2">Webvalidate URL</h3>
+                <a 
+                  href={showDetail.token.webvalidate} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-blue-500 hover:underline flex items-center"
+                >
+                  <ExternalLink className="h-4 w-4 mr-1" />
+                  {showDetail.token.webvalidate}
+                </a>
+              </div>
+            )}
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold mb-2">Extra Metadata</h3>
+              <div className="bg-gray-100 rounded-lg p-4">
+                {getExtraMetadata(showDetail.token).length > 0 ? (
+                  getExtraMetadata(showDetail.token).map(([key, value]) => (
+                    <div key={key} className="mb-2">
+                      <span className="font-medium text-gray-700">{key}: </span>
+                      <span className="text-gray-600">
+                        {formatValue(value)}
+                      </span>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-gray-500">No extra metadata</p>
+                )}
+              </div>
+            </div>
+            <button
+              onClick={() => navigate(`/send?tokenid=${showDetail.tokenid}`)}
+              className="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+            >
+              Transfer
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+
+  return (
+    <Grid
+      title={ <>
+        <svg
+            onClick={(e: any) => {
+                e.stopPropagation();
+                setOpenDrawer(true);
+            }}
+            className="block md:hidden fill-white"
+            xmlns="http://www.w3.org/2000/svg"
+            height="24"
+            viewBox="0 -960 960 960"
+            width="24"
+        >
+            <path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z" />
+        </svg>
+        Balance
+    </>}
+      variant="lg"
+    >
+      {content}
+    </Grid>
+  );
+}
