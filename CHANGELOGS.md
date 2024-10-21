@@ -157,3 +157,8 @@
 ##### [2.45.6] - 24 September 24
 
 - decode urls
+
+##### [2.47.0] - 21 October 24
+
+- Fix decimal places for balances
+- Set Max amount on send form

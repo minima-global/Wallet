@@ -23,7 +23,9 @@ interface IProps {
     ref?: any;
     max?: number;
     help?: ReactElement;
+    actionButton?: ReactElement;
 }
+
 const Input = ({
     accept,
     onChange,
@@ -44,11 +46,12 @@ const Input = ({
     ref,
     max,
     help,
+    actionButton,
 }: IProps) => {
     const [showHelp, setShowHelp] = useState(false);
 
     let base =
-        'w-full px-4 py-3  bg-white text-base text-black rounded disabled:bg-opacity-40 disabled:cursor-not-allowed focus:shadow-gray-100 focus:outline-none focus:border focus:border-neutral-200';
+        'w-full px-4 py-3 truncate bg-white text-base text-black rounded disabled:bg-opacity-40 disabled:cursor-not-allowed focus:shadow-gray-100 focus:outline-none focus:border focus:border-neutral-200';
 
     if (extraClass) {
         base += ` ${extraClass}`;
@@ -56,13 +59,16 @@ const Input = ({
     if (error) {
         base += ' border-2 border-red-500';
     }
+    if (actionButton) {
+        base += ' pr-20'; // Add padding to the right to accommodate the action button
+    }
 
     return (
         <div className="flex flex-col">
             <div className="relative w-full">
                 {help && (
                     <div className="flex flex-col gap-1 mb-2">
-                        <div className=" flex">
+                        <div className="flex">
                             {!showHelp && (
                                 <svg
                                     onClick={() => setShowHelp(true)}
@@ -116,6 +122,12 @@ const Input = ({
                         className="pr-4 absolute right-[1px] top-4 bottom-0 color-core-black-2"
                     >
                         {endIcon}
+                    </div>
+                )}
+
+                {actionButton && (
+                    <div className="absolute right-[1px] top-[1px] bottom-[1px] flex items-center">
+                        {actionButton}
                     </div>
                 )}
             </div>

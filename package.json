@@ -1,6 +1,6 @@
 {
     "name": "wallet",
-    "version": "2.46.6",
+    "version": "2.47.0",
     "private": true,
     "type": "module",
     "description": "Exchange tokens with Minimalists",
@@ -39,6 +39,7 @@
         "formik": "^2.2.9",
         "http-proxy-middleware": "^2.0.2",
         "lottie-react": "^2.4.0",
+        "lucide-react": "^0.453.0",
         "prettier": "^2.7.1",
         "react": "^17.0.2",
         "react-dom": "^17.0.2",

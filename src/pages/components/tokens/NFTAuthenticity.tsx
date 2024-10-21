@@ -1,63 +1,45 @@
 import React from 'react';
+import { CheckCircle, AlertCircle } from 'lucide-react';
 import * as RPC from '../../../minima/commands';
 
-interface IProps {
-    tokenid: string;
-    relative?: boolean;
+interface NFTAuthenticityProps {
+  tokenid: string;
+  relative?: boolean;
 }
-const NFTAuthenticity = ({ tokenid, relative = false }: IProps) => {
-    const [isTokenValidated, setIsTokenValidated] = React.useState<boolean | null>(false);
 
-    React.useEffect(() => {
-        RPC.tokenValidate(tokenid).then(() => {
-            // resolves so it is validated
-            setIsTokenValidated(true);
-        });
-    }, [tokenid]);
+const NFTAuthenticity: React.FC<NFTAuthenticityProps> = ({ tokenid, relative = false }) => {
+  const [isTokenValidated, setIsTokenValidated] = React.useState<boolean | null>(null);
 
-    return (
-        <>
-            {isTokenValidated && (
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className={`fill-blue-500 ${relative ? 'relative' : 'absolute right-1 bottom-0'}`}
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    strokeWidth="2"
-                    stroke="currentColor"
-                    fill="none"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                >
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                    <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
-                    <path d="M21 21l-6 -6" />
-                    <path d="M7 10l2 2l4 -4" />
-                </svg>
-            )}
-            {!isTokenValidated && (
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className={`fill-yellow-100 ${relative ? 'relative' : 'absolute right-1 bottom-0'}`}
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    strokeWidth="2"
-                    stroke="currentColor"
-                    fill="none"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                >
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                    <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
-                    <path d="M21 21l-6 -6" />
-                    <path d="M10 13l0 .01" />
-                    <path d="M10 10a1.5 1.5 0 1 0 -1.14 -2.474" />
-                </svg>
-            )}
-        </>
-    );
+  React.useEffect(() => {
+    let isMounted = true;
+
+    const validateToken = async () => {
+      try {
+        await RPC.tokenValidate(tokenid);
+        if (isMounted) setIsTokenValidated(true);
+      } catch (error) {
+        if (isMounted) setIsTokenValidated(false);
+      }
+    };
+
+    validateToken();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [tokenid]);
+
+  if (isTokenValidated === null) {
+    return null; // Or a loading indicator
+  }
+
+  const iconClass = `w-4 h-4 ${relative ? 'relative' : 'absolute right-1 bottom-1'}`;
+
+  return isTokenValidated ? (
+    <CheckCircle className={`${iconClass} text-blue-500`} />
+  ) : (
+    <AlertCircle className={`${iconClass} text-yellow-500`} />
+  );
 };
 
 export default NFTAuthenticity;
