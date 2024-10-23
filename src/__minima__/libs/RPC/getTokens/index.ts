@@ -1,17 +1,14 @@
 export const getTokens = (): Promise<any> => {
     return new Promise((resolve, reject) => {
-        (window as any).MDS.cmd('balance', (resp: any) => {
-            if (!resp.status) reject('Fetching balance cmd failed');
+        (window as any).MDS.cmd('balance tokendetails:true', (resp: any) => {
+            if (!resp.status) {
+                reject({status: false, response: [], message: resp.error ? resp.error : "Failed to fetch token balance"});
+            }
 
-            const tokenBalance = resp.response.filter((t: any) => t.tokenid !== '0x00').map((t: any) => t.tokenid);
+            const nonFungibles = resp.response.filter((t: any) => t.tokenid !== '0x00' && t.details && t.details.decimals === 0);
 
-            (window as any).MDS.cmd('tokens', (resp: any) => {
-                if (!resp.status) reject('Fetching tokens failed');
-
-                const tokens = resp.response.filter((t: any) => tokenBalance.includes(t.tokenid) && t.decimals === 0);
-
-                resolve(tokens);
-            });
+            resolve(nonFungibles);
+            
         });
     });
 };

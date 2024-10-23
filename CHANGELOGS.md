@@ -162,3 +162,9 @@
 
 - Fix decimal places for balances
 - Set Max amount on send form
+
+##### [2.47.2] - 23 October 24
+
+- Fix type error for NFTs
+- Design tweaks
+- other bug fixes

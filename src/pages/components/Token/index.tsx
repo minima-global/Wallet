@@ -23,7 +23,7 @@ interface TokenProps {
 
 const renderIcon = (t: any) => {
     return (
-        <div className="flex-shrink-0 w-12 h-12 overflow-hidden rounded-l-md">
+        <div className="flex-shrink-0 w-16 h-16 overflow-hidden rounded-l-md">
             {t.tokenid === '0x00' ? (
                 <div className="relative w-full h-full">
                     <img className="w-full h-full object-cover" src="./assets/token.svg" alt="Minima token" />

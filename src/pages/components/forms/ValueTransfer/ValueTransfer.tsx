@@ -394,6 +394,7 @@ const ValueTransfer = () => {
                                         error={touched.amount && errors.amount ? errors.amount : false}
                                         actionButton={
                                             <button
+                                                type="button"
                                                 className="bg-transparent text-black font-bold px-3 py-2 rounded-r outline-none"
                                                 onClick={() => setFieldValue('amount', values.token.sendable)}
                                             >

@@ -250,17 +250,25 @@ const AppProvider = ({ children }: IProps) => {
     };
 
     const getTokens = async () => {
-        await rpc.getTokens().then((tokens) => {
-            const t = tokens.map((t: any) => {
-                if ('url' in t.name && t.name.url && decodeURIComponent(t.token.url).startsWith('<artimage>', 0)) {
-                    t.name.url = makeTokenImage(decodeURIComponent(t.token.url), t.tokenid);
+        try {
+          const tokens = await rpc.getTokens();
+          const updatedTokens = tokens.map((t: any) => {
+            if (t.token.url && decodeURIComponent(t.token.url).startsWith('<artimage>', 0)) {
+              return {
+                ...t,
+                token: {
+                  ...t.token,
+                  url: makeTokenImage(decodeURIComponent(t.token.url), t.tokenid)
                 }
-
-                return t;
-            });
-            setNFTs(t);
-        });
-    };
+              };
+            }
+            return t;
+          });
+          setNFTs(updatedTokens);
+        } catch (error) {
+          console.error('Error fetching tokens:', JSON.stringify(error));
+        }
+      };
 
     const updateCurrencyFormat = async (decimal: string, thousands: string) => {
         const updatedFormat = {

@@ -33,12 +33,12 @@ const NFTAuthenticity: React.FC<NFTAuthenticityProps> = ({ tokenid, relative = f
     return null; // Or a loading indicator
   }
 
-  const iconClass = `w-4 h-4 ${relative ? 'relative' : 'absolute right-1 bottom-1'}`;
+  const iconClass = `w-4 h-4 text-white ${relative ? 'relative' : 'absolute right-1 bottom-1'}`;
 
   return isTokenValidated ? (
-    <CheckCircle className={`${iconClass} text-blue-500`} />
+    <CheckCircle className={`${iconClass} fill-blue-500`} />
   ) : (
-    <AlertCircle className={`${iconClass} text-yellow-500`} />
+    <AlertCircle className={`${iconClass} fill-yellow-500`} />
   );
 };
 

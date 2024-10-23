@@ -93,12 +93,12 @@ const TokenDetail = () => {
                         header={
                             <div className="flex space-x-2 hover:bg-slate-100 hover:cursor-pointer border border-neutral-200 bg-neutral-50 rounded-lg mb-4 whitespace-nowrap">
                                 {viewingToken.tokenid === '0x00' && (
-                                    <div className="aspect-square w-12 h-12 overflow-hidden rounded-l-md">
+                                    <div className="aspect-square w-20 h-20 overflow-hidden rounded-l-md">
                                         <img className="w-full h-full" src="./assets/token.svg" />
                                     </div>
                                 )}
                                 {viewingToken.tokenid !== '0x00' && (
-                                    <div className="aspect-square w-12 h-12 overflow-hidden rounded-l-md">
+                                    <div className="aspect-square w-20 h-20 overflow-hidden rounded-l-md">
                                         <img
                                             onClick={() =>
                                                 'url' in viewingToken.token &&
