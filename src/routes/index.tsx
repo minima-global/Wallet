@@ -4,13 +4,18 @@ import SearchBar from "../components/SearchBar";
 import Navigation from "../components/Navigation";
 import RefreshButton from "../components/RefreshButton";
 import SortButton from "../components/SortButton";
-import GridButton from "../components/GridButton";
+import { appContext } from "../AppContext";
+import { useContext } from "react";
+import useTranslation from "../hooks/useTranslation";
 
 export const Route = createFileRoute("/")({
   component: Index,
 });
 
 function Index() {
+  const { balance } = useContext(appContext);
+  const { t } = useTranslation();
+
   return (
     <>
       <Header />
@@ -20,16 +25,16 @@ function Index() {
             <Navigation />
           </div>
           <div className="grow flex flex-col">
-            <h1 className="text-white text-2xl mb-6">Balance</h1>
+            <h1 className="text-white text-2xl mb-6">{t("balance")}</h1>
 
             <div className="mb-6 flex gap-2.5">
               <SearchBar />
               <SortButton />
               <RefreshButton />
-              <GridButton />
+              {/* <GridButton /> */}
             </div>
 
-            <div className="mb-4 flex justify-end cursor-pointer select-none">
+            <div className="mb-4 flex justify-end cursor-pointer select-none hidden">
               <div className="flex items-center gap-2 text-sm text-grey60 text-xs font-bold bg-contrast1 w-fit rounded-full px-3.5 py-1.5 border dark:border-contrast2 origin-center active:scale-[0.95] transition-all duration-100">
                 <svg width="18" height="12" viewBox="0 0 18 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path className="fill-grey40" d="M9.00234 9.14783C9.8772 9.14783 10.6202 8.84165 11.2313 8.22928C11.8424 7.61692 12.148 6.87331 12.148 5.99845C12.148 5.12359 11.8418 4.3806 11.2294 3.76949C10.6171 3.15838 9.87346 2.85283 8.99859 2.85283C8.12373 2.85283 7.38075 3.15901 6.76964 3.77137C6.15852 4.38373 5.85297 5.12734 5.85297 6.0022C5.85297 6.87706 6.15915 7.62005 6.77151 8.23116C7.38387 8.84227 8.12748 9.14783 9.00234 9.14783ZM9.00047 8.00033C8.44491 8.00033 7.97269 7.80588 7.5838 7.41699C7.19491 7.0281 7.00047 6.55588 7.00047 6.00033C7.00047 5.44477 7.19491 4.97255 7.5838 4.58366C7.97269 4.19477 8.44491 4.00033 9.00047 4.00033C9.55602 4.00033 10.0282 4.19477 10.4171 4.58366C10.806 4.97255 11.0005 5.44477 11.0005 6.00033C11.0005 6.55588 10.806 7.0281 10.4171 7.41699C10.0282 7.80588 9.55602 8.00033 9.00047 8.00033ZM9.00151 11.5837C7.13248 11.5837 5.4295 11.0759 3.89255 10.0603C2.35561 9.04491 1.20783 7.69158 0.449219 6.00033C1.20783 4.30908 2.35519 2.95574 3.8913 1.94033C5.42755 0.92477 7.13026 0.416992 8.99943 0.416992C10.8685 0.416992 12.5714 0.92477 14.1084 1.94033C15.6453 2.95574 16.7931 4.30908 17.5517 6.00033C16.7931 7.69158 15.6457 9.04491 14.1096 10.0603C12.5734 11.0759 10.8707 11.5837 9.00151 11.5837ZM9.00047 10.5003C10.556 10.5003 11.9935 10.0975 13.313 9.29199C14.6324 8.48644 15.6463 7.38921 16.3546 6.00033C15.6463 4.61144 14.6324 3.51421 13.313 2.70866C11.9935 1.9031 10.556 1.50033 9.00047 1.50033C7.44491 1.50033 6.00741 1.9031 4.68797 2.70866C3.36852 3.51421 2.35464 4.61144 1.6463 6.00033C2.35464 7.38921 3.36852 8.48644 4.68797 9.29199C6.00741 10.0975 7.44491 10.5003 9.00047 10.5003Z" fill="currentColor" />
@@ -39,36 +44,40 @@ function Index() {
             </div>
 
             <ul className="select-none flex flex-col gap-2">
-              <li className="cursor-pointer bg-grey10 dark:bg-darkContrast relative w-full flex items-center p-3 rounded">
-                <div className="grow flex">
-                  <div className="w-[48px] h-[48px] border border-darkConstrast dark:border-grey80 rounded overflow-hidden">
-                    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <rect width="48" height="48" fill="white"></rect>
-                      <path d="M32.4428 16.759L31.2053 22.2329L29.6226 15.6286L24.0773 13.3795L22.578 19.9957L21.2571 12.2371L15.7119 10L10 35.2512H16.0569L17.8062 27.4926L19.1271 35.2512H25.1959L26.6834 28.6349L28.266 35.2512H34.323L38 18.9962L32.4428 16.759Z" fill="black"></path>
-                    </svg>
-                  </div>
-                  <div className="grow overflow-hidden px-4">
-                    <div className="grow w-full">
-                      <div className="flex grow">
-                        <h6 className="font-bold truncate text-black dark:text-neutral-400">Minima</h6>
-                        <div className="!text-blue-500 my-auto ml-1">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="stroke-white" width="16" height="16" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                            <path d="M5 7.2a2.2 2.2 0 0 1 2.2 -2.2h1a2.2 2.2 0 0 0 1.55 -.64l.7 -.7a2.2 2.2 0 0 1 3.12 0l.7 .7c.412 .41 .97 .64 1.55 .64h1a2.2 2.2 0 0 1 2.2 2.2v1c0 .58 .23 1.138 .64 1.55l.7 .7a2.2 2.2 0 0 1 0 3.12l-.7 .7a2.2 2.2 0 0 0 -.64 1.55v1a2.2 2.2 0 0 1 -2.2 2.2h-1a2.2 2.2 0 0 0 -1.55 .64l-.7 .7a2.2 2.2 0 0 1 -3.12 0l-.7 -.7a2.2 2.2 0 0 0 -1.55 -.64h-1a2.2 2.2 0 0 1 -2.2 -2.2v-1a2.2 2.2 0 0 0 -.64 -1.55l-.7 -.7a2.2 2.2 0 0 1 0 -3.12l.7 -.7a2.2 2.2 0 0 0 .64 -1.55v-1"></path>
-                            <path d="M9 12l2 2l4 -4"></path>
-                          </svg>
+              {balance.map((token) => (
+                <li className="cursor-pointer bg-grey10 dark:bg-darkContrast relative w-full flex items-center p-3 rounded">
+                  <div className="grow flex">
+                    <div className="w-[48px] h-[48px] border border-darkConstrast dark:border-grey80 rounded overflow-hidden">
+                      <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="48" height="48" fill="white"></rect>
+                        <path d="M32.4428 16.759L31.2053 22.2329L29.6226 15.6286L24.0773 13.3795L22.578 19.9957L21.2571 12.2371L15.7119 10L10 35.2512H16.0569L17.8062 27.4926L19.1271 35.2512H25.1959L26.6834 28.6349L28.266 35.2512H34.323L38 18.9962L32.4428 16.759Z" fill="black"></path>
+                      </svg>
+                    </div>
+                    <div className="grow overflow-hidden px-4">
+                      <div className="grow w-full">
+                        <div className="flex grow">
+                          <h6 className="font-bold truncate text-black dark:text-neutral-400">Minima</h6>
+                          <div className="!text-blue-500 my-auto ml-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="stroke-white" width="16" height="16" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                              <path d="M5 7.2a2.2 2.2 0 0 1 2.2 -2.2h1a2.2 2.2 0 0 0 1.55 -.64l.7 -.7a2.2 2.2 0 0 1 3.12 0l.7 .7c.412 .41 .97 .64 1.55 .64h1a2.2 2.2 0 0 1 2.2 2.2v1c0 .58 .23 1.138 .64 1.55l.7 .7a2.2 2.2 0 0 1 0 3.12l-.7 .7a2.2 2.2 0 0 0 -.64 1.55v1a2.2 2.2 0 0 1 -2.2 2.2h-1a2.2 2.2 0 0 0 -1.55 .64l-.7 .7a2.2 2.2 0 0 1 -3.12 0l-.7 -.7a2.2 2.2 0 0 0 -1.55 -.64h-1a2.2 2.2 0 0 1 -2.2 -2.2v-1a2.2 2.2 0 0 0 -.64 -1.55l-.7 -.7a2.2 2.2 0 0 1 0 -3.12l.7 -.7a2.2 2.2 0 0 0 .64 -1.55v-1"></path>
+                              <path d="M9 12l2 2l4 -4"></path>
+                            </svg>
+                          </div>
                         </div>
+                        <p className="font-bold truncate text-grey dark:text-neutral-300">
+                          {token.sendable}
+                        </p>
                       </div>
-                      <p className="font-bold truncate text-grey dark:text-neutral-300">0.000187</p>
+                    </div>
+                    <div className="flex items-center pr-3">
+                      <svg width="7" height="10" viewBox="0 0 7 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4.875 5L0.9375 1.0625L2 0L7 5L2 10L0.9375 8.9375L4.875 5Z" fill="#91919D" />
+                      </svg>
                     </div>
                   </div>
-                  <div className="flex items-center pr-3">
-                    <svg width="7" height="10" viewBox="0 0 7 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M4.875 5L0.9375 1.0625L2 0L7 5L2 10L0.9375 8.9375L4.875 5Z" fill="#91919D" />
-                    </svg>
-                  </div>
-                </div>
-              </li>
+                </li>
+              ))}
 
               <li className="flex flex-col gap-[1px]">
                 <div className="cursor-pointer bg-contrast dark:bg-contrast1 relative w-full flex items-center p-3 rounded">

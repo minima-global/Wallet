@@ -1,0 +1,20 @@
+{
+    "en": {
+        "balance": "Balance"
+    },
+    "zh": {
+        "balance": "余额"
+    },
+    "ru": {
+        "balance": "Баланс"
+    },
+    "ukr": {
+        "balance": "Баланс"
+    },
+    "fr": {
+        "balance": "Solde"
+    },
+    "es": {
+        "balance": "Saldo"
+    }
+}

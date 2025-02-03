@@ -3,7 +3,6 @@ import Header from '../../components/Header'
 import Navigation from '../../components/Navigation'
 import InfoBox from '../../components/InfoBox'
 import BackButton from '../../components/BackButton'
-
 export const Route = createFileRoute('/balance/$id')({
     component: RouteComponent,
 })

@@ -41,7 +41,7 @@ function Index() {
                   Validate this address
                 </button>
               </div>
-              <div className="bg-contrast1 py-8 px-10 rounded-lg">
+              <div className="bg-contrast1 py-8 px-10 rounded-lg hidden">
                 <div className="text-grey20">Your alternative addresses</div>
               </div>
             </div>

@@ -3,6 +3,8 @@ import { Link } from '@tanstack/react-router'
 import HamburgerButton from './HamburgerButton.tsx'
 import { appContext } from '../../AppContext.tsx'
 import useAndroidShowTitleBar from './useAndroidShowTitlebar';
+import NodeStatus from '../NodeStatus/index.tsx';
+import LanguageSelector from '../LanguageSelector/index.tsx';
 
 const HEADER_NAV = [
   {
@@ -97,11 +99,11 @@ const Header = () => {
                   >
 
                     <li className="text-white flex items-center gap-2">
-                      Block: <span className="text-orange font-bold">1,035,000</span>
-                      <span className="inline-block ml-2 w-2 h-2 bg-green rounded-full"></span>
+                      Block: <span className="text-white font-bold">{block?.block}</span>
+                      <NodeStatus />
                     </li>
 
-                    <li onClick={toggleDarkMode}>
+                    <li onClick={toggleDarkMode} className="hidden">
                       <div
                         className={`${!isAtTop ? 'scale-[0.8]' : ''} relative flex h-[44px] w-[44px] scale-100 items-center justify-center rounded-full border border-grey80 bg-white from-[#17191C] to-[#37393F] transition-all duration-75 hover:bg-grey10 active:scale-90 dark:border-mediumDarkContrast dark:bg-darkContrast dark:hover:bg-transparent dark:hover:bg-gradient-to-t`}
                       >
@@ -134,8 +136,8 @@ const Header = () => {
                       </div>
                     </li>
 
-                    <li className="text-white border-2 border-contrast2 rounded-full pr-3 transition-all active:scale-[90%]">
-                      <div className={`relative z-[1000] hidden cursor-pointer items-center gap-2 rounded-full pl-4 lg:flex text-sm xl:text-base transition-all ${isAtTop ? "h-[40px]" : "text-xs h-[34px] !text-[13px] !gap-2"}`}><div className="">EN</div><svg width="20" height="20" className={`transition-all ${isAtTop ? "" : "scale-[80%]"}`} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 19.5C8.6975 19.5 7.46833 19.2503 6.3125 18.751C5.15667 18.2517 4.14867 17.5718 3.2885 16.7115C2.42817 15.8513 1.74833 14.8433 1.249 13.6875C0.749667 12.5317 0.5 11.3025 0.5 10C0.5 8.68717 0.749667 7.45542 1.249 6.30475C1.74833 5.15408 2.42817 4.14867 3.2885 3.2885C4.14867 2.42817 5.15667 1.74833 6.3125 1.249C7.46833 0.749667 8.6975 0.5 10 0.5C11.3128 0.5 12.5446 0.749667 13.6953 1.249C14.8459 1.74833 15.8513 2.42817 16.7115 3.2885C17.5718 4.14867 18.2517 5.15408 18.751 6.30475C19.2503 7.45542 19.5 8.68717 19.5 10C19.5 11.3025 19.2503 12.5317 18.751 13.6875C18.2517 14.8433 17.5718 15.8513 16.7115 16.7115C15.8513 17.5718 14.8459 18.2517 13.6953 18.751C12.5446 19.2503 11.3128 19.5 10 19.5ZM10 17.9788C10.5103 17.3019 10.9398 16.6192 11.2885 15.9307C11.6372 15.2422 11.9212 14.4897 12.1405 13.673H7.8595C8.09167 14.5153 8.37892 15.2808 8.72125 15.9693C9.06342 16.6578 9.48967 17.3276 10 17.9788ZM8.0635 17.7038C7.68017 17.1538 7.33592 16.5285 7.03075 15.828C6.72558 15.1273 6.48842 14.409 6.31925 13.673H2.927C3.45517 14.7115 4.1635 15.584 5.052 16.2905C5.9405 16.9968 6.94433 17.4679 8.0635 17.7038ZM11.9365 17.7038C13.0557 17.4679 14.0595 16.9968 14.948 16.2905C15.8365 15.584 16.5448 14.7115 17.073 13.673H13.6807C13.4794 14.4153 13.2262 15.1368 12.921 15.8375C12.616 16.5382 12.2878 17.1602 11.9365 17.7038ZM2.298 12.173H6.0155C5.95267 11.8013 5.90708 11.4369 5.87875 11.0798C5.85058 10.7227 5.8365 10.3628 5.8365 10C5.8365 9.63717 5.85058 9.27725 5.87875 8.92025C5.90708 8.56308 5.95267 8.19867 6.0155 7.827H2.298C2.20183 8.16667 2.12817 8.51983 2.077 8.8865C2.02567 9.25317 2 9.62433 2 10C2 10.3757 2.02567 10.7468 2.077 11.1135C2.12817 11.4802 2.20183 11.8333 2.298 12.173ZM7.51525 12.173H12.4848C12.5474 11.8013 12.5929 11.4402 12.6212 11.0895C12.6494 10.7388 12.6635 10.3757 12.6635 10C12.6635 9.62433 12.6494 9.26117 12.6212 8.9105C12.5929 8.55983 12.5474 8.19867 12.4848 7.827H7.51525C7.45258 8.19867 7.40708 8.55983 7.37875 8.9105C7.35058 9.26117 7.3365 9.62433 7.3365 10C7.3365 10.3757 7.35058 10.7388 7.37875 11.0895C7.40708 11.4402 7.45258 11.8013 7.51525 12.173ZM13.9845 12.173H17.702C17.7982 11.8333 17.8718 11.4802 17.923 11.1135C17.9743 10.7468 18 10.3757 18 10C18 9.62433 17.9743 9.25317 17.923 8.8865C17.8718 8.51983 17.7982 8.16667 17.702 7.827H13.9845C14.0473 8.19867 14.0929 8.56308 14.1212 8.92025C14.1494 9.27725 14.1635 9.63717 14.1635 10C14.1635 10.3628 14.1494 10.7227 14.1212 11.0798C14.0929 11.4369 14.0473 11.8013 13.9845 12.173ZM13.6807 6.327H17.073C16.5385 5.27567 15.835 4.40317 14.9625 3.7095C14.09 3.016 13.0813 2.54167 11.9365 2.2865C12.3198 2.8685 12.6608 3.50508 12.9595 4.19625C13.2583 4.88725 13.4987 5.5975 13.6807 6.327ZM7.8595 6.327H12.1405C11.9083 5.491 11.6163 4.72075 11.2645 4.01625C10.9125 3.31175 10.491 2.64675 10 2.02125C9.509 2.64675 9.0875 3.31175 8.7355 4.01625C8.38367 4.72075 8.09167 5.491 7.8595 6.327ZM2.927 6.327H6.31925C6.50125 5.5975 6.74167 4.88725 7.0405 4.19625C7.33917 3.50508 7.68017 2.8685 8.0635 2.2865C6.91217 2.54167 5.90192 3.01767 5.03275 3.7145C4.16342 4.41117 3.4615 5.282 2.927 6.327Z" fill="currentColor"></path></svg><div className="absolute right-0 top-[100%] z-[1000] flex h-fit min-w-[123px] flex-col transition-all duration-150 pointer-events-none translate-y-2 opacity-0"><div className="mt-4 flex flex-col gap-[2px] bg-contrast1"><button className="bg-contrast2 px-4 py-2 text-white hover:bg-white hover:text-black">English</button><button className="bg-contrast2 px-4 py-2 text-white hover:bg-white hover:text-black">汉语</button><button className="bg-contrast2 px-4 py-2 text-white hover:bg-white hover:text-black">Pусский</button><button className="bg-contrast2 px-4 py-2 text-white hover:bg-white hover:text-black">Українська</button><button className="bg-contrast2 px-4 py-2 text-white hover:bg-white hover:text-black">Français</button><button className="bg-contrast2 px-4 py-2 text-white hover:bg-white hover:text-black">Español</button></div></div></div>
+                    <li>
+                      <LanguageSelector isAtTop={isAtTop} />
                     </li>
                   </ul>
                 </nav>

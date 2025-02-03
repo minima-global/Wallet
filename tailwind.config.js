@@ -25,6 +25,9 @@ export default {
         lightDarkContrast: "var(--light-dark-contrast)",
         coreDarkContrast: "var(--core-dark-contrast)",
 
+        green: "#4FE3C1",
+        red: "#FF627E",
+
         contrast1: "hsla(216, 10%, 10%, 1)",
         contrast2: "hsla(210, 7%, 17%, 1)",
         contrast3: "hsla(225, 7%, 23%, 1)",
