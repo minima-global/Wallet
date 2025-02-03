@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 16% 4%;
+    --foreground: 240 9% 98%;
+
+    --border: 240, 6%, 59%;
+    --input: 240, 6%, 59%;
+    --ring: 240 4.9% 83.9%;
+
+    --orange: hsla(19, 100%, 51%, 1);
+    --light-orange: hsla(25, 100%, 59%, 1);
+    --lighter-orange: hsla(32, 100%, 64%, 1);
+    --dark-orange: hsla(20, 100%, 56%);
+
+    --blue: hsla(240, 100%, 65%);
+    --light-blue: hsla(239, 100%, 81%);
+
+    --grey: hsla(233, 5%, 34%);
+
+    --dark-contrast: hsla(216, 10%, 10%, 1);
+    --medium-dark-contrast: hsla(210, 7%, 17%, 1);
+    --light-dark-contrast: hsla(225, 7%, 23%, 1);
+    --core-dark-contrast: hsla(200, 6%, 29%, 1);
+
+    --white: hsla(0, 0%, 100%, 1);
+    --black: hsl(220, 16%, 4%);
+    --grey-10: hsl(240, 5%, 96%);
+    --grey-20: hsla(240, 5%, 92%, 1);
+    --grey-40: hsla(240, 6%, 84%, 1);
+    --grey-60: hsla(240, 4%, 48%, 1);
+    --grey-80: hsla(240, 5%, 67%, 1);
+    --grey-highlight: hsla(240, 12%, 22%, 1);
+
+    scroll-behavior: smooth;
+  }
+}
+
+:root {
+  font-family: 'Manrope', sans-serif;
+  line-height: 1.5;
+  font-weight: 500;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: black;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+html,
+body {
+  background: black;
+}
