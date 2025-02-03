@@ -1,20 +1,50 @@
 {
     "en": {
-        "balance": "Balance"
+        "balance": "Balance",
+        "send": "Send",
+        "receive": "Receive",
+        "history": "History",
+        "currency_display": "Currency display",
+        "choose_a_display_format": "Choose a display format"
     },
     "zh": {
-        "balance": "余额"
+        "balance": "余额",
+        "send": "发送",
+        "receive": "接收",
+        "history": "历史",
+        "currency_display": "货币显示",
+        "choose_a_display_format": "选择显示格式"
     },
     "ru": {
-        "balance": "Баланс"
+        "balance": "Баланс",
+        "send": "Отправить",
+        "receive": "Получить",
+        "history": "История",
+        "currency_display": "Отображение валюты",
+        "choose_a_display_format": "Выберите формат отображения"
     },
     "ukr": {
-        "balance": "Баланс"
+        "balance": "Баланс",
+        "send": "Відправити",
+        "receive": "Отримати",
+        "history": "Історія",
+        "currency_display": "Отображення валюти",
+        "choose_a_display_format": "Виберіть формат відображення"
     },
     "fr": {
-        "balance": "Solde"
+        "balance": "Solde",
+        "send": "Envoyer",
+        "receive": "Recevoir",
+        "history": "Historique",
+        "currency_display": "Affichage des devises",
+        "choose_a_display_format": "Choisissez un format d'affichage"
     },
     "es": {
-        "balance": "Saldo"
+        "balance": "Saldo",
+        "send": "Enviar",
+        "receive": "Recibir",
+        "history": "Historial",
+        "currency_display": "Mostrar divisas",
+        "choose_a_display_format": "Elige un formato de visualización"
     }
 }
