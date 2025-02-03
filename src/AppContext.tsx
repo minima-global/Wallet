@@ -55,6 +55,15 @@ const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
           });
         }
 
+        if (msg.event === MinimaEvents.NEWBLOCK) {
+          setBlock({
+            block: msg.data.txpow.header.block,
+            hash: msg.data.txpow.header.txbodyhash,
+            date: msg.data.txpow.header.date,
+            timemilli: msg.data.txpow.header.timemilli,
+          });
+        }
+
         if (msg.event === 'MDS_HEAVIER_CHAIN' as any) {
           setHeavierChain(true);
         }
