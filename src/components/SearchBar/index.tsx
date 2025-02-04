@@ -1,4 +1,8 @@
+import useTranslation from "../../hooks/useTranslation";
+
 const SearchBar = ({ value, onChange }: { value: string, onChange: (value: string) => void }) => {
+    const { t } = useTranslation();
+
     return (
         <div className="h-[44px] flex bg-grey10 dark:bg-darkContrast border border-grey40 dark:border-mediumDarkContrast rounded-full flex-1">
             <label className="flex items-center justify-center pl-4" htmlFor="search">
@@ -10,7 +14,7 @@ const SearchBar = ({ value, onChange }: { value: string, onChange: (value: strin
             <input
                 id="search"
                 type="search"
-                placeholder="Search tokens"
+                placeholder={t("search_tokens")}
                 className="w-full h-full outline-none appearance-none dark:text-white bg-transparent text-sm placeholder:leading-none pb-0.5 pl-3 pr-5"
                 value={value}
                 onChange={(e) => onChange(e.target.value)}

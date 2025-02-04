@@ -9,7 +9,7 @@ import Button from '../../components/Button';
 import BackButton from '../../components/BackButton';
 import InfoBox from '../../components/InfoBox';
 import Input from '../../components/Input';
-
+import useTranslation from '../../hooks/useTranslation';
 export const Route = createFileRoute('/receive/')({
   component: Index,
 });
@@ -18,6 +18,7 @@ const YOUR_ADDRESS = 'YOUR_ADDRESS';
 const VALIDATE_ADDRESS = 'VALIDATE_ADDRESS';
 
 function Index() {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState(YOUR_ADDRESS);
   const [address, setAddress] = useState('');
   const [error, setError] = useState<boolean>(false);
@@ -34,12 +35,12 @@ function Index() {
   const TABS = [
     {
       key: YOUR_ADDRESS,
-      title: 'Your address',
+      title: t("your_address"),
       href: '/receive',
     },
     {
       key: VALIDATE_ADDRESS,
-      title: 'Vallidate',
+      title: t("validate"),
       href: '/receive/validate',
     },
   ]
@@ -81,14 +82,14 @@ function Index() {
             </div>
             <div className="grow flex flex-col">
               <BackButton onClick={dismissResults} />
-              <h1 className="text-white text-2xl mb-6">Validation report</h1>
+              <h1 className="text-white text-2xl mb-6">{t("validation_report")}</h1>
               <div className="text-white text-sm mb-6 bg-contrast1 p-3 px-4 border-l-4 border-l-green rounded">
-                This address is safe for use
+                {t("this_address_is_safe_for_use")}
               </div>
               <div className="grid grid-cols-12 text-grey60 mb-6 gap-4">
                 <div className="col-span-4 bg-contrast1 pt-3 pb-4 px-4 rounded text-center">
                   <div className="text-lg mb-2.5">
-                    Belongs to this node
+                    {t("belongs_to_this_node")}
                   </div>
                   {result.relevant && (
                     <svg className="mx-auto w-[28px] h-[28px]" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -103,7 +104,7 @@ function Index() {
                 </div>
                 <div className="col-span-4 bg-contrast1 pt-3 pb-4 px-4 rounded text-center">
                   <div className="text-lg mb-2">
-                    Simple address
+                    {t("simple_address")}
                   </div>
                   {result.simple && (
                     <svg className="mx-auto w-[28px] h-[28px]" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -118,7 +119,7 @@ function Index() {
                 </div>
                 <div className="col-span-4 bg-contrast1 pt-3 pb-4 px-4 rounded text-center">
                   <div className="text-lg mb-2">
-                    Validation report
+                    {t("validation_report")}
                   </div>
                   <svg className="mx-auto w-[28px] h-[28px]" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M8.70858 13.2541L14.3316 7.65614L13.4028 6.72739L8.70858 11.3966L6.58358 9.29664L5.65483 10.2254L8.70858 13.2541ZM10.0046 19.1004C8.75725 19.1004 7.5805 18.8636 6.47433 18.3899C5.36817 17.9162 4.4 17.2645 3.56983 16.4346C2.73967 15.6048 2.08758 14.6371 1.61358 13.5314C1.13975 12.4257 0.902832 11.2493 0.902832 10.0021C0.902832 8.73814 1.13967 7.55722 1.61333 6.45939C2.087 5.36156 2.73875 4.39756 3.56858 3.56739C4.39842 2.73722 5.36617 2.08514 6.47183 1.61114C7.5775 1.13731 8.75392 0.900391 10.0011 0.900391C11.2651 0.900391 12.446 1.13722 13.5438 1.61089C14.6417 2.08456 15.6057 2.73631 16.4358 3.56614C17.266 4.39597 17.9181 5.35956 18.3921 6.45689C18.8659 7.55422 19.1028 8.73481 19.1028 9.99864C19.1028 11.246 18.866 12.4227 18.3923 13.5289C17.9187 14.6351 17.2669 15.6032 16.4371 16.4334C15.6072 17.2636 14.6437 17.9156 13.5463 18.3896C12.449 18.8635 11.2684 19.1004 10.0046 19.1004Z" fill="#4FE3C1" />
@@ -126,9 +127,9 @@ function Index() {
                 </div>
               </div>
               <div className="flex flex-col gap-2">
-                <InfoBox title="Validating" value={address} />
-                <InfoBox title="0x address" value={result['0x']} copy />
-                <InfoBox title="Mx address" value={result['Mx']} copy />
+                <InfoBox title={t("validating")} value={address} />
+                <InfoBox title={t("0x_address")} value={result['0x']} copy />
+                <InfoBox title={t("mx_address")} value={result['Mx']} copy />
               </div>
             </div>
           </div>
@@ -146,7 +147,7 @@ function Index() {
             <Navigation />
           </div>
           <div className="grow flex flex-col">
-            <h1 className="text-white text-2xl mb-6">Recieve</h1>
+            <h1 className="text-white text-2xl mb-6">{t("receive")}</h1>
             <Tabs activeKey={activeTab} onClick={setActiveTab} tabs={TABS} />
             {activeTab === YOUR_ADDRESS && (
               <div className="mt-2 mb-6 flex flex-col gap-4">
@@ -156,17 +157,17 @@ function Index() {
                   </div>
 
                   <div className="mb-4">
-                    <label className="text-white text-sm">Address name</label>
+                    <label className="text-white text-sm">{t("address_name")}</label>
                     <div className="mt-2 text-grey20 bg-grey20 dark:bg-mediumDarkContrast py-3 px-4 rounded text-sm break-all">
                       {address}
                     </div>
                   </div>
                   <Button onClick={validateFetchedAddress}>
-                    Validate
+                    {t("validate")}
                   </Button>
                 </div>
                 <div className="bg-contrast1 py-8 px-10 rounded-lg hidden">
-                  <div className="text-grey20">Your alternative addresses</div>
+                  <div className="text-grey20">{t("your_alternative_addresses")}</div>
                 </div>
               </div>
             )}
@@ -174,18 +175,18 @@ function Index() {
               <div className="mt-2 mb-6 flex flex-col gap-4">
                 {error && (
                   <div className="text-white text-sm mb-2 bg-contrast1 p-3 px-4 border-l-4 border-l-red rounded">
-                    This address is not safe.
+                    {t("this_address_is_not_safe")}
                   </div> 
                 )}
                 <div className="bg-contrast1 p-8 rounded-lg flex flex-col gap-4">
                   <Input
                     value={query}
-                    label="Validate an address"
+                    label={t("validate_an_address")}
                     onChange={(value) => setQuery(value)}
-                    placeholder="Enter an 0x or Mx address"
+                    placeholder={t("enter_an_0x_or_mx_address")}
                     inverse
                   />
-                  <Button onClick={() => validateAddress(query)}>Validate</Button>
+                  <Button onClick={() => validateAddress(query)}>{t("validate")}</Button>
                 </div>
               </div>
               

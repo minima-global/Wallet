@@ -74,6 +74,7 @@ function Index() {
 
 const BalanceItem = ({ balance }: { balance: Balance }) => {
   const { f } = useFormatAmount();
+  const { t } = useTranslation();
   const [opened, setOpened] = useState(false);
 
   const toggleOpened = () => {
@@ -114,8 +115,8 @@ const BalanceItem = ({ balance }: { balance: Balance }) => {
             </svg>
           </div>
           <div className="grow text-white">
-            <div className="text-xs text-grey60 mb-0.5">
-              Available
+            <div className="text-sm text-grey60 mb-0.5">
+              {t("available")}
             </div>
             <div className="text-sm font-bold">{f(balance.confirmed)}</div>
           </div>
@@ -134,8 +135,8 @@ const BalanceItem = ({ balance }: { balance: Balance }) => {
 
           </div>
           <div className="grow text-white">
-            <div className="text-xs text-grey60 mb-0.5">
-              Locked
+            <div className="text-sm text-grey60 mb-0.5">
+              {t("locked")}
             </div>
             <div className="text-sm font-bold">{f(balance.unconfirmed)}</div>
           </div>

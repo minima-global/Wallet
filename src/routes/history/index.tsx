@@ -12,6 +12,7 @@ import useFormatAmount from '../../hooks/useFormatAmount'
 import { renderTokenName } from '../../utils'
 import TokenAuthenticity from '../../components/TokenAuthenticity'
 import TokenIcon from '../../components/TokenIcon'
+import useTranslation from '../../hooks/useTranslation'
 
 export const Route = createFileRoute('/history/')({
   component: Index,
@@ -36,6 +37,7 @@ type HistoryItem = {
 function Index() {
   const { loaded } = useContext(appContext);
   const { f } = useFormatAmount();
+  const { t } = useTranslation();
   const [inited, setInited] = useState(false);
   const [history, setHistory] = useState<any[] | null>(null);
   const [query, setQuery] = useState('');
@@ -87,7 +89,7 @@ function Index() {
               <div className="grid grid-cols-2">
                 <div className="col-span-1">
                   <h1 className="text-white text-2xl mb-6">
-                    History
+                    {t("history")}
                   </h1>
                 </div>
                 <div className="col-span-1">
@@ -152,7 +154,7 @@ function Index() {
                                 </h6>
                                 <TokenAuthenticity token={createdToken.token} disabled={true} />
                               </div>
-                              <p className="font-bold truncate text-grey dark:text-neutral-300">{difference > 0 ? 'Received' : 'Sent'} - {format(new Date(Number(h.HEADER.timemilli)), 'HH:mm aa')}</p>
+                              <p className="font-bold truncate text-grey dark:text-neutral-300">{t("created")} - {format(new Date(Number(h.HEADER.timemilli)), 'HH:mm aa')}</p>
                             </div>
                             <div className="text-right">
                               <p className="font-bold text-green">+{createdToken.tokenamount}</p>
@@ -179,7 +181,7 @@ function Index() {
                               </div>
                             </div>
                             <p className="font-bold truncate text-grey dark:text-neutral-300">
-                              {difference > 0 ? 'Received' : 'Sent'} - {format(new Date(Number(h.HEADER.timemilli)), 'HH:mm aa')}
+                              {difference > 0 ? t("received") : t("sent")} - {format(new Date(Number(h.HEADER.timemilli)), 'HH:mm aa')}
                             </p>
                           </div>
                           <div className="text-right font-bold">

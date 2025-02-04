@@ -88,7 +88,7 @@ const Header = () => {
                     <path d="M31.6591 14.822L28.8765 26.952L17.382 22.3746L10.3432 25.1779L7.88281 35.9038L17.382 32.1212L35.4376 39.3113L42.0012 10.7031L31.6591 14.822Z" fill="white" />
                   </svg>
                   <div className="mt-1">
-                    <div className="text-white text-sm">Wallet</div>
+                    <div className="text-white text-sm font-bold">Wallet</div>
                   </div>
                 </Link>
               </div>
