@@ -102,13 +102,13 @@ const TokenDropdown = ({ value, onChange }: TokenDropdownProps) => {
                 <div onClick={toggleDropdown} className="relative z-[20] bg-grey10 dark:bg-darkContrast relative w-full flex p-3 dark:border-lightDarkContrast rounded cursor-pointer select-none">
                     <TokenIcon token={selectedToken.token} tokenId={selectedToken.tokenid} />
                     <div className="my-auto px-4">
-                        <p className="font-bold dark:text-neutral-100 -mt-0.5 mb-0.5 flex items-center gap-1">
+                        <div className="font-bold dark:text-neutral-100 -mt-0.5 mb-0.5 flex items-center gap-1">
                             {renderTokenName(selectedToken)}
                             <TokenAuthenticity token={selectedToken} />
-                        </p>
-                        <p className="text-sm truncate text-grey80 font-bold">
+                        </div>
+                        <div className="text-sm truncate text-grey80 font-bold">
                             {selectedToken?.sendable}
-                        </p>
+                        </div>
                     </div>
                     <span className="absolute top-0 right-4 h-full flex items-center">
                         <div className={`px-2 py-2 transition-all duration-300 ${isOpen ? 'text-orange' : 'text-grey hover:text-white -rotate-90'}`}>
@@ -124,13 +124,13 @@ const TokenDropdown = ({ value, onChange }: TokenDropdownProps) => {
                                     <div onClick={() => onChange(token.tokenid)} className="p-2.5 rounded cursor-pointer hover:bg-contrast2 flex">
                                         <TokenIcon token={token.token} tokenId={token.tokenid} />
                                         <div className="my-auto px-4 text-[14px]">
-                                            <p className="font-bold text-neutral-100 -mt-1 mb-0.5 flex items-center gap-1">
+                                            <div className="font-bold text-neutral-100 -mt-1 mb-0.5 flex items-center gap-1">
                                                 {renderTokenName(token)}
                                                 <TokenAuthenticity token={token} />
-                                            </p>
-                                            <p className="truncate text-grey80 font-bold">
-                                                {selectedToken?.sendable}
-                                            </p>
+                                            </div>
+                                            <div className="truncate text-grey80 font-bold">
+                                                {token.sendable}
+                                            </div>
                                         </div>
                                     </div>
                                     {index !== balance.length - 1 && <div className="h-[1px] bg-contrast3 w-full"></div>}

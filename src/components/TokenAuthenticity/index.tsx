@@ -50,7 +50,6 @@ const TokenAuthenticity = ({ token, disabled }: { token: any, disabled?: boolean
     if (authenticated === false) {
         return (
             <div className="my-auto ml-1">
-
                 <svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg">
                     <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
                         <g id="question">

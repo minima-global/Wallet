@@ -105,7 +105,7 @@ const Header = () => {
                       <NodeStatus />
 
                       <div className="gradient-border">
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2 -mr-0.5">
                           {t('block')} <span className="text-white font-bold">{block?.block}</span>
                           <svg 
                             className="mt-[-1px]" 
