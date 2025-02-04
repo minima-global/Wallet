@@ -1,6 +1,6 @@
 import { Balance, Block, MinimaEvents } from "@minima-global/mds"
 import { MDS } from "@minima-global/mds"
-import { createContext, useEffect, useRef, useState } from "react"
+import { createContext, useCallback, useEffect, useRef, useState } from "react"
 
 export const appContext = createContext<{
   loaded: boolean,
@@ -11,6 +11,7 @@ export const appContext = createContext<{
   heavierChain: boolean,
   language: string,
   setLanguage: (language: string) => void,
+  fetchBalance: () => void,
 }>({
   loaded: false,
   currencyType: '1',
@@ -20,6 +21,7 @@ export const appContext = createContext<{
   heavierChain: false,
   language: 'en',
   setLanguage: () => { },
+  fetchBalance: () => { },
 })
 
 const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
@@ -33,6 +35,12 @@ const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const [heavierChain, setHeavierChain] = useState<boolean>(false);
   const [language, setLanguage] = useState<string>('en');
 
+  const fetchBalance = useCallback(() => {
+    MDS.cmd.balance((balance) => {
+      setBalance(balance.response);
+    });
+  }, []);
+
   useEffect(() => {
     if (!initialised.current) {
       initialised.current = true
@@ -42,9 +50,7 @@ const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
           setLoaded(true)
           console.log("MDS initialised and ready! 🚀")
 
-          MDS.cmd.balance((balance) => {
-            setBalance(balance.response);
-          });
+          fetchBalance();
 
           MDS.cmd.block((block) => {
             setBlock(block.response);
@@ -53,6 +59,14 @@ const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
           MDS.cmd.maxcontacts((maxContacts) => {
             setMaxContacts(maxContacts.response);
           });
+        }
+
+        if (msg.event === MinimaEvents.NEWCOIN) {
+          fetchBalance();
+        }
+
+        if (msg.event === MinimaEvents.NEWBLOCK) {
+          fetchBalance();
         }
 
         if (msg.event === MinimaEvents.NEWBLOCK) {
@@ -69,7 +83,7 @@ const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
         }
       })
     }
-  }, []);
+  }, [fetchBalance]);
 
   useEffect(() => {
     const currencyType = localStorage.getItem('minima_currency_type');
@@ -97,6 +111,7 @@ const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
     heavierChain,
     language,
     setLanguage,
+    fetchBalance,
   }
 
   return <appContext.Provider value={context}>{children}</appContext.Provider>

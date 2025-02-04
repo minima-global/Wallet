@@ -4,6 +4,7 @@
         "send": "Send",
         "receive": "Receive",
         "history": "History",
+        "block": "Block",
         "currency_display": "Currency display",
         "choose_a_display_format": "Choose a display format"
     },
@@ -12,6 +13,7 @@
         "send": "发送",
         "receive": "接收",
         "history": "历史",
+        "block": "区块",
         "currency_display": "货币显示",
         "choose_a_display_format": "选择显示格式"
     },
@@ -20,6 +22,7 @@
         "send": "Отправить",
         "receive": "Получить",
         "history": "История",
+        "block": "Блок",
         "currency_display": "Отображение валюты",
         "choose_a_display_format": "Выберите формат отображения"
     },
@@ -28,6 +31,7 @@
         "send": "Відправити",
         "receive": "Отримати",
         "history": "Історія",
+        "block": "Блок",
         "currency_display": "Отображення валюти",
         "choose_a_display_format": "Виберіть формат відображення"
     },
@@ -36,6 +40,7 @@
         "send": "Envoyer",
         "receive": "Recevoir",
         "history": "Historique",
+        "block": "Bloc",
         "currency_display": "Affichage des devises",
         "choose_a_display_format": "Choisissez un format d'affichage"
     },
@@ -44,6 +49,7 @@
         "send": "Enviar",
         "receive": "Recibir",
         "history": "Historial",
+        "block": "Bloc",
         "currency_display": "Mostrar divisas",
         "choose_a_display_format": "Elige un formato de visualización"
     }

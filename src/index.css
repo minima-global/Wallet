@@ -59,3 +59,42 @@ html,
 body {
   background: black;
 }
+
+.gradient-border {
+  position: relative;
+  border-radius: 16px;
+  padding: 4px 12px;
+  background: black;
+}
+
+.gradient-border:after {
+  content: "";
+  position: absolute;
+  top: calc(-1 * 3px);
+  left: calc(-1 * 3px);
+  height: calc(100% + 3px * 2);
+  width: calc(100% + 3px * 2);
+  background: linear-gradient(60deg,#f79533,#f37055,#ef4e7b,#a166ab,#5073b8,#1098ad,#07b39b,#6fba82);
+  border-radius: 16px;
+  z-index: -1;
+  animation: animatedgradient 2.5s ease infinite alternate;
+  background-size: 300% 300%
+}
+
+@keyframes animatedgradient {
+  0% {
+      background-position: 0 50%
+  }
+
+  50% {
+      background-position: 100% 50%
+  }
+
+  to {
+      background-position: 0 50%
+  }
+}
+
+.bg-minima-gradient {
+  background: linear-gradient(to right, #FF8630, #6162FB);
+}

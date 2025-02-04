@@ -5,6 +5,7 @@ import { appContext } from '../../AppContext.tsx'
 import useAndroidShowTitleBar from './useAndroidShowTitlebar';
 import NodeStatus from '../NodeStatus/index.tsx';
 import LanguageSelector from '../LanguageSelector/index.tsx';
+import useTranslation from '../../hooks/useTranslation.ts';
 
 const HEADER_NAV = [
   {
@@ -22,6 +23,7 @@ const HEADER_NAV = [
 ]
 
 const Header = () => {
+  const { t } = useTranslation();
   const pathName = '___'
   const { block, hamburgerOpen, setHamburgerOpen } = useContext(appContext)
   const [isAtTop, setIsAtTop] = useState(true)
@@ -74,8 +76,9 @@ const Header = () => {
     <>
       <header className="sticky top-0 z-50 h-[64px]" onClick={openTitleBar}>
         <div
-          className={`${isAtTop ? 'h-[84px]' : 'h-[40px]'} relative border-b-gradient border-[hsla(0, 0%, 100%, 1)] flex h-[64px] items-center border-b bg-white px-5 transition-all dark:border-lightDarkContrast dark:bg-black`}
+          className={`${isAtTop ? 'h-[84px]' : 'h-[40px]'} relative border-b-gradient  flex h-[64px] items-center bg-white px-5 transition-all dark:border-lightDarkContrast dark:bg-black`}
         >
+          <div className="absolute bottom-0 h-[1px] bg-minima-gradient w-full left-0 overflow-hidden" />
           <div className="container relative z-50 mx-auto">
             <div className="grid w-full grid-cols-12">
               <div className="col-span-6 flex items-center">
@@ -95,12 +98,30 @@ const Header = () => {
                 </div>
                 <nav className="hidden cursor-pointer lg:block">
                   <ul
-                    className={`${isAtTop ? 'gap-6' : 'gap-2.5'} flex items-center text-sm transition-all`}
+                    className={`${isAtTop ? 'gap-5' : 'gap-2.5'} flex items-center text-sm transition-all`}
                   >
 
-                    <li className="text-white flex items-center gap-2">
-                      Block: <span className="text-white font-bold">{block?.block}</span>
+                    <li className="text-white flex items-center gap-6">
                       <NodeStatus />
+
+                      <div className="gradient-border">
+                        <div className="flex items-center gap-3">
+                          {t('block')} <span className="text-white font-bold">{block?.block}</span>
+                          <svg 
+                            className="mt-[-1px]" 
+                            width="12" 
+                            height="14" 
+                            viewBox="0 0 12 14" 
+                            fill="none" 
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path 
+                              d="M5.4706 12.6057V7.31901L1.05881 4.63864V9.79715C1.05881 9.83514 1.06786 9.87075 1.08597 9.90398C1.10406 9.93722 1.13121 9.96571 1.16741 9.98944L5.4706 12.6057ZM6.5294 12.6057L10.8326 9.98944C10.8688 9.96571 10.8959 9.93722 10.914 9.90398C10.9321 9.87075 10.9412 9.83514 10.9412 9.79715V4.63864L6.5294 7.31901V12.6057ZM6 6.36196L10.3589 3.71861L6.1086 1.13935C6.0724 1.11561 6.0362 1.10374 6 1.10374C5.9638 1.10374 5.9276 1.11561 5.8914 1.13935L1.64115 3.71861L6 6.36196ZM0.638013 10.965C0.437107 10.8435 0.280548 10.6811 0.168336 10.4779C0.0561117 10.2747 0 10.0516 0 9.80855V4.19145C0 3.94838 0.0561117 3.72526 0.168336 3.52208C0.280548 3.31889 0.437107 3.15652 0.638013 3.03499L5.36199 0.182297C5.56289 0.0607659 5.77556 0 6 0C6.22444 0 6.43711 0.0607659 6.63801 0.182297L11.362 3.03499C11.5629 3.15652 11.7195 3.31889 11.8317 3.52208C11.9439 3.72526 12 3.94838 12 4.19145V9.80855C12 10.0516 11.9439 10.2747 11.8317 10.4779C11.7195 10.6811 11.5629 10.8435 11.362 10.965L6.63801 13.8177C6.43711 13.9392 6.22444 14 6 14C5.77556 14 5.56289 13.9392 5.36199 13.8177L0.638013 10.965Z" 
+                              fill="#E9E9EB"
+                            />
+                          </svg>
+                        </div>
+                      </div>
                     </li>
 
                     <li onClick={toggleDarkMode} className="hidden">

@@ -38,7 +38,7 @@ function Index() {
               <div className="mt-4 bg-contrast1 py-20 text-grey60">
                 <div className="flex flex-col items-center gap-4">
                   <svg className="block" width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="1" y="1" width="46" height="46" rx="23" stroke="#FF8630" stroke-width="2" />
+                    <rect x="1" y="1" width="46" height="46" rx="23" stroke="#FF8630" strokeWidth="2" />
                     <mask id="mask0_5595_53498" maskUnits="userSpaceOnUse" x="12" y="12" width="24" height="24">
                       <rect x="12" y="12" width="24" height="24" fill="#D9D9D9" />
                     </mask>

@@ -145,7 +145,7 @@ const Navigation = () => {
     return (
         <div className="flex flex-col gap-5 w-full min-w-[250px] bg-contrast1 rounded-lg p-6">
             {NAV_ITEMS.map((item) => (
-                <Link to={item.href} className="flex items-center gap-5">
+                <Link key={item.href} to={item.href} className="flex items-center gap-5">
                     <div className="w-4 flex items-center">
                         <div className="[&>svg>path]:fill-orange">{item.icon}</div>
                     </div>

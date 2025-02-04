@@ -54,11 +54,11 @@ function Index() {
                                                         width="16"
                                                         height="16"
                                                         viewBox="0 0 24 24"
-                                                        stroke-width="2.5"
+                                                        strokeWidth="2.5"
                                                         stroke="currentColor"
                                                         fill="none"
-                                                        stroke-linecap="round"
-                                                        stroke-linejoin="round"
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
                                                     >
                                                         <path
                                                             stroke="none"
