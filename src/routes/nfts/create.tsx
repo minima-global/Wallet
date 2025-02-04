@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import Header from '../../components/Header'
 import Navigation from '../../components/Navigation'
 import Input from '../../components/Input'
-import Send from '../../components/Send'
+import Send from '../../components/Button'
 import Tabs from '../../components/Tabs'
 
 export const Route = createFileRoute('/nfts/create')({

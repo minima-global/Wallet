@@ -4,7 +4,7 @@ import Navigation from '../../components/Navigation'
 import SearchBar from '../../components/SearchBar'
 import Dropdown from '../../components/Dropdown'
 import Input from '../../components/Input'
-import Send from '../../components/Send'
+import Send from '../../components/Button'
 
 export const Route = createFileRoute('/token-create/')({
   component: Index,

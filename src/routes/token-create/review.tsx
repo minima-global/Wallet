@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import Header from '../../components/Header'
 import Navigation from '../../components/Navigation'
-import Send from '../../components/Send'
+import Send from '../../components/Button'
 
 export const Route = createFileRoute('/token-create/review')({
   component: Index,

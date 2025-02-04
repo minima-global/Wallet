@@ -1,8 +1,17 @@
-const Input: React.FC<{ label: string, placeholder: string, value: string, onChange: (value: string) => void, info?: boolean }> = ({ label, placeholder, value, onChange, info }) => {
+interface InputProps {
+    label: string;
+    placeholder: string;
+    value: string;
+    onChange: (value: string) => void;
+    info?: boolean;
+    inverse?: boolean;
+}
+
+const Input: React.FC<InputProps> = ({ label, placeholder, value, onChange, info, inverse }) => {
     return (
         <div className="relative">
             <div className="dark:text-grey40 mb-3">{label}</div>
-            <div className="bg-grey10 dark:bg-darkContrast px-4 py-3.5 rounded ">
+            <div className={`px-4 py-3.5 rounded ${inverse ? 'bg-contrast2' : 'bg-contrast1'}`}>
                 <div className="flex">
                     <input required name="amount" placeholder={placeholder} className="text-sm bg-transparent w-full placeholder-grey60 appearance-none outline-none" value={value} onChange={(e) => onChange(e.target.value)} />
                     {info && 

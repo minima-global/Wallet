@@ -1,14 +1,40 @@
-const InfoBox = ({ title, value, copy, href }: { title: string, value?: string, copy?: boolean, href?: string }) => {
+import { useState } from "react";
+
+type InfoBoxProps = {
+    title: string;
+    value?: string;
+    copy?: boolean;
+    href?: string;
+}
+
+const InfoBox = ({ title, value, copy, href }: InfoBoxProps) => {
+    const [copied, setCopied] = useState(false);
+
+    const copyToClipboard = () => {
+        if (copy && value) {
+            setCopied(true);
+
+            navigator.clipboard.writeText(value);
+
+            setTimeout(() => {
+                setCopied(false);
+            }, 2000);
+        }
+    }
+
     return (
         <div className="bg-contrast1 relative w-full py-4 px-5 rounded text-white">
             <div className="mb-1">{title}</div>
             {value && <div className="mt-2 text-sm text-grey60">{value}</div>}
             {copy && (
-                <div className="text-sm text-grey60 absolute top-0 right-0 flex h-full px-6 items-center">
+                <div onClick={copyToClipboard} className="text-sm text-grey60 absolute top-0 right-0 flex h-full px-6 items-center">
                     <div>
-                        <svg width="14" height="16" viewBox="0 0 14 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M4.5 13C4.0875 13 3.73438 12.8531 3.44062 12.5594C3.14687 12.2656 3 11.9125 3 11.5V1.5C3 1.0875 3.14687 0.734376 3.44062 0.440626C3.73438 0.146876 4.0875 0 4.5 0H12.5C12.9125 0 13.2656 0.146876 13.5594 0.440626C13.8531 0.734376 14 1.0875 14 1.5V11.5C14 11.9125 13.8531 12.2656 13.5594 12.5594C13.2656 12.8531 12.9125 13 12.5 13H4.5ZM4.5 11.5H12.5V1.5H4.5V11.5ZM1.5 16C1.0875 16 0.734375 15.8531 0.440625 15.5594C0.146875 15.2656 0 14.9125 0 14.5V3H1.5V14.5H11V16H1.5Z" fill="#A7A7B0" />
-                        </svg>
+                        {!copied && (
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5 cursor-pointer stroke-grey hover:stroke-white"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        )}
+                        {copied && (
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.58075 14.2538L15.3038 7.53075L14.25 6.47693L8.58075 12.1462L5.73075 9.29615L4.67693 10.35L8.58075 14.2538ZM10.0016 19.5C8.68772 19.5 7.45268 19.2506 6.29655 18.752C5.1404 18.2533 4.13472 17.5765 3.2795 16.7217C2.42427 15.8669 1.74721 14.8616 1.24833 13.706C0.749442 12.5504 0.5 11.3156 0.5 10.0017C0.5 8.68772 0.749334 7.45268 1.248 6.29655C1.74667 5.1404 2.42342 4.13472 3.27825 3.2795C4.1331 2.42427 5.13834 1.74721 6.29398 1.24833C7.44959 0.749442 8.68437 0.5 9.9983 0.5C11.3122 0.5 12.5473 0.749333 13.7034 1.248C14.8596 1.74667 15.8652 2.42342 16.7205 3.27825C17.5757 4.1331 18.2527 5.13834 18.7516 6.29398C19.2505 7.44959 19.5 8.68437 19.5 9.9983C19.5 11.3122 19.2506 12.5473 18.752 13.7034C18.2533 14.8596 17.5765 15.8652 16.7217 16.7205C15.8669 17.5757 14.8616 18.2527 13.706 18.7516C12.5504 19.2505 11.3156 19.5 10.0016 19.5Z" fill="#4FE3C1"></path></svg>
+                        )}
                     </div>
                 </div>
             )}

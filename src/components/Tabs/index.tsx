@@ -1,19 +1,27 @@
-import { Link, useLocation } from "@tanstack/react-router"
+interface Tab {
+    key: string;
+    title: string;
+    href: string;
+}
 
-const Tabs: React.FC<{ tabs: { title: string; href: string }[]; }> = ({ tabs }) => {
-    const location = useLocation();
-    const pathname = location.pathname;
+interface TabsProps {
+    activeKey: string;
+    onClick?: (key: string) => void;
+    tabs: Tab[];
+}
 
+const Tabs: React.FC<TabsProps> = ({ activeKey, onClick, tabs }) => {
     return (
-        <div className="flex gap-6 mb-8">
+        <div className="flex gap-6 mb-6">
             {
                 tabs.map((tab) => (
-                    <Link
-                        to={tab.href}
-                        className={`text-white pb-1.5 text-lg border-b-[3px] w-fit flex ${tab.href === pathname ? '!text-orange border-orange' : 'border-transparent'}`}
+                    <div
+                        key={tab.key}
+                        onClick={() => onClick?.(tab.key)}
+                        className={`cursor-pointer text-white pb-1.5 text-lg border-b-[3px] w-fit flex ${tab.key === activeKey ? '!text-orange border-orange' : 'border-transparent'}`}
                     >
                         {tab.title}
-                    </Link>
+                    </div>
                 ))
             }
         </div>

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import Header from '../../components/Header'
-import Send from '../../components/Send'
+import Send from '../../components/Button'
 import Navigation from '../../components/Navigation'
 import Input from '../../components/Input'
 
