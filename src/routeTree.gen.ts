@@ -19,8 +19,6 @@ import { Route as HistoryIndexImport } from './routes/history/index'
 import { Route as CurrencyDisplayIndexImport } from './routes/currency-display/index'
 import { Route as TokenCreateReviewImport } from './routes/token-create/review'
 import { Route as SendConfirmationImport } from './routes/send/confirmation'
-import { Route as ReceiveValidateImport } from './routes/receive/validate'
-import { Route as ReceiveReportImport } from './routes/receive/report'
 import { Route as NftsReviewImport } from './routes/nfts/review'
 import { Route as NftsMyImport } from './routes/nfts/my'
 import { Route as NftsCreateImport } from './routes/nfts/create'
@@ -74,18 +72,6 @@ const TokenCreateReviewRoute = TokenCreateReviewImport.update({
 const SendConfirmationRoute = SendConfirmationImport.update({
   id: '/send/confirmation',
   path: '/send/confirmation',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const ReceiveValidateRoute = ReceiveValidateImport.update({
-  id: '/receive/validate',
-  path: '/receive/validate',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const ReceiveReportRoute = ReceiveReportImport.update({
-  id: '/receive/report',
-  path: '/receive/report',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -165,20 +151,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NftsReviewImport
       parentRoute: typeof rootRoute
     }
-    '/receive/report': {
-      id: '/receive/report'
-      path: '/receive/report'
-      fullPath: '/receive/report'
-      preLoaderRoute: typeof ReceiveReportImport
-      parentRoute: typeof rootRoute
-    }
-    '/receive/validate': {
-      id: '/receive/validate'
-      path: '/receive/validate'
-      fullPath: '/receive/validate'
-      preLoaderRoute: typeof ReceiveValidateImport
-      parentRoute: typeof rootRoute
-    }
     '/send/confirmation': {
       id: '/send/confirmation'
       path: '/send/confirmation'
@@ -240,8 +212,6 @@ export interface FileRoutesByFullPath {
   '/nfts/create': typeof NftsCreateRoute
   '/nfts/my': typeof NftsMyRoute
   '/nfts/review': typeof NftsReviewRoute
-  '/receive/report': typeof ReceiveReportRoute
-  '/receive/validate': typeof ReceiveValidateRoute
   '/send/confirmation': typeof SendConfirmationRoute
   '/token-create/review': typeof TokenCreateReviewRoute
   '/currency-display': typeof CurrencyDisplayIndexRoute
@@ -258,8 +228,6 @@ export interface FileRoutesByTo {
   '/nfts/create': typeof NftsCreateRoute
   '/nfts/my': typeof NftsMyRoute
   '/nfts/review': typeof NftsReviewRoute
-  '/receive/report': typeof ReceiveReportRoute
-  '/receive/validate': typeof ReceiveValidateRoute
   '/send/confirmation': typeof SendConfirmationRoute
   '/token-create/review': typeof TokenCreateReviewRoute
   '/currency-display': typeof CurrencyDisplayIndexRoute
@@ -277,8 +245,6 @@ export interface FileRoutesById {
   '/nfts/create': typeof NftsCreateRoute
   '/nfts/my': typeof NftsMyRoute
   '/nfts/review': typeof NftsReviewRoute
-  '/receive/report': typeof ReceiveReportRoute
-  '/receive/validate': typeof ReceiveValidateRoute
   '/send/confirmation': typeof SendConfirmationRoute
   '/token-create/review': typeof TokenCreateReviewRoute
   '/currency-display/': typeof CurrencyDisplayIndexRoute
@@ -297,8 +263,6 @@ export interface FileRouteTypes {
     | '/nfts/create'
     | '/nfts/my'
     | '/nfts/review'
-    | '/receive/report'
-    | '/receive/validate'
     | '/send/confirmation'
     | '/token-create/review'
     | '/currency-display'
@@ -314,8 +278,6 @@ export interface FileRouteTypes {
     | '/nfts/create'
     | '/nfts/my'
     | '/nfts/review'
-    | '/receive/report'
-    | '/receive/validate'
     | '/send/confirmation'
     | '/token-create/review'
     | '/currency-display'
@@ -331,8 +293,6 @@ export interface FileRouteTypes {
     | '/nfts/create'
     | '/nfts/my'
     | '/nfts/review'
-    | '/receive/report'
-    | '/receive/validate'
     | '/send/confirmation'
     | '/token-create/review'
     | '/currency-display/'
@@ -350,8 +310,6 @@ export interface RootRouteChildren {
   NftsCreateRoute: typeof NftsCreateRoute
   NftsMyRoute: typeof NftsMyRoute
   NftsReviewRoute: typeof NftsReviewRoute
-  ReceiveReportRoute: typeof ReceiveReportRoute
-  ReceiveValidateRoute: typeof ReceiveValidateRoute
   SendConfirmationRoute: typeof SendConfirmationRoute
   TokenCreateReviewRoute: typeof TokenCreateReviewRoute
   CurrencyDisplayIndexRoute: typeof CurrencyDisplayIndexRoute
@@ -368,8 +326,6 @@ const rootRouteChildren: RootRouteChildren = {
   NftsCreateRoute: NftsCreateRoute,
   NftsMyRoute: NftsMyRoute,
   NftsReviewRoute: NftsReviewRoute,
-  ReceiveReportRoute: ReceiveReportRoute,
-  ReceiveValidateRoute: ReceiveValidateRoute,
   SendConfirmationRoute: SendConfirmationRoute,
   TokenCreateReviewRoute: TokenCreateReviewRoute,
   CurrencyDisplayIndexRoute: CurrencyDisplayIndexRoute,
@@ -395,8 +351,6 @@ export const routeTree = rootRoute
         "/nfts/create",
         "/nfts/my",
         "/nfts/review",
-        "/receive/report",
-        "/receive/validate",
         "/send/confirmation",
         "/token-create/review",
         "/currency-display/",
@@ -423,12 +377,6 @@ export const routeTree = rootRoute
     },
     "/nfts/review": {
       "filePath": "nfts/review.tsx"
-    },
-    "/receive/report": {
-      "filePath": "receive/report.tsx"
-    },
-    "/receive/validate": {
-      "filePath": "receive/validate.tsx"
     },
     "/send/confirmation": {
       "filePath": "send/confirmation.tsx"
