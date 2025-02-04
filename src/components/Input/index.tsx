@@ -1,19 +1,34 @@
+import { useState } from "react";
+import useTranslation from "../../hooks/useTranslation";
+
 interface InputProps {
     label: string;
-    placeholder: string;
+    placeholder?: string;
     value: string;
-    onChange: (value: string) => void;
+    onChange?: (value: string) => void;
     info?: boolean;
     inverse?: boolean;
+    validation?: string;
+    validationMessage?: string;
 }
 
-const Input: React.FC<InputProps> = ({ label, placeholder, value, onChange, info, inverse }) => {
+const Input: React.FC<InputProps> = ({ label, placeholder, value, onChange, info, inverse, validation, validationMessage }) => {
+    const { t } = useTranslation();
+    const [valid, setValid] = useState<boolean | null>(null);
+
+    const handleOnBlur = (evt: React.FocusEvent<HTMLInputElement>) => {
+        if (validation) {
+            const invalid = new RegExp(validation, 'gmi').test(evt.target.value);
+            setValid(invalid);
+        }
+    }
+
     return (
         <div className="relative">
             <div className="dark:text-grey40 mb-3">{label}</div>
-            <div className={`px-4 py-3.5 rounded ${inverse ? 'bg-contrast2' : 'bg-contrast1'}`}>
+            <div className={`px-4 py-3.5 rounded border border-transparent ${validation && valid === false ? "border-red" : ""} ${inverse ? 'bg-contrast2' : 'bg-contrast1'}`}>
                 <div className="flex">
-                    <input required name="amount" placeholder={placeholder} className="text-sm bg-transparent w-full placeholder-grey60 appearance-none outline-none" value={value} onChange={(e) => onChange(e.target.value)} />
+                    <input required name="amount" onBlur={handleOnBlur} placeholder={placeholder} className="text-sm bg-transparent w-full placeholder-grey60 appearance-none outline-none" value={value} onChange={(e) => onChange(e.target.value)} />
                     {info && 
                         <div className="text-sm text-grey60">
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -23,6 +38,11 @@ const Input: React.FC<InputProps> = ({ label, placeholder, value, onChange, info
                     }
                 </div>
             </div>
+            {validation && valid === false && (
+                <div className="text-red text-sm mt-4 font-bold">
+                    {validationMessage || t("invalid_input")}
+                </div>
+            )}
         </div>
     )
 }

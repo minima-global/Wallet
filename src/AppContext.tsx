@@ -12,6 +12,7 @@ export const appContext = createContext<{
   language: string,
   setLanguage: (language: string) => void,
   fetchBalance: () => void,
+  address: string,
 }>({
   loaded: false,
   currencyType: '1',
@@ -22,6 +23,7 @@ export const appContext = createContext<{
   language: 'en',
   setLanguage: () => { },
   fetchBalance: () => { },
+  address: '',
 })
 
 const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
@@ -34,6 +36,7 @@ const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const [maxContacts, setMaxContacts] = useState<any>(null);
   const [heavierChain, setHeavierChain] = useState<boolean>(false);
   const [language, setLanguage] = useState<string>('en');
+  const [address, setAddress] = useState<string>('');
 
   const fetchBalance = useCallback(() => {
     MDS.cmd.balance((balance) => {
@@ -54,6 +57,10 @@ const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 
           MDS.cmd.block((block) => {
             setBlock(block.response);
+          });
+
+          MDS.cmd.getaddress((address) => {
+            setAddress(address.response.miniaddress);
           });
 
           MDS.cmd.maxcontacts((maxContacts) => {
@@ -112,6 +119,7 @@ const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
     language,
     setLanguage,
     fetchBalance,
+    address,
   }
 
   return <appContext.Provider value={context}>{children}</appContext.Provider>

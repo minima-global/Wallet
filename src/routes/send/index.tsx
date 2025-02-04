@@ -1,22 +1,28 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import Header from '../../components/Header'
 import Send from '../../components/Button'
 import Navigation from '../../components/Navigation'
 import Input from '../../components/Input'
-import useTranslation from '../../hooks/useTranslation';
+import useTranslation from '../../hooks/useTranslation'
+import { appContext } from '../../AppContext'
+import { renderTokenName } from '../../utils'
+import TokenAuthenticity from '../../components/TokenAuthenticity'
+import TokenIcon from '../../components/TokenIcon'
+
 export const Route = createFileRoute('/send/')({
     component: Index,
 })
 
 function Index() {
-    const { t } = useTranslation();
-    const [step, setStep] = useState<number>(1);
+    const { t } = useTranslation()
+    const [step, setStep] = useState<number>(1)
+    const [selectedTokenId, setSelectedTokenId] = useState<string>('0x00')
 
-    const [amount, setAmount] = useState<string>('');
-    const [recipient, setRecipient] = useState<string>('');
-    const [message, setMessage] = useState<string>('');
-    const [burn, setBurn] = useState<string>('');
+    const [amount, setAmount] = useState<string>('')
+    const [recipient, setRecipient] = useState<string>('')
+    const [message, setMessage] = useState<string>('')
+    const [burn, setBurn] = useState<string>('')
 
     return (
         <>
@@ -27,42 +33,115 @@ function Index() {
                         <Navigation />
                     </div>
                     <div className="grow flex flex-col">
-                        <h1 className="text-white text-2xl mb-6">
-                            {t("send")}
-                        </h1>
-                        <div className="bg-grey10 dark:bg-darkContrast relative w-full flex p-3 border border-grey40 dark:border-lightDarkContrast rounded"><div className="w-[48px] h-[48px] border border-grey80 rounded overflow-hidden"><svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="48" height="48" fill="white"></rect><path d="M32.4428 16.759L31.2053 22.2329L29.6226 15.6286L24.0773 13.3795L22.578 19.9957L21.2571 12.2371L15.7119 10L10 35.2512H16.0569L17.8062 27.4926L19.1271 35.2512H25.1959L26.6834 28.6349L28.266 35.2512H34.323L38 18.9962L32.4428 16.759Z" fill="black"></path></svg></div><div className="my-auto px-4"><p className="font-bold dark:text-neutral-100 -mt-0.5">Minima</p><p className="text-sm truncate dark:text-neutral-200">0.000187</p></div><span className="absolute top-0 right-6 h-full flex items-center"><svg width="8" height="4" viewBox="0 0 8 4" fill="none" xmlns="http://www.w3.org/2000/svg" className="fill-black dark:text-grey"><path d="M4.00001 3.71113L0.496887 0.208008H7.50314L4.00001 3.71113Z" fill="currentColor"></path></svg></span></div>
+                        <h1 className="text-white text-2xl mb-6">{t('send')}</h1>
+
+                        <TokenDropdown value={selectedTokenId} onChange={setSelectedTokenId} />
 
                         <div className="mt-5 mb-8 flex flex-col gap-6">
-                            <Input 
-                                label={t("amount")} 
-                                placeholder={t("enter_amount")} 
-                                value={amount} 
-                                onChange={(value) => setAmount(value)} 
+                            <Input
+                                label={t('amount')}
+                                placeholder={t('enter_amount')}
+                                value={amount}
+                                onChange={(value) => setAmount(value)}
+                                validation="^[0-9]*$"
+                                validationMessage={t('please_enter_a_valid_amount')}
                             />
-                            <Input 
-                                label={t("recipient_address")} 
-                                placeholder={t("enter_recipient_address")} 
-                                value={recipient} 
-                                onChange={(value) => setRecipient(value)} 
+                            <Input
+                                label={t('recipient_address')}
+                                placeholder={t('enter_recipient_address')}
+                                value={recipient}
+                                onChange={(value) => setRecipient(value)}
+                                validation="^(0x|Mx)[0-9a-zA-Z]*$"
+                                validationMessage={t('please_enter_a_valid_address')}
                             />
-                            <Input 
-                                label={t("message")} 
-                                placeholder={t("enter_message")} 
-                                value={message} 
-                                onChange={(value) => setMessage(value)} 
+                            <Input
+                                label={t('message')}
+                                placeholder={t('enter_message')}
+                                value={message}
+                                onChange={(value) => setMessage(value)}
                             />
-                            <Input 
-                                label={t("add_a_burn_address") + ` (${t("optional")})`} 
-                                placeholder={t("optional")} 
-                                value={burn} 
-                                onChange={(value) => setBurn(value)} 
+                            <Input
+                                label={t('add_a_burn') + ` (${t('optional')})`}
+                                placeholder={t('optional')}
+                                value={burn}
+                                onChange={(value) => setBurn(value)}
+                                validation="^[0-9]*$"
+                                validationMessage={t('please_enter_a_valid_amount')}
                             />
                         </div>
 
-                        <Send>{t("review")}</Send>
+                        <Send>{t('review')}</Send>
                     </div>
                 </div>
             </div>
         </>
+    )
+}
+
+type TokenDropdownProps = {
+    value: any
+    onChange: (value: string) => void
+}
+
+const TokenDropdown = ({ value, onChange }: TokenDropdownProps) => {
+    const { t } = useTranslation()
+    const { balance } = useContext(appContext);
+    const [isOpen, setIsOpen] = useState<boolean>(false);
+
+    const selectedToken = balance.find(
+        (token) => token.tokenid === value,
+    );
+
+    const toggleDropdown = () => {
+        setIsOpen(!isOpen)
+    }
+
+    return (
+        <div>
+            {selectedToken && (
+                <div onClick={toggleDropdown} className="relative z-[20] bg-grey10 dark:bg-darkContrast relative w-full flex p-3 dark:border-lightDarkContrast rounded cursor-pointer select-none">
+                    <TokenIcon token={selectedToken.token} tokenId={selectedToken.tokenid} />
+                    <div className="my-auto px-4">
+                        <p className="font-bold dark:text-neutral-100 -mt-0.5 mb-0.5 flex items-center gap-1">
+                            {renderTokenName(selectedToken)}
+                            <TokenAuthenticity token={selectedToken} />
+                        </p>
+                        <p className="text-sm truncate text-grey80 font-bold">
+                            {selectedToken?.sendable}
+                        </p>
+                    </div>
+                    <span className="absolute top-0 right-4 h-full flex items-center">
+                        <div className={`px-2 py-2 transition-all duration-300 ${isOpen ? 'text-orange' : 'text-grey hover:text-white -rotate-90'}`}>
+                            <svg width="10" height="7" viewBox="0 0 10 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M5 6.0625L0 1.0625L1.0625 0L5 3.9375L8.9375 0L10 1.0625L5 6.0625Z" fill="currentColor" />
+                            </svg>
+                        </div>
+                    </span>
+                    <div className={`absolute left-0 top-[100%] border border-contrast2 bg-contrast1.5 p-2 z-[20] w-full custom-scrollbar ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+                        <div className="custom-scrollbar max-h-[300px] overflow-y-auto pr-3">
+                            {balance.map((token, index) => (
+                                <div key={token.tokenid}>
+                                    <div onClick={() => onChange(token.tokenid)} className="p-2.5 rounded cursor-pointer hover:bg-contrast2 flex">
+                                        <TokenIcon token={token.token} tokenId={token.tokenid} />
+                                        <div className="my-auto px-4 text-[14px]">
+                                            <p className="font-bold text-neutral-100 -mt-1 mb-0.5 flex items-center gap-1">
+                                                {renderTokenName(token)}
+                                                <TokenAuthenticity token={token} />
+                                            </p>
+                                            <p className="truncate text-grey80 font-bold">
+                                                {selectedToken?.sendable}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    {index !== balance.length - 1 && <div className="h-[1px] bg-contrast3 w-full"></div>}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            <div className={`absolute top-0 left-0 w-full h-full bg-black z-[10] ${isOpen ? 'opacity-80' : 'opacity-0 pointer-events-none'}`}></div>
+        </div>
     )
 }

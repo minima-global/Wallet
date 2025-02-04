@@ -98,3 +98,17 @@ body {
 .bg-minima-gradient {
   background: linear-gradient(to right, #FF8630, #6162FB);
 }
+
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: .5em
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background-color: #282B2E;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #D3D3D8;
+
+}

@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import Header from '../../components/Header'
 import Tabs from '../../components/Tabs'
 import Navigation from '../../components/Navigation'
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import QRCode from 'react-qr-code';
 import { CheckAddress, MDS } from '@minima-global/mds';
 import Button from '../../components/Button';
@@ -10,6 +10,7 @@ import BackButton from '../../components/BackButton';
 import InfoBox from '../../components/InfoBox';
 import Input from '../../components/Input';
 import useTranslation from '../../hooks/useTranslation';
+import { appContext } from '../../AppContext';
 export const Route = createFileRoute('/receive/')({
   component: Index,
 });
@@ -19,18 +20,11 @@ const VALIDATE_ADDRESS = 'VALIDATE_ADDRESS';
 
 function Index() {
   const { t } = useTranslation();
+  const { address } = useContext(appContext);
   const [activeTab, setActiveTab] = useState(YOUR_ADDRESS);
-  const [address, setAddress] = useState('');
   const [error, setError] = useState<boolean>(false);
   const [result, setResult] = useState<CheckAddress | null>(null);
   const [query, setQuery] = useState('');
-
-  useEffect(() => {
-    MDS.cmd.getaddress((address) => {
-      console.log(address);
-      setAddress(address.response.miniaddress);
-    });
-  }, []);
 
   const TABS = [
     {
@@ -151,17 +145,19 @@ function Index() {
             <Tabs activeKey={activeTab} onClick={setActiveTab} tabs={TABS} />
             {activeTab === YOUR_ADDRESS && (
               <div className="mt-2 mb-6 flex flex-col gap-4">
-                <div className="bg-contrast1 p-10 rounded-lg">
+                <div className="bg-contrast1 p-8 rounded-lg">
                   <div className="block bg-white w-[240px] h-[240px] mx-auto mb-4">
                     <QRCode value={address} className="p-4 w-full h-full" />
                   </div>
 
                   <div className="mb-4">
-                    <label className="text-white text-sm">{t("address_name")}</label>
-                    <div className="mt-2 text-grey20 bg-grey20 dark:bg-mediumDarkContrast py-3 px-4 rounded text-sm break-all">
-                      {address}
-                    </div>
+                    <Input
+                      value={address}
+                      label={t("address_name")}
+                      inverse
+                    />
                   </div>
+
                   <Button onClick={validateFetchedAddress}>
                     {t("validate")}
                   </Button>

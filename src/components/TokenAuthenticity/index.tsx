@@ -18,6 +18,8 @@ const TokenAuthenticity = ({ token, disabled }: { token: any, disabled?: boolean
 
         if (typeof token.token === 'object' && token.token.webvalidate && !disabled) {
             authenticate();
+        } else {
+            setAuthenticated(null);
         }
     }, [token, disabled]);
 
