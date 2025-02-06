@@ -59,6 +59,7 @@ html,
 body {
   background: black;
   overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 .gradient-border {
