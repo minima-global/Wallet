@@ -4,7 +4,12 @@ import Navigation from '../../components/Navigation'
 import InfoBox from '../../components/InfoBox'
 import BackButton from '../../components/BackButton'
 import { appContext } from '../../AppContext'
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
+import TokenIcon from '../../components/TokenIcon'
+import TokenAuthenticity from '../../components/TokenAuthenticity'
+import { renderTokenName } from '../../utils'
+import { MDS } from '@minima-global/mds'
+import Pending from '../../components/Pending'
 
 export const Route = createFileRoute('/balance/$id')({
     component: RouteComponent,
@@ -16,7 +21,9 @@ export const Route = createFileRoute('/balance/$id')({
 function RouteComponent() {
     const { id } = useParams({ from: '/balance/$id' });
     const navigate = useNavigate();
-    const { balance } = useContext(appContext);
+    const { balance, setIsPending } = useContext(appContext);
+
+    const [showBurnModal, setShowBurnModal] = useState(false);
 
     const token = balance.find((b) => b.tokenid === id);
 
@@ -24,9 +31,57 @@ function RouteComponent() {
         navigate({ to: '/' });
     }
 
+    const toggleBurnModal = () => {
+        setShowBurnModal(!showBurnModal);
+    }
+
+    const confirmBurn = async () => {
+        try {
+            setShowBurnModal(false);
+
+            const response = await MDS.cmd.send({
+                params: {
+                    tokenid: token?.tokenid,
+                    amount: '0.01',
+                    address: '0xFF'
+                }
+            });
+
+            if (response.pending) {
+                setIsPending({
+                    uid: response.pendinguid as string,
+                    callback: () => {
+                        navigate({ to: '/' });
+                    }
+                });
+            }
+
+            if (response.status) {
+
+            }
+
+            console.log(response);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     return (
         <>
             <Header />
+            <Pending />
+            <div className={`${showBurnModal ? 'opacity-100' : 'pointer-events-none opacity-0'} transition-opacity duration-100 flex absolute z-50 inset-0 top-0 left-0 justify-center items-center w-screen h-screen`}>
+                <div className={`bg-contrast1 mb-4 fixed z-[60] rounded-lg w-[440px] text-center text-white p-5 transform transition-all duration-200 ${showBurnModal ? 'translate-y-[0%] opacity-100' : 'translate-y-[4px] opacity-0'}`}>
+                    <h1 className="text-white text-2xl mt-1.5 mb-5 font-bold">Burn token</h1>
+                    <p className="text-grey80 text-base text-sm mb-2 max-w-[80%] mx-auto">Are you sure you want to burn this token? This action cannot be undone.</p>
+                    <div className="space-y-2">
+                        <button onClick={confirmBurn} className="bg-orange hover:bg-lighterOrange text-black text-sm py-2.5 px-4 w-full mt-6 rounded-sm">Confirm</button>
+                        <button onClick={toggleBurnModal} className="text-grey80 bg-contrast2 hover:opacity-80 text-sm py-2.5 px-4 w-full rounded-sm">Close</button>
+                    </div>
+                </div>
+                <div className="z-50 fixed bg-black opacity-90 w-screen h-screen top-0 left-0"></div>
+            </div>
+
             <div className="mt-10 container mx-auto flex">
                 <div className="flex w-full gap-10">
                     <div className="flex flex-col gap-5">
@@ -39,9 +94,9 @@ function RouteComponent() {
                                 <h1 className="text-white text-2xl">Token details</h1>
                             </div>
                             <div className="col-span-1 flex justify-end">
-                                {token && (
+                                {token && token.tokenid !== '0x00' && (
                                     <div className="flex gap-2">
-                                        <div className="flex justify-end cursor-pointer select-none">
+                                        <div className="flex justify-end cursor-pointer select-none hidden">
                                             <div className="flex items-center gap-2 text-sm text-grey60 text-xs font-bold bg-contrast1 w-fit rounded-full px-3.5 py-1.5 border dark:border-contrast2 origin-center active:scale-[0.95] transition-all duration-100">
                                                 <svg
                                                     width="18"
@@ -60,7 +115,7 @@ function RouteComponent() {
                                             </div>
                                         </div>
                                         <div className="flex justify-end cursor-pointer select-none">
-                                            <div className="flex items-center gap-2 text-sm text-grey60 text-xs font-bold bg-contrast1 w-fit rounded-full px-3.5 py-1.5 border dark:border-contrast2 origin-center active:scale-[0.95] transition-all duration-100">
+                                            <div onClick={toggleBurnModal} className="flex items-center gap-2 text-sm text-grey60 text-xs font-bold bg-contrast1 w-fit rounded-full px-3.5 py-1.5 border dark:border-contrast2 origin-center active:scale-[0.95] transition-all duration-100">
                                                 <svg
                                                     width="12"
                                                     height="15"
@@ -90,51 +145,16 @@ function RouteComponent() {
                         {token && (
                             <div className="mb-14">
                                 <ul className="select-none flex flex-col gap-2">
-                                    <li className="cursor-pointer bg-grey10 dark:bg-darkContrast relative w-full flex items-center p-5 rounded">
+                                    <li className="bg-darkContrast relative w-full flex items-center p-5 rounded">
                                         <div className="grow flex">
-                                            <div className="w-[48px] h-[48px] border border-darkConstrast dark:border-grey80 rounded overflow-hidden">
-                                                <svg
-                                                    width="48"
-                                                    height="48"
-                                                    viewBox="0 0 48 48"
-                                                    fill="none"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                >
-                                                    <rect width="48" height="48" fill="white"></rect>
-                                                    <path
-                                                        d="M32.4428 16.759L31.2053 22.2329L29.6226 15.6286L24.0773 13.3795L22.578 19.9957L21.2571 12.2371L15.7119 10L10 35.2512H16.0569L17.8062 27.4926L19.1271 35.2512H25.1959L26.6834 28.6349L28.266 35.2512H34.323L38 18.9962L32.4428 16.759Z"
-                                                        fill="black"
-                                                    ></path>
-                                                </svg>
-                                            </div>
-                                            <div className="grow flex items-center overflow-hidden px-4">
+                                            <TokenIcon token={token.token} tokenId={token.tokenid} />
+                                            <div className="grow flex items-center overflow-hidden px-5">
                                                 <div className="grow items-center w-full">
                                                     <div className="flex items-center grow">
-                                                        <h6 className="text-lg font-bold truncate text-black dark:text-neutral-400">
-                                                            Minima
+                                                        <h6 className="text-lg font-bold truncate">
+                                                            {renderTokenName(token)}
                                                         </h6>
-                                                        <div className="!text-blue-500 my-auto ml-1">
-                                                            <svg
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                className="stroke-white"
-                                                                width="16"
-                                                                height="16"
-                                                                viewBox="0 0 24 24"
-                                                                strokeWidth="2.5"
-                                                                stroke="currentColor"
-                                                                fill="none"
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                            >
-                                                                <path
-                                                                    stroke="none"
-                                                                    d="M0 0h24v24H0z"
-                                                                    fill="none"
-                                                                ></path>
-                                                                <path d="M5 7.2a2.2 2.2 0 0 1 2.2 -2.2h1a2.2 2.2 0 0 0 1.55 -.64l.7 -.7a2.2 2.2 0 0 1 3.12 0l.7 .7c.412 .41 .97 .64 1.55 .64h1a2.2 2.2 0 0 1 2.2 2.2v1c0 .58 .23 1.138 .64 1.55l.7 .7a2.2 2.2 0 0 1 0 3.12l-.7 .7a2.2 2.2 0 0 0 -.64 1.55v1a2.2 2.2 0 0 1 -2.2 2.2h-1a2.2 2.2 0 0 0 -1.55 .64l-.7 .7a2.2 2.2 0 0 1 -3.12 0l-.7 -.7a2.2 2.2 0 0 0 -1.55 -.64h-1a2.2 2.2 0 0 1 -2.2 -2.2v-1a2.2 2.2 0 0 0 -.64 -1.55l-.7 -.7a2.2 2.2 0 0 1 0 -3.12l.7 -.7a2.2 2.2 0 0 0 .64 -1.55v-1"></path>
-                                                                <path d="M9 12l2 2l4 -4"></path>
-                                                            </svg>
-                                                        </div>
+                                                        <TokenAuthenticity token={token.token} />
                                                     </div>
                                                 </div>
                                             </div>

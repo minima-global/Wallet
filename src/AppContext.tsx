@@ -16,6 +16,8 @@ export const appContext = createContext<{
   address: string,
   hamburgerOpen: boolean,
   setHamburgerOpen: React.Dispatch<React.SetStateAction<boolean>>,
+  isPending: { uid: string, callback: () => void } | null,
+  setIsPending: React.Dispatch<React.SetStateAction<{ uid: string, callback: () => void } | null>>,
 }>({
   loaded: false,
   currencyType: '1',
@@ -30,6 +32,8 @@ export const appContext = createContext<{
   address: '',
   hamburgerOpen: false,
   setHamburgerOpen: () => { },
+  isPending: null,
+  setIsPending: () => { },
 })
 
 const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
@@ -37,6 +41,7 @@ const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const [loaded, setLoaded] = useState(false);
 
   const [hamburgerOpen, setHamburgerOpen] = useState(false);
+  const [isPending, setIsPending] = useState<{ uid: string, callback: () => void } | null>(null);
 
   const [currencyType, setCurrencyType] = useState<string>('1');
   const [balance, setBalance] = useState<Balance[]>([]);
@@ -82,6 +87,10 @@ const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 
         if (msg.event === MinimaEvents.NEWBLOCK) {
           fetchBalance();
+        }
+
+        if (msg.event === 'MDS_PENDING') {
+          window.dispatchEvent(new CustomEvent('MDS_PENDING', { detail: msg.data }));
         }
 
         if (msg.event === MinimaEvents.NEWBLOCK) {
@@ -130,6 +139,8 @@ const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
     address,
     hamburgerOpen,
     setHamburgerOpen,
+    isPending,
+    setIsPending,
   }
 
   return <appContext.Provider value={context}>{children}</appContext.Provider>
