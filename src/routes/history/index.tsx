@@ -185,7 +185,7 @@ function Index() {
                             </p>
                           </div>
                           <div className="text-right font-bold">
-                            <p className={`${difference > 0 ? 'text-green' : 'text-red'}`}>{difference > 0 ? '+' : '-'}{f(difference)}</p>
+                            <p className={`${difference > 0 ? 'text-green' : 'text-red'}`}>{!difference.includes('-') ? difference > 0 ? '+' : '-' : ''}{f(difference)}</p>
                             <p className="text-grey60">{f(change)}</p>
                           </div>
                         </div>

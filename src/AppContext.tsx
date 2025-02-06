@@ -18,6 +18,8 @@ export const appContext = createContext<{
   setHamburgerOpen: React.Dispatch<React.SetStateAction<boolean>>,
   isPending: { uid: string, callback: () => void } | null,
   setIsPending: React.Dispatch<React.SetStateAction<{ uid: string, callback: () => void } | null>>,
+  isSuccess: { callback: () => void } | true | null,
+  setIsSuccess: React.Dispatch<React.SetStateAction<{ callback: () => void } | true | null>>,
 }>({
   loaded: false,
   currencyType: '1',
@@ -34,6 +36,8 @@ export const appContext = createContext<{
   setHamburgerOpen: () => { },
   isPending: null,
   setIsPending: () => { },
+  isSuccess: null,
+  setIsSuccess: () => { },
 })
 
 const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
@@ -42,6 +46,7 @@ const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 
   const [hamburgerOpen, setHamburgerOpen] = useState(false);
   const [isPending, setIsPending] = useState<{ uid: string, callback: () => void } | null>(null);
+  const [isSuccess, setIsSuccess] = useState<{ callback: () => void } | null>(null);
 
   const [currencyType, setCurrencyType] = useState<string>('1');
   const [balance, setBalance] = useState<Balance[]>([]);
@@ -141,6 +146,8 @@ const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
     setHamburgerOpen,
     isPending,
     setIsPending,
+    isSuccess,
+    setIsSuccess,
   }
 
   return <appContext.Provider value={context}>{children}</appContext.Provider>

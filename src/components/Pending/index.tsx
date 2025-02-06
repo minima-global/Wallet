@@ -3,19 +3,16 @@ import { appContext } from "../../AppContext";
 import { useNavigate } from "@tanstack/react-router";
 
 const Pending = () => {
-    const { isPending, setIsPending } = useContext(appContext);
+    const { isPending, setIsPending, setIsSuccess } = useContext(appContext);
     const [success, setSuccess] = useState(false);
     const navigate = useNavigate();
 
 
     useEffect(() => {
         const callback = (e: CustomEvent) => {
-            console.log(isPending);
-            console.log(e.detail);
-            console.log(e.detail.uid && e.detail.uid === isPending?.uid)
             if (e.detail.uid && e.detail.uid === isPending?.uid) {
                 setIsPending(null);
-                setSuccess(true);
+                setIsSuccess(true);
             }
         }
 

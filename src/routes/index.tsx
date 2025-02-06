@@ -21,11 +21,29 @@ function Index() {
   const { balance, fetchBalance } = useContext(appContext);
   const { t } = useTranslation();
   const [query, setQuery] = useState('');
+  const [sort, setSort] = useState<'desc' | 'asc'>('desc');
 
   const filteredBalance = balance.filter(balance => {
     if (!query) return true;
     const tokenName = typeof balance.token === 'string' ? balance.token : balance.token.name;
     return tokenName.toLowerCase().includes(query.toLowerCase().trim());
+  }).sort((a, b) => {
+    // Always put Minima (0x00) at the top
+    if (a.tokenid === '0x00') return -1;
+    if (b.tokenid === '0x00') return 1;
+
+    const aAmount = Number(a.sendable);
+    const bAmount = Number(b.sendable);
+
+    if (sort === 'desc') {
+      if (aAmount > bAmount) return -1;
+      if (aAmount < bAmount) return 1;
+    } else {
+      if (aAmount < bAmount) return -1;
+      if (aAmount > bAmount) return 1;
+    }
+
+    return 0;
   });
 
   return (
@@ -41,7 +59,7 @@ function Index() {
 
             <div className="mb-6 flex gap-2.5">
               <SearchBar value={query} onChange={setQuery} />
-              <SortButton />
+              <SortButton action={() => setSort(sort === 'desc' ? 'asc' : 'desc')}   />
               <RefreshButton action={fetchBalance} />
               {/* <GridButton /> */}
             </div>
