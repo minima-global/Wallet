@@ -38,19 +38,19 @@ const NodeStatus = () => {
     const green = nodeStatus === true && contactStatus && !heavierChain;
 
     if (inactive) {
-        return <span className="inline-block ml-2 w-2 h-2 bg-grey60 rounded-full"></span>
+        return <span className="inline-block w-2 h-2 bg-grey60 rounded-full"></span>
     }
 
     if (red) {
-        return <span className="inline-block ml-2 w-2 h-2 bg-red rounded-full"></span>
+        return <span className="inline-block w-2 h-2 bg-red rounded-full"></span>
     }
 
     if (orange) {
-        return <span className="inline-block ml-2 w-2 h-2 bg-orange rounded-full"></span>
+        return <span className="inline-block w-2 h-2 bg-orange rounded-full"></span>
     }
 
     if (green) {
-        return <span className="inline-block ml-2 w-2 h-2 bg-green rounded-full"></span>
+        return <span className="inline-block w-2 h-2 bg-green rounded-full"></span>
     }
 
     return null;

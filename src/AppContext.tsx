@@ -5,6 +5,7 @@ import { createContext, useCallback, useEffect, useRef, useState } from "react"
 export const appContext = createContext<{
   loaded: boolean,
   currencyType: string,
+  block: Block | null,
   setCurrencyType: (type: string) => void,
   balance: Balance[],
   maxContacts: any,
@@ -13,9 +14,12 @@ export const appContext = createContext<{
   setLanguage: (language: string) => void,
   fetchBalance: () => void,
   address: string,
+  hamburgerOpen: boolean,
+  setHamburgerOpen: React.Dispatch<React.SetStateAction<boolean>>,
 }>({
   loaded: false,
   currencyType: '1',
+  block: null,
   setCurrencyType: () => { },
   balance: [],
   maxContacts: null,
@@ -24,11 +28,15 @@ export const appContext = createContext<{
   setLanguage: () => { },
   fetchBalance: () => { },
   address: '',
+  hamburgerOpen: false,
+  setHamburgerOpen: () => { },
 })
 
 const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const initialised = useRef(false);
   const [loaded, setLoaded] = useState(false);
+
+  const [hamburgerOpen, setHamburgerOpen] = useState(false);
 
   const [currencyType, setCurrencyType] = useState<string>('1');
   const [balance, setBalance] = useState<Balance[]>([]);
@@ -120,6 +128,8 @@ const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
     setLanguage,
     fetchBalance,
     address,
+    hamburgerOpen,
+    setHamburgerOpen,
   }
 
   return <appContext.Provider value={context}>{children}</appContext.Provider>

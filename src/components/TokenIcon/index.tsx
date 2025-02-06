@@ -1,5 +1,5 @@
 import { useTokenImage } from "../../hooks/useTokenImage";
-
+import { Image } from "test-image-pkg";
 const TokenIcon = ({ token, tokenId }: { token: any, tokenId: string }) => {
     const { render } = useTokenImage();
 
@@ -14,18 +14,10 @@ const TokenIcon = ({ token, tokenId }: { token: any, tokenId: string }) => {
         )
     }
 
-    if (typeof token === 'object' && token.url && (token.url.startsWith('https://') || token.url.startsWith('http://'))) {
-        return (
-            <div className="w-[48px] h-[48px] border border-contrast2 rounded overflow-hidden">
-                <img src={token.url} alt="Token" className="w-full h-full object-cover" />
-            </div>
-        )
-    }
-
     if (typeof token === 'object' && token.url) {
         return (
             <div className="w-[48px] h-[48px] border border-contrast2 rounded overflow-hidden">
-                <img src={render(token.url)} alt="Token" className="w-full h-full object-cover" />
+                <Image src={token.url} alt="Token" className="w-full h-full" />
             </div>
         )
     }
