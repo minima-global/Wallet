@@ -3,7 +3,6 @@ import Header from '../../components/Header'
 import Navigation from '../../components/Navigation'
 import Input from '../../components/Input'
 import Send from '../../components/Button'
-import Tabs from '../../components/Tabs'
 
 export const Route = createFileRoute('/nfts/create')({
   component: Index,
@@ -12,11 +11,6 @@ export const Route = createFileRoute('/nfts/create')({
 const Title = 'NFTs'
 
 function Index() {
-  const TABS = [
-    { title: 'Create', href: '/nfts/create' },
-    { title: 'My NFTs', href: '/nfts/my' },
-  ]
-
   return (
     <>
       <Header />
@@ -33,8 +27,6 @@ function Index() {
                 </div>
                 <div className="col-span-1" />
               </div>
-
-              <Tabs tabs={TABS} />
 
               <form className="mt-6 flex flex-col gap-6">
                 <Input

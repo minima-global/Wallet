@@ -17,10 +17,12 @@
         "message": "Message",
         "enter_message": "Enter message",
         "add_a_burn": "Add a burn",
+        "burn": "Burn",
         "optional": "Optional",
         "review": "Review",
         "your_address": "Your address",
         "validate": "Validate",
+        "cancel": "Cancel",
         "address_name": "Address name",
         "validate_an_address": "Validate an address",
         "enter_an_0x_or_mx_address": "Enter an 0x or Mx address",
@@ -36,9 +38,10 @@
         "back": "Back",
         "created": "Created",
         "sent": "Sent",
-        "received": "received",
+        "received": "Received",
         "please_enter_a_valid_amount": "Please enter a valid amount.",
-        "please_enter_a_valid_address": "Please enter a valid address."
+        "please_enter_a_valid_address": "Please enter a valid address.",
+        "confirmation": "Confirmation"
     },
     "zh": {
         "balance": "余额",
@@ -58,10 +61,12 @@
         "message": "消息",
         "enter_message": "输入消息",
         "add_a_burn": "添加燃烧地址",
+        "burn": "燃烧",
         "optional": "可选",
         "review": "审查",
         "your_address": "你的地址",
         "validate": "验证",
+        "cancel": "取消",
         "address_name": "地址名称",
         "validate_an_address": "验证一个地址",
         "enter_an_0x_or_mx_address": "输入一个0x或Mx地址",
@@ -76,7 +81,8 @@
         "mx_address": "Mx地址",
         "sent": "发送",
         "received": "接收",
-        "created": "创建"
+        "created": "创建",
+        "confirmation": "确认"
     },
     "ru": {
         "balance": "Баланс",
@@ -96,10 +102,12 @@
         "message": "Сообщение",
         "enter_message": "Введите сообщение",
         "add_a_burn": "Добавить адрес сжигания",
+        "burn": "Сжигание",
         "optional": "Необязательно",
         "review": "Просмотр",
         "your_address": "Ваш адрес",
         "validate": "Проверить",
+        "cancel": "Отмена",
         "address_name": "Имя адреса",
         "validate_an_address": "Проверить адрес",
         "enter_an_0x_or_mx_address": "Введите 0x или Mx адрес",
@@ -114,7 +122,8 @@
         "mx_address": "Mx адрес",
         "sent": "отправлено",
         "received": "получено",
-        "created": "создано"
+        "created": "создано",
+        "confirmation": "Подтверждение"
     },
     "ukr": {
         "balance": "Баланс",
@@ -134,10 +143,12 @@
         "message": "Повідомлення",
         "enter_message": "Введіть повідомлення",
         "add_a_burn": "Додати адресу спалювання",
+        "burn": "Спалювання",
         "optional": "Необов'язково",
         "review": "Перегляд",
         "your_address": "Ваш адрес",
         "validate": "Проверить",
+        "cancel": "Відміна",
         "address_name": "Ім'я адреси",
         "validate_an_address": "Проверить адрес",
         "enter_an_0x_or_mx_address": "Введіть 0x або Mx адрес",
@@ -152,7 +163,8 @@
         "mx_address": "Mx адрес",
         "sent": "відправлено",
         "received": "отримано",
-        "created": "створено"
+        "created": "створено",
+        "confirmation": "Підтвердження"
     },
     "fr": {
         "balance": "Solde",
@@ -172,10 +184,12 @@
         "message": "Message",
         "enter_message": "Entrez un message",
         "add_a_burn": "Ajouter une adresse de combustion",
+        "burn": "Combustion",
         "optional": "Optionnel",
         "review": "Revue",
         "your_address": "Votre adresse",
         "validate": "Valider",
+        "cancel": "Annuler",
         "address_name": "Nom de l'adresse",
         "validate_an_address": "Valider une adresse",
         "enter_an_0x_or_mx_address": "Entrez un 0x ou Mx adresse",
@@ -185,12 +199,13 @@
         "validation_report": "Rapport de validation",
         "belongs_to_this_node": "Appartient à ce nœud",
         "simple_address": "Adresse simple",
-        "validating": "Validation",
+        "validating": "Validation en cours",
         "0x_address": "Adresse 0x",
         "mx_address": "Adresse Mx",
         "sent": "envoyé",
         "received": "reçu",
-        "created": "créé"
+        "created": "créé",
+        "confirmation": "C"
     },
     "es": {
         "balance": "Saldo",
@@ -210,10 +225,12 @@
         "message": "Message",
         "enter_message": "Entrez un message",
         "add_a_burn": "Agregar una quema",
+        "burn": "Quema",
         "optional": "Optionnel",
         "review": "Revue",
         "your_address": "Votre adresse",
         "validate": "Valider",
+        "cancel": "Annuler",
         "address_name": "Nom de l'adresse",
         "validate_an_address": "Valider une adresse",
         "enter_an_0x_or_mx_address": "Entrez un 0x ou Mx adresse",
@@ -223,11 +240,12 @@
         "validation_report": "Rapport de validation",
         "belongs_to_this_node": "Appartient à ce nœud",
         "simple_address": "Adresse simple",
-        "validating": "Validation",
+        "validating": "Validando",
         "0x_address": "Adresse 0x",
         "mx_address": "Adresse Mx",
         "sent": "envoyé",
         "received": "reçu",
-        "created": "créé"
+        "created": "créé",
+        "confirmation": "Confirmación"
     }
 }

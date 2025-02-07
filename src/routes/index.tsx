@@ -73,7 +73,7 @@ function Index() {
               </div>
             </div>
 
-            <ul className="select-none flex flex-col gap-2">
+            <ul className="select-none flex flex-col gap-2 mb-20">
               {filteredBalance.length === 0 && (
                 <div className="w-full flex items-center bg-contrast1 opacity-80 p-3 px-4 text-sm rounded">
                   No tokens found

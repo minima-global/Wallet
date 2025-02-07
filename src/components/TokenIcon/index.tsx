@@ -1,7 +1,6 @@
-import { useTokenImage } from "../../hooks/useTokenImage";
 import { Image } from "test-image-pkg";
+
 const TokenIcon = ({ token, tokenId }: { token: any, tokenId: string }) => {
-    const { render } = useTokenImage();
 
     if (token === 'Minima') {
         return (
@@ -17,7 +16,7 @@ const TokenIcon = ({ token, tokenId }: { token: any, tokenId: string }) => {
     if (typeof token === 'object' && token.url) {
         return (
             <div className="w-[48px] h-[48px] border border-contrast2 rounded overflow-hidden">
-                <Image src={token.url} alt="Token" className="w-full h-full" />
+                <Image src={token.url} alt="Token" className="w-full h-full object-cover" loader={<div />} />
             </div>
         )
     }

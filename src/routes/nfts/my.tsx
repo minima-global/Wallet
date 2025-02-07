@@ -1,9 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import Header from '../../components/Header'
 import Navigation from '../../components/Navigation'
-import Tabs from '../../components/Tabs'
-import SearchBar from '../../components/SearchBar'
-import RefreshButton from '../../components/RefreshButton'
 import HeartButton from '../../components/HeartButton'
 
 export const Route = createFileRoute('/nfts/my')({
@@ -40,11 +37,6 @@ const NFTCard = ({ favourted }: { favourted: boolean }) => {
 }
 
 function Index() {
-  const TABS = [
-    { title: 'Create', href: '/nfts/create' },
-    { title: 'My NFTs', href: '/nfts/my' },
-  ]
-
   return (
     <>
       <Header />
@@ -62,10 +54,7 @@ function Index() {
                 <div className="col-span-1" />
               </div>
 
-              <Tabs tabs={TABS} />
-
               <div className="mb-6 flex gap-2.5">
-                <SearchBar />
                 <HeartButton />
               </div>
 

@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import Header from '../../components/Header'
 import Tabs from '../../components/Tabs'
 import Navigation from '../../components/Navigation'
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import QRCode from 'react-qr-code';
 import { CheckAddress, MDS } from '@minima-global/mds';
 import Button from '../../components/Button';
@@ -155,6 +155,7 @@ function Index() {
                       value={address}
                       label={t("address_name")}
                       inverse
+                      copy
                     />
                   </div>
 

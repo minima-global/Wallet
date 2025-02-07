@@ -20,6 +20,9 @@ export const appContext = createContext<{
   setIsPending: React.Dispatch<React.SetStateAction<{ uid: string, callback: () => void } | null>>,
   isSuccess: { callback: () => void } | true | null,
   setIsSuccess: React.Dispatch<React.SetStateAction<{ callback: () => void } | true | null>>,
+  history: any[] | null,
+  setHistory: React.Dispatch<React.SetStateAction<any[] | null>>,
+  getHistory: (order?: 'asc' | 'desc') => void,
 }>({
   loaded: false,
   currencyType: '1',
@@ -38,6 +41,9 @@ export const appContext = createContext<{
   setIsPending: () => { },
   isSuccess: null,
   setIsSuccess: () => { },
+  history: null,
+  setHistory: () => { },
+  getHistory: () => { },
 })
 
 const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
@@ -46,7 +52,7 @@ const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 
   const [hamburgerOpen, setHamburgerOpen] = useState(false);
   const [isPending, setIsPending] = useState<{ uid: string, callback: () => void } | null>(null);
-  const [isSuccess, setIsSuccess] = useState<{ callback: () => void } | null>(null);
+  const [isSuccess, setIsSuccess] = useState<{ callback: () => void } | true | null>(null);
 
   const [currencyType, setCurrencyType] = useState<string>('1');
   const [balance, setBalance] = useState<Balance[]>([]);
@@ -55,6 +61,8 @@ const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const [heavierChain, setHeavierChain] = useState<boolean>(false);
   const [language, setLanguage] = useState<string>('en');
   const [address, setAddress] = useState<string>('');
+
+  const [history, setHistory] = useState<any[] | null>(null);
 
   const fetchBalance = useCallback(() => {
     MDS.cmd.balance((balance) => {
@@ -83,6 +91,10 @@ const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 
           MDS.cmd.maxcontacts((maxContacts) => {
             setMaxContacts(maxContacts.response);
+          });
+
+          MDS.sql(`SELECT * FROM txpows ORDER BY timemilli desc`).then((txpows) => {
+            setHistory(txpows.rows.map((r) => ({ ...r, HEADER: JSON.parse(r.HEADER), BODY: JSON.parse(r.BODY), DETAILS: JSON.parse(r.DETAILS) })));
           });
         }
 
@@ -130,6 +142,12 @@ const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
     }
   }, []);
 
+  const getHistory = useCallback((order = 'desc') => {
+    MDS.sql(`SELECT * FROM txpows ORDER BY timemilli ${order}`).then((txpows) => {
+      setHistory(txpows.rows.map((r) => ({ ...r, HEADER: JSON.parse(r.HEADER), BODY: JSON.parse(r.BODY), DETAILS: JSON.parse(r.DETAILS) })));
+    });
+  }, []);
+
   const context = {
     loaded,
     currencyType,
@@ -148,6 +166,9 @@ const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
     setIsPending,
     isSuccess,
     setIsSuccess,
+    history,
+    getHistory,
+    setHistory,
   }
 
   return <appContext.Provider value={context}>{children}</appContext.Provider>

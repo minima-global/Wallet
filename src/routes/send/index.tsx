@@ -1,7 +1,6 @@
 import { useContext, useState } from 'react'
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import Header from '../../components/Header'
-import Send from '../../components/Button'
 import Navigation from '../../components/Navigation'
 import Input from '../../components/Input'
 import useTranslation from '../../hooks/useTranslation'
@@ -9,6 +8,10 @@ import { appContext } from '../../AppContext'
 import { renderTokenName } from '../../utils'
 import TokenAuthenticity from '../../components/TokenAuthenticity'
 import TokenIcon from '../../components/TokenIcon'
+import InfoBox from '../../components/InfoBox'
+import Button from '../../components/Button'
+import { MDS } from '@minima-global/mds'
+import Decimal from 'decimal.js'
 
 export const Route = createFileRoute('/send/')({
     component: Index,
@@ -16,13 +19,91 @@ export const Route = createFileRoute('/send/')({
 
 function Index() {
     const { t } = useTranslation()
-    const [step, setStep] = useState<number>(1)
+    const navigate = useNavigate()
+    const { balance, setIsPending, setIsSuccess } = useContext(appContext);
+    const [step, setStep] = useState<number>(1);
     const [selectedTokenId, setSelectedTokenId] = useState<string>('0x00')
+    const selectedToken = balance.find(
+        (token) => token.tokenid === selectedTokenId,
+    );
+    const sendableMinima = balance.find(
+        (token) => token.tokenid === '0x00',
+    );
 
-    const [amount, setAmount] = useState<string>('')
-    const [recipient, setRecipient] = useState<string>('')
+    const [amount, setAmount] = useState<string>('1')
+    const [recipient, setRecipient] = useState<string>('MxG08309UFVEJF9AYJJ2VYK4J4QPY7VJ0S7ZVMYFEVDGS1B1604PRTQZ5PDFS42')
     const [message, setMessage] = useState<string>('')
     const [burn, setBurn] = useState<string>('')
+
+
+    const goToStep1 = () => {
+        setStep(1)
+    }
+
+    const goToStep2 = () => {
+        setStep(2)
+    }
+
+    const send = async () => {
+        const response = await MDS.cmd.send({
+            params: {
+                tokenid: selectedTokenId,
+                amount: amount,
+                address: recipient,
+                burn: burn || undefined,
+                state: message
+                    ? JSON.stringify({
+                        44: message,
+                    })
+                    : undefined
+            }
+        })
+
+        if (response.pending) {
+            setIsPending({
+                uid: response.pendinguid as string,
+                callback: () => {
+                    navigate({ to: '/' })
+                }
+            })
+        }
+
+        if (response.status) {
+            setIsSuccess(true)
+        }
+    }
+
+    const isMaxAmount = (value: string) => {
+        try {
+            return new Decimal(value).lte(new Decimal(selectedToken?.sendable || '0'));
+        } catch (error) {
+            return false;
+        }
+    }
+
+    const hasSendableMinima = () => {
+        try {
+            return new Decimal(burn).lte(new Decimal(sendableMinima?.sendable || '0'));
+        } catch (error) {
+            return false;
+        }
+    }
+
+    const isDisabled = () => {
+        if (!recipient.match(/^(0x|Mx)[0-9a-zA-Z]*$/)) {
+            return true;
+        }
+
+        if (!isMaxAmount(amount)) {
+            return true;
+        }
+
+        if (burn && !hasSendableMinima()) {
+            return true;
+        }
+
+        return false;
+    };
 
     return (
         <>
@@ -32,46 +113,84 @@ function Index() {
                     <div className="flex flex-col gap-5">
                         <Navigation />
                     </div>
-                    <div className="grow flex flex-col">
-                        <h1 className="text-white text-2xl mb-6">{t('send')}</h1>
+                    {step === 1 && (
+                        <div className="grow flex flex-col">
+                            <h1 className="text-white text-2xl mb-6">{t('send')}</h1>
 
-                        <TokenDropdown value={selectedTokenId} onChange={setSelectedTokenId} />
+                            <TokenDropdown value={selectedTokenId} onChange={setSelectedTokenId} />
 
-                        <div className="mt-5 mb-8 flex flex-col gap-6">
-                            <Input
-                                label={t('amount')}
-                                placeholder={t('enter_amount')}
-                                value={amount}
-                                onChange={(value) => setAmount(value)}
-                                validation="^[0-9]*$"
-                                validationMessage={t('please_enter_a_valid_amount')}
-                            />
-                            <Input
-                                label={t('recipient_address')}
-                                placeholder={t('enter_recipient_address')}
-                                value={recipient}
-                                onChange={(value) => setRecipient(value)}
-                                validation="^(0x|Mx)[0-9a-zA-Z]*$"
-                                validationMessage={t('please_enter_a_valid_address')}
-                            />
-                            <Input
-                                label={t('message')}
-                                placeholder={t('enter_message')}
-                                value={message}
-                                onChange={(value) => setMessage(value)}
-                            />
-                            <Input
-                                label={t('add_a_burn') + ` (${t('optional')})`}
-                                placeholder={t('optional')}
-                                value={burn}
-                                onChange={(value) => setBurn(value)}
-                                validation="^[0-9]*$"
-                                validationMessage={t('please_enter_a_valid_amount')}
-                            />
+                            <div className="mt-5 mb-8 flex flex-col gap-6">
+                                <Input
+                                    label={t('amount')}
+                                    placeholder={t('enter_amount')}
+                                    value={amount}
+                                    onChange={(value) => setAmount(value)}
+                                    validation={isMaxAmount}
+                                    validationMessage={t('please_enter_a_valid_amount')}
+                                />
+                                <Input
+                                    label={t('recipient_address')}
+                                    placeholder={t('enter_recipient_address')}
+                                    value={recipient}
+                                    onChange={(value) => setRecipient(value)}
+                                    validation="^(0x|Mx)[0-9a-zA-Z]*$"
+                                    validationMessage={t('please_enter_a_valid_address')}
+                                />
+                                <Input
+                                    label={t('message')}
+                                    placeholder={t('enter_message')}
+                                    value={message}
+                                    onChange={(value) => setMessage(value)}
+                                />
+                                <Input
+                                    label={t('add_a_burn') + ` (${t('optional')})`}
+                                    placeholder={t('optional')}
+                                    value={burn}
+                                    onChange={(value) => setBurn(value)}
+                                    validation={hasSendableMinima}
+                                    validationMessage={t('please_enter_a_valid_amount')}
+                                />
+                            </div>
+
+                            <Button disabled={isDisabled()} onClick={goToStep2}>{t('review')}</Button>
                         </div>
+                    )}
+                    {step === 2 && selectedToken && (
+                        <div className="grow flex flex-col">
+                            <div className="grow flex flex-col">
+                                <h1 className="text-white text-2xl mb-8">{t('confirmation')}</h1>
 
-                        <Send>{t('review')}</Send>
-                    </div>
+                                <div className="flex flex-col gap-2 mb-8">
+
+                                    <div className="cursor-pointer bg-grey10 dark:bg-darkContrast relative w-full flex items-center p-5 rounded">
+                                        <div className="grow flex">
+                                            <TokenIcon token={selectedToken.token} tokenId={selectedToken.tokenid} />
+                                            <div className="grow flex items-center overflow-hidden px-4">
+                                                <div className="grow items-center w-full">
+                                                    <div className="flex items-center grow">
+                                                        <h6 className="text-lg font-bold truncate text-black dark:text-neutral-400">
+                                                            {renderTokenName(selectedToken)}
+                                                        </h6>
+                                                        <TokenAuthenticity token={selectedToken} />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <InfoBox title={t('amount')} value={`${amount}`} />
+                                    <InfoBox title={t('recipient_address')} value={recipient} />
+                                    <InfoBox title={t('message')} value={message || 'N/A'} />
+                                    <InfoBox title={t('burn')} value={burn || 'N/A'} />
+                                </div>
+
+                                <div className="flex flex-col gap-2">
+                                    <Button disabled={isDisabled()} onClick={send}>{t('send')}</Button>
+                                    <Button onClick={goToStep1} secondary>{t('cancel')}</Button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
         </>
@@ -84,7 +203,6 @@ type TokenDropdownProps = {
 }
 
 const TokenDropdown = ({ value, onChange }: TokenDropdownProps) => {
-    const { t } = useTranslation()
     const { balance } = useContext(appContext);
     const [isOpen, setIsOpen] = useState<boolean>(false);
 

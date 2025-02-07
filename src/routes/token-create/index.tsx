@@ -1,7 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import Header from '../../components/Header'
 import Navigation from '../../components/Navigation'
-import SearchBar from '../../components/SearchBar'
 import Dropdown from '../../components/Dropdown'
 import Input from '../../components/Input'
 import Send from '../../components/Button'

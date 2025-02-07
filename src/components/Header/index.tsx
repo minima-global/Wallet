@@ -7,24 +7,8 @@ import NodeStatus from '../NodeStatus/index.tsx';
 import LanguageSelector from '../LanguageSelector/index.tsx';
 import useTranslation from '../../hooks/useTranslation.ts';
 
-const HEADER_NAV = [
-  {
-    title: 'Dashboard',
-    href: '/',
-  },
-  {
-    title: 'Transactions',
-    href: '/transactions',
-  },
-  {
-    title: 'Blocks',
-    href: '/blocks',
-  },
-]
-
 const Header = () => {
   const { t } = useTranslation();
-  const pathName = '___'
   const { block, hamburgerOpen, setHamburgerOpen } = useContext(appContext)
   const [isAtTop, setIsAtTop] = useState(true)
   const openTitleBar = useAndroidShowTitleBar();

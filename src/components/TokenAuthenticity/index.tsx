@@ -7,7 +7,7 @@ const TokenAuthenticity = ({ token, disabled }: { token: any, disabled?: boolean
 
     useEffect(() => {
         const authenticate = async () => {
-            const r = await MDS.cmd.tokenValidate({
+            const r = await MDS.cmd.tokenvalidate({
                 params: {
                     tokenid
                 }

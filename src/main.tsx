@@ -2,6 +2,7 @@ import { MDS } from "@minima-global/mds"
 import {
   createRouter,
   RouterProvider,
+  createMemoryHistory,
 } from "@tanstack/react-router"
 import React from "react"
 import ReactDOM from "react-dom/client"
@@ -11,11 +12,11 @@ import "./index.css"
 import { routeTree } from "./routeTree.gen"
 import Modal from "./components/Modal/Modal.tsx"
 
-// const memoryHistory = createMemoryHistory({
-//   initialEntries: ["/"],
-// })
+const memoryHistory = createMemoryHistory({
+  initialEntries: ["/"],
+})
 
-const router = createRouter({ routeTree })
+const router = createRouter({ routeTree, history: memoryHistory })
 
 declare module "@tanstack/react-router" {
   interface Register {
