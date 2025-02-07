@@ -106,94 +106,84 @@ function Index() {
     };
 
     return (
-        <>
-            <Header />
-            <div className="mt-10 container mx-auto flex">
-                <div className="flex w-full gap-10">
-                    <div className="flex flex-col gap-5">
-                        <Navigation />
+        <div>
+            {step === 1 && (
+                <div className="grow flex flex-col">
+                    <h1 className="text-white text-2xl mb-6">{t('send')}</h1>
+
+                    <TokenDropdown value={selectedTokenId} onChange={setSelectedTokenId} />
+
+                    <div className="mt-5 mb-8 flex flex-col gap-6">
+                        <Input
+                            label={t('amount')}
+                            placeholder={t('enter_amount')}
+                            value={amount}
+                            onChange={(value) => setAmount(value)}
+                            validation={isMaxAmount}
+                            validationMessage={t('please_enter_a_valid_amount')}
+                        />
+                        <Input
+                            label={t('recipient_address')}
+                            placeholder={t('enter_recipient_address')}
+                            value={recipient}
+                            onChange={(value) => setRecipient(value)}
+                            validation="^(0x|Mx)[0-9a-zA-Z]*$"
+                            validationMessage={t('please_enter_a_valid_address')}
+                        />
+                        <Input
+                            label={t('message')}
+                            placeholder={t('enter_message')}
+                            value={message}
+                            onChange={(value) => setMessage(value)}
+                        />
+                        <Input
+                            label={t('add_a_burn') + ` (${t('optional')})`}
+                            placeholder={t('optional')}
+                            value={burn}
+                            onChange={(value) => setBurn(value)}
+                            validation={hasSendableMinima}
+                            validationMessage={t('please_enter_a_valid_amount')}
+                        />
                     </div>
-                    {step === 1 && (
-                        <div className="grow flex flex-col">
-                            <h1 className="text-white text-2xl mb-6">{t('send')}</h1>
 
-                            <TokenDropdown value={selectedTokenId} onChange={setSelectedTokenId} />
+                    <Button disabled={isDisabled()} onClick={goToStep2}>{t('review')}</Button>
+                </div>
+            )}
+            {step === 2 && selectedToken && (
+                <div className="grow flex flex-col">
+                    <h1 className="text-white text-2xl mb-6">{t('confirmation')}</h1>
 
-                            <div className="mt-5 mb-8 flex flex-col gap-6">
-                                <Input
-                                    label={t('amount')}
-                                    placeholder={t('enter_amount')}
-                                    value={amount}
-                                    onChange={(value) => setAmount(value)}
-                                    validation={isMaxAmount}
-                                    validationMessage={t('please_enter_a_valid_amount')}
-                                />
-                                <Input
-                                    label={t('recipient_address')}
-                                    placeholder={t('enter_recipient_address')}
-                                    value={recipient}
-                                    onChange={(value) => setRecipient(value)}
-                                    validation="^(0x|Mx)[0-9a-zA-Z]*$"
-                                    validationMessage={t('please_enter_a_valid_address')}
-                                />
-                                <Input
-                                    label={t('message')}
-                                    placeholder={t('enter_message')}
-                                    value={message}
-                                    onChange={(value) => setMessage(value)}
-                                />
-                                <Input
-                                    label={t('add_a_burn') + ` (${t('optional')})`}
-                                    placeholder={t('optional')}
-                                    value={burn}
-                                    onChange={(value) => setBurn(value)}
-                                    validation={hasSendableMinima}
-                                    validationMessage={t('please_enter_a_valid_amount')}
-                                />
-                            </div>
+                    <div className="flex flex-col gap-2 mb-8">
 
-                            <Button disabled={isDisabled()} onClick={goToStep2}>{t('review')}</Button>
-                        </div>
-                    )}
-                    {step === 2 && selectedToken && (
-                        <div className="grow flex flex-col">
-                            <div className="grow flex flex-col">
-                                <h1 className="text-white text-2xl mb-8">{t('confirmation')}</h1>
-
-                                <div className="flex flex-col gap-2 mb-8">
-
-                                    <div className="cursor-pointer bg-grey10 dark:bg-darkContrast relative w-full flex items-center p-5 rounded">
-                                        <div className="grow flex">
-                                            <TokenIcon token={selectedToken.token} tokenId={selectedToken.tokenid} />
-                                            <div className="grow flex items-center overflow-hidden px-4">
-                                                <div className="grow items-center w-full">
-                                                    <div className="flex items-center grow">
-                                                        <h6 className="text-lg font-bold truncate text-black dark:text-neutral-400">
-                                                            {renderTokenName(selectedToken)}
-                                                        </h6>
-                                                        <TokenAuthenticity token={selectedToken} />
-                                                    </div>
-                                                </div>
-                                            </div>
+                        <div className="bg-contrast1 relative w-full flex items-center p-5 rounded">
+                            <div className="grow flex">
+                                <TokenIcon token={selectedToken.token} tokenId={selectedToken.tokenid} />
+                                <div className="grow flex items-center overflow-hidden px-4">
+                                    <div className="grow items-center w-full">
+                                        <div className="flex items-center grow gap-1.5">
+                                            <h6 className="text-lg font-bold truncate text-black dark:text-neutral-400">
+                                                {renderTokenName(selectedToken)}
+                                            </h6>
+                                            <TokenAuthenticity token={selectedToken} />
                                         </div>
                                     </div>
-
-                                    <InfoBox title={t('amount')} value={`${amount}`} />
-                                    <InfoBox title={t('recipient_address')} value={recipient} />
-                                    <InfoBox title={t('message')} value={message || 'N/A'} />
-                                    <InfoBox title={t('burn')} value={burn || 'N/A'} />
-                                </div>
-
-                                <div className="flex flex-col gap-2">
-                                    <Button disabled={isDisabled()} onClick={send}>{t('send')}</Button>
-                                    <Button onClick={goToStep1} secondary>{t('cancel')}</Button>
                                 </div>
                             </div>
                         </div>
-                    )}
+
+                        <InfoBox title={t('amount')} value={`${amount}`} />
+                        <InfoBox title={t('recipient_address')} value={recipient} />
+                        <InfoBox title={t('message')} value={message || 'N/A'} />
+                        <InfoBox title={t('burn')} value={burn || 'N/A'} />
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                        <Button disabled={isDisabled()} onClick={send}>{t('send')}</Button>
+                        <Button onClick={goToStep1} secondary>{t('cancel')}</Button>
+                    </div>
                 </div>
-            </div>
-        </>
+            )}
+        </div>
     )
 }
 

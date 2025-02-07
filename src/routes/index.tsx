@@ -1,7 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import Header from "../components/Header";
 import SearchBar from "../components/SearchBar";
-import Navigation from "../components/Navigation";
 import RefreshButton from "../components/RefreshButton";
 import SortButton from "../components/SortButton";
 import { appContext } from "../AppContext";
@@ -64,47 +62,37 @@ function Index() {
   }
 
   return (
-    <>
-      <Header />
-      <div className="mt-4 lg:mt-10 container mx-auto px-4 lg:px-0 lg:mx-auto flex">
-        <div className="flex w-full gap-10">
-          <div className="flex flex-col gap-5 hidden lg:blockhidden lg:block">
-            <Navigation />
-          </div>
-          <div className="grow flex flex-col">
-            <h1 className="text-white text-2xl mb-6">{t("balance")}</h1>
+    <div>
+      <h1 className="text-white text-2xl mb-6">{t("balance")}</h1>
 
-            <div className="mb-6 flex gap-2.5">
-              <SearchBar value={query} onChange={setQuery} />
-              <SortButton action={() => setSort(sort === 'desc' ? 'asc' : 'desc')} />
-              <RefreshButton action={fetchBalance} />
-              {/* <GridButton /> */}
-            </div>
+      <div className="mb-6 flex gap-2.5">
+        <SearchBar value={query} onChange={setQuery} />
+        <SortButton action={() => setSort(sort === 'desc' ? 'asc' : 'desc')} />
+        <RefreshButton action={fetchBalance} />
+        {/* <GridButton /> */}
+      </div>
 
-            <div onClick={toggleTokensHidden} className="mb-4 flex justify-end cursor-pointer select-none">
-              <div className="flex items-center gap-2.5 text-sm text-grey60 text-xs font-bold bg-contrast1 w-fit rounded-full px-3.5 py-1.5 border dark:border-contrast2 origin-center active:scale-[0.95] transition-all duration-100">
-                {hideHiddenTokens ? <img src="./assets/icons/eye-open.svg" alt="Show hidden tokens" className="text-white w-4 h-4" /> : <img src="./assets/icons/eye-closed.svg" alt="Show hidden tokens" className="w-4 h-4" />}
-                {hideHiddenTokens ? t('show_hidden_tokens') : t('hide_hidden_tokens')}
-              </div>
-            </div>
-
-            <ul className="select-none flex flex-col gap-2 mb-20">
-              {filteredBalance.length === 0 && (
-                <div className="w-full flex items-center bg-contrast1 opacity-80 p-3 px-4 text-sm rounded">
-                  No tokens found
-                </div>
-              )}
-              {filteredBalance.map((balance) => (
-                <BalanceItem key={balance.tokenid} balance={balance} />
-              ))}
-              {hideHiddenTokens && (
-                <div className="mt-2 text-right w-full text-[13px] font-bold text-grey60"><strong className="font-heavy">{numberHiddenTokens}</strong> {t('hidden_items')}</div>
-              )}
-            </ul>
-          </div>
+      <div onClick={toggleTokensHidden} className="mb-4 flex justify-end cursor-pointer select-none">
+        <div className="flex items-center gap-2.5 text-sm text-grey60 text-xs font-bold bg-contrast1 w-fit rounded-full px-3.5 py-1.5 border dark:border-contrast2 origin-center active:scale-[0.95] transition-all duration-100">
+          {hideHiddenTokens ? <img src="./assets/icons/eye-open.svg" alt="Show hidden tokens" className="text-white w-4 h-4" /> : <img src="./assets/icons/eye-closed.svg" alt="Show hidden tokens" className="w-4 h-4" />}
+          {hideHiddenTokens ? t('show_hidden_tokens') : t('hide_hidden_tokens')}
         </div>
       </div>
-    </>
+
+      <ul className="select-none flex flex-col gap-2 mb-20">
+        {filteredBalance.length === 0 && (
+          <div className="w-full flex items-center bg-contrast1 opacity-80 p-3 px-4 text-sm rounded">
+            No tokens found
+          </div>
+        )}
+        {filteredBalance.map((balance) => (
+          <BalanceItem key={balance.tokenid} balance={balance} />
+        ))}
+        {hideHiddenTokens && (
+          <div className="mt-2 text-right w-full text-[13px] font-bold text-grey60"><strong className="font-heavy">{numberHiddenTokens}</strong> {t('hidden_items')}</div>
+        )}
+      </ul>
+    </div>
   );
 }
 
