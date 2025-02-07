@@ -30,8 +30,8 @@ function Index() {
         (token) => token.tokenid === '0x00',
     );
 
-    const [amount, setAmount] = useState<string>('1')
-    const [recipient, setRecipient] = useState<string>('MxG08309UFVEJF9AYJJ2VYK4J4QPY7VJ0S7ZVMYFEVDGS1B1604PRTQZ5PDFS42')
+    const [amount, setAmount] = useState<string>('')
+    const [recipient, setRecipient] = useState<string>('')
     const [message, setMessage] = useState<string>('')
     const [burn, setBurn] = useState<string>('')
 

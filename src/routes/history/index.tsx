@@ -9,7 +9,7 @@ import { appContext } from '../../AppContext'
 import { MDS } from '@minima-global/mds'
 import { format } from "date-fns";
 import useFormatAmount from '../../hooks/useFormatAmount'
-import { renderTokenName } from '../../utils'
+import { escape, renderTokenName } from '../../utils'
 import TokenAuthenticity from '../../components/TokenAuthenticity'
 import TokenIcon from '../../components/TokenIcon'
 import useTranslation from '../../hooks/useTranslation'
@@ -33,6 +33,35 @@ export const Route = createFileRoute('/history/')({
 //   BODY: object;
 //   DETAILS: object;
 // }
+
+const Dropdown = ({ options }: { options: { key: string, label: string }[] }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  }
+
+  const handleOptionClick = (option: { key: string, label: string, onClick?: () => void }) => {
+    setIsOpen(false);
+    option.onClick?.();
+  }
+
+  return (
+    <div className="relative flex items-center justify-end">
+      <div onClick={toggleDropdown} className="relative z-[1000] cursor-pointer flex flex-col gap-0.5 px-4 -mr-4">
+        <div className="w-[4px] h-[4px] bg-grey60 rounded-full" />
+        <div className="w-[4px] h-[4px] bg-grey60 rounded-full" />
+        <div className="w-[4px] h-[4px] bg-grey60 rounded-full" />
+      </div>
+      <div className={`absolute z-10 top-[100%] mt-2 text-sm right-0 flex flex-col gap-[2px] bg-contrast1 whitespace-nowrap ${isOpen ? 'block' : 'hidden'}`}>
+        {options.map((option) => (
+          <button key={option.key} onClick={() => handleOptionClick(option)} className="bg-contrast2 px-4 py-2 text-white hover:bg-white hover:text-black">{option.label}</button>
+        ))}
+      </div>
+      <div className={`fixed z-0 bg-black opacity-50 inset-0 ${isOpen ? 'pointer-events-auto' : 'pointer-events-none hidden'}`} onClick={toggleDropdown}></div>
+    </div>
+  )
+}
 
 function Index() {
   const { loaded, history, getHistory } = useContext(appContext);
@@ -83,11 +112,11 @@ function Index() {
 
     if (query && typeof row.BODY.txn.inputs[0].token === 'string' && row.BODY.txn.inputs[0].token.toLowerCase().includes(query.toLowerCase().trim())) {
       groups[date].push(row);
-    } 
+    }
 
     if (query && typeof row.BODY.txn.inputs[0].token.name === 'object' && row.BODY.txn.inputs[0].token.name.name.toLowerCase().includes(query.toLowerCase().trim())) {
       groups[date].push(row);
-    } 
+    }
 
     if (!query) {
       groups[date].push(row);
@@ -95,6 +124,52 @@ function Index() {
 
     return groups;
   }, {});
+
+  const downloadTransactions = () => {
+    if (!history) {
+      return;
+    }
+
+    const now = new Date();
+    const date = now.toISOString().split('T')[0].replace(/-/g, '_');
+    const time = now.toISOString().split('T')[1].split('.')[0].replace(/:/g, '_');
+    const filename = `minima_${date}_${time}.csv`;
+
+    const headers = ['AMOUNT', 'TYPE', 'DATE', 'SENT_TO_MX_ADDRESS', 'SENT_TO_0X_ADDRESS', 'TXPOWID', 'TIMEMILLI', 'ISBLOCK', 'ISTRANSACTION', 'HASBODY', 'BURN', 'SUPERBLOCK', 'SIZE', 'HEADER', 'BODY', 'DETAILS'];
+    const csv = [
+      headers,
+      ...history.map((h) => {
+        const DIFFERENCE = h.DETAILS.difference[h.BODY.txn.inputs[0].tokenid];
+        const AMOUNT = DIFFERENCE > 0 ? `"${'+' + DIFFERENCE}"` : `"${DIFFERENCE}"`;
+        const TYPE = DIFFERENCE > 0 ? 'IN' : 'OUT';
+        const DATE = format(new Date(Number(h.TIMEMILLI)), "dd-MM-yyyy HH:mm a");
+        const SENT_TO_MX = h.BODY.txn.outputs[0].miniaddress || "N/A";
+        const SENT_TO_0X = h.BODY.txn.outputs[0].address || "N/A";
+        return [AMOUNT, TYPE, DATE, `"${SENT_TO_MX}"`, `"${SENT_TO_0X}"`, h.TXPOWID, h.HEADER.timemilli, h.ISBLOCK, h.ISTRANSACTION, h.HASBODY, h.BURN, h.SUPERBLOCK, h.SIZE, escape(h.HEADER), escape(h.BODY), escape(h.DETAILS)];
+      })
+    ];
+
+    if (window.navigator.userAgent.includes('Minima Browser')) {
+      // @ts-ignore
+      return Android.blobDownload(filename, toHex(csv.join('\n')));
+    }
+
+    const blob = new Blob([csv.join('\n')], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+
+  const dropdownOptions = [
+    {
+      key: 'download_transactions',
+      label: 'Download transactions',
+      onClick: downloadTransactions,
+    },
+  ]
 
   return (
     <>
@@ -113,12 +188,8 @@ function Index() {
                   </h1>
                 </div>
                 <div className="col-span-1">
-                  <div className="flex items-end justify-end flex-col gap-3">
-                    <div className="flex flex-col gap-0.5">
-                      <div className="w-[4px] h-[4px] bg-grey60 rounded-full" />
-                      <div className="w-[4px] h-[4px] bg-grey60 rounded-full" />
-                      <div className="w-[4px] h-[4px] bg-grey60 rounded-full" />
-                    </div>
+                  <div className="flex items-center justify-end gap-3 h-full">
+                    <Dropdown options={dropdownOptions} />
                   </div>
                 </div>
               </div>
@@ -163,6 +234,10 @@ function Index() {
                             const showCreatedToken = query ? renderTokenName(createdToken).toLowerCase().includes(query.toLowerCase().trim()) : true;
 
                             if (!difference || !change) {
+                              return null;
+                            }
+
+                            if (difference === '0') {
                               return null;
                             }
 
