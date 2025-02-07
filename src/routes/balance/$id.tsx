@@ -130,11 +130,11 @@ function RouteComponent() {
                     </div>
                     <div className="grow flex flex-col">
                         <BackButton onClick={goBackToPreviousPage} />
-                        <div className="grid grid-cols-2 mt-1 mb-6">
-                            <div className="col-span-1">
+                        <div className="flex mt-2 mb-8">
+                            <div className="flex items-center">
                                 <h1 className="text-white text-2xl">{t('token_details')}</h1>
                             </div>
-                            <div className="col-span-1 flex justify-end">
+                            <div className="grow flex justify-end">
                                 {token && token.tokenid !== '0x00' && (
                                     <div className="flex gap-2">
                                         <div className="flex justify-end cursor-pointer select-none">
