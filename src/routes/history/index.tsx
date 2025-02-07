@@ -71,8 +71,6 @@ function Index() {
   const [query, setQuery] = useState('');
   const [order, setOrder] = useState<'asc' | 'desc'>('desc');
 
-  console.log(history);
-
   useEffect(() => {
     if (loaded && !inited) {
       MDS.sql('CREATE TABLE IF NOT EXISTS txpows (txpowid TEXT PRIMARY KEY, timemilli BIGINT, isblock BOOLEAN, istransaction BOOLEAN, hasbody BOOLEAN, burn INT, superblock INT, size INT, header TEXT, body TEXT, details TEXT)', () => {
@@ -233,9 +231,9 @@ function Index() {
 
                             const showCreatedToken = query ? renderTokenName(createdToken).toLowerCase().includes(query.toLowerCase().trim()) : true;
 
-                            if (!difference || !change) {
-                              return null;
-                            }
+                            // if (!difference || !change) {
+                            //   return null;
+                            // }
 
                             if (difference === '0') {
                               return null;
@@ -294,9 +292,9 @@ function Index() {
                                     </p>
                                   </div>
                                   {difference && difference !== '0' && (
-                                    <div className="text-right gap-1 font-bold">
+                                    <div className="text-right flex flex-col items-end justify-center gap-1 font-bold">
                                       <p className={`${difference > 0 ? 'text-green' : 'text-red'}`}>{!difference.includes('-') ? difference > 0 ? '+' : '-' : ''}{f(difference)}</p>
-                                      <p className="text-grey60">{change && f(change)}</p>
+                                      {change && <p className="text-grey60">{f(change)}</p>}
                                     </div>
                                   )}
                                   {difference === '0' && (

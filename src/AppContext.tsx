@@ -23,6 +23,11 @@ export const appContext = createContext<{
   history: any[] | null,
   setHistory: React.Dispatch<React.SetStateAction<any[] | null>>,
   getHistory: (order?: 'asc' | 'desc') => void,
+  hiddenTokens: string[],
+  setHiddenTokens: React.Dispatch<React.SetStateAction<string[]>>,
+  hiddenTokensShown: boolean,
+  setHiddenTokensShown: React.Dispatch<React.SetStateAction<boolean>>,
+  verified: Record<string, number>,
 }>({
   loaded: false,
   currencyType: '1',
@@ -44,6 +49,11 @@ export const appContext = createContext<{
   history: null,
   setHistory: () => { },
   getHistory: () => { },
+  hiddenTokens: [],
+  setHiddenTokens: () => { },
+  hiddenTokensShown: true,
+  setHiddenTokensShown: () => { },
+  verified: {},
 })
 
 const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
@@ -63,6 +73,11 @@ const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const [address, setAddress] = useState<string>('');
 
   const [history, setHistory] = useState<any[] | null>(null);
+  const [hiddenTokens, setHiddenTokens] = useState<string[]>([]);
+  const [hiddenTokensShown, setHiddenTokensShown] = useState(true);
+  const [verified, setVerified] = useState<Record<string, number>>({
+    '0x00': 2
+  });
 
   const fetchBalance = useCallback(() => {
     MDS.cmd.balance((balance) => {
@@ -80,6 +95,15 @@ const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
           console.log("MDS initialised and ready! 🚀")
 
           fetchBalance();
+
+          // create hidden token keypair item
+          MDS.keypair.get('hidden_tokens').then((keypair) => {
+            if (keypair.value) {
+              setHiddenTokens(JSON.parse(keypair.value));
+            } else {
+              MDS.keypair.set('hidden_tokens', '[]');
+            } 
+          });
 
           MDS.cmd.block((block) => {
             setBlock(block.response);
@@ -124,7 +148,13 @@ const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
         }
       })
     }
-  }, [fetchBalance]);
+  }, [fetchBalance, setHiddenTokens]);
+
+  useEffect(() => {
+    if (hiddenTokens.length > 0) {
+      MDS.keypair.set('hidden_tokens', JSON.stringify(hiddenTokens));
+    }
+  }, [hiddenTokens]);
 
   useEffect(() => {
     const currencyType = localStorage.getItem('minima_currency_type');
@@ -141,6 +171,23 @@ const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
       setLanguage(language)
     }
   }, []);
+
+  useEffect(() => { 
+    balance.forEach((token) => {
+      if (typeof token.token === 'object' && token.token.webvalidate) {
+        MDS.cmd.tokenvalidate({
+          params: {
+            tokenid: token.tokenid
+          }
+        }).then((response) => {
+          setVerified({
+            ...verified,
+            [token.tokenid]: response.response.web.valid ? 2 : 1
+          });
+        });
+      }
+    });
+  }, [balance]);
 
   const getHistory = useCallback((order = 'desc') => {
     MDS.sql(`SELECT * FROM txpows ORDER BY timemilli ${order}`).then((txpows) => {
@@ -169,6 +216,11 @@ const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
     history,
     getHistory,
     setHistory,
+    hiddenTokens,
+    setHiddenTokens,
+    hiddenTokensShown,
+    setHiddenTokensShown,
+    verified,
   }
 
   return <appContext.Provider value={context}>{children}</appContext.Provider>

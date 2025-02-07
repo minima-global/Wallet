@@ -9,6 +9,7 @@ import TokenIcon from '../../components/TokenIcon'
 import TokenAuthenticity from '../../components/TokenAuthenticity'
 import { renderTokenName } from '../../utils'
 import { MDS } from '@minima-global/mds'
+import useTranslation from '../../hooks/useTranslation'
 
 export const Route = createFileRoute('/balance/$id')({
     component: RouteComponent,
@@ -18,11 +19,14 @@ export const Route = createFileRoute('/balance/$id')({
 })
 
 function RouteComponent() {
+    const { t } = useTranslation();
     const { id } = useParams({ from: '/balance/$id' });
     const navigate = useNavigate();
-    const { balance, setIsPending, setIsSuccess } = useContext(appContext);
+    const { balance, setIsPending, setIsSuccess, hiddenTokens, setHiddenTokens } = useContext(appContext);
+    const isHidden = hiddenTokens.includes(id);
 
     const [showBurnModal, setShowBurnModal] = useState(false);
+    const [showHideTokenModal, setShowHideTokenModal] = useState(false);
 
     const token = balance.find((b) => b.tokenid === id);
 
@@ -32,6 +36,10 @@ function RouteComponent() {
 
     const toggleBurnModal = () => {
         setShowBurnModal(!showBurnModal);
+    }
+
+    const toggleHideTokenModal = () => {
+        setShowHideTokenModal(!showHideTokenModal);
     }
 
     const confirmBurn = async () => {
@@ -58,8 +66,22 @@ function RouteComponent() {
             if (response.status) {
                 setIsSuccess(true);
             }
+        } catch {
+           // do nothing
+        }
+    }
 
-            console.log(response);
+    const toggleHideToken = async () => {
+        try {
+            if (token?.tokenid) {
+                if (isHidden) {
+                    setHiddenTokens(hiddenTokens.filter((tokenId) => tokenId !== token.tokenid));
+                } else {
+                    setHiddenTokens([...hiddenTokens, token.tokenid]);
+                }
+            }
+
+            setShowHideTokenModal(false);
         } catch (error) {
             console.error(error);
         }
@@ -69,12 +91,33 @@ function RouteComponent() {
         <>
             <Header />
             <div className={`${showBurnModal ? 'opacity-100' : 'pointer-events-none opacity-0'} transition-opacity duration-100 flex absolute z-50 inset-0 top-0 left-0 justify-center items-center w-screen h-screen`}>
-                <div className={`bg-contrast1 mb-4 fixed z-[60] rounded-lg w-[440px] text-center text-white p-5 transform transition-all duration-200 ${showBurnModal ? 'translate-y-[0%] opacity-100' : 'translate-y-[4px] opacity-0'}`}>
-                    <h1 className="text-white text-2xl mt-1.5 mb-5 font-bold">Burn token</h1>
-                    <p className="text-grey80 text-base text-sm mb-2 max-w-[80%] mx-auto">Are you sure you want to burn this token? This action cannot be undone.</p>
+                <div className={`bg-contrast1 mb-8 fixed z-[60] rounded-lg w-[440px] text-center text-white p-5 transform transition-all duration-200 ${showBurnModal ? 'translate-y-[0%] opacity-100' : 'translate-y-[4px] opacity-0'}`}>
+                    <h1 className="text-white text-2xl mt-1.5 mb-5 font-bold">{t('burn_token')}</h1>
+                    <p className="text-grey80 text-base text-sm mb-2 max-w-[80%] mx-auto">{t('are_you_sure_you_want_to_burn_this_token_this_action_cannot_be_reversed')}</p>
                     <div className="space-y-2">
-                        <button onClick={confirmBurn} className="bg-orange hover:bg-lighterOrange text-black text-sm py-2.5 px-4 w-full mt-6 rounded-sm">Confirm</button>
-                        <button onClick={toggleBurnModal} className="text-grey80 bg-contrast2 hover:opacity-80 text-sm py-2.5 px-4 w-full rounded-sm">Close</button>
+                        <button onClick={confirmBurn} className="bg-orange hover:bg-lighterOrange text-black text-sm py-2.5 px-4 w-full mt-6 rounded-sm">{t('confirm')}</button>
+                        <button onClick={toggleBurnModal} className="text-grey80 bg-contrast2 hover:opacity-80 text-sm py-2.5 px-4 w-full rounded-sm">{t('close')}</button>
+                    </div>
+                </div>
+                <div className="z-50 fixed bg-black opacity-90 w-screen h-screen top-0 left-0"></div>
+            </div>
+
+            <div className={`${showHideTokenModal ? 'opacity-100' : 'pointer-events-none opacity-0'} transition-opacity duration-100 flex absolute z-50 inset-0 top-0 left-0 justify-center items-center w-screen h-screen`}>
+                <div className={`bg-contrast1 mb-8 fixed z-[60] rounded-lg w-[440px] text-center text-white p-5 transform transition-all duration-200 ${showHideTokenModal ? 'translate-y-[0%] opacity-100' : 'translate-y-[4px] opacity-0'}`}>
+                    {isHidden ? (
+                        <>
+                            <h1 className="text-white text-2xl mt-1.5 mb-5 font-bold">{t('show_token')}</h1>
+                            <p className="text-grey80 text-base text-sm mb-2 max-w-[80%] mx-auto">{t('are_you_sure_you_want_to_show_this_token')}</p>
+                        </>
+                    ) : (
+                        <>
+                            <h1 className="text-white text-2xl mt-1.5 mb-5 font-bold">{t('hide_token')}</h1>
+                            <p className="text-grey80 text-base text-sm mb-2 max-w-[80%] mx-auto">{t('are_you_sure_you_want_to_hide_this_token')}</p>
+                        </>
+                    )}
+                    <div className="space-y-2">
+                        <button onClick={toggleHideToken} className="bg-orange hover:bg-lighterOrange text-black text-sm py-2.5 px-4 w-full mt-6 rounded-sm">{t('confirm')}</button>
+                        <button onClick={toggleHideTokenModal} className="text-grey80 bg-contrast2 hover:opacity-80 text-sm py-2.5 px-4 w-full rounded-sm">{t('close')}</button>
                     </div>
                 </div>
                 <div className="z-50 fixed bg-black opacity-90 w-screen h-screen top-0 left-0"></div>
@@ -89,27 +132,15 @@ function RouteComponent() {
                         <BackButton onClick={goBackToPreviousPage} />
                         <div className="grid grid-cols-2 mt-1 mb-6">
                             <div className="col-span-1">
-                                <h1 className="text-white text-2xl">Token details</h1>
+                                <h1 className="text-white text-2xl">{t('token_details')}</h1>
                             </div>
                             <div className="col-span-1 flex justify-end">
                                 {token && token.tokenid !== '0x00' && (
                                     <div className="flex gap-2">
-                                        <div className="flex justify-end cursor-pointer select-none hidden">
-                                            <div className="flex items-center gap-2 text-sm text-grey60 text-xs font-bold bg-contrast1 w-fit rounded-full px-3.5 py-1.5 border dark:border-contrast2 origin-center active:scale-[0.95] transition-all duration-100">
-                                                <svg
-                                                    width="18"
-                                                    height="12"
-                                                    viewBox="0 0 18 12"
-                                                    fill="none"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                >
-                                                    <path
-                                                        className="fill-grey40"
-                                                        d="M9.00234 9.14783C9.8772 9.14783 10.6202 8.84165 11.2313 8.22928C11.8424 7.61692 12.148 6.87331 12.148 5.99845C12.148 5.12359 11.8418 4.3806 11.2294 3.76949C10.6171 3.15838 9.87346 2.85283 8.99859 2.85283C8.12373 2.85283 7.38075 3.15901 6.76964 3.77137C6.15852 4.38373 5.85297 5.12734 5.85297 6.0022C5.85297 6.87706 6.15915 7.62005 6.77151 8.23116C7.38387 8.84227 8.12748 9.14783 9.00234 9.14783ZM9.00047 8.00033C8.44491 8.00033 7.97269 7.80588 7.5838 7.41699C7.19491 7.0281 7.00047 6.55588 7.00047 6.00033C7.00047 5.44477 7.19491 4.97255 7.5838 4.58366C7.97269 4.19477 8.44491 4.00033 9.00047 4.00033C9.55602 4.00033 10.0282 4.19477 10.4171 4.58366C10.806 4.97255 11.0005 5.44477 11.0005 6.00033C11.0005 6.55588 10.806 7.0281 10.4171 7.41699C10.0282 7.80588 9.55602 8.00033 9.00047 8.00033ZM9.00151 11.5837C7.13248 11.5837 5.4295 11.0759 3.89255 10.0603C2.35561 9.04491 1.20783 7.69158 0.449219 6.00033C1.20783 4.30908 2.35519 2.95574 3.8913 1.94033C5.42755 0.92477 7.13026 0.416992 8.99943 0.416992C10.8685 0.416992 12.5714 0.92477 14.1084 1.94033C15.6453 2.95574 16.7931 4.30908 17.5517 6.00033C16.7931 7.69158 15.6457 9.04491 14.1096 10.0603C12.5734 11.0759 10.8707 11.5837 9.00151 11.5837ZM9.00047 10.5003C10.556 10.5003 11.9935 10.0975 13.313 9.29199C14.6324 8.48644 15.6463 7.38921 16.3546 6.00033C15.6463 4.61144 14.6324 3.51421 13.313 2.70866C11.9935 1.9031 10.556 1.50033 9.00047 1.50033C7.44491 1.50033 6.00741 1.9031 4.68797 2.70866C3.36852 3.51421 2.35464 4.61144 1.6463 6.00033C2.35464 7.38921 3.36852 8.48644 4.68797 9.29199C6.00741 10.0975 7.44491 10.5003 9.00047 10.5003Z"
-                                                        fill="currentColor"
-                                                    />
-                                                </svg>
-                                                Hide token
+                                        <div className="flex justify-end cursor-pointer select-none">
+                                            <div onClick={toggleHideTokenModal} className="flex items-center gap-2 text-sm text-grey60 text-xs font-bold bg-contrast1 w-fit rounded-full px-3.5 py-1.5 border dark:border-contrast2 origin-center active:scale-[0.95] transition-all duration-100">
+                                                {isHidden ? <img src="./assets/icons/eye-open.svg" alt="Show hidden tokens" className="text-white w-4 h-4" /> : <img src="./assets/icons/eye-closed.svg" alt="Show hidden tokens" className="w-4 h-4" />}
+                                                {isHidden ? t('show_token') : t('hide_token')}
                                             </div>
                                         </div>
                                         <div className="flex justify-end cursor-pointer select-none">
@@ -126,7 +157,7 @@ function RouteComponent() {
                                                         fill="white"
                                                     />
                                                 </svg>
-                                                Burn token
+                                                {t('burn_token')}
                                             </div>
                                         </div>
                                     </div>
@@ -148,11 +179,11 @@ function RouteComponent() {
                                             <TokenIcon token={token.token} tokenId={token.tokenid} />
                                             <div className="grow flex items-center overflow-hidden px-5">
                                                 <div className="grow items-center w-full">
-                                                    <div className="flex items-center grow">
+                                                    <div className="flex items-center grow gap-1">
                                                         <h6 className="text-lg font-bold truncate">
                                                             {renderTokenName(token)}
                                                         </h6>
-                                                        <TokenAuthenticity token={token.token} />
+                                                        <TokenAuthenticity token={token} />
                                                     </div>
                                                 </div>
                                             </div>
@@ -161,21 +192,21 @@ function RouteComponent() {
 
 
                                     <InfoBox
-                                        title="Description"
-                                        value={typeof token.token === 'object' && token.token.description || "No description"}
+                                        title={t('description')}
+                                        value={typeof token.token === 'object' && token.token.description || t('no_description')}
                                     />
-                                    <InfoBox title="Token ID" value={token.tokenid} copy />
-                                    <InfoBox title="Total minted" value={token.total} />
-                                    <InfoBox title="Total Coins" value={token.coins} />
+                                    <InfoBox title={t('token_id')} value={token.tokenid} copy />
+                                    <InfoBox title={t('total_minted')} value={token.total} />
+                                    <InfoBox title={t('total_coins')} value={token.coins} />
                                     <InfoBox
-                                        title="Web validation URL"
+                                        title={t('web_validation_url')}
                                         copy
                                         linkValue={!!(typeof token.token === 'object' && token.token.webvalidate)}
-                                        value={typeof token.token === 'object' && token.token.webvalidate || "N/A "}
+                                        value={typeof token.token === 'object' && token.token.webvalidate || t('n_a')}
                                     />
-                                    <InfoBox title="Sendable" value={token.sendable} />
-                                    <InfoBox title="Confirmed" value={token.confirmed} />
-                                    <InfoBox title="Unconfirmed" value={token.unconfirmed} />
+                                    <InfoBox title={t('sendable')} value={token.sendable} />
+                                    <InfoBox title={t('confirmed')} value={token.confirmed} />
+                                    <InfoBox title={t('unconfirmed')} value={token.unconfirmed} />
                                 </ul>
                             </div>
                         )}

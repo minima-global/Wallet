@@ -18,33 +18,45 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const { balance, fetchBalance } = useContext(appContext);
+  const { balance, fetchBalance, hiddenTokens, hiddenTokensShown, setHiddenTokensShown } = useContext(appContext);
   const { t } = useTranslation();
   const [query, setQuery] = useState('');
   const [sort, setSort] = useState<'desc' | 'asc'>('desc');
 
-  const filteredBalance = balance.filter(balance => {
-    if (!query) return true;
-    const tokenName = typeof balance.token === 'string' ? balance.token : balance.token.name;
-    return tokenName.toLowerCase().includes(query.toLowerCase().trim());
-  }).sort((a, b) => {
-    // Always put Minima (0x00) at the top
-    if (a.tokenid === '0x00') return -1;
-    if (b.tokenid === '0x00') return 1;
+  const filteredBalance = balance
+    .filter(balance => {
+      if (!hiddenTokensShown){
+        return true;
+      }
 
-    const aAmount = Number(a.sendable);
-    const bAmount = Number(b.sendable);
+      return !hiddenTokens.includes(balance.tokenid);
+    })
+    .filter(balance => {
+      if (!query) return true;
+      const tokenName = typeof balance.token === 'string' ? balance.token : balance.token.name;
+      return tokenName.toLowerCase().includes(query.toLowerCase().trim());
+    }).sort((a, b) => {
+      // Always put Minima (0x00) at the top
+      if (a.tokenid === '0x00') return -1;
+      if (b.tokenid === '0x00') return 1;
 
-    if (sort === 'desc') {
-      if (aAmount > bAmount) return -1;
-      if (aAmount < bAmount) return 1;
-    } else {
-      if (aAmount < bAmount) return -1;
-      if (aAmount > bAmount) return 1;
-    }
+      const aAmount = Number(a.sendable);
+      const bAmount = Number(b.sendable);
 
-    return 0;
-  });
+      if (sort === 'desc') {
+        if (aAmount > bAmount) return -1;
+        if (aAmount < bAmount) return 1;
+      } else {
+        if (aAmount < bAmount) return -1;
+        if (aAmount > bAmount) return 1;
+      }
+
+      return 0;
+    });
+
+  const toggleTokensHidden = () => {
+    setHiddenTokensShown(prevState => !prevState);
+  }
 
   return (
     <>
@@ -64,12 +76,10 @@ function Index() {
               {/* <GridButton /> */}
             </div>
 
-            <div className="mb-4 flex justify-end cursor-pointer select-none hidden">
-              <div className="flex items-center gap-2 text-sm text-grey60 text-xs font-bold bg-contrast1 w-fit rounded-full px-3.5 py-1.5 border dark:border-contrast2 origin-center active:scale-[0.95] transition-all duration-100">
-                <svg width="18" height="12" viewBox="0 0 18 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path className="fill-grey40" d="M9.00234 9.14783C9.8772 9.14783 10.6202 8.84165 11.2313 8.22928C11.8424 7.61692 12.148 6.87331 12.148 5.99845C12.148 5.12359 11.8418 4.3806 11.2294 3.76949C10.6171 3.15838 9.87346 2.85283 8.99859 2.85283C8.12373 2.85283 7.38075 3.15901 6.76964 3.77137C6.15852 4.38373 5.85297 5.12734 5.85297 6.0022C5.85297 6.87706 6.15915 7.62005 6.77151 8.23116C7.38387 8.84227 8.12748 9.14783 9.00234 9.14783ZM9.00047 8.00033C8.44491 8.00033 7.97269 7.80588 7.5838 7.41699C7.19491 7.0281 7.00047 6.55588 7.00047 6.00033C7.00047 5.44477 7.19491 4.97255 7.5838 4.58366C7.97269 4.19477 8.44491 4.00033 9.00047 4.00033C9.55602 4.00033 10.0282 4.19477 10.4171 4.58366C10.806 4.97255 11.0005 5.44477 11.0005 6.00033C11.0005 6.55588 10.806 7.0281 10.4171 7.41699C10.0282 7.80588 9.55602 8.00033 9.00047 8.00033ZM9.00151 11.5837C7.13248 11.5837 5.4295 11.0759 3.89255 10.0603C2.35561 9.04491 1.20783 7.69158 0.449219 6.00033C1.20783 4.30908 2.35519 2.95574 3.8913 1.94033C5.42755 0.92477 7.13026 0.416992 8.99943 0.416992C10.8685 0.416992 12.5714 0.92477 14.1084 1.94033C15.6453 2.95574 16.7931 4.30908 17.5517 6.00033C16.7931 7.69158 15.6457 9.04491 14.1096 10.0603C12.5734 11.0759 10.8707 11.5837 9.00151 11.5837ZM9.00047 10.5003C10.556 10.5003 11.9935 10.0975 13.313 9.29199C14.6324 8.48644 15.6463 7.38921 16.3546 6.00033C15.6463 4.61144 14.6324 3.51421 13.313 2.70866C11.9935 1.9031 10.556 1.50033 9.00047 1.50033C7.44491 1.50033 6.00741 1.9031 4.68797 2.70866C3.36852 3.51421 2.35464 4.61144 1.6463 6.00033C2.35464 7.38921 3.36852 8.48644 4.68797 9.29199C6.00741 10.0975 7.44491 10.5003 9.00047 10.5003Z" fill="currentColor" />
-                </svg>
-                Hidden tokens
+            <div onClick={toggleTokensHidden} className="mb-4 flex justify-end cursor-pointer select-none">
+              <div className="flex items-center gap-2.5 text-sm text-grey60 text-xs font-bold bg-contrast1 w-fit rounded-full px-3.5 py-1.5 border dark:border-contrast2 origin-center active:scale-[0.95] transition-all duration-100">
+                {hiddenTokensShown ? <img src="./assets/icons/eye-open.svg" alt="Show hidden tokens" className="text-white w-4 h-4" /> : <img src="./assets/icons/eye-closed.svg" alt="Show hidden tokens" className="w-4 h-4" />}
+                {hiddenTokensShown ? t('show_hidden_tokens') : t('hide_hidden_tokens')}
               </div>
             </div>
 
@@ -108,7 +118,7 @@ const BalanceItem = ({ balance }: { balance: Balance }) => {
             <TokenIcon token={balance.token} tokenId={balance.tokenid} />
             <div className="grow overflow-hidden px-4">
               <div className="grow w-full">
-                <div className="flex grow">
+                <div className="flex grow gap-1">
                   <h6 className="font-bold truncate text-black dark:text-neutral-400">
                     {renderTokenName(balance)}
                   </h6>
