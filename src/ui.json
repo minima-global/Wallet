@@ -67,7 +67,8 @@
         "this_transaction_has_been_sent_successfully": "This transaction has been sent successfully.",
         "go_to_balance": "Go to balance",
         "pending": "Pending",
-        "pending_transaction_message": "Please accept the pending transaction to continue or skip to continue if you want to accept the command later."
+        "pending_transaction_message": "Please accept the pending transaction to continue or skip to continue if you want to accept the command later.",
+        "hidden_items": "hidden items"
     },
     "zh": {
         "balance": "余额",
@@ -137,7 +138,8 @@
         "this_transaction_has_been_sent_successfully": "此交易已成功发送。",
         "go_to_balance": "前往余额",
         "pending": "待处理",
-        "pending_transaction_message": "请继续处理待处理的交易，或跳过继续，如果您想稍后接受命令。"
+        "pending_transaction_message": "请继续处理待处理的交易，或跳过继续，如果您想稍后接受命令。",
+        "hidden_items": "隐藏项目"
     },
     "ru": {
         "balance": "Баланс",
@@ -207,7 +209,8 @@
         "this_transaction_has_been_sent_successfully": "Эта транзакция была успешно отправлена.",
         "go_to_balance": "Перейти к балансу",
         "pending": "Ожидание",
-        "pending_transaction_message": "Пожалуйста, продолжите обработку ожидающей транзакции или пропустите продолжение, если вы хотите принять команду позже."
+        "pending_transaction_message": "Пожалуйста, продолжите обработку ожидающей транзакции или пропустите продолжение, если вы хотите принять команду позже.",
+        "hidden_items": "скрытые элементы"
     },
     "ukr": {
         "balance": "Баланс",
@@ -277,7 +280,8 @@
         "this_transaction_has_been_sent_successfully": "Ця транзакція була успішно відправлена.",
         "go_to_balance": "Перейти до балансу",
         "pending": "Очікування",
-        "pending_transaction_message": "Будь ласка, продовжте обробку очікуваної транзакції або пропустіть продовження, якщо ви хочете прийняти команду пізніше."
+        "pending_transaction_message": "Будь ласка, продовжте обробку очікуваної транзакції або пропустіть продовження, якщо ви хочете прийняти команду пізніше.",
+        "hidden_items": "скрыті елементи"
     },
     "fr": {
         "balance": "Solde",
@@ -347,7 +351,8 @@
         "this_transaction_has_been_sent_successfully": "Cette transaction a été envoyée avec succès.",
         "go_to_balance": "Aller au solde",
         "pending": "En attente",
-        "pending_transaction_message": "Veuillez continuer le traitement de la transaction en attente ou passer à la suite si vous souhaitez accepter la commande plus tard."
+        "pending_transaction_message": "Veuillez continuer le traitement de la transaction en attente ou passer à la suite si vous souhaitez accepter la commande plus tard.",
+        "hidden_items": "éléments cachés"
     },
     "es": {
         "balance": "Saldo",
@@ -417,7 +422,8 @@
         "this_transaction_has_been_sent_successfully": "Esta transacción se ha enviado con éxito.",
         "go_to_balance": "Ir al saldo",
         "pending": "En espera",
-        "pending_transaction_message": "Por favor, continúe procesando la transacción pendiente o pase a la siguiente si desea aceptar la orden más tarde."
+        "pending_transaction_message": "Por favor, continúe procesando la transacción pendiente o pase a la siguiente si desea aceptar la orden más tarde.",
+        "hidden_items": "elementos ocultos"
     },
     "ja": {
         "balance": "残高",
@@ -487,7 +493,8 @@
         "this_transaction_has_been_sent_successfully": "このトランザクションは正常に送信されました。",
         "go_to_balance": "残高に戻る",
         "pending": "待機中",
-        "pending_transaction_message": "この保留中のトランザクションを続けるか、後でコマンドを受け入れる場合はスキップしてください。"
+        "pending_transaction_message": "この保留中のトランザクションを続けるか、後でコマンドを受け入れる場合はスキップしてください。",
+        "hidden_items": "非表示の要素"
     },
     "ko": {
         "balance": "잔액",
@@ -557,6 +564,7 @@
         "this_transaction_has_been_sent_successfully": "이 트랜잭션은 성공적으로 전송되었습니다.",
         "go_to_balance": "잔액으로 돌아가기",
         "pending": "대기 중",
-        "pending_transaction_message": "이 보류 중인 트랜잭션을 계속 처리하거나 나중에 명령을 수락하려는 경우 건너뛰세요."
+        "pending_transaction_message": "이 보류 중인 트랜잭션을 계속 처리하거나 나중에 명령을 수락하려는 경우 건너뛰세요.",
+        "hidden_items": "숨김 요소"
     }
 }

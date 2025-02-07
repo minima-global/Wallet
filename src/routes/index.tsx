@@ -18,14 +18,19 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const { balance, fetchBalance, hiddenTokens, hiddenTokensShown, setHiddenTokensShown } = useContext(appContext);
+  const { balance, fetchBalance, hiddenTokens, hideHiddenTokens, setHideHiddenTokens } = useContext(appContext);
   const { t } = useTranslation();
   const [query, setQuery] = useState('');
   const [sort, setSort] = useState<'desc' | 'asc'>('desc');
 
+  const numberHiddenTokens = balance
+    .filter(balance => {
+      return hiddenTokens.includes(balance.tokenid);
+    }).length;
+
   const filteredBalance = balance
     .filter(balance => {
-      if (!hiddenTokensShown){
+      if (!hideHiddenTokens) {
         return true;
       }
 
@@ -55,7 +60,7 @@ function Index() {
     });
 
   const toggleTokensHidden = () => {
-    setHiddenTokensShown(prevState => !prevState);
+    setHideHiddenTokens(prevState => !prevState);
   }
 
   return (
@@ -71,15 +76,15 @@ function Index() {
 
             <div className="mb-6 flex gap-2.5">
               <SearchBar value={query} onChange={setQuery} />
-              <SortButton action={() => setSort(sort === 'desc' ? 'asc' : 'desc')}   />
+              <SortButton action={() => setSort(sort === 'desc' ? 'asc' : 'desc')} />
               <RefreshButton action={fetchBalance} />
               {/* <GridButton /> */}
             </div>
 
             <div onClick={toggleTokensHidden} className="mb-4 flex justify-end cursor-pointer select-none">
               <div className="flex items-center gap-2.5 text-sm text-grey60 text-xs font-bold bg-contrast1 w-fit rounded-full px-3.5 py-1.5 border dark:border-contrast2 origin-center active:scale-[0.95] transition-all duration-100">
-                {hiddenTokensShown ? <img src="./assets/icons/eye-open.svg" alt="Show hidden tokens" className="text-white w-4 h-4" /> : <img src="./assets/icons/eye-closed.svg" alt="Show hidden tokens" className="w-4 h-4" />}
-                {hiddenTokensShown ? t('show_hidden_tokens') : t('hide_hidden_tokens')}
+                {hideHiddenTokens ? <img src="./assets/icons/eye-open.svg" alt="Show hidden tokens" className="text-white w-4 h-4" /> : <img src="./assets/icons/eye-closed.svg" alt="Show hidden tokens" className="w-4 h-4" />}
+                {hideHiddenTokens ? t('show_hidden_tokens') : t('hide_hidden_tokens')}
               </div>
             </div>
 
@@ -92,6 +97,9 @@ function Index() {
               {filteredBalance.map((balance) => (
                 <BalanceItem key={balance.tokenid} balance={balance} />
               ))}
+              {hideHiddenTokens && (
+                <div className="mt-2 text-right w-full text-[13px] font-bold text-grey60"><strong className="font-heavy">{numberHiddenTokens}</strong> {t('hidden_items')}</div>
+              )}
             </ul>
           </div>
         </div>

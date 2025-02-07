@@ -252,13 +252,12 @@ function Index() {
                                         <h6 className="font-bold truncate text-black dark:text-neutral-400">
                                           {renderTokenName(createdToken)}
                                         </h6>
-                                        <TokenAuthenticity token={createdToken.token} disabled={true} />
+                                        <TokenAuthenticity token={createdToken.token} />
                                       </div>
                                       <p className="font-bold truncate text-grey dark:text-neutral-300">{t("created")} - {format(new Date(Number(h.HEADER.timemilli)), 'HH:mm aa')}</p>
                                     </div>
                                     <div className="text-right flex items-center gap-1">
                                       <p className="font-bold text-green">+{createdToken.tokenamount}</p>
-                                      {/* <p className="font-bold text-grey60">{createdToken.tokenamount}</p> */}
                                     </div>
                                   </div>
                                 )}

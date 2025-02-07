@@ -25,8 +25,8 @@ export const appContext = createContext<{
   getHistory: (order?: 'asc' | 'desc') => void,
   hiddenTokens: string[],
   setHiddenTokens: React.Dispatch<React.SetStateAction<string[]>>,
-  hiddenTokensShown: boolean,
-  setHiddenTokensShown: React.Dispatch<React.SetStateAction<boolean>>,
+  hideHiddenTokens: boolean,
+  setHideHiddenTokens: React.Dispatch<React.SetStateAction<boolean>>,
   verified: Record<string, number>,
 }>({
   loaded: false,
@@ -51,8 +51,8 @@ export const appContext = createContext<{
   getHistory: () => { },
   hiddenTokens: [],
   setHiddenTokens: () => { },
-  hiddenTokensShown: true,
-  setHiddenTokensShown: () => { },
+  hideHiddenTokens: true,
+  setHideHiddenTokens: () => { },
   verified: {},
 })
 
@@ -74,7 +74,7 @@ const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 
   const [history, setHistory] = useState<any[] | null>(null);
   const [hiddenTokens, setHiddenTokens] = useState<string[]>([]);
-  const [hiddenTokensShown, setHiddenTokensShown] = useState(true);
+  const [hideHiddenTokens, setHideHiddenTokens] = useState(true);
   const [verified, setVerified] = useState<Record<string, number>>({
     '0x00': 2
   });
@@ -218,8 +218,8 @@ const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
     setHistory,
     hiddenTokens,
     setHiddenTokens,
-    hiddenTokensShown,
-    setHiddenTokensShown,
+    hideHiddenTokens,
+    setHideHiddenTokens,
     verified,
   }
 
