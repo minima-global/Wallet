@@ -179,13 +179,13 @@ function Index() {
           </div>
           <div className="grow flex flex-col">
             <div>
-              <div className="grid grid-cols-2">
-                <div className="col-span-1">
-                  <h1 className="text-white text-2xl mb-6">
+              <div className="flex mb-6">
+                <div className="flex items-center">
+                  <h1 className="text-white text-2xl">
                     {t("history")}
                   </h1>
                 </div>
-                <div className="col-span-1">
+                <div className="grow flex justify-end">
                   <div className="flex items-center justify-end gap-3 h-full">
                     <Dropdown options={dropdownOptions} />
                   </div>
