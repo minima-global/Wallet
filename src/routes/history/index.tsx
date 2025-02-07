@@ -190,7 +190,7 @@ function Index() {
         <RefreshButton action={() => getHistory(order)} />
       </div>
 
-      <div className="mt-8 flex flex-col gap-2 mb-10">
+      <div className="mt-8 flex flex-col gap-2 mb-20">
         {history && (history.length === 0 || Object.values(groupedByDay || {}).every(group => group.length === 0)) && (
           <div className="w-full flex items-center bg-contrast1 opacity-80 p-4 px-5 text-sm rounded">
             No transactions found
