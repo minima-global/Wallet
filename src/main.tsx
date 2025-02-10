@@ -18,7 +18,7 @@ const memoryHistory = createMemoryHistory({
 
 const router = createRouter({
   routeTree,
-  history: memoryHistory
+  // history: memoryHistory
 });
 
 declare module "@tanstack/react-router" {

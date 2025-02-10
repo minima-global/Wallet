@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import SearchBar from "../components/SearchBar";
 import RefreshButton from "../components/RefreshButton";
 import { appContext } from "../AppContext";

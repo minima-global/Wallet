@@ -2,13 +2,14 @@ import { createFileRoute } from '@tanstack/react-router'
 import SearchBar from '../../components/SearchBar'
 import RefreshButton from '../../components/RefreshButton'
 import SortButton from '../../components/SortButton'
-import { useContext, useEffect, useState, Fragment } from 'react'
+import { useContext, useEffect, useState, Fragment, useMemo } from 'react'
 import { appContext } from '../../AppContext'
 import { MDS } from '@minima-global/mds'
 import { format } from "date-fns";
 import useFormatAmount from '../../hooks/useFormatAmount'
 import { escape, renderTokenName } from '../../utils'
 import TokenAuthenticity from '../../components/TokenAuthenticity'
+import Pagination from '../../components/Pagination'
 import TokenIcon from '../../components/TokenIcon'
 import useTranslation from '../../hooks/useTranslation'
 import Decimal from 'decimal.js'
@@ -69,7 +70,14 @@ function Index() {
   const [inited, setInited] = useState(false);
   const [query, setQuery] = useState('');
   const [order, setOrder] = useState<'asc' | 'desc'>('desc');
-  const [balanceDifference, setBalanceDifference] = useState<Record<string, number>>({});
+  const [page, setPage] = useState(1);
+  const [activeMonth, setActiveMonth] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (history && !activeMonth) {
+      setActiveMonth(format(new Date(Number(history[0].HEADER.timemilli)), 'yyyy-MM'));
+    }
+  }, [history]);
 
   useEffect(() => {
     if (loaded && !inited) {
@@ -92,47 +100,6 @@ function Index() {
       setInited(true);
     }
   }, [loaded, inited, getHistory]);
-
-  useEffect(() => {
-    if (history && balance) {
-      const balanceAtStart = {};
-      const previousBalance = {};
-      const balanceHistory = {};
-
-      balance.forEach((item) => {
-        balanceAtStart[item.tokenid] = new Decimal(item.confirmed).add(item.unconfirmed);
-      });
-
-      history.forEach((item) => {
-        const inputToken = item.BODY.txn.inputs[0].tokenid;
-        const difference = item.DETAILS.difference[inputToken];
-
-        if (!previousBalance[inputToken]) {
-          balanceHistory[item.TXPOWID] = new Decimal(balanceAtStart[inputToken]).toString();
-
-          previousBalance[inputToken] = new Decimal(balanceAtStart[inputToken]);
-        }
-
-        if (previousBalance[inputToken]) {
-          balanceHistory[item.TXPOWID] = new Decimal(previousBalance[inputToken]).toString();
-
-          const add = difference[0] === '+';
-          const subtract = difference[0] === '-';
-          const amount = difference.replace('+', '').replace('-', '');
-  
-          if (add) {
-            previousBalance[inputToken] = new Decimal(previousBalance[inputToken]).sub(amount);
-          } else if (subtract) {
-            previousBalance[inputToken] = new Decimal(previousBalance[inputToken]).add(amount);
-          } else {
-            previousBalance[inputToken] = new Decimal(previousBalance[inputToken]);
-          }
-        }
-      });
-
-      setBalanceDifference(balanceHistory);
-    }
-  }, [history, balance]);
 
   const toggleOrder = () => {
     setOrder(prevState => prevState === 'desc' ? 'asc' : 'desc');
@@ -210,6 +177,21 @@ function Index() {
     },
   ]
 
+  const uniqueMonths = useMemo(() => {
+    return history?.reduce((acc, h) => {
+      const date = format(new Date(Number(h.HEADER.timemilli)), 'yyyy-MM');
+      if (!acc.includes(date)) {
+        acc.push(date);
+      }
+      return acc;
+    }, []);
+  }, [history]);
+
+  const currentPage = uniqueMonths?.[page - 1] || null;
+  const totalMonths = uniqueMonths?.length || null;
+
+  console.log(currentPage, totalMonths)
+
   return (
     <div>
       <div className="flex mb-6">
@@ -239,26 +221,27 @@ function Index() {
         )}
         {history && history.length >= 0 && (
           <>
-            {groupedByDay && Object.keys(groupedByDay).map((day) => {
-              if (groupedByDay[day].length === 0) {
+            {groupedByDay && Object.keys(groupedByDay).map((row) => {
+              if (groupedByDay[row].length === 0) {
                 return null;
               }
 
-              // const everyItemIsDifferenceZero = groupedByDay[day].every((h) => {
-              //   return h.DETAILS.difference[h.BODY.txn.inputs[0].tokenid] === '0';
-              // });
+              if (activeMonth && format(row, 'yyyy-MM') !== currentPage) {
+                return null;
+              }
 
-              // if (everyItemIsDifferenceZero) {
-              //   return null;
-              // }
+              const date = format(new Date(row), 'dd MMMM yyyy');
+              const day = date.split(' ')[0];
+              const month = date.split(' ')[1];
+              const year = date.split(' ')[2];
 
               return (
                 <Fragment key={day}>
                   <div className="bg-contrast2 w-full rounded px-5 py-3 text-white">
-                    <h5>{format(new Date(day), 'dd MMMM yyyy')}</h5>
+                    <h5>{t(day)} {t(month.toLowerCase())} {year}</h5>
                   </div>
 
-                  {groupedByDay[day].map((h) => {
+                  {groupedByDay[row].map((h) => {
                     const input = h.BODY.txn.inputs[0].tokenid;
                     const difference = h.DETAILS.difference[input];
 
@@ -298,7 +281,6 @@ function Index() {
                             </div>
                             <div className="text-right flex flex-col items-end justify-center gap-1">
                               <p className="font-bold text-green">+{createdToken.tokenamount}</p>
-                              <p className="text-grey60">{createdToken.tokenamount}</p>
                             </div>
                           </div>
                         )}
@@ -334,14 +316,14 @@ function Index() {
                           {difference && difference !== '0' && (
                             <div className="text-right flex flex-col items-end justify-center gap-1 font-bold">
                               <p className={`${difference > 0 ? 'text-green' : 'text-red'}`}>{!difference.includes('-') ? difference > 0 ? '+' : '-' : ''}{f(difference)}</p>
-                              {balanceDifference[h.TXPOWID] && <p className="text-grey60">{f(balanceDifference[h.TXPOWID].toString())}</p>}
+                              {/* {balanceDifference[h.TXPOWID] && <p className="text-grey60">{f(balanceDifference[h.TXPOWID].toString())}</p>} */}
                               {/* {change && <p className="text-grey60">{f(change)}</p>} */}
                             </div>
                           )}
                           {difference === '0' && (
                             <div className="text-right flex flex-col items-end justify-center gap-1 font-bold">
                               <p className={`text-grey-60`}>0</p>
-                              {balanceDifference[h.TXPOWID] && <p className="text-grey60">{f(balanceDifference[h.TXPOWID].toString())}</p>}
+                              {/* {balanceDifference[h.TXPOWID] && <p className="text-grey60">{f(balanceDifference[h.TXPOWID].toString())}</p>} */}
                             </div>
                           )}
                         </div>
@@ -351,6 +333,7 @@ function Index() {
                 </Fragment>
               )
             })}
+            {totalMonths && totalMonths > 1 && <Pagination totalPages={totalMonths} page={page} onPageChange={setPage} />}
           </>
         )}
       </div>

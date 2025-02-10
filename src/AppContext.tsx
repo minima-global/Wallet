@@ -1,7 +1,7 @@
 import { Balance, Block, MinimaEvents } from "@minima-global/mds"
 import { MDS } from "@minima-global/mds"
 import { createContext, useCallback, useEffect, useRef, useState } from "react"
-
+import { format } from "date-fns";
 export const appContext = createContext<{
   loaded: boolean,
   currencyType: string,
@@ -23,6 +23,8 @@ export const appContext = createContext<{
   history: any[] | null,
   setHistory: React.Dispatch<React.SetStateAction<any[] | null>>,
   getHistory: (order?: 'asc' | 'desc') => void,
+  activeMonth: string | null,
+  setActiveMonth: React.Dispatch<React.SetStateAction<string | null>>,
   hiddenTokens: string[],
   setHiddenTokens: React.Dispatch<React.SetStateAction<string[]>>,
   verified: Record<string, number>,
@@ -52,6 +54,8 @@ export const appContext = createContext<{
   history: null,
   setHistory: () => { },
   getHistory: () => { },
+  activeMonth: null,
+  setActiveMonth: () => { },
   hiddenTokens: [],
   setHiddenTokens: () => { },
   verified: {},
@@ -82,6 +86,8 @@ const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const [address, setAddress] = useState<string>('');
 
   const [history, setHistory] = useState<any[] | null>(null);
+  const [activeMonth, setActiveMonth] = useState<string | null>(null);
+
   const [hiddenTokens, setHiddenTokens] = useState<string[]>([]);
   const [verified, setVerified] = useState<Record<string, number>>({
     '0x00': 2
@@ -207,6 +213,12 @@ const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 
   const getHistory = useCallback((order = 'desc') => {
     MDS.sql(`SELECT * FROM txpows ORDER BY timemilli ${order}`).then((txpows) => {
+      // let history = txpows.rows.map((r) => ({ ...r, HEADER: JSON.parse(r.HEADER), BODY: JSON.parse(r.BODY), DETAILS: JSON.parse(r.DETAILS) }));
+      // history[history.length - 1].HEADER = { timemilli: 1712985600000 };
+      // MDS.sql(`UPDATE txpows SET HEADER = '${JSON.stringify(history[history.length - 1].HEADER)}' WHERE txpowid = '${history[history.length - 1].TXPOWID}'`, function (res) {
+      //   console.log(res);
+      // });
+
       setHistory(txpows.rows.map((r) => ({ ...r, HEADER: JSON.parse(r.HEADER), BODY: JSON.parse(r.BODY), DETAILS: JSON.parse(r.DETAILS) })));
     });
   }, []);
@@ -240,6 +252,8 @@ const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
     activeTab,
     setActiveTab,
     addresses,
+    activeMonth,
+    setActiveMonth,
   }
 
   return <appContext.Provider value={context}>{children}</appContext.Provider>
