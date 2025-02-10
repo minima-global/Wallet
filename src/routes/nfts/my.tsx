@@ -38,34 +38,24 @@ const NFTCard = ({ favourted }: { favourted: boolean }) => {
 
 function Index() {
   return (
-    <>
-      <Header />
-      <div className="mt-10 container mx-auto flex">
-        <div className="flex w-full gap-10">
-          <div className="flex flex-col gap-5">
-            <Navigation />
+    <div className="grow flex flex-col mb-20">
+      <div>
+        <div className="grid grid-cols-2">
+          <div className="col-span-1">
+            <h1 className="text-white text-2xl mb-6">{Title}</h1>
           </div>
-          <div className="grow flex flex-col mb-20">
-            <div>
-              <div className="grid grid-cols-2">
-                <div className="col-span-1">
-                  <h1 className="text-white text-2xl mb-6">{Title}</h1>
-                </div>
-                <div className="col-span-1" />
-              </div>
-
-              <div className="mb-6 flex gap-2.5">
-                <HeartButton />
-              </div>
-
-              <div className="my-8 grid grid-cols-12 gap-6">
-                {new Array(10).fill(0).map((_, index) => <NFTCard favourted={index % 2 === 0} />)}
-              </div>
-
-            </div>
-          </div>
+          <div className="col-span-1" />
         </div>
+
+        <div className="mb-6 flex gap-2.5">
+          <HeartButton />
+        </div>
+
+        <div className="my-8 grid grid-cols-12 gap-6">
+          {new Array(10).fill(0).map((_, index) => <NFTCard favourted={index % 2 === 0} />)}
+        </div>
+
       </div>
-    </>
+    </div>
   )
 }

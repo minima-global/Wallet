@@ -55,11 +55,13 @@
   -webkit-text-size-adjust: 100%;
 }
 
-html,
-body {
-  background: black;
+html, body {
   overflow-y: scroll;
   overflow-x: hidden;
+}
+
+body {
+  background: black;
 }
 
 .gradient-border {
@@ -103,7 +105,8 @@ body {
 
 
 body::-webkit-scrollbar {
-  width: .4em
+  width: .4em;
+  height: .4em;
 }
 
 .custom-scrollbar::-webkit-scrollbar {

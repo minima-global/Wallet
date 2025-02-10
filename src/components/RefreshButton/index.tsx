@@ -1,13 +1,13 @@
 import { useState } from "react";
 
-const RefreshButton = ({ action }: { action: () => void }) => {
+const RefreshButton = ({ onClick }: { onClick: () => void }) => {
     const [refreshing, setRefreshing] = useState(false);
     const [disabled, setDisabled] = useState(false);
 
     const handleClick = async () => {
         setRefreshing(true);
         setDisabled(true);
-        await action();
+        await onClick();
 
         setTimeout(() => {
             setRefreshing(false);

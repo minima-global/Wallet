@@ -126,7 +126,7 @@ function RouteComponent() {
                 <BackButton onClick={goBackToPreviousPage} />
             </div>
 
-            <div className="flex mb-8">
+            <div className="flex mb-12">
                 <div className="flex items-center">
                     <h1 className="text-white text-2xl">{t('token_details')}</h1>
                 </div>

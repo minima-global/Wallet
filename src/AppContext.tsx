@@ -28,6 +28,8 @@ export const appContext = createContext<{
   hideHiddenTokens: boolean,
   setHideHiddenTokens: React.Dispatch<React.SetStateAction<boolean>>,
   verified: Record<string, number>,
+  gridMode: 'list' | 'grid',
+  setGridMode: React.Dispatch<React.SetStateAction<'list' | 'grid'>>,
 }>({
   loaded: false,
   currencyType: '1',
@@ -54,11 +56,14 @@ export const appContext = createContext<{
   hideHiddenTokens: true,
   setHideHiddenTokens: () => { },
   verified: {},
+  gridMode: 'list',
+  setGridMode: () => { },
 })
 
 const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const initialised = useRef(false);
   const [loaded, setLoaded] = useState(false);
+  const [gridMode, setGridMode] = useState<'list' | 'grid'>('list');
 
   const [hamburgerOpen, setHamburgerOpen] = useState(false);
   const [isPending, setIsPending] = useState<{ uid: string, callback: () => void } | null>(null);
@@ -221,6 +226,8 @@ const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
     hideHiddenTokens,
     setHideHiddenTokens,
     verified,
+    gridMode,
+    setGridMode,
   }
 
   return <appContext.Provider value={context}>{children}</appContext.Provider>

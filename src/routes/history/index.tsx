@@ -169,6 +169,8 @@ function Index() {
     },
   ]
 
+  console.log(history);
+
   return (
     <div>
       <div className="flex mb-6">
@@ -186,8 +188,8 @@ function Index() {
 
       <div className="mb-6 flex gap-2.5">
         <SearchBar value={query} onChange={setQuery} />
-        <SortButton action={toggleOrder} />
-        <RefreshButton action={() => getHistory(order)} />
+        <SortButton onClick={toggleOrder} />
+        <RefreshButton onClick={() => getHistory(order)} />
       </div>
 
       <div className="mt-8 flex flex-col gap-2 mb-20">
@@ -202,6 +204,14 @@ function Index() {
               if (groupedByDay[day].length === 0) {
                 return null;
               }
+
+              const everyItemIsDifferenceZero = groupedByDay[day].every((h) => {
+                return h.DETAILS.difference[h.BODY.txn.inputs[0].tokenid] === '0';
+              });
+
+              // if (everyItemIsDifferenceZero) {
+              //   return null;
+              // }
 
               return (
                 <Fragment key={day}>
@@ -227,9 +237,9 @@ function Index() {
                     //   return null;
                     // }
 
-                    if (difference === '0') {
-                      return null;
-                    }
+                    // if (difference === '0') {
+                    //   return null;
+                    // }
 
                     return (
                       <div key={h.TXPOWID}>
@@ -285,13 +295,13 @@ function Index() {
                           {difference && difference !== '0' && (
                             <div className="text-right flex flex-col items-end justify-center gap-1 font-bold">
                               <p className={`${difference > 0 ? 'text-green' : 'text-red'}`}>{!difference.includes('-') ? difference > 0 ? '+' : '-' : ''}{f(difference)}</p>
-                              {change && <p className="text-grey60">{f(change)}</p>}
+                              {/* {change && <p className="text-grey60">{f(change)}</p>} */}
                             </div>
                           )}
                           {difference === '0' && (
-                            <div className="text-right w-full gap-1 font-bold">
+                            <div className="text-right flex flex-col items-end justify-center gap-1 font-bold">
                               <p className={`text-grey-60`}>0</p>
-                              <p className="text-grey60 text-sm">Sent to yourself</p>
+                              {/* <p className="text-grey60 text-sm">Sent to yourself</p> */}
                             </div>
                           )}
                         </div>
