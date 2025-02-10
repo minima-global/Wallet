@@ -290,7 +290,7 @@ const Header = () => {
       </header>
       <div className="flex lg:hidden">
         {hamburgerOpen && (
-          <nav className="fixed left-0 top-0 z-10 h-screen w-screen bg-black pt-20 pl-1 text-white">
+          <nav className="fixed left-0 top-0 z-[1000] h-screen w-screen bg-black pt-20 pl-1 text-white">
             <div className="py-3 px-5">
               <ul className="flex flex-col gap-6 text-2xl">
                 {NAV_ITEMS.map((item) => (
