@@ -68,7 +68,9 @@
         "go_to_balance": "Go to balance",
         "pending": "Pending",
         "pending_transaction_message": "Please accept the pending transaction to continue or skip to continue if you want to accept the command later.",
-        "hidden_items": "hidden items"
+        "hidden_items": "hidden items",
+        "main": "Main",
+        "hidden_tokens": "Hidden tokens"
     },
     "zh": {
         "balance": "余额",
@@ -139,7 +141,9 @@
         "go_to_balance": "前往余额",
         "pending": "待处理",
         "pending_transaction_message": "请继续处理待处理的交易，或跳过继续，如果您想稍后接受命令。",
-        "hidden_items": "隐藏项目"
+        "hidden_items": "隐藏项目",
+        "main": "主页",
+        "hidden_tokens": "隐藏代币"
     },
     "ru": {
         "balance": "Баланс",
@@ -210,7 +214,9 @@
         "go_to_balance": "Перейти к балансу",
         "pending": "Ожидание",
         "pending_transaction_message": "Пожалуйста, продолжите обработку ожидающей транзакции или пропустите продолжение, если вы хотите принять команду позже.",
-        "hidden_items": "скрытые элементы"
+        "hidden_items": "скрытые элементы",
+        "main": "Главная",
+        "hidden_tokens": "Скрытые токены"
     },
     "ukr": {
         "balance": "Баланс",
@@ -281,7 +287,9 @@
         "go_to_balance": "Перейти до балансу",
         "pending": "Очікування",
         "pending_transaction_message": "Будь ласка, продовжте обробку очікуваної транзакції або пропустіть продовження, якщо ви хочете прийняти команду пізніше.",
-        "hidden_items": "скрыті елементи"
+        "hidden_items": "скрыті елементи",
+        "main": "Головна",
+        "hidden_tokens": "Скрыті токени"
     },
     "fr": {
         "balance": "Solde",
@@ -352,7 +360,9 @@
         "go_to_balance": "Aller au solde",
         "pending": "En attente",
         "pending_transaction_message": "Veuillez continuer le traitement de la transaction en attente ou passer à la suite si vous souhaitez accepter la commande plus tard.",
-        "hidden_items": "éléments cachés"
+        "hidden_items": "éléments cachés",
+        "main": "Accueil",
+        "hidden_tokens": "Jetons cachés"
     },
     "es": {
         "balance": "Saldo",
@@ -423,7 +433,9 @@
         "go_to_balance": "Ir al saldo",
         "pending": "En espera",
         "pending_transaction_message": "Por favor, continúe procesando la transacción pendiente o pase a la siguiente si desea aceptar la orden más tarde.",
-        "hidden_items": "elementos ocultos"
+        "hidden_items": "elementos ocultos",
+        "main": "Inicio",
+        "hidden_tokens": "Tokens ocultos"
     },
     "ja": {
         "balance": "残高",
@@ -494,7 +506,9 @@
         "go_to_balance": "残高に戻る",
         "pending": "待機中",
         "pending_transaction_message": "この保留中のトランザクションを続けるか、後でコマンドを受け入れる場合はスキップしてください。",
-        "hidden_items": "非表示の要素"
+        "hidden_items": "非表示の要素",
+        "main": "メイン",
+        "hidden_tokens": "非表示のトークン"
     },
     "ko": {
         "balance": "잔액",
@@ -565,6 +579,81 @@
         "go_to_balance": "잔액으로 돌아가기",
         "pending": "대기 중",
         "pending_transaction_message": "이 보류 중인 트랜잭션을 계속 처리하거나 나중에 명령을 수락하려는 경우 건너뛰세요.",
-        "hidden_items": "숨김 요소"
+        "hidden_items": "숨김 요소",
+        "main": "메인",
+        "hidden_tokens": "숨김 토큰"
+    },
+    "ita": {
+        "balance": "Saldo",
+        "send": "Invia",
+        "receive": "Ricevi",
+        "history": "Cronologia",
+        "block": "Blocco",
+        "available": "Disponibile",
+        "locked": "Bloccato",
+        "search_tokens": "Cerca token",
+        "currency_display": "Visualizzazione valuta",
+        "choose_a_display_format": "Scegli un formato di visualizzazione",
+        "amount": "Importo",
+        "enter_amount": "Inserisci importo",
+        "recipient_address": "Indirizzo del destinatario",
+        "enter_recipient_address": "Inserisci l'indirizzo del destinatario",
+        "message": "Messaggio",
+        "enter_message": "Inserisci messaggio",
+        "add_a_burn": "Aggiungi una combustione",
+        "burn": "Brucia",
+        "optional": "Opzionale",
+        "review": "Rivedi",
+        "your_address": "Il tuo indirizzo",
+        "validate": "Convalida",
+        "cancel": "Annulla",
+        "address_name": "Nome dell'indirizzo",
+        "validate_an_address": "Convalida un indirizzo",
+        "enter_an_0x_or_mx_address": "Inserisci un indirizzo 0x o Mx",
+        "your_alternative_addresses": "I tuoi indirizzi alternativi",
+        "this_address_is_safe_for_use": "Questo indirizzo è sicuro da usare",
+        "this_address_is_not_safe": "Questo indirizzo non è sicuro",
+        "validation_report": "Rapporto di convalida",
+        "belongs_to_this_node": "Appartiene a questo nodo",
+        "simple_address": "Indirizzo semplice",
+        "validating": "Convalida in corso",
+        "0x_address": "Indirizzo 0x",
+        "mx_address": "Indirizzo Mx",
+        "back": "Indietro",
+        "created": "Creato",
+        "sent": "Inviato",
+        "received": "Ricevuto",
+        "please_enter_a_valid_amount": "Si prega di inserire un importo valido.",
+        "please_enter_a_valid_address": "Si prega di inserire un indirizzo valido.",
+        "confirmation": "Conferma",
+        "show_hidden_tokens": "Mostra token nascosti",
+        "hide_hidden_tokens": "Nascondi token nascosti",
+        "token_details": "Dettagli del token",
+        "token_id": "ID del token",
+        "total_minted": "Totale coniato",
+        "total_coins": "Totale monete",
+        "description": "Descrizione",
+        "no_description": "Nessuna descrizione",
+        "web_validation_url": "URL di convalida web",
+        "confirmed": "Confermato",
+        "unconfirmed": "Non confermato",
+        "sendable": "Inviabile",
+        "n_a": "N/A",
+        "hide_token": "Nascondi token",
+        "show_token": "Mostra token",
+        "burn_token": "Brucia token",
+        "are_you_sure_you_want_to_burn_this_token_this_action_cannot_be_reversed": "Sei sicuro di voler bruciare questo token? Questa azione non può essere annullata.",
+        "are_you_sure_you_want_to_show_this_token": "Sei sicuro di voler mostrare questo token?",
+        "are_you_sure_you_want_to_hide_this_token": "Sei sicuro di voler nascondere questo token?",
+        "confirm": "Conferma",
+        "close": "Chiudi",
+        "success": "Successo",
+        "this_transaction_has_been_sent_successfully": "Questa transazione è stata inviata con successo.",
+        "go_to_balance": "Vai al saldo",
+        "pending": "In attesa",
+        "pending_transaction_message": "Si prega di accettare la transazione in sospeso per continuare o saltare per continuare se si desidera accettare il comando in seguito.",
+        "hidden_items": "elementi nascosti",
+        "main": "Principale",
+        "hidden_tokens": "Token nascosti"
     }
 }

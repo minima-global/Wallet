@@ -11,6 +11,7 @@ import InfoBox from '../../components/InfoBox';
 import Input from '../../components/Input';
 import useTranslation from '../../hooks/useTranslation';
 import { appContext } from '../../AppContext';
+import SearchBar from '../../components/SearchBar';
 export const Route = createFileRoute('/receive/')({
   component: Index,
 });
@@ -20,11 +21,13 @@ const VALIDATE_ADDRESS = 'VALIDATE_ADDRESS';
 
 function Index() {
   const { t } = useTranslation();
-  const { address } = useContext(appContext);
+  const { address, addresses } = useContext(appContext);
   const [activeTab, setActiveTab] = useState(YOUR_ADDRESS);
   const [error, setError] = useState<boolean>(false);
   const [result, setResult] = useState<CheckAddress | null>(null);
   const [query, setQuery] = useState('');
+  const [filterAddressQuery, setFilterAddressQuery] = useState('');
+  const [showAltAddresses, setShowAltAddresses] = useState(false);
 
   const TABS = [
     {
@@ -63,6 +66,10 @@ function Index() {
 
   const dismissResults = () => {
     setResult(null);
+  }
+
+  const toggleAltAddresses = () => {
+    setShowAltAddresses(!showAltAddresses);
   }
 
   if (result) {
@@ -123,9 +130,11 @@ function Index() {
   }
 
   return (
-    <div className="grow flex flex-col">
+    <div className="grow flex flex-col mb-12">
       <h1 className="text-white text-2xl mb-6">{t("receive")}</h1>
-      <Tabs activeKey={activeTab} onClick={setActiveTab} tabs={TABS} />
+      <div className="mb-6">
+        <Tabs activeKey={activeTab} onClick={setActiveTab} tabs={TABS} />
+      </div>
       {activeTab === YOUR_ADDRESS && (
         <div className="mt-2 mb-6 flex flex-col gap-4">
           <div className="bg-contrast1 p-8 rounded-lg">
@@ -146,8 +155,37 @@ function Index() {
               {t("validate")}
             </Button>
           </div>
-          <div className="bg-contrast1 py-8 px-10 rounded-lg hidden">
-            <div className="text-grey20">{t("your_alternative_addresses")}</div>
+          <div className="bg-contrast1 rounded-lg">
+            <div onClick={toggleAltAddresses} className="pt-8 px-8 cursor-pointer grid grid-cols-12">
+              <div className="col-span-6 flex items-center">
+                <div className="text-grey20">{t("your_alternative_addresses")}</div>
+              </div>
+              <div className="col-span-6 flex items-center justify-end">
+                <svg className={`-ml-2 fill-[#91919D] hover:fill-white transition-all transition-100 ${showAltAddresses ? 'rotate-90' : ''}`} width="7" height="10" viewBox="0 0 7 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.875 5L0.9375 1.0625L2 0L7 5L2 10L0.9375 8.9375L4.875 5Z" fill="#currentColor"></path></svg>                </div>
+            </div>
+            <div className={`flex flex-col gap-2 p-8 pt-0 ${showAltAddresses ? 'mt-6 opacity-100' : 'h-0 opacity-0'}`}>
+              <div className="mt-1 mb-4">
+                <SearchBar placeholder="Enter an address" value={filterAddressQuery} onChange={(value) => setFilterAddressQuery(value)} className="!bg-black" />
+              </div>
+              <div className="custom-scrollbar overflow-y-auto max-h-[300px] pr-4 flex flex-col gap-2">
+                {addresses
+                  .filter((address) => address.toLowerCase().includes(filterAddressQuery.toLowerCase()))
+                  .length === 0 && (
+                    <div className="bg-contrast2/50 rounded-lg text-white text-sm px-4 py-4">
+                      <div>No matching addresses could be found</div>
+                    </div>
+                  )}
+                {addresses
+                  .filter((address) => address.toLowerCase().includes(filterAddressQuery.toLowerCase()))
+                  .map((address) => (
+                    <div key={address} className="rounded-lg bg-contrast2/50 p-3">
+                      <div key={address}>
+                        <div>{address}</div>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </div>
           </div>
         </div>
       )}

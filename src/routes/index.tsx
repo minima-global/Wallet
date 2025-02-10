@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import SearchBar from "../components/SearchBar";
 import RefreshButton from "../components/RefreshButton";
-import SortButton from "../components/SortButton";
 import { appContext } from "../AppContext";
 import { useContext, useState } from "react";
 import useTranslation from "../hooks/useTranslation";
@@ -9,34 +8,82 @@ import TokenListItem from "../components/TokenListItem";
 
 import GridButton from "../components/GridButton";
 import TokenCard from "../components/TokenCard";
+import Tabs from "../components/Tabs";
 export const Route = createFileRoute("/")({
   component: Index,
 });
 
+const Sort = ({ title, selected, options, onClick }: { title: string, selected: string, options: { key: string, label: string }[], onClick: (option: string) => void }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const selectedOption = options.find((option) => option.key === selected);
+
+  const toggleDropdown = () => {
+    setIsOpen(prevState => !prevState);
+  }
+
+  const handleOptionClick = (option: { key: string, label: string }) => {
+    setIsOpen(false);
+    onClick(option.key);
+  }
+
+  return (
+    <div className="relative text-sm">
+      <div onClick={toggleDropdown} className="cursor-pointer flex items-center gap-3">
+        <div className="text-grey80">
+          {title}
+        </div>
+        <div className="font-bold capitalize">
+          {selectedOption?.label}
+        </div>
+        <svg className="-mb-1" width="10" height="7" viewBox="0 0 10 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M5 6.0625L0 1.0625L1.0625 0L5 3.9375L8.9375 0L10 1.0625L5 6.0625Z" fill="#E9E9EB" />
+        </svg>
+      </div>
+      <div className={`absolute z-20 top-[100%] mt-4 text-sm right-0 flex flex-col gap-[2px] bg-contrast1 whitespace-nowrap ${isOpen ? 'block' : 'hidden'}`}>
+        {options.map((option) => (
+          <button key={option.key} onClick={() => handleOptionClick(option)} className="bg-contrast2 px-4 py-2 text-white hover:bg-white hover:text-black">{option.label}</button>
+        ))}
+      </div>
+      <div className={`fixed z-10 bg-black opacity-50 inset-0 ${isOpen ? 'pointer-events-auto' : 'pointer-events-none hidden'}`} onClick={toggleDropdown}></div>
+    </div>
+  )
+}
+
 function Index() {
-  const { balance, fetchBalance, hiddenTokens, hideHiddenTokens, setHideHiddenTokens, gridMode, setGridMode } = useContext(appContext);
+  const { balance, fetchBalance, hiddenTokens, activeTab, setActiveTab, gridMode, setGridMode } = useContext(appContext);
   const { t } = useTranslation();
   const [query, setQuery] = useState('');
-  const [sort, setSort] = useState<'desc' | 'asc'>('desc');
+  const [sort, setSort] = useState<'A-Z' | 'Z-A' | 'Lowest' | 'Highest'>('A-Z');
+  const [filter, setFilter] = useState<'all' | 'simple' | 'nfts' | 'custom'>('all');
 
-  const numberHiddenTokens = balance
-    .filter(balance => {
-      return hiddenTokens.includes(balance.tokenid);
-    }).length;
-
-  const filteredBalance = balance
-    .filter(balance => {
-      if (!hideHiddenTokens) {
-        return true;
-      }
-
-      return !hiddenTokens.includes(balance.tokenid);
-    })
+  const baseBalance = balance
     .filter(balance => {
       if (!query) return true;
       const tokenName = typeof balance.token === 'string' ? balance.token : balance.token.name;
       return tokenName.toLowerCase().includes(query.toLowerCase().trim());
-    }).sort((a, b) => {
+    })
+    .filter(balance => {
+      if (filter === 'all') return true;
+      if (filter === 'simple') return typeof balance.token === 'string';
+      if (filter === 'nfts') return typeof balance.token === 'object' && (balance as any).details.decimals === 0;
+      if (filter === 'custom') return typeof balance.token === 'object' && (balance as any).details.decimals !== 0;
+    })
+
+
+  const numberOfHiddenTokens = baseBalance
+    .filter(balance => {
+      return hiddenTokens.includes(balance.tokenid);
+    }).length;
+
+  const filteredBalance = baseBalance
+    .filter(balance => {
+      if (activeTab === 'main') {
+        return !hiddenTokens.includes(balance.tokenid);
+      }
+
+      return hiddenTokens.includes(balance.tokenid);
+    })
+    .sort((a, b) => {
       // Always put Minima (0x00) at the top
       if (a.tokenid === '0x00') return -1;
       if (b.tokenid === '0x00') return 1;
@@ -44,24 +91,42 @@ function Index() {
       const aAmount = Number(a.sendable);
       const bAmount = Number(b.sendable);
 
-      if (sort === 'desc') {
-        if (aAmount > bAmount) return -1;
-        if (aAmount < bAmount) return 1;
-      } else {
-        if (aAmount < bAmount) return -1;
+      if (sort === 'A-Z') {
+        const aName = typeof a.token === 'string' ? a.token : a.token.name;
+        const bName = typeof b.token === 'string' ? b.token : b.token.name;
+        return aName.localeCompare(bName);
+      } else if (sort === 'Z-A') {
+        const aName = typeof a.token === 'string' ? a.token : a.token.name;
+        const bName = typeof b.token === 'string' ? b.token : b.token.name;
+        return bName.localeCompare(aName);
+      } else if (sort === 'Lowest') {
         if (aAmount > bAmount) return 1;
+        if (aAmount < bAmount) return -1;
+      } else if (sort === 'Highest') {
+        if (aAmount < bAmount) return 1;
+        if (aAmount > bAmount) return -1;
       }
 
       return 0;
     });
 
-  const toggleTokensHidden = () => {
-    setHideHiddenTokens(prevState => !prevState);
-  }
-
   const toggleGridMode = () => {
     setGridMode(prevState => prevState === 'list' ? 'grid' : 'list');
   }
+
+  const sortOptions = [
+    { key: 'A-Z', label: 'A-Z' },
+    { key: 'Z-A', label: 'Z-A' },
+    { key: 'Lowest', label: 'Lowest' },
+    { key: 'Highest', label: 'Highest' },
+  ];
+
+  const filterOptions = [
+    { key: 'all', label: 'All' },
+    { key: 'simple', label: 'Simple' },
+    { key: 'custom', label: 'Custom' },
+    { key: 'nfts', label: 'NFTs' },
+  ];
 
   return (
     <div>
@@ -69,15 +134,17 @@ function Index() {
 
       <div className="mb-6 flex gap-2.5">
         <SearchBar value={query} onChange={setQuery} />
-        <SortButton onClick={() => setSort(sort === 'desc' ? 'asc' : 'desc')} />
         <RefreshButton onClick={fetchBalance} />
         <GridButton gridMode={gridMode} onClick={toggleGridMode} />
       </div>
 
-      <div onClick={toggleTokensHidden} className="mb-4 flex justify-end cursor-pointer select-none">
-        <div className="flex items-center gap-2.5 text-sm text-grey60 text-xs font-bold bg-contrast1 w-fit rounded-full px-3.5 py-1.5 border dark:border-contrast2 origin-center active:scale-[0.95] transition-all duration-100">
-          {hideHiddenTokens ? <img src="./assets/icons/eye-open.svg" alt="Show hidden tokens" className="text-white w-4 h-4" /> : <img src="./assets/icons/eye-closed.svg" alt="Show hidden tokens" className="w-4 h-4" />}
-          {hideHiddenTokens ? t('show_hidden_tokens') : t('hide_hidden_tokens')}
+      <div className="grid grid-cols-12 gap-4 mb-7">
+        <div className="col-span-6 flex items-center gap-2">
+          <Tabs activeKey={activeTab} tabs={[{ key: 'main', title: t('main') }, { key: 'hidden', title: t('hidden_tokens'), number: numberOfHiddenTokens }]} onClick={(key) => setActiveTab(key as 'main' | 'hidden')} />
+        </div>
+        <div className="col-span-6 flex items-center justify-end gap-5">
+          <Sort title="Sort" selected={sort} options={sortOptions} onClick={(option) => setSort(option as 'A-Z' | 'Z-A' | 'Lowest' | 'Highest')} />
+          <Sort title="Filter" selected={filter} options={filterOptions} onClick={(option) => setFilter(option as 'all' | 'simple' | 'nfts' | 'custom')} />
         </div>
       </div>
 
@@ -91,22 +158,21 @@ function Index() {
           {filteredBalance.map((balance) => (
             <TokenListItem key={balance.tokenid} balance={balance} />
           ))}
-          {hideHiddenTokens && (
-            <div className="mt-2 text-left w-full text-[13px] font-bold text-grey60"><strong className="font-heavy">{numberHiddenTokens}</strong> {t('hidden_items')}</div>
-          )}
         </ul>
       )}
 
       {gridMode === 'grid' && (
         <div className="mb-10">
           <div className="grid grid-cols-12 gap-4">
+            {filteredBalance.length === 0 && (
+              <div className="col-span-12 w-full flex items-center bg-contrast1 opacity-80 p-3 px-4 text-sm rounded">
+                No tokens found
+              </div>
+            )}
             {filteredBalance.map((balance) => (
               <TokenCard key={balance.tokenid} balance={balance} favourted={false} />
             ))}
           </div>
-          {hideHiddenTokens && (
-            <div className="mt-6 text-left w-full text-[13px] font-bold text-grey60"><strong className="font-heavy">{numberHiddenTokens}</strong> {t('hidden_items')}</div>
-          )}
         </div>
       )}
     </div>

@@ -17,7 +17,7 @@ const LanguageSelector = ({ isAtTop }: { isAtTop: boolean }) => {
 
     return (
         <div>
-            <div onClick={toggleOpen} className="relative z-20 cursor-pointer text-white border-[3px] border-contrast2 rounded-full px-3 w-full transition-all active:scale-[95%] flex gap-2 py-1.5 pl-3.5 pr-2.5">
+            <div onClick={toggleOpen} className="text-[13px] flex items-center font-[800] relative z-20 cursor-pointer text-white border-[3px] border-contrast2 rounded-full px-3 w-full transition-all active:scale-[95%] flex gap-2 py-1.5 pl-3.5 pr-2.5">
                 {language === 'en' && <div className="font-bold">EN</div>}
                 {language === 'zh' && <div className="font-bold">汉语</div>}
                 {language === 'ru' && <div className="font-bold">Pусский</div>}

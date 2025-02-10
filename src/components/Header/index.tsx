@@ -14,6 +14,14 @@ const Header = () => {
   const openTitleBar = useAndroidShowTitleBar();
 
   useEffect(() => {
+    if (hamburgerOpen) {
+      document.body.classList.add('overflow-hidden')
+    } else {
+      document.body.classList.remove('overflow-hidden')
+    }
+  }, [hamburgerOpen]);
+
+  useEffect(() => {
     const onScroll = () => {
       setIsAtTop(window.scrollY <= 30)
     }
@@ -24,14 +32,6 @@ const Header = () => {
       window.removeEventListener('scroll', onScroll)
     }
   }, [])
-
-  useEffect(() => {
-    if (hamburgerOpen) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = 'auto'
-    }
-  }, [hamburgerOpen]);
 
   const toggle = () => {
     setHamburgerOpen((prevState) => !prevState);
@@ -200,16 +200,16 @@ const Header = () => {
 
   return (
     <>
-      <header className="sticky top-0 z-50 h-[64px]" onClick={openTitleBar}>
+      <header className="sticky top-0 z-[10000] h-[64px]" onClick={openTitleBar}>
         <div
-          className={`${isAtTop ? 'py-3.5 px-5 lg:py-5 lg:px-6' : 'h-[40px]'} relative border-b-gradient flex items-center bg-white transition-all dark:border-lightDarkContrast dark:bg-black`}
+          className={`${hamburgerOpen ? '!py-3.5 !px-5' : ''} ${isAtTop ? 'px-5 lg:px-6 h-[72px]' : 'pl-5 pr-2 h-[64px]'} relative border-b-gradient flex items-center bg-white transition-all dark:border-lightDarkContrast dark:bg-black`}
         >
           <div className={`absolute bottom-0 h-[1px] w-full left-0 overflow-hidden ${!hamburgerOpen ? 'bg-minima-gradient' : 'bg-contrast2'}`} />
           <div className="container relative z-50 mx-auto">
             <div className="grid w-full grid-cols-12">
               <div className="col-span-6 flex items-center">
                 <Link to="/" className="flex items-center gap-5 text-xs">
-                  <svg className="w-[32px] h-[40px] lg:w-[42px] lg:h-[40px]" width="42" height="40" viewBox="0 0 42 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <svg className={`w-[32px] h-[40px] lg:w-[42px] lg:h-[40px] transition-all duration-150 ${!isAtTop && !hamburgerOpen ? '!w-[32px] !h-[32px]' : ''}`} width="42" height="40" viewBox="0 0 42 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M13.1247 13.0477L24.6192 17.6251L31.658 14.8219L34.1184 4.09599L24.6192 7.87852L6.56361 0.688477L0 29.2966L10.342 25.1777L13.1247 13.0477Z" fill="white" />
                     <path d="M31.6591 14.822L28.8765 26.952L17.382 22.3746L10.3432 25.1779L7.88281 35.9038L17.382 32.1212L35.4376 39.3113L42.0012 10.7031L31.6591 14.822Z" fill="white" />
                   </svg>
@@ -237,7 +237,7 @@ const Header = () => {
 
                     <li className="text-white flex items-center gap-6">
 
-                      <div className="gradient-border flex items-center gap-2 -mb-0.5">
+                      <div className="gradient-border flex items-center gap-2">
                         <NodeStatus />
                         <div className="flex items-center text-[13px] gap-2">
                           <span className="text-white font-bold">{block?.block}</span>

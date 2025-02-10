@@ -25,11 +25,12 @@ export const appContext = createContext<{
   getHistory: (order?: 'asc' | 'desc') => void,
   hiddenTokens: string[],
   setHiddenTokens: React.Dispatch<React.SetStateAction<string[]>>,
-  hideHiddenTokens: boolean,
-  setHideHiddenTokens: React.Dispatch<React.SetStateAction<boolean>>,
   verified: Record<string, number>,
   gridMode: 'list' | 'grid',
   setGridMode: React.Dispatch<React.SetStateAction<'list' | 'grid'>>,
+  activeTab: 'main' | 'hidden',
+  setActiveTab: React.Dispatch<React.SetStateAction<'main' | 'hidden'>>,
+  addresses: string[],
 }>({
   loaded: false,
   currencyType: '1',
@@ -53,17 +54,20 @@ export const appContext = createContext<{
   getHistory: () => { },
   hiddenTokens: [],
   setHiddenTokens: () => { },
-  hideHiddenTokens: true,
-  setHideHiddenTokens: () => { },
   verified: {},
   gridMode: 'list',
   setGridMode: () => { },
+  activeTab: 'main',
+  setActiveTab: () => { },
+  addresses: [],
 })
 
 const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const initialised = useRef(false);
   const [loaded, setLoaded] = useState(false);
   const [gridMode, setGridMode] = useState<'list' | 'grid'>('list');
+  const [activeTab, setActiveTab] = useState<'main' | 'hidden'>('main');
+  const [addresses, setAddresses] = useState<string[]>([]);
 
   const [hamburgerOpen, setHamburgerOpen] = useState(false);
   const [isPending, setIsPending] = useState<{ uid: string, callback: () => void } | null>(null);
@@ -79,13 +83,16 @@ const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 
   const [history, setHistory] = useState<any[] | null>(null);
   const [hiddenTokens, setHiddenTokens] = useState<string[]>([]);
-  const [hideHiddenTokens, setHideHiddenTokens] = useState(true);
   const [verified, setVerified] = useState<Record<string, number>>({
     '0x00': 2
   });
 
   const fetchBalance = useCallback(() => {
-    MDS.cmd.balance((balance) => {
+    MDS.cmd.balance({
+      params: {
+        tokendetails: 'true',
+      }
+    }, (balance) => {
       setBalance(balance.response);
     });
   }, []);
@@ -120,6 +127,10 @@ const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 
           MDS.cmd.maxcontacts((maxContacts) => {
             setMaxContacts(maxContacts.response);
+          });
+
+          MDS.cmd.scripts((scripts) => {
+            setAddresses(scripts.response.filter((script) => script.simple && script.default).map((script) => script.miniaddress));
           });
 
           MDS.sql(`SELECT * FROM txpows ORDER BY timemilli desc`).then((txpows) => {
@@ -223,11 +234,12 @@ const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
     setHistory,
     hiddenTokens,
     setHiddenTokens,
-    hideHiddenTokens,
-    setHideHiddenTokens,
     verified,
     gridMode,
     setGridMode,
+    activeTab,
+    setActiveTab,
+    addresses,
   }
 
   return <appContext.Provider value={context}>{children}</appContext.Provider>

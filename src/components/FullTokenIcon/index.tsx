@@ -1,4 +1,4 @@
-import { Image } from "test-image-pkg";
+import { Image } from "@minima-global/image";
 
 const FullTokenIcon = ({ token, tokenId }: { token: any, tokenId: string }) => {
 

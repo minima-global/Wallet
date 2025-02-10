@@ -55,12 +55,9 @@
   -webkit-text-size-adjust: 100%;
 }
 
-html, body {
+body {
   overflow-y: scroll;
   overflow-x: hidden;
-}
-
-body {
   background: black;
 }
 
@@ -110,11 +107,16 @@ body::-webkit-scrollbar {
 }
 
 .custom-scrollbar::-webkit-scrollbar {
-  width: .5em
+  width: .5em;
 }
 
 body::-webkit-scrollbar-track, .custom-scrollbar::-webkit-scrollbar-track {
   background-color: black;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  width: .5em;
+  background: #282B2E;
 }
 
 body::-webkit-scrollbar-thumb, .custom-scrollbar::-webkit-scrollbar-thumb {

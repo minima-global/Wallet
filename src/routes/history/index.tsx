@@ -1,6 +1,4 @@
 import { createFileRoute } from '@tanstack/react-router'
-import Header from '../../components/Header'
-import Navigation from '../../components/Navigation'
 import SearchBar from '../../components/SearchBar'
 import RefreshButton from '../../components/RefreshButton'
 import SortButton from '../../components/SortButton'
@@ -13,6 +11,7 @@ import { escape, renderTokenName } from '../../utils'
 import TokenAuthenticity from '../../components/TokenAuthenticity'
 import TokenIcon from '../../components/TokenIcon'
 import useTranslation from '../../hooks/useTranslation'
+import Decimal from 'decimal.js'
 
 export const Route = createFileRoute('/history/')({
   component: Index,
@@ -64,12 +63,13 @@ const Dropdown = ({ options }: { options: { key: string, label: string }[] }) =>
 }
 
 function Index() {
-  const { loaded, history, getHistory } = useContext(appContext);
+  const { loaded, history, getHistory, balance } = useContext(appContext);
   const { f } = useFormatAmount();
   const { t } = useTranslation();
   const [inited, setInited] = useState(false);
   const [query, setQuery] = useState('');
   const [order, setOrder] = useState<'asc' | 'desc'>('desc');
+  const [balanceDifference, setBalanceDifference] = useState<Record<string, number>>({});
 
   useEffect(() => {
     if (loaded && !inited) {
@@ -92,6 +92,47 @@ function Index() {
       setInited(true);
     }
   }, [loaded, inited, getHistory]);
+
+  useEffect(() => {
+    if (history && balance) {
+      const balanceAtStart = {};
+      const previousBalance = {};
+      const balanceHistory = {};
+
+      balance.forEach((item) => {
+        balanceAtStart[item.tokenid] = new Decimal(item.confirmed).add(item.unconfirmed);
+      });
+
+      history.forEach((item) => {
+        const inputToken = item.BODY.txn.inputs[0].tokenid;
+        const difference = item.DETAILS.difference[inputToken];
+
+        if (!previousBalance[inputToken]) {
+          balanceHistory[item.TXPOWID] = new Decimal(balanceAtStart[inputToken]).toString();
+
+          previousBalance[inputToken] = new Decimal(balanceAtStart[inputToken]);
+        }
+
+        if (previousBalance[inputToken]) {
+          balanceHistory[item.TXPOWID] = new Decimal(previousBalance[inputToken]).toString();
+
+          const add = difference[0] === '+';
+          const subtract = difference[0] === '-';
+          const amount = difference.replace('+', '').replace('-', '');
+  
+          if (add) {
+            previousBalance[inputToken] = new Decimal(previousBalance[inputToken]).sub(amount);
+          } else if (subtract) {
+            previousBalance[inputToken] = new Decimal(previousBalance[inputToken]).add(amount);
+          } else {
+            previousBalance[inputToken] = new Decimal(previousBalance[inputToken]);
+          }
+        }
+      });
+
+      setBalanceDifference(balanceHistory);
+    }
+  }, [history, balance]);
 
   const toggleOrder = () => {
     setOrder(prevState => prevState === 'desc' ? 'asc' : 'desc');
@@ -169,8 +210,6 @@ function Index() {
     },
   ]
 
-  console.log(history);
-
   return (
     <div>
       <div className="flex mb-6">
@@ -205,9 +244,9 @@ function Index() {
                 return null;
               }
 
-              const everyItemIsDifferenceZero = groupedByDay[day].every((h) => {
-                return h.DETAILS.difference[h.BODY.txn.inputs[0].tokenid] === '0';
-              });
+              // const everyItemIsDifferenceZero = groupedByDay[day].every((h) => {
+              //   return h.DETAILS.difference[h.BODY.txn.inputs[0].tokenid] === '0';
+              // });
 
               // if (everyItemIsDifferenceZero) {
               //   return null;
@@ -222,7 +261,6 @@ function Index() {
                   {groupedByDay[day].map((h) => {
                     const input = h.BODY.txn.inputs[0].tokenid;
                     const difference = h.DETAILS.difference[input];
-                    const change = h.DETAILS.outputs[input];
 
                     const hasCreatedToken = h.BODY?.txn.outputs[0].tokenid === '0xFF';
                     const createdToken = h.BODY?.txn.outputs[0];
@@ -258,8 +296,9 @@ function Index() {
                               </div>
                               <p className="font-bold truncate text-grey dark:text-neutral-300">{t("created")} - {format(new Date(Number(h.HEADER.timemilli)), 'HH:mm aa')}</p>
                             </div>
-                            <div className="text-right flex items-center gap-1">
+                            <div className="text-right flex flex-col items-end justify-center gap-1">
                               <p className="font-bold text-green">+{createdToken.tokenamount}</p>
+                              <p className="text-grey60">{createdToken.tokenamount}</p>
                             </div>
                           </div>
                         )}
@@ -295,13 +334,14 @@ function Index() {
                           {difference && difference !== '0' && (
                             <div className="text-right flex flex-col items-end justify-center gap-1 font-bold">
                               <p className={`${difference > 0 ? 'text-green' : 'text-red'}`}>{!difference.includes('-') ? difference > 0 ? '+' : '-' : ''}{f(difference)}</p>
+                              {balanceDifference[h.TXPOWID] && <p className="text-grey60">{f(balanceDifference[h.TXPOWID].toString())}</p>}
                               {/* {change && <p className="text-grey60">{f(change)}</p>} */}
                             </div>
                           )}
                           {difference === '0' && (
                             <div className="text-right flex flex-col items-end justify-center gap-1 font-bold">
                               <p className={`text-grey-60`}>0</p>
-                              {/* <p className="text-grey60 text-sm">Sent to yourself</p> */}
+                              {balanceDifference[h.TXPOWID] && <p className="text-grey60">{f(balanceDifference[h.TXPOWID].toString())}</p>}
                             </div>
                           )}
                         </div>
