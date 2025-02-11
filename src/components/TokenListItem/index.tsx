@@ -19,6 +19,8 @@ const TokenListItem = ({ balance }: { balance: Balance }) => {
     }
 
     const locked = new Decimal(balance.confirmed).minus(balance.sendable).abs().toString();
+    const confirmed = new Decimal(balance.confirmed).add(balance.unconfirmed).abs().toString();
+    const sendable = new Decimal(balance.sendable).add(balance.unconfirmed).abs().toString();
 
     return (
         <li>
@@ -36,7 +38,7 @@ const TokenListItem = ({ balance }: { balance: Balance }) => {
                                     <TokenAuthenticity token={balance} />
                                 </div>
                                 <p className="font-bold w-full overflow-ellipsis truncate text-grey dark:text-neutral-300">
-                                    <BalanceAmount balance={balance} />
+                                    <BalanceAmount balance={balance} value={confirmed} />
                                 </p>
                             </div>
                         </div>
@@ -56,7 +58,7 @@ const TokenListItem = ({ balance }: { balance: Balance }) => {
                     </div>
                     <div className="grow flex flex-col">
                         <div className="mb-1">
-                            <Truncate text={balance.confirmed} maxLength={24} />
+                            <BalanceAmount balance={balance} value={sendable} />
                         </div>
                         <div>
                             <Truncate text={locked} maxLength={24} />
@@ -73,7 +75,7 @@ const TokenListItem = ({ balance }: { balance: Balance }) => {
     )
 }
 
-const BalanceAmount = ({ balance }: { balance: Balance }) => {
+const BalanceAmount = ({ balance, value }: { balance: Balance, value: string }) => {
     const { f } = useFormatAmount();
     const [hasUnconfirmed, setHasUnconfirmed] = useState(false);
     const [showing, setShowing] = useState<1 | 2 | false>(false);
@@ -100,27 +102,10 @@ const BalanceAmount = ({ balance }: { balance: Balance }) => {
         setShowing(false);
     }, [showing, hasUnconfirmed]);
 
-    const sendable = f(balance.sendable);
-    const unconfirmed = f(balance.unconfirmed);
-
-    if (showing === false) {
-        return (
-            <div className="w-full">
-                <Truncate text={sendable} maxLength={24} />
-            </div>
-        )
-    }
-
     return (
         <div className="relative">
-            <div className={`w-full truncate overflow-ellipsis flex gap-2 items-center transition-all duration-200 ${showing === 1 ? 'opacity-100' : 'opacity-0'}`}>
-                <Truncate text={sendable} maxLength={24} />
-            </div>
-            <div className={`w-full flex items-center gap-2 text-green absolute top-0 left-0 transition-all duration-200 ${showing === 2 ? 'opacity-100' : 'opacity-0'}`}>
-                <svg className="min-w-[10px]" width="10" height="5" viewBox="0 0 10 5" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M0.832031 4.66667L4.9987 0.5L9.16536 4.66667H0.832031Z" fill="#00CBB6" />
-                </svg>
-                <Truncate text={unconfirmed} maxLength={24} />
+            <div className={`w-full truncate overflow-ellipsis flex gap-2 items-center transition-all duration-100 ${showing === false ? '' : showing === 1 ? 'text-grey60' : 'text-white'}`}>
+                {f(value)}
             </div>
         </div>
     )
