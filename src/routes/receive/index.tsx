@@ -204,7 +204,7 @@ function Index() {
               placeholder={t("enter_an_0x_or_mx_address")}
               inverse
             />
-            <Button onClick={() => validateAddress(query)}>{t("validate")}</Button>
+            <Button disabled={query.length === 0} onClick={() => validateAddress(query)}>{t("validate")}</Button>
           </div>
         </div>
       )}

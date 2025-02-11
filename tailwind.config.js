@@ -28,7 +28,7 @@ export default {
         green: "#4FE3C1",
         red: "#FF627E",
 
-        'contrast1.5': '#202428',
+        'contrast1.5': '#1F2327',
 
         contrast1: "hsla(216, 10%, 10%, 1)",
         contrast2: "hsla(210, 7%, 17%, 1)",

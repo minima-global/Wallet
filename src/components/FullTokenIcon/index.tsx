@@ -13,7 +13,10 @@ const FullTokenIcon = ({ token, tokenId }: { token: any, tokenId: string }) => {
 
     if (typeof token === 'object' && token.url && !token.url.includes('http')) {
         return (
-            <Image src={token.url} alt="Token" className="max-w-[48px] max-h-[48px] border border-contrast3 l w-full h-full object-cover" loader={<div />} />
+            <>
+                <Image src={token.url} alt="Token" className="relative z-10 max-w-[48px] max-h-[48px] l w-full h-full object-cover" loader={<div />} />
+                <Image src={token.url} alt="Token" className="absolute blur opacity-50 w-[120%] h-[120%] object-cover" loader={<div />} />
+            </>
         )
     }
 

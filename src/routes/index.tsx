@@ -8,7 +8,7 @@ import TokenListItem from "../components/TokenListItem";
 
 import GridButton from "../components/GridButton";
 import TokenCard from "../components/TokenCard";
-import Tabs from "../components/Tabs";
+
 export const Route = createFileRoute("/")({
   component: Index,
 });
@@ -27,7 +27,7 @@ const Sort = ({ title, selected, options, onClick }: { title: string, selected: 
   }
 
   return (
-    <div className="relative text-sm">
+    <div className="relative text-[15px]">
       <div onClick={toggleDropdown} className="cursor-pointer flex items-center gap-3">
         <div className="text-grey80">
           {title}
@@ -60,7 +60,7 @@ function Index() {
     .filter(balance => {
       if (!query) return true;
       const tokenName = typeof balance.token === 'string' ? balance.token : balance.token.name;
-      return tokenName.toLowerCase().includes(query.toLowerCase().trim());
+      return tokenName.toLowerCase().includes(query.toLowerCase().trim()) || balance.tokenid.toLowerCase().includes(query.toLowerCase().trim());
     })
     .filter(balance => {
       if (filter === 'all') return true;
@@ -68,12 +68,6 @@ function Index() {
       if (filter === 'nfts') return typeof balance.token === 'object' && (balance as any).details.decimals === 0;
       if (filter === 'custom') return typeof balance.token === 'object' && (balance as any).details.decimals !== 0;
     })
-
-
-  const numberOfHiddenTokens = baseBalance
-    .filter(balance => {
-      return hiddenTokens.includes(balance.tokenid);
-    }).length;
 
   const filteredBalance = baseBalance
     .filter(balance => {
@@ -130,7 +124,17 @@ function Index() {
 
   return (
     <div>
-      <h1 className="text-white text-2xl mb-6">{t("balance")}</h1>
+      <h1 className="text-white text-2xl mb-6 flex items-center gap-2">
+        <button disabled={activeTab === 'main'} className={`enabled:cursor-pointer ${activeTab === 'hidden' ? 'text-grey80' : 'text-white'}`} onClick={() => setActiveTab('main')}>
+          {t("balance")}
+        </button>
+        {activeTab === 'hidden' && (
+          <div className="flex gap-2">
+            <div>/</div>
+            <div>Hidden tokens</div>
+          </div>
+        )}
+      </h1>
 
       <div className="mb-6 flex gap-2.5">
         <SearchBar value={query} onChange={setQuery} />
@@ -139,12 +143,17 @@ function Index() {
       </div>
 
       <div className="grid grid-cols-12 gap-4 mb-7">
-        <div className="col-span-6 flex items-center gap-2">
-          <Tabs activeKey={activeTab} tabs={[{ key: 'main', title: t('main') }, { key: 'hidden', title: t('hidden_tokens'), number: numberOfHiddenTokens }]} onClick={(key) => setActiveTab(key as 'main' | 'hidden')} />
-        </div>
-        <div className="col-span-6 flex items-center justify-end gap-5">
+        <div className="col-span-6 flex items-center gap-6">
           <Sort title="Sort" selected={sort} options={sortOptions} onClick={(option) => setSort(option as 'A-Z' | 'Z-A' | 'Lowest' | 'Highest')} />
           <Sort title="Filter" selected={filter} options={filterOptions} onClick={(option) => setFilter(option as 'all' | 'simple' | 'nfts' | 'custom')} />
+        </div>
+        <div className="col-span-6 flex items-center justify-end gap-5">
+          {activeTab === 'hidden' && (
+            <div className="underline cursor-pointer" onClick={() => setActiveTab('main')}>Go back</div>
+          )}
+          {activeTab !== 'hidden' && (
+            <div className="underline cursor-pointer" onClick={() => setActiveTab('hidden')}>Hidden tokens</div>
+          )}
         </div>
       </div>
 
