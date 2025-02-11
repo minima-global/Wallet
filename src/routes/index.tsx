@@ -8,6 +8,8 @@ import TokenListItem from "../components/TokenListItem";
 
 import GridButton from "../components/GridButton";
 import TokenCard from "../components/TokenCard";
+import OverlayModal from "../components/OverlayModal";
+import Button from "../components/Button";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -55,6 +57,9 @@ function Index() {
   const [query, setQuery] = useState('');
   const [sort, setSort] = useState<'A-Z' | 'Z-A' | 'Lowest' | 'Highest'>('A-Z');
   const [filter, setFilter] = useState<'all' | 'simple' | 'nfts' | 'custom'>('all');
+  const [proxySort, setProxySort] = useState<'A-Z' | 'Z-A' | 'Lowest' | 'Highest'>('A-Z');
+  const [proxyFilter, setProxyFilter] = useState<'all' | 'simple' | 'nfts' | 'custom'>('all');
+  const [showFilterAndSort, setShowFilterAndSort] = useState(false);
 
   const baseBalance = balance
     .filter(balance => {
@@ -122,8 +127,67 @@ function Index() {
     { key: 'nfts', label: 'NFTs' },
   ];
 
+  const toggleFilterAndSort = () => {
+    setShowFilterAndSort(prevState => !prevState);
+  }
+
+  const applyChanges = () => {
+    setSort(proxySort);
+    setFilter(proxyFilter);
+    toggleFilterAndSort();
+  };
+
+  const resetChanges = () => {
+    setSort('A-Z');
+    setFilter('all');
+    setProxySort('A-Z');
+    setProxyFilter('all');
+    toggleFilterAndSort();
+  }
+
   return (
     <div>
+      <OverlayModal display={showFilterAndSort}>
+        <div className="text-left">
+          <h5 className="mb-4 text-grey80">Sort by</h5>
+          <div className="flex flex-col gap-3 mb-8">
+            {sortOptions.map((option) => (
+              <div className="flex items-center gap-2">
+                <label className="w-full flex items-center gap-2 text-grey20">
+                  {option.label}
+                  <span className="grow flex justify-end relative">
+                    <input type="radio" className="peer sr-only" name="sort" id={option.key} checked={proxySort === option.key} onChange={() => setProxySort(option.key as 'A-Z' | 'Z-A' | 'Lowest' | 'Highest')} />
+                    <div className="relative peer-checked:[&>div]:opacity-100 w-4 h-4 border-2 border-grey60 peer-checked:border-orange rounded-full flex items-center justify-center">
+                      <div className="absolute inset-0 opacity-0 top-0.5 left-0.5 w-2 h-2 rounded-full bg-orange"></div>
+                    </div>
+                  </span>
+                </label>
+              </div>
+            ))}
+          </div>
+          <h5 className="mt-4 my-4 text-grey80">Filter by</h5>
+          <div className="flex flex-col gap-3 mb-8">
+            {filterOptions.map((option) => (
+              <div className="flex items-center gap-2">
+                <label className="w-full flex items-center gap-2 text-grey20">
+                  {option.label}
+                  <span className="grow flex justify-end relative">
+                    <input type="radio" className="peer sr-only" name="filter" id={option.key} checked={proxyFilter === option.key} onChange={() => setProxyFilter(option.key as 'all' | 'simple' | 'nfts' | 'custom')} />
+                    <div className="relative peer-checked:[&>div]:opacity-100 w-4 h-4 border-2 border-grey60 peer-checked:border-orange rounded-full flex items-center justify-center">
+                      <div className="absolute inset-0 opacity-0 top-0.5 left-0.5 w-2 h-2 rounded-full bg-orange"></div>
+                    </div>
+                  </span>
+                </label>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="flex flex-col gap-3 mb-4">
+          <Button onClick={applyChanges}>Apply</Button>
+          <Button secondary onClick={resetChanges}>Reset</Button>
+        </div>
+      </OverlayModal>
+
       <h1 className="text-white text-2xl mb-6 flex items-center gap-2">
         <button disabled={activeTab === 'main'} className={`enabled:cursor-pointer ${activeTab === 'hidden' ? 'text-grey80' : 'text-white'}`} onClick={() => setActiveTab('main')}>
           {t("balance")}
@@ -142,10 +206,17 @@ function Index() {
         <GridButton gridMode={gridMode} onClick={toggleGridMode} />
       </div>
 
-      <div className="grid grid-cols-12 gap-4 mb-7">
-        <div className="col-span-6 flex items-center gap-6">
-          <Sort title="Sort" selected={sort} options={sortOptions} onClick={(option) => setSort(option as 'A-Z' | 'Z-A' | 'Lowest' | 'Highest')} />
-          <Sort title="Filter" selected={filter} options={filterOptions} onClick={(option) => setFilter(option as 'all' | 'simple' | 'nfts' | 'custom')} />
+      <div className="flex gap-4 my-6">
+        <div className="grow">
+          <div className="flex lg:hidden items-center gap-6">
+            <div onClick={toggleFilterAndSort} className="cursor-pointer text-grey80 active:text-white transition-all duration-100">
+              Filter & sort
+            </div>
+          </div>
+          <div className="hidden lg:flex items-center gap-6">
+            <Sort title="Sort" selected={sort} options={sortOptions} onClick={(option) => setSort(option as 'A-Z' | 'Z-A' | 'Lowest' | 'Highest')} />
+            <Sort title="Filter" selected={filter} options={filterOptions} onClick={(option) => setFilter(option as 'all' | 'simple' | 'nfts' | 'custom')} />
+          </div>
         </div>
         <div className="col-span-6 flex items-center justify-end gap-5">
           {activeTab === 'hidden' && (
@@ -179,7 +250,7 @@ function Index() {
               </div>
             )}
             {filteredBalance.map((balance) => (
-              <TokenCard key={balance.tokenid} balance={balance} favourted={false} />
+              <TokenCard key={balance.tokenid} balance={balance} />
             ))}
           </div>
         </div>

@@ -22,7 +22,7 @@ const TokenIcon = ({ token, tokenId }: { token: any, tokenId: string }) => {
     }
 
     return (
-        <div className="w-[48px] h-[48px] border border-contrast2 rounded overflow-hidden">
+        <div className="w-[48px] h-[48px] border border-contrast2 bg-contrast1 rounded overflow-hidden">
             <img src={`https://robohash.org/${tokenId}`} alt="Token" className="w-full h-full object-cover" />
         </div>
     );

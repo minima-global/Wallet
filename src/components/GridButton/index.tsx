@@ -10,7 +10,7 @@ const GridButton = ({ gridMode, onClick }: { gridMode: 'list' | 'grid', onClick:
                 {gridMode === 'grid' && (
 
                     <svg width="14px" height="14px" viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
-                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                        <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
                             <g id="grid" transform="translate(-84.000000, -85.000000)" stroke="#FFFFFF">
                                 <g id="list" transform="translate(84.000000, 85.000000)">
                                     <rect id="row-3" x="0.5" y="0.5" width="13" height="3"></rect>

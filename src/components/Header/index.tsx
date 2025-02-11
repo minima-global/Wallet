@@ -202,7 +202,7 @@ const Header = () => {
     <>
       <header className="sticky top-0 z-[10000] h-[64px]" onClick={openTitleBar}>
         <div
-          className={`${hamburgerOpen ? '!py-3.5 !px-5' : ''} ${isAtTop ? 'px-5 lg:px-6 h-[72px]' : 'pl-5 pr-2 h-[64px]'} relative border-b-gradient flex items-center bg-white transition-all dark:border-lightDarkContrast dark:bg-black`}
+          className={`${hamburgerOpen ? '!py-3.5 !px-5' : ''} ${isAtTop ? 'px-5 lg:px-6 h-[72px]' : 'p-4 min-h-[64px]'} relative border-b-gradient flex items-center bg-white transition-all dark:border-lightDarkContrast dark:bg-black`}
         >
           <div className={`absolute bottom-0 h-[1px] w-full left-0 overflow-hidden ${!hamburgerOpen ? 'bg-minima-gradient' : 'bg-contrast2'}`} />
           <div className="container relative z-50 mx-auto">
