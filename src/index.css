@@ -119,10 +119,20 @@ body::-webkit-scrollbar-track, .custom-scrollbar::-webkit-scrollbar-track {
   background: #282B2E;
 }
 
+
+.custom-scrollbar-modal::-webkit-scrollbar-track {
+  width: .5em;
+  background: black;
+}
+
 body::-webkit-scrollbar-thumb, .custom-scrollbar::-webkit-scrollbar-thumb {
   background-color: #D3D3D8;
 }
 
 canvas {
   z-index: -100;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }

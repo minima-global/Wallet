@@ -1,8 +1,9 @@
-import { Link } from "@tanstack/react-router"
+import { Link, useLocation } from "@tanstack/react-router"
 import useTranslation from "../../hooks/useTranslation";
 
 const Navigation = () => {
     const { t } = useTranslation();
+    const { pathname } = useLocation();
 
     const NAV_ITEMS = [
         {
@@ -143,13 +144,13 @@ const Navigation = () => {
     ]
 
     return (
-        <div className="flex flex-col gap-5 w-full min-w-[250px] bg-contrast1 rounded-lg p-6">
+        <div className="flex flex-col gap-2 w-full min-w-[250px] bg-contrast1 rounded-lg p-6">
             {NAV_ITEMS.map((item) => (
-                <Link key={item.href} to={item.href} className="flex items-center gap-5">
+                <Link key={item.href} to={item.href} className="flex items-center gap-5 transition-all py-2 px-3 rounded duration-100 group">
                     <div className="w-4 flex items-center">
-                        <div className="[&>svg>path]:fill-orange">{item.icon}</div>
+                        <div className={`group-hover:text-grey60 ${pathname === '/' && item.href === '/' || pathname !== '/' && item.href.includes(pathname) ? '[&>svg>path]:!fill-orange' : ''}`}>{item.icon}</div>
                     </div>
-                    <div className="text-white text-sm">{item.title}</div>
+                    <div className={`${pathname === '/' && item.href === '/' || pathname !== '/' && item.href.includes(pathname) ? '!text-orange' : 'text-white'} group-hover:text-grey60`}>{item.title}</div>
                 </Link>
             ))}
         </div>

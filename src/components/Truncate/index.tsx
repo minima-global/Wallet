@@ -1,4 +1,4 @@
-const Truncate = ({ text, maxLength = 16 }: { text: string | undefined, maxLength: number }) => {
+const Truncate = ({ text, maxLength = 16 }: { text: string | undefined, maxLength?: number }) => {
     if (!text) return null;
 
     return (

@@ -2,17 +2,16 @@ import { createFileRoute } from '@tanstack/react-router'
 import SearchBar from '../../components/SearchBar'
 import RefreshButton from '../../components/RefreshButton'
 import SortButton from '../../components/SortButton'
-import { useContext, useEffect, useState, Fragment, useMemo } from 'react'
+import { useContext, useEffect, useState, Fragment, useMemo, useRef, MutableRefObject } from 'react'
 import { appContext } from '../../AppContext'
 import { MDS } from '@minima-global/mds'
 import { format } from "date-fns";
 import useFormatAmount from '../../hooks/useFormatAmount'
 import { escape, renderTokenName } from '../../utils'
 import TokenAuthenticity from '../../components/TokenAuthenticity'
-import Pagination from '../../components/Pagination'
 import TokenIcon from '../../components/TokenIcon'
 import useTranslation from '../../hooks/useTranslation'
-import Decimal from 'decimal.js'
+import { useDraggable } from 'react-use-draggable-scroll'
 
 export const Route = createFileRoute('/history/')({
   component: Index,
@@ -71,7 +70,7 @@ function Index() {
   const [query, setQuery] = useState('');
   const [order, setOrder] = useState<'asc' | 'desc'>('desc');
   const [page, setPage] = useState(1);
-  const [activeMonth, setActiveMonth] = useState<string | null>(null);
+  const [activeMonth, setActiveMonth] = useState<string>('all');
 
   useEffect(() => {
     if (history && !activeMonth) {
@@ -183,14 +182,40 @@ function Index() {
       if (!acc.includes(date)) {
         acc.push(date);
       }
+
+      if (acc.length === 1) {
+        const date = new Date(acc[0]);
+        for (let i = 1; i < 6; i++) {
+          date.setMonth(date.getMonth() - 1);
+          acc.push(format(date, 'yyyy-MM'));
+        }
+      }
+
+      // Fill in missing months between lowest and highest
+      if (acc.length > 1) {
+        const start = new Date(acc[acc.length - 1]); // Lowest month
+        const end = new Date(acc[0]); // Highest month
+
+        // Create array of all months between start and end
+        const current = new Date(start);
+
+        while (current <= end) {
+          const monthStr = format(current, 'yyyy-MM');
+          if (!acc.includes(monthStr)) {
+            acc.push(monthStr);
+          }
+          current.setMonth(current.getMonth() + 1);
+        }
+
+        // Sort in descending order
+        acc.sort((a, b) => a.localeCompare(b));
+      }
+
       return acc;
     }, []);
   }, [history]);
 
   const currentPage = uniqueMonths?.[page - 1] || null;
-  const totalMonths = uniqueMonths?.length || null;
-
-  console.log(currentPage, totalMonths)
 
   return (
     <div>
@@ -207,10 +232,14 @@ function Index() {
         </div>
       </div>
 
-      <div className="mb-6 flex gap-2.5">
+      <div className="mb-8 flex gap-2.5">
         <SearchBar value={query} onChange={setQuery} />
         <SortButton onClick={toggleOrder} />
         <RefreshButton onClick={() => getHistory(order)} />
+      </div>
+
+      <div className="flex gap-2.5">
+        <Timeline months={uniqueMonths} activeMonth={activeMonth} setActiveMonth={setActiveMonth} />
       </div>
 
       <div className="mt-8 flex flex-col gap-2 mb-20">
@@ -221,12 +250,14 @@ function Index() {
         )}
         {history && history.length >= 0 && (
           <>
-            {groupedByDay && Object.keys(groupedByDay).map((row) => {
-              if (groupedByDay[row].length === 0) {
-                return null;
-              }
+            {groupedByDay && activeMonth !== 'all' && !Object.keys(groupedByDay).map((row) => format(row, 'yyyy-MM')).includes(activeMonth) && (
+              <div className="w-full flex items-center bg-contrast1 opacity-80 p-4 px-5 text-sm rounded">
+                No transactions found for {activeMonth}
+              </div>
+            )}
 
-              if (activeMonth && format(row, 'yyyy-MM') !== currentPage) {
+            {groupedByDay && Object.keys(groupedByDay).map((row) => {
+              if (activeMonth !== 'all' && format(row, 'yyyy-MM') !== activeMonth) {
                 return null;
               }
 
@@ -333,10 +364,82 @@ function Index() {
                 </Fragment>
               )
             })}
-            {totalMonths && totalMonths > 1 && <Pagination totalPages={totalMonths} page={page} onPageChange={setPage} />}
           </>
         )}
       </div>
     </div>
   )
+}
+
+const Timeline = ({ months, activeMonth, setActiveMonth }: { months: string[], activeMonth: string, setActiveMonth: (month: string) => void }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const { events } = useDraggable(ref as MutableRefObject<HTMLElement>, {
+    applyRubberBandEffect: true,
+  });
+
+  useEffect(() => {
+    if (months) {
+      if (ref.current) {
+        ref.current.scrollLeft = ref.current.scrollWidth;
+      }
+    }
+  }, [months, ref]);
+
+  const goToPrevious = () => {
+    const index = months.findIndex((month) => month === activeMonth);
+
+    if (index !== -1) {
+      setActiveMonth(months[index - 1]);
+    }
+  }
+
+  const goToNext = () => {
+    const index = months.findIndex((month) => month === activeMonth);
+
+    if (index + 1 >= months.length) {
+      setActiveMonth('all');
+      return;
+    }
+
+    if (index !== -1) {
+      setActiveMonth(months[index + 1]);
+    }
+  }
+
+  return (
+    <>
+      <button onClick={goToPrevious} disabled={months &&activeMonth === months[0]} className="disabled:opacity-90 disabled:cursor-not-allowed bg-contrast1 enabled:hover:bg-contrast2 enabled:active:text-black enabled:active:bg-white cursor-pointer p-4">
+        <svg width="8" height="10" viewBox="0 0 8 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0.96875 5L5.96875 -4.64434e-08L7.03125 1.0625L3.09375 5L7.03125 8.9375L5.96875 10L0.96875 5Z" fill="currentColor" />
+        </svg>
+      </button>
+      <div className="grow bg-contrast1 overflow-hidden relative cursor-grab active:cursor-grabbing">
+        <div
+          className="absolute max-w-full h-full flex space-x-3 overflow-x-scroll overflow-x-hidden scrollbar-hide"
+          ref={ref}
+          {...events}
+        >
+          <div className="flex">
+            {months && months.map((month) => (
+              <div
+                key={month}
+                className={`w-[300px] h-full bg-blue-500 flex items-center justify-center text-white border-b-2 border-transparent ${activeMonth === month ? '!border-orange' : ''}`}
+                onClick={() => setActiveMonth(month)}
+              >
+                {month}
+              </div>
+            ))}
+            <div onClick={() => setActiveMonth('all')} className={`w-[300px] h-full bg-blue-500 flex items-center justify-center text-white border-b-2 border-transparent ${activeMonth === 'all' ? '!border-orange' : ''}`}>
+              All
+            </div>
+          </div>
+        </div>
+      </div>
+      <button onClick={goToNext} disabled={activeMonth === 'all'} className="disabled:opacity-90 disabled:cursor-not-allowed bg-contrast1 enabled:hover:bg-contrast2 enabled:active:text-black enabled:active:bg-white cursor-pointer p-4">
+        <svg width="8" height="10" viewBox="0 0 8 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M7.03125 5L2.03125 10L0.96875 8.9375L4.90625 5L0.96875 1.0625L2.03125 1.26702e-08L7.03125 5Z" fill="currentColor" />
+        </svg>
+      </button>
+    </>
+  );
 }

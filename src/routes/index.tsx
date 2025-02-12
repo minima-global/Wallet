@@ -209,7 +209,7 @@ function Index() {
       <div className="flex gap-4 my-6">
         <div className="grow">
           <div className="flex lg:hidden items-center gap-6">
-            <div onClick={toggleFilterAndSort} className="cursor-pointer text-grey80 active:text-white transition-all duration-100">
+            <div onClick={toggleFilterAndSort} className="cursor-pointer text-grey80 font-bold text-[15px] active:text-white transition-all duration-100 mt-0.5">
               Filter & sort
             </div>
           </div>
