@@ -15,42 +15,6 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const Sort = ({ title, selected, options, onClick }: { title: string, selected: string, options: { key: string, label: string }[], onClick: (option: string) => void }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const selectedOption = options.find((option) => option.key === selected);
-
-  const toggleDropdown = () => {
-    setIsOpen(prevState => !prevState);
-  }
-
-  const handleOptionClick = (option: { key: string, label: string }) => {
-    setIsOpen(false);
-    onClick(option.key);
-  }
-
-  return (
-    <div className="relative text-[15px]">
-      <div onClick={toggleDropdown} className="cursor-pointer flex items-center gap-3">
-        <div className="text-grey80">
-          {title}
-        </div>
-        <div className="font-bold capitalize">
-          {selectedOption?.label}
-        </div>
-        <svg className="-mb-1" width="10" height="7" viewBox="0 0 10 7" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M5 6.0625L0 1.0625L1.0625 0L5 3.9375L8.9375 0L10 1.0625L5 6.0625Z" fill="#E9E9EB" />
-        </svg>
-      </div>
-      <div className={`absolute z-20 top-[100%] mt-4 text-sm right-0 flex flex-col gap-[2px] bg-contrast1 whitespace-nowrap ${isOpen ? 'block' : 'hidden'}`}>
-        {options.map((option) => (
-          <button key={option.key} onClick={() => handleOptionClick(option)} className="bg-contrast2 px-4 py-2 text-white hover:bg-white hover:text-black">{option.label}</button>
-        ))}
-      </div>
-      <div className={`fixed z-10 bg-black opacity-50 inset-0 ${isOpen ? 'pointer-events-auto' : 'pointer-events-none hidden'}`} onClick={toggleDropdown}></div>
-    </div>
-  )
-}
-
 function Index() {
   const { balance, fetchBalance, hiddenTokens, activeTab, setActiveTab, gridMode, setGridMode } = useContext(appContext);
   const { t } = useTranslation();
@@ -261,4 +225,40 @@ function Index() {
       )}
     </div>
   );
+}
+
+const Sort = ({ title, selected, options, onClick }: { title: string, selected: string, options: { key: string, label: string }[], onClick: (option: string) => void }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const selectedOption = options.find((option) => option.key === selected);
+
+  const toggleDropdown = () => {
+    setIsOpen(prevState => !prevState);
+  }
+
+  const handleOptionClick = (option: { key: string, label: string }) => {
+    setIsOpen(false);
+    onClick(option.key);
+  }
+
+  return (
+    <div className="relative text-[15px]">
+      <div onClick={toggleDropdown} className="cursor-pointer flex items-center gap-3">
+        <div className="text-grey80">
+          {title}
+        </div>
+        <div className="font-bold capitalize">
+          {selectedOption?.label}
+        </div>
+        <svg className="-mb-1" width="10" height="7" viewBox="0 0 10 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M5 6.0625L0 1.0625L1.0625 0L5 3.9375L8.9375 0L10 1.0625L5 6.0625Z" fill="#E9E9EB" />
+        </svg>
+      </div>
+      <div className={`absolute z-20 top-[100%] mt-4 text-sm right-0 flex flex-col gap-[2px] bg-contrast1 whitespace-nowrap ${isOpen ? 'block' : 'hidden'}`}>
+        {options.map((option) => (
+          <button key={option.key} onClick={() => handleOptionClick(option)} className="bg-contrast2 px-4 py-2 text-white hover:bg-white hover:text-black">{option.label}</button>
+        ))}
+      </div>
+      <div className={`fixed z-10 bg-black opacity-50 inset-0 ${isOpen ? 'pointer-events-auto' : 'pointer-events-none hidden'}`} onClick={toggleDropdown}></div>
+    </div>
+  )
 }

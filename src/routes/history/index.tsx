@@ -58,7 +58,7 @@ function Index() {
       const balanceHistory = {};
 
       balance.forEach((item) => {
-        balanceAtStart[item.tokenid] = new Decimal(item.confirmed).add(item.unconfirmed);
+        balanceAtStart[item.tokenid] = new Decimal(item.confirmed);
       });
 
       history.forEach((item) => {
@@ -110,6 +110,9 @@ function Index() {
             if (result.rows.length === 0) {
               await MDS.sql(`INSERT INTO txpows (txpowid, timemilli, isblock, istransaction, hasbody, burn, superblock, size, header, body, details) VALUES ('${txpow.txpowid}', ${txpow.header.timemilli}, ${txpow.isblock}, ${txpow.istransaction}, ${txpow.hasbody}, ${txpow.burn}, ${txpow.superblock}, ${txpow.size}, '${JSON.stringify(txpow.header)}', '${JSON.stringify(txpow.body)}','${JSON.stringify(details)}')`);
             }
+
+            // sometimes max retries shows up, so add artificial delay
+            await new Promise((resolve) => setTimeout(resolve, 100));
           }
 
           getHistory();

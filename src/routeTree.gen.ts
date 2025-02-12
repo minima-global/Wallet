@@ -17,7 +17,6 @@ import { Route as SendIndexImport } from './routes/send/index'
 import { Route as ReceiveIndexImport } from './routes/receive/index'
 import { Route as HistoryIndexImport } from './routes/history/index'
 import { Route as CurrencyDisplayIndexImport } from './routes/currency-display/index'
-import { Route as TokenCreateReviewImport } from './routes/token-create/review'
 import { Route as NftsReviewImport } from './routes/nfts/review'
 import { Route as NftsMyImport } from './routes/nfts/my'
 import { Route as NftsCreateImport } from './routes/nfts/create'
@@ -59,12 +58,6 @@ const HistoryIndexRoute = HistoryIndexImport.update({
 const CurrencyDisplayIndexRoute = CurrencyDisplayIndexImport.update({
   id: '/currency-display/',
   path: '/currency-display/',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const TokenCreateReviewRoute = TokenCreateReviewImport.update({
-  id: '/token-create/review',
-  path: '/token-create/review',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -144,13 +137,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NftsReviewImport
       parentRoute: typeof rootRoute
     }
-    '/token-create/review': {
-      id: '/token-create/review'
-      path: '/token-create/review'
-      fullPath: '/token-create/review'
-      preLoaderRoute: typeof TokenCreateReviewImport
-      parentRoute: typeof rootRoute
-    }
     '/currency-display/': {
       id: '/currency-display/'
       path: '/currency-display'
@@ -198,7 +184,6 @@ export interface FileRoutesByFullPath {
   '/nfts/create': typeof NftsCreateRoute
   '/nfts/my': typeof NftsMyRoute
   '/nfts/review': typeof NftsReviewRoute
-  '/token-create/review': typeof TokenCreateReviewRoute
   '/currency-display': typeof CurrencyDisplayIndexRoute
   '/history': typeof HistoryIndexRoute
   '/receive': typeof ReceiveIndexRoute
@@ -213,7 +198,6 @@ export interface FileRoutesByTo {
   '/nfts/create': typeof NftsCreateRoute
   '/nfts/my': typeof NftsMyRoute
   '/nfts/review': typeof NftsReviewRoute
-  '/token-create/review': typeof TokenCreateReviewRoute
   '/currency-display': typeof CurrencyDisplayIndexRoute
   '/history': typeof HistoryIndexRoute
   '/receive': typeof ReceiveIndexRoute
@@ -229,7 +213,6 @@ export interface FileRoutesById {
   '/nfts/create': typeof NftsCreateRoute
   '/nfts/my': typeof NftsMyRoute
   '/nfts/review': typeof NftsReviewRoute
-  '/token-create/review': typeof TokenCreateReviewRoute
   '/currency-display/': typeof CurrencyDisplayIndexRoute
   '/history/': typeof HistoryIndexRoute
   '/receive/': typeof ReceiveIndexRoute
@@ -246,7 +229,6 @@ export interface FileRouteTypes {
     | '/nfts/create'
     | '/nfts/my'
     | '/nfts/review'
-    | '/token-create/review'
     | '/currency-display'
     | '/history'
     | '/receive'
@@ -260,7 +242,6 @@ export interface FileRouteTypes {
     | '/nfts/create'
     | '/nfts/my'
     | '/nfts/review'
-    | '/token-create/review'
     | '/currency-display'
     | '/history'
     | '/receive'
@@ -274,7 +255,6 @@ export interface FileRouteTypes {
     | '/nfts/create'
     | '/nfts/my'
     | '/nfts/review'
-    | '/token-create/review'
     | '/currency-display/'
     | '/history/'
     | '/receive/'
@@ -290,7 +270,6 @@ export interface RootRouteChildren {
   NftsCreateRoute: typeof NftsCreateRoute
   NftsMyRoute: typeof NftsMyRoute
   NftsReviewRoute: typeof NftsReviewRoute
-  TokenCreateReviewRoute: typeof TokenCreateReviewRoute
   CurrencyDisplayIndexRoute: typeof CurrencyDisplayIndexRoute
   HistoryIndexRoute: typeof HistoryIndexRoute
   ReceiveIndexRoute: typeof ReceiveIndexRoute
@@ -305,7 +284,6 @@ const rootRouteChildren: RootRouteChildren = {
   NftsCreateRoute: NftsCreateRoute,
   NftsMyRoute: NftsMyRoute,
   NftsReviewRoute: NftsReviewRoute,
-  TokenCreateReviewRoute: TokenCreateReviewRoute,
   CurrencyDisplayIndexRoute: CurrencyDisplayIndexRoute,
   HistoryIndexRoute: HistoryIndexRoute,
   ReceiveIndexRoute: ReceiveIndexRoute,
@@ -329,7 +307,6 @@ export const routeTree = rootRoute
         "/nfts/create",
         "/nfts/my",
         "/nfts/review",
-        "/token-create/review",
         "/currency-display/",
         "/history/",
         "/receive/",
@@ -354,9 +331,6 @@ export const routeTree = rootRoute
     },
     "/nfts/review": {
       "filePath": "nfts/review.tsx"
-    },
-    "/token-create/review": {
-      "filePath": "token-create/review.tsx"
     },
     "/currency-display/": {
       "filePath": "currency-display/index.tsx"
