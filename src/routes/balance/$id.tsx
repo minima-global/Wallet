@@ -1,6 +1,4 @@
 import { createFileRoute, useNavigate, useParams } from '@tanstack/react-router'
-import Header from '../../components/Header'
-import Navigation from '../../components/Navigation'
 import InfoBox from '../../components/InfoBox'
 import BackButton from '../../components/BackButton'
 import { appContext } from '../../AppContext'

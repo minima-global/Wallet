@@ -1,7 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import Header from '../../components/Header'
 import Tabs from '../../components/Tabs'
-import Navigation from '../../components/Navigation'
 import { useContext, useState } from 'react';
 import QRCode from 'react-qr-code';
 import { CheckAddress, MDS } from '@minima-global/mds';
@@ -12,6 +10,7 @@ import Input from '../../components/Input';
 import useTranslation from '../../hooks/useTranslation';
 import { appContext } from '../../AppContext';
 import SearchBar from '../../components/SearchBar';
+
 export const Route = createFileRoute('/receive/')({
   component: Index,
 });

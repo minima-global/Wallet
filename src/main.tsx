@@ -1,3 +1,6 @@
+import Decimal from "decimal.js"
+Decimal.config({ precision: 44 });
+
 import { MDS } from "@minima-global/mds"
 import {
   createRouter,
@@ -18,7 +21,7 @@ const memoryHistory = createMemoryHistory({
 
 const router = createRouter({
   routeTree,
-  // history: memoryHistory
+  history: memoryHistory
 });
 
 declare module "@tanstack/react-router" {

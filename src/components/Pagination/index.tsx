@@ -3,10 +3,6 @@ const Pagination = ({ page, totalPages, onPageChange }: { page: number, totalPag
         return null;
     }
 
-    const handlePageChange = (page: number) => {
-        onPageChange(page);
-    }
-
     const goToLastPage = () => {
         onPageChange(totalPages);
     }

@@ -1,17 +1,7 @@
+import { ChangeEvent, useState } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
-import Header from '../../components/Header'
-import Navigation from '../../components/Navigation'
-import Dropdown from '../../components/Dropdown'
 import Input from '../../components/Input'
-import Send from '../../components/Button'
-import { ChangeEvent, useContext, useState } from 'react'
-import { isNumber } from 'lodash'
-import { appContext } from '../../AppContext'
-import useFormatAmount from '../../hooks/useFormatAmount'
-import TokenIcon from '../../components/TokenIcon'
-import { renderTokenName } from '../../utils'
-import TokenAuthenticity from '../../components/TokenAuthenticity'
-import Truncate from '../../components/Truncate'
+import Button from '../../components/Button';
 
 export const Route = createFileRoute('/token-create/')({
   component: Index,
@@ -256,7 +246,7 @@ function Index() {
           </div>
 
           <div className="mt-8">
-            <Send>Review</Send>
+            <Button>Review</Button>
           </div>
 
         </div >

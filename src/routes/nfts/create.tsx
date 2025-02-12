@@ -58,7 +58,7 @@ function Index() {
                   placeholder="Enter the name of the creator"
                   value=""
                   onChange={() => {}}
-                  info
+                  info="The creator name is used to identify the creator of the NFT."
                 />
                 <Input
                   label="External URL (Optional)"

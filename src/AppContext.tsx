@@ -1,7 +1,7 @@
 import { Balance, Block, MinimaEvents } from "@minima-global/mds"
 import { MDS } from "@minima-global/mds"
 import { createContext, useCallback, useEffect, useRef, useState } from "react"
-import { format } from "date-fns";
+
 export const appContext = createContext<{
   loaded: boolean,
   currencyType: string,

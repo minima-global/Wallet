@@ -13,6 +13,7 @@ import TokenIcon from '../../components/TokenIcon'
 import useTranslation from '../../hooks/useTranslation'
 import Timeline from '../../components/Timeline'
 import Truncate from '../../components/Truncate'
+import Decimal from 'decimal.js'
 
 export const Route = createFileRoute('/history/')({
   component: Index,
@@ -34,49 +35,67 @@ export const Route = createFileRoute('/history/')({
 //   DETAILS: object;
 // }
 
-const Dropdown = ({ options }: { options: { key: string, label: string }[] }) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-  }
-
-  const handleOptionClick = (option: { key: string, label: string, onClick?: () => void }) => {
-    setIsOpen(false);
-    option.onClick?.();
-  }
-
-  return (
-    <div className="relative flex items-center justify-end">
-      <div onClick={toggleDropdown} className="relative z-[1000] cursor-pointer flex flex-col gap-0.5 px-4 -mr-4">
-        <div className="w-[4px] h-[4px] bg-grey60 rounded-full" />
-        <div className="w-[4px] h-[4px] bg-grey60 rounded-full" />
-        <div className="w-[4px] h-[4px] bg-grey60 rounded-full" />
-      </div>
-      <div className={`absolute z-10 top-[100%] mt-2 text-sm right-0 flex flex-col gap-[2px] bg-contrast1 whitespace-nowrap ${isOpen ? 'block' : 'hidden'}`}>
-        {options.map((option) => (
-          <button key={option.key} onClick={() => handleOptionClick(option)} className="bg-contrast2 px-4 py-2 text-white hover:bg-white hover:text-black">{option.label}</button>
-        ))}
-      </div>
-      <div className={`fixed z-0 bg-black opacity-50 inset-0 ${isOpen ? 'pointer-events-auto' : 'pointer-events-none hidden'}`} onClick={toggleDropdown}></div>
-    </div>
-  )
-}
-
 function Index() {
-  const { loaded, history, getHistory } = useContext(appContext);
+  const { loaded, history, balance, getHistory } = useContext(appContext);
   const { f } = useFormatAmount();
   const { t } = useTranslation();
   const [inited, setInited] = useState(false);
   const [query, setQuery] = useState('');
   const [order, setOrder] = useState<'asc' | 'desc'>('desc');
   const [activeMonth, setActiveMonth] = useState<string>('all');
+  const [balanceDifference, setBalanceDifference] = useState<Record<string, string>>({});
 
   useEffect(() => {
     if (history && !activeMonth) {
       setActiveMonth(format(new Date(Number(history[0].HEADER.timemilli)), 'yyyy-MM'));
     }
   }, [history]);
+
+  useEffect(() => {
+    if (history && balance) {
+      const balanceAtStart = {};
+      const previousBalance = {};
+      const balanceHistory = {};
+
+      balance.forEach((item) => {
+        balanceAtStart[item.tokenid] = new Decimal(item.confirmed).add(item.unconfirmed);
+      });
+
+      history.forEach((item) => {
+        const inputToken = item.BODY.txn.inputs[0].tokenid;
+        const difference = item.DETAILS.difference[inputToken];
+
+        if (!previousBalance[inputToken]) {
+          balanceHistory[item.TXPOWID] = new Decimal(balanceAtStart[inputToken]).toString();
+
+          previousBalance[inputToken] = new Decimal(balanceAtStart[inputToken]);
+        }
+
+        if (previousBalance[inputToken]) {
+          balanceHistory[item.TXPOWID] = new Decimal(previousBalance[inputToken]).toString();
+
+          if (difference) {
+            const add = difference[0] === '+';
+            const subtract = difference[0] === '-';
+            const amount = difference.replace('+', '').replace('-', '');
+
+
+            if (add) {
+              previousBalance[inputToken] = new Decimal(previousBalance[inputToken]).sub(amount);
+            } else if (subtract) {
+              previousBalance[inputToken] = new Decimal(previousBalance[inputToken]).add(amount);
+            } else {
+              previousBalance[inputToken] = new Decimal(previousBalance[inputToken]).sub(amount);
+            }
+          } else {
+            previousBalance[inputToken] = new Decimal(previousBalance[inputToken]);
+          }
+        }
+      });
+
+      setBalanceDifference(balanceHistory);
+    }
+  }, [history, balance]);
 
   useEffect(() => {
     if (loaded && !inited) {
@@ -359,14 +378,19 @@ function Index() {
                                   {!difference.includes('-') ? difference > 0 ? '+' : '-' : ''}
                                   <Truncate text={f(difference)} />
                                 </p>
-                                {/* {balanceDifference[h.TXPOWID] && <p className="text-grey60">{f(balanceDifference[h.TXPOWID].toString())}</p>} */}
-                                {/* {change && <p className="text-grey60">{f(change)}</p>} */}
+                                {balanceDifference[h.TXPOWID] && <p className="text-grey60">{f(balanceDifference[h.TXPOWID].toString())}</p>}
                               </div>
                             )}
                             {difference === '0' && (
                               <div className="text-right flex flex-col items-end justify-center gap-1 font-bold">
                                 <p className={`text-grey-60`}>0</p>
-                                {/* {balanceDifference[h.TXPOWID] && <p className="text-grey60">{f(balanceDifference[h.TXPOWID].toString())}</p>} */}
+                                {balanceDifference[h.TXPOWID] && <p className="text-grey60">{f(balanceDifference[h.TXPOWID].toString())}</p>}
+                              </div>
+                            )}
+                            {!difference && (
+                              <div className="text-right flex flex-col items-end justify-center gap-1 font-bold">
+                                <p className={`text-grey-60`}>0</p>
+                                {balanceDifference[h.TXPOWID] && <p className="text-grey60">{f(balanceDifference[h.TXPOWID].toString())}</p>}
                               </div>
                             )}
                           </div>
@@ -380,6 +404,36 @@ function Index() {
           </>
         )}
       </div>
+    </div>
+  )
+}
+
+
+const Dropdown = ({ options }: { options: { key: string, label: string }[] }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  }
+
+  const handleOptionClick = (option: { key: string, label: string, onClick?: () => void }) => {
+    setIsOpen(false);
+    option.onClick?.();
+  }
+
+  return (
+    <div className="relative flex items-center justify-end">
+      <div onClick={toggleDropdown} className="relative z-[1000] cursor-pointer flex flex-col gap-0.5 px-4 -mr-4">
+        <div className="w-[4px] h-[4px] bg-grey60 rounded-full" />
+        <div className="w-[4px] h-[4px] bg-grey60 rounded-full" />
+        <div className="w-[4px] h-[4px] bg-grey60 rounded-full" />
+      </div>
+      <div className={`absolute z-10 top-[100%] mt-2 text-sm right-0 flex flex-col gap-[2px] bg-contrast1 whitespace-nowrap ${isOpen ? 'block' : 'hidden'}`}>
+        {options.map((option) => (
+          <button key={option.key} onClick={() => handleOptionClick(option)} className="bg-contrast2 px-4 py-2 text-white hover:bg-white hover:text-black">{option.label}</button>
+        ))}
+      </div>
+      <div className={`fixed z-0 bg-black opacity-50 inset-0 ${isOpen ? 'pointer-events-auto' : 'pointer-events-none hidden'}`} onClick={toggleDropdown}></div>
     </div>
   )
 }
