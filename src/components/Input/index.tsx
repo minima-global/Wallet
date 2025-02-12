@@ -24,7 +24,7 @@ const Input: React.FC<InputProps> = ({ label, placeholder, value, onChange, info
                 return setValid(validation(evt.target.value));
             }
 
-            const invalid = new RegExp(validation, 'gmi').test(evt.target.value);
+            const invalid = new RegExp(validation, 'gmi').test(evt.target.value.toString());
             setValid(invalid);
         }
     }

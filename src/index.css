@@ -40,7 +40,6 @@
 }
 
 :root {
-  font-family: 'Manrope', sans-serif;
   line-height: 1.5;
   font-weight: 500;
 
@@ -53,6 +52,10 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+}
+
+html {
+  font-family: 'Manrope', sans-serif;
 }
 
 body {

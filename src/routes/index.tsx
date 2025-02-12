@@ -213,17 +213,21 @@ function Index() {
               Filter & sort
             </div>
           </div>
-          <div className="hidden lg:flex items-center gap-6">
+          <div className="hidden lg:flex items-center gap-6 mt-0.5">
             <Sort title="Sort" selected={sort} options={sortOptions} onClick={(option) => setSort(option as 'A-Z' | 'Z-A' | 'Lowest' | 'Highest')} />
             <Sort title="Filter" selected={filter} options={filterOptions} onClick={(option) => setFilter(option as 'all' | 'simple' | 'nfts' | 'custom')} />
           </div>
         </div>
         <div className="col-span-6 flex items-center justify-end gap-5">
           {activeTab === 'hidden' && (
-            <div className="underline cursor-pointer" onClick={() => setActiveTab('main')}>Go back</div>
+            <button onClick={() => setActiveTab('main')} className="cursor-pointer text-xs flex bg-contrast1 rounded-full flex items-center gap-3 w-fit px-3.5 py-1.5 text-white cursor-pointer select-none origin-center active:scale-[0.95] transition-all duration-100">
+              {t('go_back')}
+            </button>
           )}
           {activeTab !== 'hidden' && (
-            <div className="underline cursor-pointer" onClick={() => setActiveTab('hidden')}>Hidden tokens</div>
+            <button onClick={() => setActiveTab('hidden')} className="cursor-pointer text-xs flex bg-contrast1 rounded-full flex items-center gap-3 w-fit px-3.5 py-1.5 text-white cursor-pointer select-none origin-center active:scale-[0.95] transition-all duration-100">
+              {t('hidden_tokens')}
+            </button>
           )}
         </div>
       </div>
