@@ -136,3 +136,25 @@ canvas {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+.slider {
+  max-width: 100%;
+  margin: auto;
+  --slide-height: 48px;
+  --slide-spacing: 0;
+}
+
+.slider-container__viewport {
+  overflow: hidden;
+}
+
+.slider-container__container {
+  display: flex;
+  touch-action: pan-y pinch-zoom;
+  margin-left: calc(var(--slide-spacing) * -1)
+}
+
+.slider-container__slide {
+  min-height: 48px;
+  min-width: 312px
+}

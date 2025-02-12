@@ -63,13 +63,12 @@ const Dropdown = ({ options }: { options: { key: string, label: string }[] }) =>
 }
 
 function Index() {
-  const { loaded, history, getHistory, balance } = useContext(appContext);
+  const { loaded, history, getHistory } = useContext(appContext);
   const { f } = useFormatAmount();
   const { t } = useTranslation();
   const [inited, setInited] = useState(false);
   const [query, setQuery] = useState('');
   const [order, setOrder] = useState<'asc' | 'desc'>('desc');
-  const [page, setPage] = useState(1);
   const [activeMonth, setActiveMonth] = useState<string>('all');
 
   useEffect(() => {
@@ -120,6 +119,10 @@ function Index() {
     }
 
     if (query && typeof row.BODY.txn.inputs[0].token.name === 'object' && row.BODY.txn.inputs[0].token.name.name.toLowerCase().includes(query.toLowerCase().trim())) {
+      groups[date].push(row);
+    }
+
+    if (query && row.BODY.txn.inputs[0].tokenid.toLowerCase().includes(query.toLowerCase().trim())) {
       groups[date].push(row);
     }
 
@@ -212,7 +215,7 @@ function Index() {
       }
 
       return acc;
-    }, []);
+    }, []).concat(['all']);
   }, [history]);
 
   return (
@@ -248,14 +251,12 @@ function Index() {
         )}
         {history && history.length >= 0 && (
           <>
-            {groupedByDay && activeMonth !== 'all' && !Object.keys(groupedByDay).map((row) => format(row, 'yyyy-MM')).includes(activeMonth) && (
-              <div className="w-full flex items-center bg-contrast1 opacity-80 p-4 px-5 text-sm rounded">
-                No transactions found for {activeMonth}
-              </div>
-            )}
-
             {groupedByDay && Object.keys(groupedByDay).map((row) => {
               if (activeMonth !== 'all' && format(row, 'yyyy-MM') !== activeMonth) {
+                return null;
+              }
+
+              if (groupedByDay[row].length === 0) {
                 return null;
               }
 

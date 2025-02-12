@@ -1,32 +1,28 @@
-import { MutableRefObject, useEffect, useRef } from "react";
-import { useDraggable } from "react-use-draggable-scroll";
+import useEmblaCarousel from "embla-carousel-react";
 
 const Timeline = ({ months, activeMonth, setActiveMonth }: { months: string[], activeMonth: string, setActiveMonth: (month: string) => void }) => {
-    const ref = useRef<HTMLDivElement>(null);
-    const { events } = useDraggable(ref as MutableRefObject<HTMLElement>, {
-        applyRubberBandEffect: true,
+    const [emblaRef, emblaApi] = useEmblaCarousel({
+        slidesToScroll: 2,
+        dragFree: false,
+        watchDrag: true,
+        startIndex: months ? months.length - 1 : 0
     });
 
-    useEffect(() => {
-        if (months) {
-            if (ref.current) {
-                ref.current.scrollLeft = ref.current.scrollWidth;
-            }
-        }
-    }, [months, ref]);
-
     const goToPrevious = () => {
+
         const index = months.findIndex((month) => month === activeMonth);
 
         if (index !== -1) {
             setActiveMonth(months[index - 1]);
+            emblaApi?.scrollTo(index - 1);
         }
     }
 
     const goToNext = () => {
         const index = months.findIndex((month) => month === activeMonth);
+        emblaApi?.scrollTo(index + 1);
 
-        if (index + 1 >= months.length) {
+        if (index + 1 === months.length) {
             setActiveMonth('all');
             return;
         }
@@ -36,36 +32,38 @@ const Timeline = ({ months, activeMonth, setActiveMonth }: { months: string[], a
         }
     }
 
+    if (!months) {
+        return <div />;
+    }
+
     return (
         <>
-            <button onClick={goToPrevious} disabled={months && activeMonth === months[0]} className="disabled:opacity-90 disabled:cursor-not-allowed bg-contrast1 enabled:hover:bg-contrast2 enabled:active:text-black enabled:active:bg-white cursor-pointer p-4">
+            <button onClick={goToPrevious} disabled={activeMonth === months[0]} className="disabled:opacity-90 disabled:cursor-not-allowed bg-contrast1 enabled:hover:bg-contrast2 enabled:active:text-black enabled:active:bg-white cursor-pointer p-5">
                 <svg width="8" height="10" viewBox="0 0 8 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M0.96875 5L5.96875 -4.64434e-08L7.03125 1.0625L3.09375 5L7.03125 8.9375L5.96875 10L0.96875 5Z" fill="currentColor" />
                 </svg>
             </button>
-            <div className="grow bg-contrast1 overflow-hidden relative cursor-grab active:cursor-grabbing">
-                <div
-                    className="absolute max-w-full h-full flex space-x-3 overflow-x-scroll overflow-x-hidden scrollbar-hide"
-                    ref={ref}
-                    {...events}
-                >
-                    <div className="flex">
-                        {months && months.map((month) => (
-                            <div
-                                key={month}
-                                className={`w-[300px] h-full bg-blue-500 flex items-center justify-center text-white border-b-2 border-transparent ${activeMonth === month ? '!border-orange' : ''}`}
-                                onClick={() => setActiveMonth(month)}
-                            >
-                                {month}
-                            </div>
-                        ))}
-                        <div onClick={() => setActiveMonth('all')} className={`w-[300px] h-full bg-blue-500 flex items-center justify-center text-white border-b-2 border-transparent ${activeMonth === 'all' ? '!border-orange' : ''}`}>
-                            All
+            <div className="grow relative overflow-hidden">
+                <div className="absolute slide w-full overflow-x-hidden bg-contrast1">
+                    <div
+                        className="slider-container__viewport"
+                        ref={emblaRef}
+                    >
+                        <div className="slider-container__container">
+                            {months && months.map((month) => (
+                                <div
+                                    key={month}
+                                    className={`slider-container__slide mt-[1px] font-bold text-[15px] capitalize cursor-pointer flex items-center justify-center border-b-2 border-transparent ${activeMonth === month ? '!border-orange' : ''}`}
+                                    onClick={() => setActiveMonth(month)}
+                                >
+                                    {month}
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </div>
             </div>
-            <button onClick={goToNext} disabled={activeMonth === 'all'} className="disabled:opacity-90 disabled:cursor-not-allowed bg-contrast1 enabled:hover:bg-contrast2 enabled:active:text-black enabled:active:bg-white cursor-pointer p-4">
+            <button onClick={goToNext} disabled={activeMonth === 'all'} className="disabled:opacity-90 disabled:cursor-not-allowed bg-contrast1 enabled:hover:bg-contrast2 enabled:active:text-black enabled:active:bg-white cursor-pointer p-5">
                 <svg width="8" height="10" viewBox="0 0 8 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M7.03125 5L2.03125 10L0.96875 8.9375L4.90625 5L0.96875 1.0625L2.03125 1.26702e-08L7.03125 5Z" fill="currentColor" />
                 </svg>
