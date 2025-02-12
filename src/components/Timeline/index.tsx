@@ -1,8 +1,9 @@
+import { format } from "date-fns";
 import useEmblaCarousel from "embla-carousel-react";
 
 const Timeline = ({ months, activeMonth, setActiveMonth }: { months: string[], activeMonth: string, setActiveMonth: (month: string) => void }) => {
     const [emblaRef, emblaApi] = useEmblaCarousel({
-        slidesToScroll: 2,
+        slidesToScroll: 1,
         dragFree: false,
         watchDrag: true,
         startIndex: months ? months.length - 1 : 0
@@ -56,7 +57,8 @@ const Timeline = ({ months, activeMonth, setActiveMonth }: { months: string[], a
                                     className={`slider-container__slide mt-[1px] font-bold text-[15px] capitalize cursor-pointer flex items-center justify-center border-b-2 border-transparent ${activeMonth === month ? '!border-orange' : ''}`}
                                     onClick={() => setActiveMonth(month)}
                                 >
-                                    {month}
+                                    {/* {month} */}
+                                    {month === 'all' ? 'All' : format(new Date(month), 'MMM yyyy')}
                                 </div>
                             ))}
                         </div>

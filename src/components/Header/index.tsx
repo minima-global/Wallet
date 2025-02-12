@@ -227,7 +227,8 @@ const Header = () => {
                 </Link>
               </div>
               <div className="col-span-6 flex items-center justify-end">
-                <div className="flex lg:hidden">
+                <div className="flex lg:hidden gap-3">
+                  <LanguageSelector isAtTop={isAtTop} />
                   <HamburgerButton isOpen={hamburgerOpen} toggle={toggle} />
                 </div>
                 <nav className="hidden cursor-pointer lg:block">

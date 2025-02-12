@@ -152,7 +152,7 @@ function Index() {
           <h5 className="mb-4 text-grey80">Sort by</h5>
           <div className="flex flex-col gap-3 mb-8">
             {sortOptions.map((option) => (
-              <div className="flex items-center gap-2">
+              <div key={option.key} className="flex items-center gap-2">
                 <label className="w-full flex items-center gap-2 text-grey20">
                   {option.label}
                   <span className="grow flex justify-end relative">
@@ -168,7 +168,7 @@ function Index() {
           <h5 className="mt-4 my-4 text-grey80">Filter by</h5>
           <div className="flex flex-col gap-3 mb-8">
             {filterOptions.map((option) => (
-              <div className="flex items-center gap-2">
+              <div key={option.key} className="flex items-center gap-2">
                 <label className="w-full flex items-center gap-2 text-grey20">
                   {option.label}
                   <span className="grow flex justify-end relative">

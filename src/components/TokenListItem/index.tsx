@@ -37,9 +37,9 @@ const TokenListItem = ({ balance }: { balance: Balance }) => {
                                     </h6>
                                     <TokenAuthenticity token={balance} />
                                 </div>
-                                <p className="font-bold w-full overflow-ellipsis truncate text-grey dark:text-neutral-300">
+                                <div className="font-bold w-full overflow-ellipsis truncate text-grey dark:text-neutral-300">
                                     <BalanceAmount balance={balance} value={confirmed} />
-                                </p>
+                                </div>
                             </div>
                         </div>
                     </div>

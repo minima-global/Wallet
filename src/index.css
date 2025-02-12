@@ -156,5 +156,17 @@ canvas {
 
 .slider-container__slide {
   min-height: 48px;
-  min-width: 312px
+  min-width: 50%;
+}
+
+@media (min-width: 768px) {
+  .slider-container__slide {
+    min-width: 50%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .slider-container__slide {
+    min-width: 25%;
+  }
 }

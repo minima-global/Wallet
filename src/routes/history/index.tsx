@@ -12,6 +12,7 @@ import TokenAuthenticity from '../../components/TokenAuthenticity'
 import TokenIcon from '../../components/TokenIcon'
 import useTranslation from '../../hooks/useTranslation'
 import Timeline from '../../components/Timeline'
+import Truncate from '../../components/Truncate'
 
 export const Route = createFileRoute('/history/')({
   component: Index,
@@ -100,6 +101,7 @@ function Index() {
   }, [loaded, inited, getHistory]);
 
   const toggleOrder = () => {
+    setActiveMonth('all');
     setOrder(prevState => prevState === 'desc' ? 'asc' : 'desc');
     getHistory(order === 'asc' ? 'desc' : 'asc');
   }
@@ -243,7 +245,7 @@ function Index() {
         <Timeline months={uniqueMonths} activeMonth={activeMonth} setActiveMonth={setActiveMonth} />
       </div>
 
-      <div className="mt-8 flex flex-col gap-2 mb-20">
+      <div className="mt-8 flex flex-col gap-4 mb-20">
         {history && (history.length === 0 || Object.values(groupedByDay || {}).every(group => group.length === 0)) && (
           <div className="w-full flex items-center bg-contrast1 opacity-80 p-4 px-5 text-sm rounded">
             No transactions found
@@ -251,6 +253,11 @@ function Index() {
         )}
         {history && history.length >= 0 && (
           <>
+            {groupedByDay && activeMonth !== 'all' && !Object.keys(groupedByDay).map((row) => format(row, 'yyyy-MM')).includes(activeMonth) && (
+              <div className="w-full flex items-center bg-contrast1 opacity-80 p-4 px-5 text-sm rounded">
+                No transactions found.
+              </div>
+            )}
             {groupedByDay && Object.keys(groupedByDay).map((row) => {
               if (activeMonth !== 'all' && format(row, 'yyyy-MM') !== activeMonth) {
                 return null;
@@ -267,99 +274,106 @@ function Index() {
 
               return (
                 <Fragment key={day}>
-                  <div className="bg-contrast2 w-full rounded px-5 py-3 text-white">
-                    <h5>{t(day)} {t(month.toLowerCase())} {year}</h5>
-                  </div>
+                  <div>
+                    <div className="bg-contrast2 w-full rounded px-5 py-3 text-white mb-0.5">
+                      <h5>{t(day)} {t(month.toLowerCase())} {year}</h5>
+                    </div>
 
-                  {groupedByDay[row].map((h) => {
-                    const input = h.BODY.txn.inputs[0].tokenid;
-                    const difference = h.DETAILS.difference[input];
+                    {groupedByDay[row].map((h) => {
+                      const input = h.BODY.txn.inputs[0].tokenid;
+                      const difference = h.DETAILS.difference[input];
 
-                    const hasCreatedToken = h.BODY?.txn.outputs[0].tokenid === '0xFF';
-                    const createdToken = h.BODY?.txn.outputs[0];
+                      const hasCreatedToken = h.BODY?.txn.outputs[0].tokenid === '0xFF';
+                      const createdToken = h.BODY?.txn.outputs[0];
 
-                    if (query && h.BODY?.txn.inputs[0].tokenid === '0xFF') {
-                      h.BODY.txn.inputs[0].token = 'Minima';
-                    }
+                      if (query && h.BODY?.txn.inputs[0].tokenid === '0xFF') {
+                        h.BODY.txn.inputs[0].token = 'Minima';
+                      }
 
-                    const showCreatedToken = query ? renderTokenName(createdToken).toLowerCase().includes(query.toLowerCase().trim()) : true;
+                      const showCreatedToken = query ? renderTokenName(createdToken).toLowerCase().includes(query.toLowerCase().trim()) : true;
 
-                    // if (!difference || !change) {
-                    //   return null;
-                    // }
+                      // if (!difference || !change) {
+                      //   return null;
+                      // }
 
-                    // if (difference === '0') {
-                    //   return null;
-                    // }
+                      // if (difference === '0') {
+                      //   return null;
+                      // }
 
-                    return (
-                      <div key={h.TXPOWID}>
+                      return (
+                        <div key={h.TXPOWID}>
 
-                        {hasCreatedToken && showCreatedToken && (
-                          <div className="bg-contrast1 mb-2 w-full rounded px-4 py-3 text-white flex gap-4">
+                          {hasCreatedToken && showCreatedToken && (
+                            <div className="bg-contrast1 w-full rounded px-4 py-3 text-white flex gap-4 mb-0.5">
+                              <div data-testid="token-icon">
+                                <TokenIcon token={createdToken.token.name} tokenId={createdToken.tokenid} />
+                              </div>
+                              <div data-testid="token-name" className="grow w-full">
+                                <div className="flex grow">
+                                  <h6 className="font-bold truncate text-black dark:text-neutral-400">
+                                    {renderTokenName(createdToken)}
+                                  </h6>
+                                  <TokenAuthenticity token={createdToken.token} />
+                                </div>
+                                <p className="font-bold truncate text-grey dark:text-neutral-300">{t("created")} - {format(new Date(Number(h.HEADER.timemilli)), 'HH:mm aa')}</p>
+                              </div>
+                              <div className="text-right flex flex-col items-end justify-center gap-1">
+                                <p className="font-bold text-green">
+                                  +<Truncate text={f(createdToken.tokenamount)} />
+                                </p>
+                              </div>
+                            </div>
+                          )}
+
+                          <div className="bg-contrast1 w-full rounded px-4 py-3 text-white flex gap-4 mb-0.5">
                             <div data-testid="token-icon">
-                              <TokenIcon token={createdToken.token.name} tokenId={createdToken.tokenid} />
-                            </div>
-                            <div data-testid="token-name" className="grow w-full">
-                              <div className="flex grow">
-                                <h6 className="font-bold truncate text-black dark:text-neutral-400">
-                                  {renderTokenName(createdToken)}
-                                </h6>
-                                <TokenAuthenticity token={createdToken.token} />
-                              </div>
-                              <p className="font-bold truncate text-grey dark:text-neutral-300">{t("created")} - {format(new Date(Number(h.HEADER.timemilli)), 'HH:mm aa')}</p>
-                            </div>
-                            <div className="text-right flex flex-col items-end justify-center gap-1">
-                              <p className="font-bold text-green">+{createdToken.tokenamount}</p>
-                            </div>
-                          </div>
-                        )}
-
-                        <div className="bg-contrast1 w-full rounded px-4 py-3 text-white flex gap-4">
-                          <div data-testid="token-icon">
-                            {h.BODY.txn.inputs[0].tokenid !== '0x00' && (
-                              <TokenIcon token={h.BODY.txn.inputs[0].token.name} tokenId={h.BODY.txn.inputs[0].tokenid} />
-                            )}
-                            {h.BODY.txn.inputs[0].tokenid === '0x00' && (
-                              <div className="w-[48px] h-[48px] border border-contrast2 rounded overflow-hidden">
-                                <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="48" height="48" fill="white"></rect><path d="M32.4428 16.759L31.2053 22.2329L29.6226 15.6286L24.0773 13.3795L22.578 19.9957L21.2571 12.2371L15.7119 10L10 35.2512H16.0569L17.8062 27.4926L19.1271 35.2512H25.1959L26.6834 28.6349L28.266 35.2512H34.323L38 18.9962L32.4428 16.759Z" fill="black"></path></svg>
-                              </div>
-                            )}
-                          </div>
-                          <div data-testid="token-name" className="grow w-full">
-                            <div className="flex grow">
-                              <h6 className="font-bold truncate text-black dark:text-neutral-400">{renderTokenName(h.BODY.txn.inputs[0])}</h6>
+                              {h.BODY.txn.inputs[0].tokenid !== '0x00' && (
+                                <TokenIcon token={h.BODY.txn.inputs[0].token.name} tokenId={h.BODY.txn.inputs[0].tokenid} />
+                              )}
                               {h.BODY.txn.inputs[0].tokenid === '0x00' && (
-                                <div className="my-auto ml-1">
-                                  <svg xmlns="http://www.w3.org/2000/svg" className="stroke-white" width="16" height="16" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                    <path d="M5 7.2a2.2 2.2 0 0 1 2.2 -2.2h1a2.2 2.2 0 0 0 1.55 -.64l.7 -.7a2.2 2.2 0 0 1 3.12 0l.7 .7c.412 .41 .97 .64 1.55 .64h1a2.2 2.2 0 0 1 2.2 2.2v1c0 .58 .23 1.138 .64 1.55l.7 .7a2.2 2.2 0 0 1 0 3.12l-.7 .7a2.2 2.2 0 0 0 -.64 1.55v1a2.2 2.2 0 0 1 -2.2 2.2h-1a2.2 2.2 0 0 0 -1.55 .64l-.7 .7a2.2 2.2 0 0 1 -3.12 0l-.7 -.7a2.2 2.2 0 0 0 -1.55 -.64h-1a2.2 2.2 0 0 1 -2.2 -2.2v-1a2.2 2.2 0 0 0 -.64 -1.55l-.7 -.7a2.2 2.2 0 0 1 0 -3.12l.7 -.7a2.2 2.2 0 0 0 .64 -1.55v-1"></path>
-                                    <path d="M9 12l2 2l4 -4"></path>
-                                  </svg>
+                                <div className="w-[48px] h-[48px] border border-contrast2 rounded overflow-hidden">
+                                  <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="48" height="48" fill="white"></rect><path d="M32.4428 16.759L31.2053 22.2329L29.6226 15.6286L24.0773 13.3795L22.578 19.9957L21.2571 12.2371L15.7119 10L10 35.2512H16.0569L17.8062 27.4926L19.1271 35.2512H25.1959L26.6834 28.6349L28.266 35.2512H34.323L38 18.9962L32.4428 16.759Z" fill="black"></path></svg>
                                 </div>
                               )}
                             </div>
-                            <p className="font-bold truncate text-grey dark:text-neutral-300">
-                              {difference > 0 ? t("received") : t("sent")} - {format(new Date(Number(h.HEADER.timemilli)), 'HH:mm aa')}
-                            </p>
+                            <div data-testid="token-name" className="grow w-full">
+                              <div className="flex grow">
+                                <h6 className="font-bold truncate text-black dark:text-neutral-400">{renderTokenName(h.BODY.txn.inputs[0])}</h6>
+                                {h.BODY.txn.inputs[0].tokenid === '0x00' && (
+                                  <div className="my-auto ml-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="stroke-white" width="16" height="16" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                                      <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                      <path d="M5 7.2a2.2 2.2 0 0 1 2.2 -2.2h1a2.2 2.2 0 0 0 1.55 -.64l.7 -.7a2.2 2.2 0 0 1 3.12 0l.7 .7c.412 .41 .97 .64 1.55 .64h1a2.2 2.2 0 0 1 2.2 2.2v1c0 .58 .23 1.138 .64 1.55l.7 .7a2.2 2.2 0 0 1 0 3.12l-.7 .7a2.2 2.2 0 0 0 -.64 1.55v1a2.2 2.2 0 0 1 -2.2 2.2h-1a2.2 2.2 0 0 0 -1.55 .64l-.7 .7a2.2 2.2 0 0 1 -3.12 0l-.7 -.7a2.2 2.2 0 0 0 -1.55 -.64h-1a2.2 2.2 0 0 1 -2.2 -2.2v-1a2.2 2.2 0 0 0 -.64 -1.55l-.7 -.7a2.2 2.2 0 0 1 0 -3.12l.7 -.7a2.2 2.2 0 0 0 .64 -1.55v-1"></path>
+                                      <path d="M9 12l2 2l4 -4"></path>
+                                    </svg>
+                                  </div>
+                                )}
+                              </div>
+                              <p className="font-bold truncate text-grey dark:text-neutral-300">
+                                {difference > 0 ? t("received") : t("sent")} - {format(new Date(Number(h.HEADER.timemilli)), 'HH:mm aa')}
+                              </p>
+                            </div>
+                            {difference && difference !== '0' && (
+                              <div className="text-right flex flex-col items-end justify-center gap-1 font-bold">
+                                <p className={`${difference > 0 ? 'text-green' : 'text-red'}`}>
+                                  {!difference.includes('-') ? difference > 0 ? '+' : '-' : ''}
+                                  <Truncate text={f(difference)} />
+                                </p>
+                                {/* {balanceDifference[h.TXPOWID] && <p className="text-grey60">{f(balanceDifference[h.TXPOWID].toString())}</p>} */}
+                                {/* {change && <p className="text-grey60">{f(change)}</p>} */}
+                              </div>
+                            )}
+                            {difference === '0' && (
+                              <div className="text-right flex flex-col items-end justify-center gap-1 font-bold">
+                                <p className={`text-grey-60`}>0</p>
+                                {/* {balanceDifference[h.TXPOWID] && <p className="text-grey60">{f(balanceDifference[h.TXPOWID].toString())}</p>} */}
+                              </div>
+                            )}
                           </div>
-                          {difference && difference !== '0' && (
-                            <div className="text-right flex flex-col items-end justify-center gap-1 font-bold">
-                              <p className={`${difference > 0 ? 'text-green' : 'text-red'}`}>{!difference.includes('-') ? difference > 0 ? '+' : '-' : ''}{f(difference)}</p>
-                              {/* {balanceDifference[h.TXPOWID] && <p className="text-grey60">{f(balanceDifference[h.TXPOWID].toString())}</p>} */}
-                              {/* {change && <p className="text-grey60">{f(change)}</p>} */}
-                            </div>
-                          )}
-                          {difference === '0' && (
-                            <div className="text-right flex flex-col items-end justify-center gap-1 font-bold">
-                              <p className={`text-grey-60`}>0</p>
-                              {/* {balanceDifference[h.TXPOWID] && <p className="text-grey60">{f(balanceDifference[h.TXPOWID].toString())}</p>} */}
-                            </div>
-                          )}
                         </div>
-                      </div>
-                    )
-                  })}
+                      )
+                    })}
+                  </div>
                 </Fragment>
               )
             })}
