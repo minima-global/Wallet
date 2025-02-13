@@ -35,6 +35,8 @@ export const appContext = createContext<{
   addresses: string[],
   isDenied: boolean,
   setIsDenied: React.Dispatch<React.SetStateAction<boolean>>,
+  favourites: string[],
+  setFavourites: React.Dispatch<React.SetStateAction<string[]>>,
 }>({
   loaded: false,
   currencyType: '1',
@@ -66,8 +68,10 @@ export const appContext = createContext<{
   activeTab: 'main',
   setActiveTab: () => { },
   addresses: [],
-  isDenied: null,
+  isDenied: false,
   setIsDenied: () => { },
+  favourites: [],
+  setFavourites: () => { },
 })
 
 const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
@@ -94,6 +98,8 @@ const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const [activeMonth, setActiveMonth] = useState<string | null>(null);
 
   const [hiddenTokens, setHiddenTokens] = useState<string[]>([]);
+  const [favourites, setFavourites] = useState<string[]>([]);
+
   const [verified, setVerified] = useState<Record<string, number>>({
     '0x00': 2
   });
@@ -126,6 +132,14 @@ const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
             } else {
               MDS.keypair.set('hidden_tokens', '[]');
             } 
+          });
+
+          MDS.keypair.get('favourites').then((keypair) => {
+            if (keypair.value) {
+              setFavourites(JSON.parse(keypair.value));
+            } else {
+              MDS.keypair.set('favourites', '[]');
+            }
           });
 
           MDS.cmd.block((block) => {
@@ -182,6 +196,12 @@ const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
       MDS.keypair.set('hidden_tokens', JSON.stringify(hiddenTokens));
     }
   }, [hiddenTokens]);
+
+  useEffect(() => {
+    if (favourites.length > 0) {
+      MDS.keypair.set('favourites', JSON.stringify(favourites));
+    }
+  }, [favourites]);
 
   useEffect(() => {
     const currencyType = localStorage.getItem('minima_currency_type');
@@ -261,6 +281,8 @@ const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
     setActiveMonth,
     isDenied,
     setIsDenied,
+    favourites,
+    setFavourites,
   }
 
   return <appContext.Provider value={context}>{children}</appContext.Provider>

@@ -14,9 +14,10 @@ interface InputProps {
     copy?: boolean;
     required?: boolean;
     className?: string;
+    clearable?: boolean;
 }
 
-const Input: React.FC<InputProps> = ({ type = 'text', label, optionalLabel, placeholder, value, onChange, required = false, info, inverse, validation, validationMessage, copy, className = '' }) => {
+const Input: React.FC<InputProps> = ({ label, optionalLabel, placeholder, value, onChange, required = false, info, inverse, validation, validationMessage, copy, className = '', clearable = false }) => {
     const { t } = useTranslation();
     const [valid, setValid] = useState<boolean | null>(null);
     const [copied, setCopied] = useState(false);
@@ -49,6 +50,10 @@ const Input: React.FC<InputProps> = ({ type = 'text', label, optionalLabel, plac
         }
     }
 
+    const handleClear = () => {
+        onChange?.('');
+    }
+
     return (
         <div className={`relative ${className}`}>
             <div className="dark:text-grey40 mb-2">
@@ -68,6 +73,13 @@ const Input: React.FC<InputProps> = ({ type = 'text', label, optionalLabel, plac
                             <div className="group-hover:opacity-100 pointer-events-none text-white opacity-0 bg-contrast1.5 rounded-md px-3 py-2 absolute text-sm w-full min-w-[210px] top-[calc(100%+12px)] right-[-4px] text-sm text-grey60 before:content-[''] before:absolute before:top-[-4px] before:right-[10px] before:w-[8px] before:h-[8px] before:rotate-45 before:bg-contrast1.5">{info}</div>
                         </div>
                     }
+                    {clearable && value && (
+                        <button onClick={handleClear} className="text-sm text-grey60 absolute top-0 right-0 flex h-full items-center z-10">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4 cursor-pointer stroke-grey80 hover:stroke-white">
+                                <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
+                    )}
                     {copy && (
                         <div onClick={copyToClipboard} className="text-sm text-grey60 absolute top-0 right-0 flex h-full items-center z-10">
                             <div>

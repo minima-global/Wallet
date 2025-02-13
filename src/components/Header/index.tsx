@@ -222,8 +222,8 @@ const Header = () => {
                     </div>
                   </div>
                   <div className="mt-0.5 hidden lg:block">
-                      <div className="text-white text-sm font-bold">Wallet</div>
-                    </div>
+                    <div className="text-white text-sm font-bold">Wallet</div>
+                  </div>
                 </Link>
               </div>
               <div className="col-span-6 flex items-center justify-end">
@@ -238,12 +238,14 @@ const Header = () => {
 
                     <li className="text-white flex items-center gap-6">
 
-                      <div className="gradient-border flex items-center gap-2">
-                        <NodeStatus />
-                        <div className="flex items-center text-[13px] gap-2">
-                          <span className="text-white font-bold">{block?.block}</span>
+                      {block && (
+                        <div className="gradient-border flex items-center gap-2">
+                          <NodeStatus />
+                          <div className="flex items-center text-[13px] gap-2">
+                            Block <span className="text-white font-bold">{block?.block}</span>
+                          </div>
                         </div>
-                      </div>
+                      )}
                     </li>
 
                     <li onClick={toggleDarkMode} className="hidden">

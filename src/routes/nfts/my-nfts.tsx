@@ -6,14 +6,16 @@ import { useState } from 'react';
 import { appContext } from '../../AppContext';
 import SearchBar from '../../components/SearchBar';
 import TokenCard from '../../components/TokenCard';
+import HeartButton from '../../components/HeartButton';
 export const Route = createFileRoute('/nfts/my-nfts')({
   component: Index,
 })
 
 function Index() {
-  const { balance } = useContext(appContext);
+  const { balance, favourites } = useContext(appContext);
   const navigate = useNavigate();
   const [query, setQuery] = useState('');
+  const [showOnlyFavourites, setShowOnlyFavourites] = useState(false);
 
   const nfts = balance
     .filter((token) => typeof token.token === 'object' && (token as any).details.decimals === 0)
@@ -40,6 +42,10 @@ function Index() {
 
   const activeTab = '/nfts/my-nfts';
 
+  const toggleShowOnlyFavourites = () => {
+    setShowOnlyFavourites(!showOnlyFavourites);
+  }
+
   return (
     <div className="grow flex flex-col mb-20">
       <div>
@@ -57,7 +63,10 @@ function Index() {
           />
         </div>
 
-        <SearchBar placeholder="Search for an NFT" value={query} onChange={setQuery} />
+        <div className="flex gap-4">
+          <SearchBar placeholder="Search for an NFT" value={query} onChange={setQuery} />
+          <HeartButton showOnlyFavourites={showOnlyFavourites} onClick={toggleShowOnlyFavourites} />
+        </div>
 
         <div className="my-8 grid grid-cols-12 gap-6">
           {nfts.length === 0 && (
@@ -65,7 +74,14 @@ function Index() {
               No NFTs found
             </div>
           )}
-          {nfts.length > 0 && nfts.map((balance) => <TokenCard key={balance.tokenid} balance={balance} />)}
+          {nfts.length > 0 && nfts
+            .filter((token) => {
+              if (showOnlyFavourites) {
+                return favourites.includes(token.tokenid);
+              }
+              return true;
+            })
+            .map((balance) => <TokenCard key={balance.tokenid} balance={balance} showFavourite={true} />)}
         </div>
 
       </div>

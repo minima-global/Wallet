@@ -207,6 +207,7 @@ function Index() {
               validation="^(0x|Mx)[0-9a-zA-Z]*$"
               validationMessage="The address should start with 0x or Mx."
               inverse
+              clearable
             />
             <Button disabled={!/^(0x|Mx)[0-9a-zA-Z]*$/.test(query)} onClick={() => validateAddress(query)}>{t("validate")}</Button>
           </div>

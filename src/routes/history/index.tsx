@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import SearchBar from '../../components/SearchBar'
 import RefreshButton from '../../components/RefreshButton'
 import SortButton from '../../components/SortButton'
-import { useContext, useEffect, useState, Fragment, useMemo } from 'react'
+import { useContext, useEffect, useState, Fragment, useMemo, useRef } from 'react'
 import { appContext } from '../../AppContext'
 import { MDS } from '@minima-global/mds'
 import { format } from "date-fns";
@@ -36,14 +36,43 @@ export const Route = createFileRoute('/history/')({
 // }
 
 function Index() {
-  const { loaded, history, balance, getHistory } = useContext(appContext);
+  const { history, balance, getHistory } = useContext(appContext);
   const { f } = useFormatAmount();
   const { t } = useTranslation();
-  const [inited, setInited] = useState(false);
   const [query, setQuery] = useState('');
   const [order, setOrder] = useState<'asc' | 'desc'>('desc');
   const [activeMonth, setActiveMonth] = useState<string>('all');
   const [balanceDifference, setBalanceDifference] = useState<Record<string, string>>({});
+  const mounted = useRef(false);
+
+  useEffect(() => {
+    if (!mounted.current) {
+      mounted.current = true;
+
+      MDS.sql('CREATE TABLE IF NOT EXISTS txpows (txpowid TEXT PRIMARY KEY, timemilli BIGINT, isblock BOOLEAN, istransaction BOOLEAN, hasbody BOOLEAN, burn INT, superblock INT, size INT, header TEXT, body TEXT, details TEXT)', () => {
+        MDS.cmd.history(async (response) => {
+          const result = await MDS.sql(`SELECT * FROM txpows WHERE txpowid IN ('${response.response.txpows.map((txpow) => txpow.txpowid).join("','")}')`);
+          const txpowsInDatabase = result.rows.map((row) => row.TXPOWID);
+          const txpowsNotInDatabase: string[] = [];
+
+          for (let index = 0; index < response.response.txpows.length; index++) {
+            const txpow = response.response.txpows[index];
+            const details = response.response.details[index];
+
+            if (!txpowsInDatabase.includes(txpow.txpowid)) {
+              txpowsNotInDatabase.push(`INSERT INTO txpows (txpowid, timemilli, isblock, istransaction, hasbody, burn, superblock, size, header, body, details) VALUES ('${txpow.txpowid}', ${txpow.header.timemilli}, ${txpow.isblock}, ${txpow.istransaction}, ${txpow.hasbody}, ${txpow.burn}, ${txpow.superblock}, ${txpow.size}, '${JSON.stringify(txpow.header)}', '${JSON.stringify(txpow.body)}','${JSON.stringify(details)}')`);
+            }
+          }
+
+          if (txpowsNotInDatabase.length > 0) {
+            await MDS.sql(txpowsNotInDatabase.join('; '));
+          }
+
+          getHistory();
+        });
+      });
+    }
+  }, []);
 
   useEffect(() => {
     if (history && !activeMonth) {
@@ -97,31 +126,6 @@ function Index() {
     }
   }, [history, balance]);
 
-  useEffect(() => {
-    if (loaded && !inited) {
-      MDS.sql('CREATE TABLE IF NOT EXISTS txpows (txpowid TEXT PRIMARY KEY, timemilli BIGINT, isblock BOOLEAN, istransaction BOOLEAN, hasbody BOOLEAN, burn INT, superblock INT, size INT, header TEXT, body TEXT, details TEXT)', () => {
-        MDS.cmd.history(async (response) => {
-
-          for (let index = 0; index < response.response.txpows.length; index++) {
-            const txpow = response.response.txpows[index];
-            const details = response.response.details[index];
-            const result = await MDS.sql(`SELECT * FROM txpows WHERE txpowid = '${txpow.txpowid}'`);
-
-            if (result.rows.length === 0) {
-              await MDS.sql(`INSERT INTO txpows (txpowid, timemilli, isblock, istransaction, hasbody, burn, superblock, size, header, body, details) VALUES ('${txpow.txpowid}', ${txpow.header.timemilli}, ${txpow.isblock}, ${txpow.istransaction}, ${txpow.hasbody}, ${txpow.burn}, ${txpow.superblock}, ${txpow.size}, '${JSON.stringify(txpow.header)}', '${JSON.stringify(txpow.body)}','${JSON.stringify(details)}')`);
-            }
-
-            // sometimes max retries shows up, so add artificial delay
-            await new Promise((resolve) => setTimeout(resolve, 100));
-          }
-
-          getHistory();
-        });
-      });
-      setInited(true);
-    }
-  }, [loaded, inited, getHistory]);
-
   const toggleOrder = () => {
     setActiveMonth('all');
     setOrder(prevState => prevState === 'desc' ? 'asc' : 'desc');
@@ -174,15 +178,15 @@ function Index() {
         // if (query && typeof row.BODY.txn.inputs[0].token === 'string' && row.BODY.txn.inputs[0].token.toLowerCase().includes(query.toLowerCase().trim())) {
         //   return true;
         // }
-    
+
         // if (query && typeof row.BODY.txn.inputs[0].token.name === 'object' && row.BODY.txn.inputs[0].token.name.name.toLowerCase().includes(query.toLowerCase().trim())) {
         //   return true;
         // }
-    
+
         // if (query && row.BODY.txn.inputs[0].tokenid.toLowerCase().includes(query.toLowerCase().trim())) {
         //   return true;
         // }
-    
+
         // if (!query) {
         //   return false;
         // }
@@ -314,7 +318,7 @@ function Index() {
               const year = date.split(' ')[2];
 
               return (
-                <Fragment key={day}>
+                <Fragment key={date}>
                   <div>
                     <div className="bg-contrast2 w-full rounded px-5 py-3 text-white mb-0.5">
                       <h5>{t(day)} {t(month.toLowerCase())} {year}</h5>
@@ -350,13 +354,15 @@ function Index() {
                                 <TokenIcon token={createdToken.token.name} tokenId={createdToken.tokenid} />
                               </div>
                               <div data-testid="token-name" className="grow w-full">
-                                <div className="flex grow">
-                                  <h6 className="font-bold truncate text-black dark:text-neutral-400">
+                                <div className="flex">
+                                  <h6 className="font-bold truncate lg:text-base">
                                     {renderTokenName(createdToken)}
                                   </h6>
                                   <TokenAuthenticity token={createdToken.token} />
                                 </div>
-                                <p className="font-bold truncate text-grey dark:text-neutral-300">{t("created")} - {format(new Date(Number(h.HEADER.timemilli)), 'HH:mm aa')}</p>
+                                <p className="font-bold truncate text-grey40 text-sm">
+                                  {t("created")} - {format(new Date(Number(h.HEADER.timemilli)), 'HH:mm aa')}
+                                </p>
                               </div>
                               <div className="text-right flex flex-col items-end justify-center gap-1">
                                 <p className="font-bold text-green">
@@ -366,7 +372,7 @@ function Index() {
                             </div>
                           )}
 
-                          <div className="bg-contrast1 w-full rounded px-4 py-3 text-white flex gap-4 mb-0.5">
+                          <div className="bg-contrast1 w-full rounded px-4 py-3 text-white text-sm lg:text-base flex gap-4 mb-0.5">
                             <div data-testid="token-icon">
                               {h.BODY.txn.inputs[0].tokenid !== '0x00' && (
                                 <TokenIcon token={h.BODY.txn.inputs[0].token.name} tokenId={h.BODY.txn.inputs[0].tokenid} />
@@ -377,9 +383,11 @@ function Index() {
                                 </div>
                               )}
                             </div>
-                            <div data-testid="token-name" className="grow w-full">
-                              <div className="flex grow">
-                                <h6 className="font-bold truncate text-black dark:text-neutral-400">{renderTokenName(h.BODY.txn.inputs[0])}</h6>
+                            <div data-testid="token-name" className="grow flex flex-col justify-center items-start w-full">
+                              <div className="flex">
+                                <h6 className="font-bold truncate lg:text-base">
+                                  {renderTokenName(h.BODY.txn.inputs[0])}
+                                </h6>
                                 {h.BODY.txn.inputs[0].tokenid === '0x00' && (
                                   <div className="my-auto ml-1">
                                     <svg xmlns="http://www.w3.org/2000/svg" className="stroke-white" width="16" height="16" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
@@ -390,7 +398,7 @@ function Index() {
                                   </div>
                                 )}
                               </div>
-                              <p className="font-bold truncate text-grey dark:text-neutral-300">
+                              <p className="font-bold truncate text-grey40 text-sm">
                                 {difference > 0 ? t("received") : t("sent")} - {format(new Date(Number(h.HEADER.timemilli)), 'HH:mm aa')}
                               </p>
                             </div>
@@ -400,19 +408,31 @@ function Index() {
                                   {!difference.includes('-') ? difference > 0 ? '+' : '-' : ''}
                                   <Truncate text={f(difference)} />
                                 </p>
-                                {balanceDifference[h.TXPOWID] && <p className="text-grey60">{f(balanceDifference[h.TXPOWID].toString())}</p>}
+                                {balanceDifference[h.TXPOWID] && (
+                                  <p className="text-grey60">
+                                    <Truncate text={f(balanceDifference[h.TXPOWID].toString())} />
+                                  </p>
+                                )}
                               </div>
                             )}
                             {difference === '0' && (
                               <div className="text-right flex flex-col items-end justify-center gap-1 font-bold">
                                 <p className={`text-grey-60`}>0</p>
-                                {balanceDifference[h.TXPOWID] && <p className="text-grey60">{f(balanceDifference[h.TXPOWID].toString())}</p>}
+                                {balanceDifference[h.TXPOWID] && (
+                                  <p className="text-grey60">
+                                    <Truncate text={f(balanceDifference[h.TXPOWID].toString())} />
+                                  </p>
+                                )}
                               </div>
                             )}
                             {!difference && (
                               <div className="text-right flex flex-col items-end justify-center gap-1 font-bold">
                                 <p className={`text-grey-60`}>0</p>
-                                {balanceDifference[h.TXPOWID] && <p className="text-grey60">{f(balanceDifference[h.TXPOWID].toString())}</p>}
+                                {balanceDifference[h.TXPOWID] && (
+                                  <p className="text-grey60">
+                                    <Truncate text={f(balanceDifference[h.TXPOWID].toString())} />
+                                  </p>
+                                )}
                               </div>
                             )}
                           </div>
@@ -445,7 +465,7 @@ const Dropdown = ({ options }: { options: { key: string, label: string }[] }) =>
 
   return (
     <div className="relative flex items-center justify-end">
-      <div onClick={toggleDropdown} className="group relative z-[1000] cursor-pointer flex flex-col gap-0.5 px-4 -mr-4">
+      <div onClick={toggleDropdown} className="group relative z-[20] cursor-pointer flex flex-col gap-0.5 px-4 -mr-4">
         <div className="w-[4px] h-[4px] bg-grey40 group-hover:bg-grey60 rounded-full" />
         <div className="w-[4px] h-[4px] bg-grey40 group-hover:bg-grey60 rounded-full" />
         <div className="w-[4px] h-[4px] bg-grey40 group-hover:bg-grey60 rounded-full" />
