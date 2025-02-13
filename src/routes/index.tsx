@@ -153,7 +153,7 @@ function Index() {
       </OverlayModal>
 
       <h1 className="text-white text-2xl mb-6 flex items-center gap-2">
-        <button disabled={activeTab === 'main'} className={`enabled:cursor-pointer ${activeTab === 'hidden' ? 'text-grey80' : 'text-white'}`} onClick={() => setActiveTab('main')}>
+        <button disabled={activeTab === 'main'} className={`enabled:cursor-pointer transition-all duration-100 ${activeTab === 'hidden' ? 'text-grey80 hover:text-grey60' : 'text-white'}`} onClick={() => setActiveTab('main')}>
           {t("balance")}
         </button>
         {activeTab === 'hidden' && (
@@ -184,12 +184,12 @@ function Index() {
         </div>
         <div className="col-span-6 flex items-center justify-end gap-5">
           {activeTab === 'hidden' && (
-            <button onClick={() => setActiveTab('main')} className="cursor-pointer text-xs flex bg-contrast1 rounded-full flex items-center gap-3 w-fit px-3.5 py-1.5 text-white cursor-pointer select-none origin-center active:scale-[0.95] transition-all duration-100">
+            <button onClick={() => setActiveTab('main')} className="cursor-pointer text-xs flex bg-contrast1 hover:bg-contrast2 transition-all duration-100 border border-contrast2 rounded-full flex items-center gap-3 w-fit px-3.5 py-1.5 text-white cursor-pointer select-none origin-center active:scale-[0.95] transition-all duration-100">
               {t('go_back')}
             </button>
           )}
           {activeTab !== 'hidden' && (
-            <button onClick={() => setActiveTab('hidden')} className="cursor-pointer text-xs flex bg-contrast1 border border-contrast2 rounded-full flex items-center gap-3 w-fit px-3.5 py-1.5 text-white cursor-pointer select-none origin-center active:scale-[0.95] transition-all duration-100">
+            <button onClick={() => setActiveTab('hidden')} className="cursor-pointer text-xs flex bg-contrast1 hover:bg-contrast2 transition-all duration-100 border border-contrast2 rounded-full flex items-center gap-3 w-fit px-3.5 py-1.5 text-white cursor-pointer select-none origin-center active:scale-[0.95] transition-all duration-100">
               {t('hidden_tokens')}
             </button>
           )}
