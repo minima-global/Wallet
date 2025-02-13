@@ -12,15 +12,21 @@ interface InputProps {
     validationMessage?: string;
     copy?: boolean;
     required?: boolean;
+    className?: string;
 }
 
-const Input: React.FC<InputProps> = ({ label, placeholder, value, onChange, required = false, info, inverse, validation, validationMessage, copy }) => {
+const Input: React.FC<InputProps> = ({ label, placeholder, value, onChange, required = false, info, inverse, validation, validationMessage, copy, className = '' }) => {
     const { t } = useTranslation();
     const [valid, setValid] = useState<boolean | null>(null);
     const [copied, setCopied] = useState(false);
 
     const handleOnBlur = (evt: React.FocusEvent<HTMLInputElement>) => {
         if (validation) {
+            if (required === false && evt.target.value.length === 0) {
+                setValid(true);
+                return;
+            }
+
             if (typeof validation === 'function') {
                 return setValid(validation(evt.target.value));
             }
@@ -43,7 +49,7 @@ const Input: React.FC<InputProps> = ({ label, placeholder, value, onChange, requ
     }
 
     return (
-        <div className="relative">
+        <div className={`relative ${className}`}>
             <div className="dark:text-grey40 mb-3">{label}</div>
             <div className={`px-4 py-3.5 rounded border border-transparent ${validation && valid === false ? "!border-red" : ""} ${inverse ? 'bg-contrast2' : 'bg-contrast1'}`}>
                 <div className="flex relative">

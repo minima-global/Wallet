@@ -19,7 +19,7 @@ function Index() {
   const [step, setStep] = useState(1);
   const [webUrl, setWebUrl] = useState("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRyd_3tNcIge2aIjsnJNa6leacGWID5_RkB6A&s");
   const [tokenName, setTokenName] = useState("Test");
-  const [tokenSupply, setTokenSupply] = useState("1");
+  const [totalSupply, setTotalSupply] = useState("1");
   const [description, setDescription] = useState("Testing description");
   const [creatorsName, setCreatorsName] = useState("Test");
   const [externalUrl, setExternalUrl] = useState("");
@@ -67,9 +67,9 @@ function Index() {
 
     const params = {
       name: JSON.stringify(token),
-      amount: tokenSupply,
+      amount: totalSupply,
       decimals: '0',
-      burn,
+      burn: burn || undefined,
     };
 
     const response = await MDS.cmd.tokencreate({
@@ -101,7 +101,7 @@ function Index() {
       },
       {
         label: "Total Supply",
-        value: tokenSupply,
+        value: totalSupply,
       },
       {
         label: "Description",
@@ -147,6 +147,12 @@ function Index() {
 
   const activeTab = '/nfts/create';
 
+  const isDisabled = () => {
+    return !webUrl
+      || !(tokenName.length > 0)
+      || !(/^\d+$/.test(totalSupply));
+  };
+
   return (
     <>
       <div className="grow flex flex-col mb-20">
@@ -171,8 +177,9 @@ function Index() {
                 label="Image URL"
                 placeholder="Enter the image URL for your NFT"
                 value={webUrl}
+                required={true}
                 onChange={setWebUrl}
-                validation={(value) => /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z0-9\u00a1-\uffff][a-z0-9\u00a1-\uffff_-]{0,62})?[a-z0-9\u00a1-\uffff]\.)+(?:[a-z\u00a1-\uffff]{2,}\.?))(?::\d{2,5})?(?:[/?#]\S*)?$/i.test(value)}
+                validation={(value) => /^(?:(?:(?:https?):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z0-9\u00a1-\uffff][a-z0-9\u00a1-\uffff_-]{0,62})?[a-z0-9\u00a1-\uffff]\.)+(?:[a-z\u00a1-\uffff]{2,}\.?))(?::\d{2,5})?(?:[/?#]\S*)?$/i.test(value)}
                 validationMessage="Please enter a valid URL."
               />
               <Input
@@ -188,8 +195,8 @@ function Index() {
               <Input
                 label="Total supply"
                 placeholder="Enter the total supply of your NFT"
-                value={tokenSupply}
-                onChange={setTokenSupply}
+                value={totalSupply}
+                onChange={setTotalSupply}
                 validation={(value) => {
                   return value.length > 0;
                 }}
@@ -310,7 +317,7 @@ function Index() {
               </div>
 
               <div className="mt-4">
-                <Button onClick={goToReview}>Review</Button>
+                <Button disabled={isDisabled()} onClick={goToReview}>Review</Button>
               </div>
             </form>
           </div>
@@ -341,7 +348,7 @@ function Index() {
                   ))}
                 </div>
                 <div className="flex flex-col gap-4 -mb-5">
-                  <button onClick={createToken} className="mt-4 w-full bg-orange text-black py-3 px-4 rounded text-sm">
+                  <button disabled={isDisabled()} onClick={createToken} className="mt-4 w-full bg-orange text-black py-3 px-4 rounded text-sm">
                     Create
                   </button>
                   <Button onClick={goToCreate} secondary>
