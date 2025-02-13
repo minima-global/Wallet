@@ -89,8 +89,6 @@ function RouteComponent() {
           .map(([key, value]) => ({ key, value }))
       : [];
 
-    console.log(metadata);
-
     return (
         <div>
             <div className={`${showBurnModal ? 'opacity-100' : 'pointer-events-none opacity-0'} transition-opacity duration-100 flex absolute z-50 inset-0 top-0 left-0 justify-center items-center w-screen h-screen`}>
@@ -126,20 +124,19 @@ function RouteComponent() {
                 <div className="z-50 fixed bg-black opacity-90 w-screen h-screen top-0 left-0"></div>
             </div>
 
-            <div className="pb-4">
+            <div className="mb-6">
                 <BackButton />
             </div>
 
-            <div className="flex mb-12">
+            <div className="flex flex-col lg:flex-row gap-6 lg:gap-0 mb-6">
                 <div className="flex items-center">
                     <h1 className="text-white text-2xl">{t('token_details')}</h1>
                 </div>
-                <div className="grow flex justify-end">
+                <div className="grow flex lg:justify-end">
                     {token && token.tokenid !== '0x00' && (
                         <div className="flex gap-2">
                             <div className="flex justify-end cursor-pointer select-none">
                                 <div onClick={toggleHideTokenModal} className="flex items-center gap-2 text-sm text-grey60 text-xs font-bold bg-contrast1 w-fit rounded-full px-3.5 py-1.5 border dark:border-contrast2 origin-center active:scale-[0.95] transition-all duration-100">
-                                    {isHidden ? <img src="./assets/icons/eye-open.svg" alt="Show hidden tokens" className="text-white w-4 h-4" /> : <img src="./assets/icons/eye-closed.svg" alt="Show hidden tokens" className="w-4 h-4" />}
                                     {isHidden ? t('show_token') : t('hide_token')}
                                 </div>
                             </div>
@@ -202,7 +199,7 @@ function RouteComponent() {
                                 value={t('this_is_the_native_minima_token')}
                             />
                         )}
-                        <InfoBox title={t('token_id')} value={token.tokenid} copy />
+                        {/* <InfoBox title={t('token_id')} value={token.tokenid} copy /> */}
                         <InfoBox title={t('total_minted')} value={token.total} />
                         <InfoBox title={t('total_coins')} value={token.coins} />
                         <InfoBox

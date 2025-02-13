@@ -52,9 +52,7 @@ function Index() {
                 address: recipient,
                 burn: burn || undefined,
                 state: message
-                    ? JSON.stringify({
-                        44: message,
-                    })
+                    ? `{"44":"[${message}]"}`
                     : undefined
             }
         })
@@ -132,12 +130,14 @@ function Index() {
                         />
                         <Input
                             label={t('message')}
+                            optionalLabel={t('optional')}
                             placeholder={t('enter_message')}
                             value={message}
                             onChange={(value) => setMessage(value)}
                         />
                         <Input
-                            label={t('add_a_burn') + ` (${t('optional')})`}
+                            label={t('add_a_burn')}
+                            optionalLabel={t('optional')}
                             placeholder={t('optional')}
                             value={burn}
                             onChange={(value) => setBurn(value)}

@@ -39,7 +39,7 @@ const Timeline = ({ months, activeMonth, setActiveMonth }: { months: string[], a
 
     return (
         <>
-            <button onClick={goToPrevious} disabled={activeMonth === months[0]} className="disabled:opacity-90 disabled:cursor-not-allowed bg-contrast1 enabled:hover:bg-contrast2 enabled:active:text-black enabled:active:bg-white cursor-pointer p-5">
+            <button onClick={goToPrevious} disabled={activeMonth === months[0]} className="disabled:text-grey disabled:cursor-not-allowed bg-contrast1 enabled:hover:bg-contrast2 enabled:active:text-black enabled:active:bg-white cursor-pointer p-5">
                 <svg width="8" height="10" viewBox="0 0 8 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M0.96875 5L5.96875 -4.64434e-08L7.03125 1.0625L3.09375 5L7.03125 8.9375L5.96875 10L0.96875 5Z" fill="currentColor" />
                 </svg>
@@ -54,7 +54,7 @@ const Timeline = ({ months, activeMonth, setActiveMonth }: { months: string[], a
                             {months && months.map((month) => (
                                 <div
                                     key={month}
-                                    className={`slider-container__slide mt-[1px] font-bold text-[15px] capitalize cursor-pointer flex items-center justify-center border-b-2 border-transparent ${activeMonth === month ? '!border-orange' : ''}`}
+                                    className={`slider-container__slide mt-[1px] font-bold text-[15px] capitalize cursor-pointer flex items-center justify-center border-b-2 border-transparent transition-all duration-100 ${activeMonth === month ? '!border-orange' : 'hover:text-grey80'}`}
                                     onClick={() => setActiveMonth(month)}
                                 >
                                     {/* {month} */}
@@ -65,7 +65,7 @@ const Timeline = ({ months, activeMonth, setActiveMonth }: { months: string[], a
                     </div>
                 </div>
             </div>
-            <button onClick={goToNext} disabled={activeMonth === 'all'} className="disabled:opacity-90 disabled:cursor-not-allowed bg-contrast1 enabled:hover:bg-contrast2 enabled:active:text-black enabled:active:bg-white cursor-pointer p-5">
+            <button onClick={goToNext} disabled={activeMonth === 'all'} className="disabled:text-grey disabled:cursor-not-allowed bg-contrast1 enabled:hover:bg-contrast2 enabled:active:text-black enabled:active:bg-white cursor-pointer p-5">
                 <svg width="8" height="10" viewBox="0 0 8 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M7.03125 5L2.03125 10L0.96875 8.9375L4.90625 5L0.96875 1.0625L2.03125 1.26702e-08L7.03125 5Z" fill="currentColor" />
                 </svg>

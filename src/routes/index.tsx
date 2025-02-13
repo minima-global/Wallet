@@ -164,13 +164,13 @@ function Index() {
         )}
       </h1>
 
-      <div className="mb-6 flex gap-2.5">
+      <div className="flex gap-4">
         <SearchBar value={query} onChange={setQuery} />
         <RefreshButton onClick={fetchBalance} />
         <GridButton gridMode={gridMode} onClick={toggleGridMode} />
       </div>
 
-      <div className="flex gap-4 my-6">
+      <div className="flex gap-4 my-4">
         <div className="grow">
           <div className="flex lg:hidden items-center gap-6">
             <div onClick={toggleFilterAndSort} className="cursor-pointer text-grey80 font-bold text-[15px] active:text-white transition-all duration-100 mt-0.5">
@@ -189,7 +189,7 @@ function Index() {
             </button>
           )}
           {activeTab !== 'hidden' && (
-            <button onClick={() => setActiveTab('hidden')} className="cursor-pointer text-xs flex bg-contrast1 rounded-full flex items-center gap-3 w-fit px-3.5 py-1.5 text-white cursor-pointer select-none origin-center active:scale-[0.95] transition-all duration-100">
+            <button onClick={() => setActiveTab('hidden')} className="cursor-pointer text-xs flex bg-contrast1 border border-contrast2 rounded-full flex items-center gap-3 w-fit px-3.5 py-1.5 text-white cursor-pointer select-none origin-center active:scale-[0.95] transition-all duration-100">
               {t('hidden_tokens')}
             </button>
           )}
@@ -197,7 +197,7 @@ function Index() {
       </div>
 
       {gridMode === 'list' && (
-        <ul className="select-none flex flex-col gap-2 mb-20">
+        <ul className="select-none flex flex-col gap-4 mb-20">
           {filteredBalance.length === 0 && (
             <div className="w-full flex items-center bg-contrast1 opacity-80 p-3 px-4 text-sm rounded">
               No tokens found

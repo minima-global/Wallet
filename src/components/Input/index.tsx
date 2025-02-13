@@ -3,6 +3,7 @@ import useTranslation from "../../hooks/useTranslation";
 
 interface InputProps {
     label: string;
+    optionalLabel?: string;
     placeholder?: string;
     value: string;
     onChange?: (value: string) => void;
@@ -15,7 +16,7 @@ interface InputProps {
     className?: string;
 }
 
-const Input: React.FC<InputProps> = ({ label, placeholder, value, onChange, required = false, info, inverse, validation, validationMessage, copy, className = '' }) => {
+const Input: React.FC<InputProps> = ({ type = 'text', label, optionalLabel, placeholder, value, onChange, required = false, info, inverse, validation, validationMessage, copy, className = '' }) => {
     const { t } = useTranslation();
     const [valid, setValid] = useState<boolean | null>(null);
     const [copied, setCopied] = useState(false);
@@ -50,7 +51,10 @@ const Input: React.FC<InputProps> = ({ label, placeholder, value, onChange, requ
 
     return (
         <div className={`relative ${className}`}>
-            <div className="dark:text-grey40 mb-3">{label}</div>
+            <div className="dark:text-grey40 mb-2">
+                {label}
+                {optionalLabel ? <span className="pl-1 text-xs text-grey80">({optionalLabel})</span> : ''}
+            </div>
             <div className={`px-4 py-3.5 rounded border border-transparent ${validation && valid === false ? "!border-red" : ""} ${inverse ? 'bg-contrast2' : 'bg-contrast1'}`}>
                 <div className="flex relative">
                     <input required={required} name="amount" onBlur={handleOnBlur} placeholder={placeholder} className="text-sm bg-transparent w-full placeholder-grey60 appearance-none outline-none" value={value} onChange={(e) => onChange?.(e.target.value)} />

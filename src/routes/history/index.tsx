@@ -170,22 +170,22 @@ function Index() {
     const headers = ['AMOUNT', 'BALANCE_AFTER', 'TYPE', 'DATE', 'SENT_TO_MX_ADDRESS', 'SENT_TO_0X_ADDRESS', 'TXPOWID', 'TIMEMILLI', 'ISBLOCK', 'ISTRANSACTION', 'HASBODY', 'BURN', 'SUPERBLOCK', 'SIZE', 'HEADER', 'BODY', 'DETAILS'];
     const csv = [
       headers,
-      ...history.filter((row) => {
-        if (query && typeof row.BODY.txn.inputs[0].token === 'string' && row.BODY.txn.inputs[0].token.toLowerCase().includes(query.toLowerCase().trim())) {
-          return true;
-        }
+      ...history.filter((_row) => {
+        // if (query && typeof row.BODY.txn.inputs[0].token === 'string' && row.BODY.txn.inputs[0].token.toLowerCase().includes(query.toLowerCase().trim())) {
+        //   return true;
+        // }
     
-        if (query && typeof row.BODY.txn.inputs[0].token.name === 'object' && row.BODY.txn.inputs[0].token.name.name.toLowerCase().includes(query.toLowerCase().trim())) {
-          return true;
-        }
+        // if (query && typeof row.BODY.txn.inputs[0].token.name === 'object' && row.BODY.txn.inputs[0].token.name.name.toLowerCase().includes(query.toLowerCase().trim())) {
+        //   return true;
+        // }
     
-        if (query && row.BODY.txn.inputs[0].tokenid.toLowerCase().includes(query.toLowerCase().trim())) {
-          return true;
-        }
+        // if (query && row.BODY.txn.inputs[0].tokenid.toLowerCase().includes(query.toLowerCase().trim())) {
+        //   return true;
+        // }
     
-        if (!query) {
-          return false;
-        }
+        // if (!query) {
+        //   return false;
+        // }
 
         return true;
       }).map((h) => {
@@ -445,10 +445,10 @@ const Dropdown = ({ options }: { options: { key: string, label: string }[] }) =>
 
   return (
     <div className="relative flex items-center justify-end">
-      <div onClick={toggleDropdown} className="relative z-[1000] cursor-pointer flex flex-col gap-0.5 px-4 -mr-4">
-        <div className="w-[4px] h-[4px] bg-grey60 rounded-full" />
-        <div className="w-[4px] h-[4px] bg-grey60 rounded-full" />
-        <div className="w-[4px] h-[4px] bg-grey60 rounded-full" />
+      <div onClick={toggleDropdown} className="group relative z-[1000] cursor-pointer flex flex-col gap-0.5 px-4 -mr-4">
+        <div className="w-[4px] h-[4px] bg-grey40 group-hover:bg-grey60 rounded-full" />
+        <div className="w-[4px] h-[4px] bg-grey40 group-hover:bg-grey60 rounded-full" />
+        <div className="w-[4px] h-[4px] bg-grey40 group-hover:bg-grey60 rounded-full" />
       </div>
       <div className={`absolute z-10 top-[100%] mt-2 text-sm right-0 flex flex-col gap-[2px] bg-contrast1 whitespace-nowrap ${isOpen ? 'block' : 'hidden'}`}>
         {options.map((option) => (

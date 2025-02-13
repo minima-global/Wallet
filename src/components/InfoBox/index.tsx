@@ -26,8 +26,8 @@ const InfoBox = ({ title, value, copy, href, linkValue, className }: InfoBoxProp
 
     return (
         <div className={`bg-contrast1 relative w-full py-4 px-5 rounded text-white ${className}`}>
-            <div>{title}</div>
-            {value && !linkValue && <div className="mt-2 text-sm text-grey60">{value}</div>}
+            <div className="text-grey80">{title}</div>
+            {value && !linkValue && <div className="mt-2 text-sm">{value}</div>}
             {value && linkValue && <a href={value} target="_blank" rel="noopener noreferrer" className="mt-2 block text-sm text-grey60 text-orange underline">{value}</a>}
             {copy && (
                 <div onClick={copyToClipboard} className="text-sm text-grey60 absolute top-0 right-0 flex h-full px-6 items-center">

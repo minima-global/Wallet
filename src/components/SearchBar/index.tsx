@@ -4,7 +4,7 @@ const SearchBar = ({ placeholder, value, onChange, className }: { placeholder?: 
     const { t } = useTranslation();
 
     return (
-        <div className={`h-[48px] flex bg-grey10 dark:bg-darkContrast border border-grey40 dark:border-mediumDarkContrast rounded-full flex-1 ${className}`}>
+        <div className={`h-[48px] flex dark:bg-darkContrast border border-grey40 dark:border-mediumDarkContrast rounded-full flex-1 ${className}`}>
             <label className="flex items-center justify-center pl-4" htmlFor="search">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M18.3913 10.6957C18.3913 14.9458 14.9459 18.3913 10.6957 18.3913C6.44546 18.3913 3 14.9458 3 10.6957C3 6.44546 6.44546 3 10.6957 3C14.9459 3 18.3913 6.44546 18.3913 10.6957Z" stroke="#464C4F" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"></path>
