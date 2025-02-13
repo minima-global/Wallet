@@ -1,7 +1,9 @@
-import { ChangeEvent, useState } from 'react'
-import { createFileRoute } from '@tanstack/react-router'
+import { MDS } from '@minima-global/mds';
+import { ChangeEvent, useContext, useState } from 'react'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import Input from '../../components/Input'
 import Button from '../../components/Button';
+import { appContext } from '../../AppContext';
 
 export const Route = createFileRoute('/token-create/')({
   component: Index,
@@ -10,8 +12,11 @@ export const Route = createFileRoute('/token-create/')({
 const Title = "Token create";
 
 function Index() {
+  const { setIsPending, setIsSuccess } = useContext(appContext);
+  const navigate = useNavigate();
+
   const [step, setStep] = useState(1);
-  const [selectedToken, setSelectedToken] = useState("UPLOAD_IMAGE");
+  const [type, setType] = useState("UPLOAD_IMAGE");
   const [webUrl, setWebUrl] = useState("");
   const [tokenName, setTokenName] = useState("Test");
   const [tokenSupply, setTokenSupply] = useState("1");
@@ -105,9 +110,58 @@ function Index() {
     setStep(2);
   }
 
-  const createToken = () => {
-    console.log("createToken");
+  const createToken = async () => {
+    let response;
+
+    const token = {
+      name: tokenName,
+      url: webUrl,
+      ticker: ticker,
+      description: description,
+      webvalidate: webValidationUrl,
+    };
+
+    if (metadata.length > 0) {
+      metadata.forEach((item) => {
+        token[item.key] = item.value;
+      });
+    }
+
+    if (type === "UPLOAD_IMAGE") {
+      response = await MDS.cmd.tokencreate({
+        params: {
+          name: JSON.stringify(token),
+          amount: tokenSupply,
+          decimals: '0',
+          burn: burn,
+        }
+      });
+    } else if (type === "WEB_URL") {
+      response = await MDS.cmd.tokencreate({
+        params: {
+          name: JSON.stringify(token),
+          amount: tokenSupply,
+          decimals: '0',
+          burn: burn,
+        }
+      });
+    }
+
+    if (response.pending) {
+      setIsPending({
+        uid: response.pendinguid as string,
+        callback: () => {
+          navigate({ to: '/' })
+        }
+      })
+    }
+
+    if (response.status) {
+      setIsSuccess(true)
+    }
   }
+
+  const isDisabled = (type === "UPLOAD_IMAGE" && !image) || (type === "WEB_URL" && !webUrl);
 
   return (
     <>
@@ -123,10 +177,10 @@ function Index() {
 
             <form className="flex flex-col gap-6">
               <div>
-                <Dropdown options={OPTIONS} value={selectedToken} onChange={setSelectedToken} />
+                <Dropdown options={OPTIONS} value={type} onChange={setType} />
               </div>
 
-              {selectedToken === "UPLOAD_IMAGE" && (
+              {type === "UPLOAD_IMAGE" && (
                 <label className={`cursor-pointer mt-2 bg-contrast1 py-10 text-grey60 ${!image ? 'hover:bg-contrast1.5' : ''}`}>
                   <div className="flex flex-col items-center gap-4">
                     {!image && (
@@ -164,13 +218,13 @@ function Index() {
                 </label>
               )}
 
-              {selectedToken === "WEB_URL" && (
+              {type === "WEB_URL" && (
                 <Input
                   label="Web URL"
                   placeholder="Enter the web URL of your image"
                   value={webUrl}
                   onChange={setWebUrl}
-                  validation={(value) => /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/.test(value)}
+                  validation={(value) => /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z0-9\u00a1-\uffff][a-z0-9\u00a1-\uffff_-]{0,62})?[a-z0-9\u00a1-\uffff]\.)+(?:[a-z\u00a1-\uffff]{2,}\.?))(?::\d{2,5})?(?:[/?#]\S*)?$/i.test(value)}
                   validationMessage="Please enter a valid URL."
                 />
               )}
@@ -311,7 +365,7 @@ function Index() {
               </div>
 
               <div className="mt-4">
-                <Button onClick={goToReview}>Review</Button>
+                <Button disabled={isDisabled} onClick={goToReview}>Review</Button>
               </div>
             </form>
 
@@ -323,13 +377,18 @@ function Index() {
             <div className="mt-2 mb-6 flex flex-col gap-4">
               <div className="bg-contrast1 p-10 rounded-lg">
                 <div className="mb-5 mx-auto text-center gap-4">
-                  {image && (
+                  {image && type === "UPLOAD_IMAGE" && (
                     <div className="relative w-full h-full mx-auto min-h-[200px] max-w-[200px] border border-contrast2 rounded-md flex items-center justify-center">
                       <img
                         src={URL.createObjectURL(image)}
                         alt="Token preview"
                         className="object-contain"
                       />
+                    </div>
+                  )}
+                  {webUrl && type === "WEB_URL" && (
+                    <div className="relative w-full h-full mx-auto min-h-[200px] max-w-[200px] border border-contrast2 rounded-md flex items-center justify-center">
+                      <img src={webUrl} alt="Token preview" className="object-contain" />
                     </div>
                   )}
                 </div>
@@ -343,7 +402,7 @@ function Index() {
                   ))}
                 </div>
                 <div className="flex flex-col gap-4 -mb-5">
-                  <button onClick={createToken} className="mt-4 w-full bg-orange text-black py-3 px-4 rounded text-sm">
+                  <button disabled={isDisabled} onClick={createToken} className="mt-4 w-full bg-orange text-black py-3 px-4 rounded text-sm">
                     Create
                   </button>
                   <Button onClick={goToCreate} secondary>

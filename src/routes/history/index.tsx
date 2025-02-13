@@ -167,17 +167,36 @@ function Index() {
     const time = now.toISOString().split('T')[1].split('.')[0].replace(/:/g, '_');
     const filename = `minima_${date}_${time}.csv`;
 
-    const headers = ['AMOUNT', 'TYPE', 'DATE', 'SENT_TO_MX_ADDRESS', 'SENT_TO_0X_ADDRESS', 'TXPOWID', 'TIMEMILLI', 'ISBLOCK', 'ISTRANSACTION', 'HASBODY', 'BURN', 'SUPERBLOCK', 'SIZE', 'HEADER', 'BODY', 'DETAILS'];
+    const headers = ['AMOUNT', 'BALANCE_AFTER', 'TYPE', 'DATE', 'SENT_TO_MX_ADDRESS', 'SENT_TO_0X_ADDRESS', 'TXPOWID', 'TIMEMILLI', 'ISBLOCK', 'ISTRANSACTION', 'HASBODY', 'BURN', 'SUPERBLOCK', 'SIZE', 'HEADER', 'BODY', 'DETAILS'];
     const csv = [
       headers,
-      ...history.map((h) => {
+      ...history.filter((row) => {
+        if (query && typeof row.BODY.txn.inputs[0].token === 'string' && row.BODY.txn.inputs[0].token.toLowerCase().includes(query.toLowerCase().trim())) {
+          return true;
+        }
+    
+        if (query && typeof row.BODY.txn.inputs[0].token.name === 'object' && row.BODY.txn.inputs[0].token.name.name.toLowerCase().includes(query.toLowerCase().trim())) {
+          return true;
+        }
+    
+        if (query && row.BODY.txn.inputs[0].tokenid.toLowerCase().includes(query.toLowerCase().trim())) {
+          return true;
+        }
+    
+        if (!query) {
+          return false;
+        }
+
+        return true;
+      }).map((h) => {
+        const BALANCE_AFTER = balanceDifference[h.TXPOWID];
         const DIFFERENCE = h.DETAILS.difference[h.BODY.txn.inputs[0].tokenid];
         const AMOUNT = DIFFERENCE > 0 ? `"${'+' + DIFFERENCE}"` : `"${DIFFERENCE}"`;
         const TYPE = DIFFERENCE > 0 ? 'IN' : 'OUT';
         const DATE = format(new Date(Number(h.TIMEMILLI)), "dd-MM-yyyy HH:mm a");
         const SENT_TO_MX = h.BODY.txn.outputs[0].miniaddress || "N/A";
         const SENT_TO_0X = h.BODY.txn.outputs[0].address || "N/A";
-        return [AMOUNT, TYPE, DATE, `"${SENT_TO_MX}"`, `"${SENT_TO_0X}"`, h.TXPOWID, h.HEADER.timemilli, h.ISBLOCK, h.ISTRANSACTION, h.HASBODY, h.BURN, h.SUPERBLOCK, h.SIZE, escape(h.HEADER), escape(h.BODY), escape(h.DETAILS)];
+        return [AMOUNT, BALANCE_AFTER, TYPE, DATE, `"${SENT_TO_MX}"`, `"${SENT_TO_0X}"`, h.TXPOWID, h.HEADER.timemilli, h.ISBLOCK, h.ISTRANSACTION, h.HASBODY, h.BURN, h.SUPERBLOCK, h.SIZE, escape(h.HEADER), escape(h.BODY), escape(h.DETAILS)];
       })
     ];
 

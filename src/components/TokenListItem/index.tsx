@@ -75,7 +75,7 @@ const TokenListItem = ({ balance }: { balance: Balance }) => {
     )
 }
 
-const BalanceAmount = ({ balance, value }: { balance: Balance, value: string }) => {
+export const BalanceAmount = ({ balance, value }: { balance: Balance, value: string }) => {
     const { f } = useFormatAmount();
     const [hasUnconfirmed, setHasUnconfirmed] = useState(false);
     const [showing, setShowing] = useState<1 | 2 | false>(false);

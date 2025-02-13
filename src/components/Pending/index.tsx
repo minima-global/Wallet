@@ -5,14 +5,19 @@ import useTranslation from "../../hooks/useTranslation";
 
 const Pending = () => {
     const { t } = useTranslation();
-    const { isPending, setIsPending, setIsSuccess } = useContext(appContext);
+    const { isPending, setIsPending, setIsDenied, setIsSuccess } = useContext(appContext);
     const navigate = useNavigate();
 
     useEffect(() => {
         const callback = (e: CustomEvent) => {
             if (e.detail.uid && e.detail.uid === isPending?.uid) {
                 setIsPending(null);
-                setIsSuccess(true);
+
+                if (e.detail.accept) {
+                    return setIsSuccess(true);
+                }
+
+                return setIsDenied(true);
             }
         }
 
@@ -25,6 +30,7 @@ const Pending = () => {
 
     const skip = () => {
         setIsPending(null);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
         navigate({ to: '/' });
     }
 

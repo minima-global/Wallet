@@ -3,9 +3,9 @@ import { Link } from "@tanstack/react-router";
 import { renderTokenName } from "../../utils";
 import FullTokenIcon from "../FullTokenIcon";
 import Decimal from "decimal.js";
-import useFormatAmount from "../../hooks/useFormatAmount";
+import { BalanceAmount } from "../TokenListItem";
+
 const TokenCard = ({ balance }: { balance: Balance }) => {
-    const { f } = useFormatAmount();
     const confirmed = new Decimal(balance.confirmed).add(balance.unconfirmed).abs().toString();
 
     return (
@@ -17,7 +17,9 @@ const TokenCard = ({ balance }: { balance: Balance }) => {
                 <div className="grid grid-cols-2">
                     <div className="col-span-2">
                         <h5 className="text-white capitalize">{renderTokenName(balance)}</h5>
-                        <p className="text-grey60 text-sm truncate" >{f(confirmed)}</p>
+                        <p className="text-grey60 text-sm truncate">
+                            <BalanceAmount balance={balance} value={confirmed} />
+                        </p>
                     </div>
                 </div>
             </div>

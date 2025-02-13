@@ -33,6 +33,8 @@ export const appContext = createContext<{
   activeTab: 'main' | 'hidden',
   setActiveTab: React.Dispatch<React.SetStateAction<'main' | 'hidden'>>,
   addresses: string[],
+  isDenied: boolean,
+  setIsDenied: React.Dispatch<React.SetStateAction<boolean>>,
 }>({
   loaded: false,
   currencyType: '1',
@@ -64,6 +66,8 @@ export const appContext = createContext<{
   activeTab: 'main',
   setActiveTab: () => { },
   addresses: [],
+  isDenied: null,
+  setIsDenied: () => { },
 })
 
 const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
@@ -76,6 +80,7 @@ const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const [hamburgerOpen, setHamburgerOpen] = useState(false);
   const [isPending, setIsPending] = useState<{ uid: string, callback: () => void } | null>(null);
   const [isSuccess, setIsSuccess] = useState<{ callback: () => void } | true | null>(null);
+  const [isDenied, setIsDenied] = useState<boolean>(false);
 
   const [currencyType, setCurrencyType] = useState<string>('1');
   const [balance, setBalance] = useState<Balance[]>([]);
@@ -254,6 +259,8 @@ const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
     addresses,
     activeMonth,
     setActiveMonth,
+    isDenied,
+    setIsDenied,
   }
 
   return <appContext.Provider value={context}>{children}</appContext.Provider>

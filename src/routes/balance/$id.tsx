@@ -28,10 +28,6 @@ function RouteComponent() {
 
     const token = balance.find((b) => b.tokenid === id);
 
-    const goBackToPreviousPage = () => {
-        navigate({ to: '/' });
-    }
-
     const toggleBurnModal = () => {
         setShowBurnModal(!showBurnModal);
     }
@@ -85,6 +81,16 @@ function RouteComponent() {
         }
     }
 
+    const normalFields = ['name', 'url', 'description', 'external_url', 'webvalidate', 'ticker', 'owner'];
+    const hasMetadata = typeof token?.token === 'object' && token.token && Object.keys(token.token).some(key => !normalFields.includes(key));
+    const metadata = hasMetadata
+      ? Object.entries(token.token)
+          .filter(([key]) => !normalFields.includes(key))
+          .map(([key, value]) => ({ key, value }))
+      : [];
+
+    console.log(metadata);
+
     return (
         <div>
             <div className={`${showBurnModal ? 'opacity-100' : 'pointer-events-none opacity-0'} transition-opacity duration-100 flex absolute z-50 inset-0 top-0 left-0 justify-center items-center w-screen h-screen`}>
@@ -120,8 +126,8 @@ function RouteComponent() {
                 <div className="z-50 fixed bg-black opacity-90 w-screen h-screen top-0 left-0"></div>
             </div>
 
-            <div className="pb-2">
-                <BackButton onClick={goBackToPreviousPage} />
+            <div className="pb-4">
+                <BackButton />
             </div>
 
             <div className="flex mb-12">
@@ -184,11 +190,18 @@ function RouteComponent() {
                             </div>
                         </li>
 
-
-                        <InfoBox
-                            title={t('description')}
-                            value={typeof token.token === 'object' && token.token.description || t('no_description')}
-                        />
+                        {token && token.tokenid !== '0x00' && (
+                            <InfoBox
+                                title={t('description')}
+                                value={typeof token.token === 'object' && token.token.description || t('no_description')}
+                            />
+                        )}
+                        {token && token.tokenid === '0x00' && (
+                            <InfoBox
+                                title={t('description')}
+                                value={t('this_is_the_native_minima_token')}
+                            />
+                        )}
                         <InfoBox title={t('token_id')} value={token.tokenid} copy />
                         <InfoBox title={t('total_minted')} value={token.total} />
                         <InfoBox title={t('total_coins')} value={token.coins} />
@@ -201,6 +214,9 @@ function RouteComponent() {
                         <InfoBox title={t('sendable')} value={token.sendable} />
                         <InfoBox title={t('confirmed')} value={token.confirmed} />
                         <InfoBox title={t('unconfirmed')} value={token.unconfirmed} />
+                        {metadata.length > 0 && metadata.map((item) => (
+                            <InfoBox title={item.key} value={item.value} className="capitalize" />
+                        ))}
                     </ul>
                 </div>
             )}

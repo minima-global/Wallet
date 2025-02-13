@@ -1,7 +1,10 @@
-import { useState } from 'react'
-import { createFileRoute } from '@tanstack/react-router'
+import { useContext, useState } from 'react'
+import { MDS } from '@minima-global/mds';
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import Input from '../../components/Input'
 import Button from '../../components/Button'
+import Tabs from '../../components/Tabs'
+import { appContext } from '../../AppContext';
 
 export const Route = createFileRoute('/nfts/create')({
   component: Index,
@@ -10,6 +13,9 @@ export const Route = createFileRoute('/nfts/create')({
 const Title = 'NFTs'
 
 function Index() {
+  const navigate = useNavigate();
+  const { setIsPending, setIsSuccess } = useContext(appContext);
+
   const [step, setStep] = useState(1);
   const [webUrl, setWebUrl] = useState("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRyd_3tNcIge2aIjsnJNa6leacGWID5_RkB6A&s");
   const [tokenName, setTokenName] = useState("Test");
@@ -43,8 +49,45 @@ function Index() {
     setStep(2);
   }
 
-  const createToken = () => {
-    console.log("createToken");
+  const createToken = async () => {
+    const token = {
+      name: tokenName,
+      url: webUrl,
+      description: description,
+      webvalidate: webValidationUrl,
+      owner: creatorsName,
+      external_url: externalUrl,
+    };
+
+    if (metadata.length > 0) {
+      metadata.forEach((item) => {
+        token[item.key] = item.value;
+      });
+    }
+
+    const params = {
+      name: JSON.stringify(token),
+      amount: tokenSupply,
+      decimals: '0',
+      burn,
+    };
+
+    const response = await MDS.cmd.tokencreate({
+      params
+    });
+
+    if (response.pending) {
+      setIsPending({
+        uid: response.pendinguid as string,
+        callback: () => {
+          navigate({ to: '/' })
+        }
+      })
+    }
+
+    if (response.status) {
+      setIsSuccess(true)
+    }
   }
 
   const REVIEW_FIELDS: {
@@ -87,16 +130,40 @@ function Index() {
       })),
     ];
 
+  const TABS = [
+    {
+      key: '/nfts/create',
+      title: 'Create',
+    },
+    {
+      key: '/nfts/my-nfts',
+      title: 'My NFTs',
+    }
+  ]
+
+  const goToPage = (page: string) => {
+    navigate({ to: page });
+  }
+
+  const activeTab = '/nfts/create';
+
   return (
     <>
       <div className="grow flex flex-col mb-20">
         {step === 1 && (
           <div>
             <div className="grid grid-cols-2">
-              <div className="col-span-1">
+              <div className="col-span-2">
                 <h1 className="text-white text-2xl mb-6">{Title}</h1>
               </div>
-              <div className="col-span-1" />
+            </div>
+
+            <div className="mt-2 mb-8">
+              <Tabs
+                tabs={TABS}
+                activeKey={activeTab}
+                onClick={goToPage}
+              />
             </div>
 
             <form className="mt-0 flex flex-col gap-6">

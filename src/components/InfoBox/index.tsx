@@ -6,9 +6,10 @@ type InfoBoxProps = {
     copy?: boolean;
     href?: string;
     linkValue?: boolean;
+    className?: string;
 }
 
-const InfoBox = ({ title, value, copy, href, linkValue }: InfoBoxProps) => {
+const InfoBox = ({ title, value, copy, href, linkValue, className }: InfoBoxProps) => {
     const [copied, setCopied] = useState(false);
 
     const copyToClipboard = () => {
@@ -24,7 +25,7 @@ const InfoBox = ({ title, value, copy, href, linkValue }: InfoBoxProps) => {
     }
 
     return (
-        <div className="bg-contrast1 relative w-full py-4 px-5 rounded text-white">
+        <div className={`bg-contrast1 relative w-full py-4 px-5 rounded text-white ${className}`}>
             <div>{title}</div>
             {value && !linkValue && <div className="mt-2 text-sm text-grey60">{value}</div>}
             {value && linkValue && <a href={value} target="_blank" rel="noopener noreferrer" className="mt-2 block text-sm text-grey60 text-orange underline">{value}</a>}

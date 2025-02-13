@@ -17,8 +17,7 @@ import { Route as SendIndexImport } from './routes/send/index'
 import { Route as ReceiveIndexImport } from './routes/receive/index'
 import { Route as HistoryIndexImport } from './routes/history/index'
 import { Route as CurrencyDisplayIndexImport } from './routes/currency-display/index'
-import { Route as NftsReviewImport } from './routes/nfts/review'
-import { Route as NftsMyImport } from './routes/nfts/my'
+import { Route as NftsMyNftsImport } from './routes/nfts/my-nfts'
 import { Route as NftsCreateImport } from './routes/nfts/create'
 import { Route as HistorySummaryImport } from './routes/history/summary'
 import { Route as BalanceIdImport } from './routes/balance/$id'
@@ -61,15 +60,9 @@ const CurrencyDisplayIndexRoute = CurrencyDisplayIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const NftsReviewRoute = NftsReviewImport.update({
-  id: '/nfts/review',
-  path: '/nfts/review',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const NftsMyRoute = NftsMyImport.update({
-  id: '/nfts/my',
-  path: '/nfts/my',
+const NftsMyNftsRoute = NftsMyNftsImport.update({
+  id: '/nfts/my-nfts',
+  path: '/nfts/my-nfts',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -123,18 +116,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NftsCreateImport
       parentRoute: typeof rootRoute
     }
-    '/nfts/my': {
-      id: '/nfts/my'
-      path: '/nfts/my'
-      fullPath: '/nfts/my'
-      preLoaderRoute: typeof NftsMyImport
-      parentRoute: typeof rootRoute
-    }
-    '/nfts/review': {
-      id: '/nfts/review'
-      path: '/nfts/review'
-      fullPath: '/nfts/review'
-      preLoaderRoute: typeof NftsReviewImport
+    '/nfts/my-nfts': {
+      id: '/nfts/my-nfts'
+      path: '/nfts/my-nfts'
+      fullPath: '/nfts/my-nfts'
+      preLoaderRoute: typeof NftsMyNftsImport
       parentRoute: typeof rootRoute
     }
     '/currency-display/': {
@@ -182,8 +168,7 @@ export interface FileRoutesByFullPath {
   '/balance/$id': typeof BalanceIdRoute
   '/history/summary': typeof HistorySummaryRoute
   '/nfts/create': typeof NftsCreateRoute
-  '/nfts/my': typeof NftsMyRoute
-  '/nfts/review': typeof NftsReviewRoute
+  '/nfts/my-nfts': typeof NftsMyNftsRoute
   '/currency-display': typeof CurrencyDisplayIndexRoute
   '/history': typeof HistoryIndexRoute
   '/receive': typeof ReceiveIndexRoute
@@ -196,8 +181,7 @@ export interface FileRoutesByTo {
   '/balance/$id': typeof BalanceIdRoute
   '/history/summary': typeof HistorySummaryRoute
   '/nfts/create': typeof NftsCreateRoute
-  '/nfts/my': typeof NftsMyRoute
-  '/nfts/review': typeof NftsReviewRoute
+  '/nfts/my-nfts': typeof NftsMyNftsRoute
   '/currency-display': typeof CurrencyDisplayIndexRoute
   '/history': typeof HistoryIndexRoute
   '/receive': typeof ReceiveIndexRoute
@@ -211,8 +195,7 @@ export interface FileRoutesById {
   '/balance/$id': typeof BalanceIdRoute
   '/history/summary': typeof HistorySummaryRoute
   '/nfts/create': typeof NftsCreateRoute
-  '/nfts/my': typeof NftsMyRoute
-  '/nfts/review': typeof NftsReviewRoute
+  '/nfts/my-nfts': typeof NftsMyNftsRoute
   '/currency-display/': typeof CurrencyDisplayIndexRoute
   '/history/': typeof HistoryIndexRoute
   '/receive/': typeof ReceiveIndexRoute
@@ -227,8 +210,7 @@ export interface FileRouteTypes {
     | '/balance/$id'
     | '/history/summary'
     | '/nfts/create'
-    | '/nfts/my'
-    | '/nfts/review'
+    | '/nfts/my-nfts'
     | '/currency-display'
     | '/history'
     | '/receive'
@@ -240,8 +222,7 @@ export interface FileRouteTypes {
     | '/balance/$id'
     | '/history/summary'
     | '/nfts/create'
-    | '/nfts/my'
-    | '/nfts/review'
+    | '/nfts/my-nfts'
     | '/currency-display'
     | '/history'
     | '/receive'
@@ -253,8 +234,7 @@ export interface FileRouteTypes {
     | '/balance/$id'
     | '/history/summary'
     | '/nfts/create'
-    | '/nfts/my'
-    | '/nfts/review'
+    | '/nfts/my-nfts'
     | '/currency-display/'
     | '/history/'
     | '/receive/'
@@ -268,8 +248,7 @@ export interface RootRouteChildren {
   BalanceIdRoute: typeof BalanceIdRoute
   HistorySummaryRoute: typeof HistorySummaryRoute
   NftsCreateRoute: typeof NftsCreateRoute
-  NftsMyRoute: typeof NftsMyRoute
-  NftsReviewRoute: typeof NftsReviewRoute
+  NftsMyNftsRoute: typeof NftsMyNftsRoute
   CurrencyDisplayIndexRoute: typeof CurrencyDisplayIndexRoute
   HistoryIndexRoute: typeof HistoryIndexRoute
   ReceiveIndexRoute: typeof ReceiveIndexRoute
@@ -282,8 +261,7 @@ const rootRouteChildren: RootRouteChildren = {
   BalanceIdRoute: BalanceIdRoute,
   HistorySummaryRoute: HistorySummaryRoute,
   NftsCreateRoute: NftsCreateRoute,
-  NftsMyRoute: NftsMyRoute,
-  NftsReviewRoute: NftsReviewRoute,
+  NftsMyNftsRoute: NftsMyNftsRoute,
   CurrencyDisplayIndexRoute: CurrencyDisplayIndexRoute,
   HistoryIndexRoute: HistoryIndexRoute,
   ReceiveIndexRoute: ReceiveIndexRoute,
@@ -305,8 +283,7 @@ export const routeTree = rootRoute
         "/balance/$id",
         "/history/summary",
         "/nfts/create",
-        "/nfts/my",
-        "/nfts/review",
+        "/nfts/my-nfts",
         "/currency-display/",
         "/history/",
         "/receive/",
@@ -326,11 +303,8 @@ export const routeTree = rootRoute
     "/nfts/create": {
       "filePath": "nfts/create.tsx"
     },
-    "/nfts/my": {
-      "filePath": "nfts/my.tsx"
-    },
-    "/nfts/review": {
-      "filePath": "nfts/review.tsx"
+    "/nfts/my-nfts": {
+      "filePath": "nfts/my-nfts.tsx"
     },
     "/currency-display/": {
       "filePath": "currency-display/index.tsx"

@@ -13,6 +13,7 @@ const Pending = () => {
             isSuccess.callback();
         }
 
+        window.scrollTo({ top: 0, behavior: 'smooth' });
         navigate({ to: '/' });
         setIsSuccess(null);
     }
