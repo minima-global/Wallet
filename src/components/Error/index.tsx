@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { appContext } from "../../AppContext";
 import { useNavigate } from "@tanstack/react-router";
 import useTranslation from "../../hooks/useTranslation";
+import Button from "../Button";
 
 const Error = () => {
     const { t } = useTranslation();
@@ -22,8 +23,10 @@ const Error = () => {
                     <p className="text-grey80 text-base text-sm mb-2 max-w-[90%] mx-auto">
                         {isError?.message}
                     </p>
-                    <div className="space-y-2">
-                        <button onClick={dismiss} className="mt-5 text-grey80 bg-contrast2 hover:opacity-80 text-sm py-4 px-4 w-full rounded-sm">{t('go_to_balance')}</button>
+                    <div className="mt-6 space-y-2">
+                        <Button variant="tertiary" onClick={dismiss}>
+                            {t('go_to_balance')}
+                        </Button>
                     </div>
                 </div>
                 <div className="z-50 fixed bg-black opacity-90 w-screen h-screen top-0 left-0"></div>

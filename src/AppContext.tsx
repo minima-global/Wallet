@@ -94,7 +94,7 @@ const AppProvider: React.FC = ({ children }) => {
   const [hamburgerOpen, setHamburgerOpen] = useState(false);
 
   // MDS action modalss
-  const [isPending, setIsPending] = useState<{ uid: string, callback: () => void } | null>(null);
+  const [isPending, setIsPending] = useState<{ uid: string, callback: () => void } | null>({ uid: '', callback: () => {} });
   const [isSuccess, setIsSuccess] = useState<{ callback: () => void } | true | null>(null);
   const [isError, setIsError] = useState<{ display: boolean, message?: string } | null>(null);
   const [isDenied, setIsDenied] = useState<boolean>(false);

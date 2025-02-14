@@ -2,6 +2,7 @@ import { useContext, useEffect } from "react";
 import { appContext } from "../../AppContext";
 import { useNavigate } from "@tanstack/react-router";
 import useTranslation from "../../hooks/useTranslation";
+import Button from "../Button";
 
 const Pending = () => {
     const { t } = useTranslation();
@@ -45,8 +46,10 @@ const Pending = () => {
                     <img src="./assets/pending.png" alt="pending" className="w-12 h-12 rounded mx-auto mt-4 mb-6" />
                     <h1 className="text-white text-2xl mt-1.5 mb-5 font-bold">{t('pending')}</h1>
                     <p className="text-grey80 text-base text-sm mb-2 max-w-[90%] mx-auto">{t('pending_transaction_message')}</p>
-                    <div className="space-y-2">
-                        <button onClick={skip} className="mt-5 text-grey80 bg-contrast2 hover:opacity-80 text-sm py-4 px-4 w-full rounded-sm">{t('go_to_balance')}</button>
+                    <div className="mt-6 space-y-2">
+                        <Button variant="tertiary" onClick={skip}>
+                            {t('go_to_balance')}
+                        </Button>
                     </div>
                 </div>
                 <div className="z-50 fixed bg-black opacity-90 w-screen h-screen top-0 left-0"></div>

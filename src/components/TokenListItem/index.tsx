@@ -9,6 +9,7 @@ import { renderTokenName } from "../../utils";
 import { useEffect, useState } from "react";
 import Decimal from "decimal.js";
 import Truncate from "../Truncate";
+import Button from "../Button";
 
 const TokenListItem = ({ balance }: { balance: Balance }) => {
     const { t } = useTranslation();
@@ -138,8 +139,10 @@ const BalanceInfoModal = ({ display, dismiss }: { display: boolean, dismiss: () 
                         </p>
                     </div>
                 </div>
-                <div className="space-y-2">
-                    <button onClick={dismiss} className="mt-5 text-grey80 bg-contrast2 hover:opacity-90 text-sm py-4 px-4 w-full rounded-sm">{t('close')}</button>
+                <div className="mt-6 space-y-2">
+                    <Button variant="tertiary" onClick={dismiss}>
+                        {t('close')}
+                    </Button>
                 </div>
             </div>
             <div className="z-50 fixed bg-black opacity-90 w-screen h-screen top-0 left-0"></div>

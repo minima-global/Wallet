@@ -8,6 +8,7 @@ import TokenAuthenticity from '../../components/TokenAuthenticity'
 import { renderTokenName } from '../../utils'
 import { MDS } from '@minima-global/mds'
 import useTranslation from '../../hooks/useTranslation'
+import Button from '../../components/Button'
 
 export const Route = createFileRoute('/balance/$id')({
     component: RouteComponent,
@@ -66,7 +67,9 @@ function RouteComponent() {
     }
 
     const toggleHideToken = async () => {
-        try {
+        setShowHideTokenModal(false);
+
+        setTimeout(() => {
             if (token?.tokenid) {
                 if (isHidden) {
                     setHiddenTokens(hiddenTokens.filter((tokenId) => tokenId !== token.tokenid));
@@ -74,11 +77,7 @@ function RouteComponent() {
                     setHiddenTokens([...hiddenTokens, token.tokenid]);
                 }
             }
-
-            setShowHideTokenModal(false);
-        } catch (error) {
-            console.error(error);
-        }
+        }, 100);
     }
 
     const normalFields = ['name', 'url', 'description', 'external_url', 'webvalidate', 'ticker', 'owner'];
@@ -95,9 +94,13 @@ function RouteComponent() {
                 <div className={`bg-contrast1 mb-8 fixed z-[60] rounded-lg w-[440px] text-center text-white p-5 transform transition-all duration-200 ${showBurnModal ? 'translate-y-[0%] opacity-100' : 'translate-y-[4px] opacity-0'}`}>
                     <h1 className="text-white text-2xl mt-1.5 mb-5 font-bold">{t('burn_token')}</h1>
                     <p className="text-grey80 text-base text-sm mb-2 max-w-[80%] mx-auto">{t('are_you_sure_you_want_to_burn_this_token_this_action_cannot_be_reversed')}</p>
-                    <div className="space-y-2">
-                        <button onClick={confirmBurn} className="bg-orange hover:bg-lighterOrange text-black text-sm py-2.5 px-4 w-full mt-6 rounded-sm">{t('confirm')}</button>
-                        <button onClick={toggleBurnModal} className="text-grey80 bg-contrast2 hover:opacity-80 text-sm py-2.5 px-4 w-full rounded-sm">{t('close')}</button>
+                    <div className="mt-6 space-y-2">
+                        <Button onClick={confirmBurn}>
+                            {t('confirm')}
+                        </Button>
+                        <Button variant="tertiary" onClick={toggleBurnModal}>
+                            {t('close')}
+                        </Button>
                     </div>
                 </div>
                 <div className="z-50 fixed bg-black opacity-90 w-screen h-screen top-0 left-0"></div>
@@ -116,9 +119,13 @@ function RouteComponent() {
                             <p className="text-grey80 text-base text-sm mb-2 max-w-[80%] mx-auto">{t('are_you_sure_you_want_to_hide_this_token')}</p>
                         </>
                     )}
-                    <div className="space-y-2">
-                        <button onClick={toggleHideToken} className="bg-orange hover:bg-lighterOrange text-black text-sm py-2.5 px-4 w-full mt-6 rounded-sm">{t('confirm')}</button>
-                        <button onClick={toggleHideTokenModal} className="text-grey80 bg-contrast2 hover:opacity-80 text-sm py-2.5 px-4 w-full rounded-sm">{t('close')}</button>
+                    <div className="mt-6 space-y-2">
+                        <Button onClick={toggleHideToken}>
+                            {t('confirm')}
+                        </Button>
+                        <Button variant="tertiary" onClick={toggleHideTokenModal}>
+                            {t('close')}
+                        </Button>
                     </div>
                 </div>
                 <div className="z-50 fixed bg-black opacity-90 w-screen h-screen top-0 left-0"></div>
