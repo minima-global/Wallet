@@ -37,6 +37,8 @@ export const appContext = createContext<{
   setIsDenied: React.Dispatch<React.SetStateAction<boolean>>,
   favourites: string[],
   setFavourites: React.Dispatch<React.SetStateAction<string[]>>,
+  isError: { display: boolean, message?: string } | null,
+  setIsError: React.Dispatch<React.SetStateAction<{ display: boolean, message?: string } | null>>,
 }>({
   loaded: false,
   currencyType: '1',
@@ -72,9 +74,11 @@ export const appContext = createContext<{
   setIsDenied: () => { },
   favourites: [],
   setFavourites: () => { },
+  isError: null,
+  setIsError: () => { },
 })
 
-const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
+const AppProvider: React.FC = ({ children }) => {
   const initialised = useRef(false);
   const [loaded, setLoaded] = useState(false);
   const [gridMode, setGridMode] = useState<'list' | 'grid'>('list');
@@ -82,8 +86,11 @@ const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const [addresses, setAddresses] = useState<string[]>([]);
 
   const [hamburgerOpen, setHamburgerOpen] = useState(false);
+
+  // MDS action modalss
   const [isPending, setIsPending] = useState<{ uid: string, callback: () => void } | null>(null);
   const [isSuccess, setIsSuccess] = useState<{ callback: () => void } | true | null>(null);
+  const [isError, setIsError] = useState<string | null>(null);
   const [isDenied, setIsDenied] = useState<boolean>(false);
 
   const [currencyType, setCurrencyType] = useState<string>('1');
@@ -172,6 +179,7 @@ const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
         }
 
         if (msg.event === 'MDS_PENDING') {
+          console.log(msg);
           window.dispatchEvent(new CustomEvent('MDS_PENDING', { detail: msg.data }));
         }
 
@@ -283,6 +291,8 @@ const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
     setIsDenied,
     favourites,
     setFavourites,
+    isError,
+    setIsError,
   }
 
   return <appContext.Provider value={context}>{children}</appContext.Provider>

@@ -19,7 +19,7 @@ const memoryHistory = createMemoryHistory({
 
 const router = createRouter({
   routeTree,
-  history: memoryHistory
+  // history: memoryHistory
 });
 
 declare module "@tanstack/react-router" {
@@ -39,7 +39,6 @@ Decimal.set({ precision: 64 });
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <AppProvider>
-      <Modal />
       <RouterProvider router={router} />
     </AppProvider>
   </React.StrictMode>

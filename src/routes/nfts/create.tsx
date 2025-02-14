@@ -15,7 +15,7 @@ const Title = 'NFTs'
 function Index() {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { setIsPending, setIsSuccess } = useContext(appContext);
+  const { setIsPending, setIsSuccess, setIsError } = useContext(appContext);
 
   const [step, setStep] = useState(1);
   const [webUrl, setWebUrl] = useState("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRyd_3tNcIge2aIjsnJNa6leacGWID5_RkB6A&s");
@@ -87,8 +87,10 @@ function Index() {
     }
 
     if (response.status) {
-      setIsSuccess(true)
+      return setIsSuccess(true)
     }
+
+    return setIsError({ display: true, message: response.error || "An unknown error occurred, please try again later." });
   }
 
   const REVIEW_FIELDS: {

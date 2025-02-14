@@ -212,7 +212,7 @@ function Index() {
               <div className="col-span-2 flex items-center justify-end">
                 <svg className={`-ml-2 fill-[#91919D] hover:fill-white transition-all transition-100 ${showAltAddresses ? 'rotate-90' : ''}`} width="7" height="10" viewBox="0 0 7 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.875 5L0.9375 1.0625L2 0L7 5L2 10L0.9375 8.9375L4.875 5Z" fill="#currentColor"></path></svg>                </div>
             </div>
-            <div className={`flex flex-col gap-2 p-6 md:p-8 pt-0 ${showAltAddresses ? 'mt-4 md:mt-6 opacity-100' : 'h-0 opacity-0'}`}>
+            <div className={`flex flex-col gap-2 p-6 md:p-8 lg:pt-0 ${showAltAddresses ? 'mt-4 md:mt-6 opacity-100' : 'h-0 opacity-0'}`}>
               <div className="md:mt-1 mb-4">
                 <SearchBar placeholder="Enter an address" value={filterAddressQuery} onChange={(value) => setFilterAddressQuery(value)} className="!bg-black" />
               </div>

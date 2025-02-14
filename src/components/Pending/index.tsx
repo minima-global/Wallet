@@ -5,7 +5,7 @@ import useTranslation from "../../hooks/useTranslation";
 
 const Pending = () => {
     const { t } = useTranslation();
-    const { isPending, setIsPending, setIsDenied, setIsSuccess } = useContext(appContext);
+    const { isPending, setIsPending, setIsDenied, setIsSuccess, setIsError } = useContext(appContext);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -14,7 +14,11 @@ const Pending = () => {
                 setIsPending(null);
 
                 if (e.detail.accept) {
-                    return setIsSuccess(true);
+                    if (e.detail.result.status) {
+                        return setIsSuccess(true);
+                    }
+
+                    return setIsError({ display: true, message: e.detail.result.error || "An unknown error occurred, please try again later." });
                 }
 
                 return setIsDenied(true);

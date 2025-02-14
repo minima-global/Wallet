@@ -21,7 +21,7 @@ export const Route = createFileRoute('/send/')({
 function Index() {
     const { t } = useTranslation()
     const navigate = useNavigate()
-    const { balance, setIsPending, setIsSuccess } = useContext(appContext);
+    const { balance, setIsPending, setIsSuccess, setIsError } = useContext(appContext);
     const [step, setStep] = useState<number>(1);
     const [selectedTokenId, setSelectedTokenId] = useState<string>('0x00')
     const selectedToken = balance.find(
@@ -57,6 +57,8 @@ function Index() {
             }
         })
 
+        console.log(response);
+
         if (response.pending) {
             setIsPending({
                 uid: response.pendinguid as string,
@@ -69,6 +71,8 @@ function Index() {
         if (response.status) {
             setIsSuccess(true)
         }
+
+        return setIsError({ display: true, message: response.error || "An unknown error occurred, please try again later." });
     }
 
     const isMaxAmount = (value: string) => {
@@ -125,7 +129,7 @@ function Index() {
                             placeholder={t('enter_recipient_address')}
                             value={recipient}
                             onChange={(value) => setRecipient(value)}
-                            validation="^(0x|Mx)[0-9a-zA-Z]*$"
+                            validation="^(0x|Mx|0X|MX)[0-9a-zA-Z]*$"
                             validationMessage={t('please_enter_a_valid_address')}
                         />
                         <Input

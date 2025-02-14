@@ -16,7 +16,7 @@ const Title = "Token create";
 function Index() {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { setIsPending, setIsSuccess } = useContext(appContext);
+  const { setIsPending, setIsSuccess, setIsError } = useContext(appContext);
   const { getImage } = useGetSuitableImage();
 
   const [step, setStep] = useState(1);
@@ -189,8 +189,10 @@ function Index() {
     }
 
     if (response.status) {
-      setIsSuccess(true)
+      return setIsSuccess(true)
     }
+
+    return setIsError({ display: true, message: response.error || "An unknown error occurred, please try again later." });
   }
 
   const createSimpleToken = async () => {

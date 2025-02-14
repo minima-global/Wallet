@@ -89,7 +89,8 @@
         "simple": "Simple",
         "custom": "Custom",
         "token_name": "Token name",
-        "total_supply": "Total supply"
+        "total_supply": "Total supply",
+        "download": "Download"
     },
     "zh": {
         "balance": "余额",
