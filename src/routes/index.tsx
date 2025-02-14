@@ -177,7 +177,7 @@ function Index() {
               Filter & sort
             </div>
           </div>
-          <div className="hidden lg:flex items-center gap-6 mt-0.5">
+          <div className="hidden lg:flex items-center gap-6 mt-1">
             <Sort title="Sort" selected={sort} options={sortOptions} onClick={(option) => setSort(option as 'A-Z' | 'Z-A' | 'Lowest' | 'Highest')} />
             <Sort title="Filter" selected={filter} options={filterOptions} onClick={(option) => setFilter(option as 'all' | 'simple' | 'nfts' | 'custom')} />
           </div>
