@@ -31,9 +31,9 @@ const TokenCard = ({ balance, showFavourite = false }: { balance: Balance, showF
                 <div className="flex">
                     <div className="grow">
                         <h5 className="text-white capitalize">{renderTokenName(balance)}</h5>
-                        <p className="text-grey60 text-sm truncate">
+                        <div className="text-grey60 text-sm truncate">
                             <BalanceAmount balance={balance} value={confirmed} />
-                        </p>
+                        </div>
                     </div>
                     {showFavourite && (
                         <div className="flex items-center gap-2 pr-1">

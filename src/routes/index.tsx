@@ -16,7 +16,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const { balance, fetchBalance, hiddenTokens, activeTab, setActiveTab, gridMode, setGridMode } = useContext(appContext);
+  const { loaded, balance, fetchBalance, hiddenTokens, activeTab, setActiveTab, gridMode, setGridMode } = useContext(appContext);
   const { t } = useTranslation();
   const [query, setQuery] = useState('');
   const [sort, setSort] = useState<'A-Z' | 'Z-A' | 'Lowest' | 'Highest'>('A-Z');
@@ -196,7 +196,7 @@ function Index() {
         </div>
       </div>
 
-      {gridMode === 'list' && (
+      {loaded &&gridMode === 'list' && (
         <ul className="select-none flex flex-col gap-4 mb-20">
           {filteredBalance.length === 0 && (
             <div className="w-full flex items-center bg-contrast1 opacity-80 p-3 px-4 text-sm rounded">
@@ -209,7 +209,7 @@ function Index() {
         </ul>
       )}
 
-      {gridMode === 'grid' && (
+      {loaded && gridMode === 'grid' && (
         <div className="mb-10">
           <div className="grid grid-cols-12 gap-4">
             {filteredBalance.length === 0 && (

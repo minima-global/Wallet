@@ -32,7 +32,7 @@
         "validation_report": "Validation report",
         "belongs_to_this_node": "Belongs to this node",
         "simple_address": "Simple address",
-        "validating": "Validating",
+        "validated": "Validated",
         "0x_address": "0x address",
         "mx_address": "Mx address",
         "back": "Back",
@@ -83,7 +83,13 @@
         "october": "October",
         "november": "November",
         "december": "December",
-        "go_back": "Go back"
+        "go_back": "Go back",
+        "_token_create_page": "_",
+        "token_create": "Token create",
+        "simple": "Simple",
+        "custom": "Custom",
+        "token_name": "Token name",
+        "total_supply": "Total supply"
     },
     "zh": {
         "balance": "余额",

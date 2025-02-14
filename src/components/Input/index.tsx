@@ -15,9 +15,11 @@ interface InputProps {
     required?: boolean;
     className?: string;
     clearable?: boolean;
+    readOnly?: boolean;
+    copyValueOverride?: string;
 }
 
-const Input: React.FC<InputProps> = ({ label, optionalLabel, placeholder, value, onChange, required = false, info, inverse, validation, validationMessage, copy, className = '', clearable = false }) => {
+const Input: React.FC<InputProps> = ({ label, optionalLabel, placeholder, value, onChange, required = false, info, inverse, validation, validationMessage, copy, className = '', clearable = false, readOnly = false, copyValueOverride }) => {
     const { t } = useTranslation();
     const [valid, setValid] = useState<boolean | null>(null);
     const [copied, setCopied] = useState(false);
@@ -39,10 +41,10 @@ const Input: React.FC<InputProps> = ({ label, optionalLabel, placeholder, value,
     }
 
     const copyToClipboard = () => {
-        if (copy && value) {
+        if (copy && (value || copyValueOverride)) {
             setCopied(true);
 
-            navigator.clipboard.writeText(value);
+            navigator.clipboard.writeText(copyValueOverride || value);
 
             setTimeout(() => {
                 setCopied(false);
@@ -62,7 +64,7 @@ const Input: React.FC<InputProps> = ({ label, optionalLabel, placeholder, value,
             </div>
             <div className={`px-4 py-3.5 rounded border border-transparent ${validation && valid === false ? "!border-red" : ""} ${inverse ? 'bg-contrast2' : 'bg-contrast1'}`}>
                 <div className="flex relative">
-                    <input required={required} name="amount" onBlur={handleOnBlur} placeholder={placeholder} className="text-sm bg-transparent w-full placeholder-grey60 appearance-none outline-none" value={value} onChange={(e) => onChange?.(e.target.value)} />
+                    <input readOnly={readOnly} required={required} name="amount" onBlur={handleOnBlur} placeholder={placeholder} className={`text-sm bg-transparent w-full placeholder-grey60 appearance-none outline-none ${copy || clearable ? "pr-6" : ""}`} value={value} onChange={(e) => onChange?.(e.target.value)} />
                     {info &&
                         <div className="relative group z-[30]">
                             <div className="text-sm text-grey60">
@@ -74,8 +76,8 @@ const Input: React.FC<InputProps> = ({ label, optionalLabel, placeholder, value,
                         </div>
                     }
                     {clearable && value && (
-                        <button onClick={handleClear} className="text-sm text-grey60 absolute top-0 right-0 flex h-full items-center z-10">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4 cursor-pointer stroke-grey80 hover:stroke-white">
+                        <button onClick={handleClear} className="text-sm text-white hover:text-grey80 absolute top-0 right-0 flex h-full items-center z-10">
+                            <svg className="h-4 w-4 cursor-pointer" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                                 <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
                             </svg>
                         </button>

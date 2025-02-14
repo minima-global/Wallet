@@ -18,9 +18,9 @@ const TokenListItem = ({ balance }: { balance: Balance }) => {
         setShowInfo(!showInfo);
     }
 
-    const locked = new Decimal(balance.confirmed).minus(balance.sendable).abs().toString();
-    const confirmed = new Decimal(balance.confirmed).add(balance.unconfirmed).abs().toString();
-    const sendable = new Decimal(balance.sendable).add(balance.unconfirmed).abs().toString();
+    const locked = new Decimal(balance.confirmed).minus(balance.sendable).toString();
+    const confirmed = new Decimal(balance.confirmed).add(balance.unconfirmed).toString();
+    const sendable = new Decimal(balance.sendable).add(balance.unconfirmed).toString();
 
     return (
         <li>

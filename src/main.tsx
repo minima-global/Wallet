@@ -1,6 +1,4 @@
 import Decimal from "decimal.js"
-Decimal.config({ precision: 44 });
-
 import { MDS } from "@minima-global/mds"
 import {
   createRouter,
@@ -35,6 +33,8 @@ if (import.meta.env.DEV) {
   MDS.DEBUG_PORT = Number(import.meta.env.VITE_DEBUG_MDS_PORT)
   MDS.DEBUG_MINIDAPPID = import.meta.env.VITE_DEBUG_SESSION_ID
 }
+
+Decimal.set({ precision: 64 });
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

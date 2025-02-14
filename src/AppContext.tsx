@@ -116,7 +116,7 @@ const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 
   useEffect(() => {
     if (!initialised.current) {
-      initialised.current = true
+      initialised.current = true;
 
       MDS.init(async (msg) => {
         if (msg.event === MinimaEvents.INITED) {

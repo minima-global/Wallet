@@ -286,8 +286,13 @@ function Index() {
         <RefreshButton onClick={() => getHistory(order)} />
       </div>
 
-      <div className="flex gap-2.5">
-        <Timeline months={uniqueMonths} activeMonth={activeMonth} setActiveMonth={setActiveMonth} />
+      <div className="flex">
+        <div className="flex md:hidden w-full gap-2.5">
+          <Timeline containScroll={false} months={uniqueMonths} activeMonth={activeMonth} setActiveMonth={setActiveMonth} />
+        </div>
+        <div className="hidden md:flex w-full gap-2.5">
+          <Timeline containScroll={true} months={uniqueMonths} activeMonth={activeMonth} setActiveMonth={setActiveMonth} />
+        </div>
       </div>
 
       <div className="mt-8 flex flex-col gap-4 mb-20">
