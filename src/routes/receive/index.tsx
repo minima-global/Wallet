@@ -323,7 +323,7 @@ const EditAddressName = ({ display, address, existingName, dismiss }: { display:
   return (
     <div className={`${display ? 'opacity-100' : 'pointer-events-none opacity-0'} delay-100 transition-opacity duration-100 flex absolute z-50 inset-0 top-0 left-0 justify-center items-center w-screen h-screen`}>
       <div className={`bg-contrast1 mb-4 fixed z-[60] rounded-lg w-[440px] text-center text-white p-5 transform transition-all duration-200 ${display ? 'translate-y-[0%] opacity-100' : 'translate-y-[4px] opacity-0'}`}>
-        <h1 className="text-white text-2xl mt-2 mb-6 font-bold">
+        <h1 className="text-white text-2xl mt-2 mb-5 font-bold">
           Set Address Name
         </h1>
         <div className="mb-6">
