@@ -38,7 +38,7 @@ const InfoBox = ({ title, value, copy, collapsable, linkValue, className, childr
                 {value && !linkValue && <div className="mt-2 text-sm">{value}</div>}
                 {value && linkValue && <a href={value} target="_blank" rel="noopener noreferrer" className="mt-2 block text-sm text-grey60 text-orange underline">{value}</a>}
                 {copy && (
-                    <div onClick={copyToClipboard} className="text-sm text-grey60 absolute top-0 right-0 flex h-full px-6 items-center">
+                    <div onClick={copyToClipboard} className="text-sm text-grey60 absolute top-0 right-0 flex h-full px-3 items-center">
                         <div>
                             {!copied && (
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5 cursor-pointer stroke-grey hover:stroke-white"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>

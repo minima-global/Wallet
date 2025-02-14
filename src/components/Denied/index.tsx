@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { appContext } from "../../AppContext";
 import useTranslation from "../../hooks/useTranslation";
+import Button from "../Button";
 
 const Pending = () => {
     const { t } = useTranslation();
@@ -23,7 +24,9 @@ const Pending = () => {
                         Your transaction was denied in the Pending MiniDapp.
                     </p>
                     <div className="space-y-2">
-                        <button onClick={confirm} className="mt-5 text-black bg-orange hover:bg-lighterOrange text-sm py-3 px-4 w-full rounded-sm">{t('go_to_balance')}</button>
+                        <Button onClick={confirm} className="mt-5 text-black bg-orange hover:bg-lighterOrange text-sm py-3 px-4 w-full rounded-sm">
+                            {t('go_to_balance')}
+                        </Button>
                     </div>
                 </div>
                 <div className="z-50 fixed bg-black opacity-90 w-screen h-screen top-0 left-0"></div>

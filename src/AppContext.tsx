@@ -14,6 +14,7 @@ export const appContext = createContext<{
   setLanguage: (language: string) => void,
   fetchBalance: () => void,
   address: string,
+  setAddress: (address: string) => void,
   hamburgerOpen: boolean,
   setHamburgerOpen: React.Dispatch<React.SetStateAction<boolean>>,
   isPending: { uid: string, callback: () => void } | null,
@@ -39,6 +40,8 @@ export const appContext = createContext<{
   setFavourites: React.Dispatch<React.SetStateAction<string[]>>,
   isError: { display: boolean, message?: string } | null,
   setIsError: React.Dispatch<React.SetStateAction<{ display: boolean, message?: string } | null>>,
+  addressNames: Record<string, string>,
+  setAddressNames: React.Dispatch<React.SetStateAction<Record<string, string>>>,
 }>({
   loaded: false,
   currencyType: '1',
@@ -70,12 +73,15 @@ export const appContext = createContext<{
   activeTab: 'main',
   setActiveTab: () => { },
   addresses: [],
+  setAddress: () => { },
   isDenied: false,
   setIsDenied: () => { },
   favourites: [],
   setFavourites: () => { },
   isError: null,
   setIsError: () => { },
+  addressNames: {},
+  setAddressNames: () => { },
 })
 
 const AppProvider: React.FC = ({ children }) => {
@@ -90,7 +96,7 @@ const AppProvider: React.FC = ({ children }) => {
   // MDS action modalss
   const [isPending, setIsPending] = useState<{ uid: string, callback: () => void } | null>(null);
   const [isSuccess, setIsSuccess] = useState<{ callback: () => void } | true | null>(null);
-  const [isError, setIsError] = useState<string | null>(null);
+  const [isError, setIsError] = useState<{ display: boolean, message?: string } | null>(null);
   const [isDenied, setIsDenied] = useState<boolean>(false);
 
   const [currencyType, setCurrencyType] = useState<string>('1');
@@ -104,6 +110,7 @@ const AppProvider: React.FC = ({ children }) => {
   const [history, setHistory] = useState<any[] | null>(null);
   const [activeMonth, setActiveMonth] = useState<string | null>(null);
 
+  const [addressNames, setAddressNames] = useState<Record<string, string>>({});
   const [hiddenTokens, setHiddenTokens] = useState<string[]>([]);
   const [favourites, setFavourites] = useState<string[]>([]);
 
@@ -146,6 +153,14 @@ const AppProvider: React.FC = ({ children }) => {
               setFavourites(JSON.parse(keypair.value));
             } else {
               MDS.keypair.set('favourites', '[]');
+            }
+          });
+
+          MDS.keypair.get('address_names').then((keypair) => {
+            if (keypair.value) {
+              setAddressNames(JSON.parse(keypair.value));
+            } else {
+              MDS.keypair.set('address_names', '{}');
             }
           });
 
@@ -212,6 +227,12 @@ const AppProvider: React.FC = ({ children }) => {
   }, [favourites]);
 
   useEffect(() => {
+    if (Object.keys(addressNames).length > 0) {
+      MDS.keypair.set('address_names', JSON.stringify(addressNames));
+    }
+  }, [addressNames]);
+
+  useEffect(() => {
     const currencyType = localStorage.getItem('minima_currency_type');
 
     if (currencyType) {
@@ -268,6 +289,7 @@ const AppProvider: React.FC = ({ children }) => {
     setLanguage,
     fetchBalance,
     address,
+    setAddress,
     hamburgerOpen,
     setHamburgerOpen,
     isPending,
@@ -293,6 +315,8 @@ const AppProvider: React.FC = ({ children }) => {
     setFavourites,
     isError,
     setIsError,
+    addressNames,
+    setAddressNames,
   }
 
   return <appContext.Provider value={context}>{children}</appContext.Provider>

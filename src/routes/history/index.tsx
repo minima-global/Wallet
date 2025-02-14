@@ -504,8 +504,6 @@ const Summary = ({ txpow, back }: { txpow: any, back: () => void }) => {
     URL.revokeObjectURL(url);
   }
 
-  console.log(txpow)
-
   return (
     <div className="mb-12">
       <div className="mb-6">
@@ -549,22 +547,36 @@ const Summary = ({ txpow, back }: { txpow: any, back: () => void }) => {
         <InfoBox title="Date" value={format(new Date(Number(txpow?.HEADER.timemilli)), 'dd MMMM yyyy @ hh:mm aa')} />
         <InfoBox title="Burn" value={txpow?.BURN || "N/A"} />
         <InfoBox title="Inputs" collapsable>
-          <div className="space-y-2">
+          <div className="space-y-2 mb-2 text-sm">
             {txpow?.BODY?.txn.inputs.map((row: any, index) => (
               <div key={row.tokenid}>
-                <div className="bg-contrast2 rounded-t py-2 px-3 text-sm">
+                <div className="bg-contrast3 rounded py-3 px-4 text-sm mb-1">
                   Input #{index + 1}
                 </div>
-                <div className="bg-contrast1.5 rounded-b py-3 px-4">
-                  <div>
-                    <div className="text-sm">
-                      <p>Token: {renderTokenName(row)}</p>
-                      <p>Amount: {f(row.amount)}</p>
-                      <p>Coin ID: {row.coinid}</p>
-                      <p>Token ID: {row.tokenid}</p>
-                      <p>Spent: {row.spent ? "True" : "False"}</p>
-                      <p>Store State: {row.storestate ? "True" : "False"}</p>
-                    </div>
+                <div className="flex flex-col gap-1">
+                  <div className="bg-contrast2 py-3 px-4 rounded">
+                    <div className="text-grey80 mb-1">Token</div>
+                    <div className="text-white">{renderTokenName(row)}</div>
+                  </div>
+                  <div className="bg-contrast2 py-3 px-4 rounded">
+                    <div className="text-grey80 mb-1">Amount</div>
+                    <div className="text-white">{f(row.amount)}</div>
+                  </div>
+                  <div className="bg-contrast2 py-3 px-4 rounded">
+                    <div className="text-grey80 mb-1">Coin ID</div>
+                    <div className="text-white">{row.coinid}</div>
+                  </div>
+                  <div className="bg-contrast2 py-3 px-4 rounded">
+                    <div className="text-grey80 mb-1">Token ID</div>
+                    <div className="text-white">{row.tokenid}</div>
+                  </div>
+                  <div className="bg-contrast2 py-3 px-4 rounded">
+                    <div className="text-grey80 mb-1">Spent</div>
+                    <div className="text-white">{row.spent ? "True" : "False"}</div>
+                  </div>
+                  <div className="bg-contrast2 py-3 px-4 rounded">
+                    <div className="text-grey80 mb-1">Store State</div>
+                    <div className="text-white">{row.storestate ? "True" : "False"}</div>
                   </div>
                 </div>
               </div>
@@ -572,22 +584,36 @@ const Summary = ({ txpow, back }: { txpow: any, back: () => void }) => {
           </div>
         </InfoBox>
         <InfoBox title="Outputs" collapsable>
-          <div className="space-y-2">
+          <div className="space-y-4 mb-2 text-sm">
             {txpow?.BODY?.txn.outputs.map((row: any, index) => (
               <div key={row.tokenid}>
-                <div className="bg-contrast2 rounded-t py-2 px-3 text-sm">
+                <div className="bg-contrast3 rounded py-3 px-4 text-sm mb-1">
                   Input #{index + 1}
                 </div>
-                <div className="bg-contrast1.5 rounded-b py-3 px-4">
-                  <div>
-                    <div className="text-sm">
-                      <p>Token: {renderTokenName(row)}</p>
-                      <p>Amount: {f(row.amount)}</p>
-                      <p>Coin ID: {row.coinid}</p>
-                      <p>Token ID: {row.tokenid}</p>
-                      <p>Spent: {row.spent ? "True" : "False"}</p>
-                      <p>Store State: {row.storestate ? "True" : "False"}</p>
-                    </div>
+                <div className="flex flex-col gap-1">
+                  <div className="bg-contrast2 py-3 px-4 rounded">
+                    <div className="text-grey80 mb-1">Token</div>
+                    <div className="text-white">{renderTokenName(row)}</div>
+                  </div>
+                  <div className="bg-contrast2 py-3 px-4 rounded">
+                    <div className="text-grey80 mb-1">Amount</div>
+                    <div className="text-white">{f(row.amount)}</div>
+                  </div>
+                  <div className="bg-contrast2 py-3 px-4 rounded">
+                    <div className="text-grey80 mb-1">Coin ID</div>
+                    <div className="text-white">{row.coinid}</div>
+                  </div>
+                  <div className="bg-contrast2 py-3 px-4 rounded">
+                    <div className="text-grey80 mb-1">Token ID</div>
+                    <div className="text-white">{row.tokenid}</div>
+                  </div>
+                  <div className="bg-contrast2 py-3 px-4 rounded">
+                    <div className="text-grey80 mb-1">Spent</div>
+                    <div className="text-white">{row.spent ? "True" : "False"}</div>
+                  </div>
+                  <div className="bg-contrast2 py-3 px-4 rounded">
+                    <div className="text-grey80 mb-1">Store State</div>
+                    <div className="text-white">{row.storestate ? "True" : "False"}</div>
                   </div>
                 </div>
               </div>
@@ -595,8 +621,8 @@ const Summary = ({ txpow, back }: { txpow: any, back: () => void }) => {
           </div>
         </InfoBox>
         <InfoBox title="JSON" collapsable>
-          <div className="bg-contrast1.5 rounded-sm p-2">
-            <pre className="bg-contrast1.5 pr-4 pb-4 text-sm max-h-[300px] rounded-b py-3 px-4 overflow-scroll custom-scrollbar">
+          <div className="bg-contrast2 rounded p-2">
+            <pre className="bg-contrast2 pr-4 pb-4 text-sm max-h-[300px] rounded-b py-3 px-4 overflow-scroll custom-scrollbar">
               {JSON.stringify(txpow, null, 2)}
             </pre>
           </div>

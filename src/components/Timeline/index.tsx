@@ -41,12 +41,12 @@ const Timeline = ({ containScroll = false, months, activeMonth, setActiveMonth }
 
     return (
         <>
-            <button onClick={goToPrevious} disabled={activeMonth === months[0]} className="hidden md:block disabled:text-grey disabled:cursor-not-allowed bg-contrast1 enabled:hover:bg-contrast2 enabled:active:text-black enabled:active:bg-white cursor-pointer py-4 px-5">
+            <button onClick={goToPrevious} disabled={activeMonth === months[0]} className="hidden md:block disabled:text-grey disabled:cursor-not-allowed bg-contrast1 border border-contrast2 enabled:hover:bg-contrast2 enabled:active:text-black enabled:active:bg-white cursor-pointer py-4 px-5">
                 <svg width="8" height="10" viewBox="0 0 8 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M0.96875 5L5.96875 -4.64434e-08L7.03125 1.0625L3.09375 5L7.03125 8.9375L5.96875 10L0.96875 5Z" fill="currentColor" />
                 </svg>
             </button>
-            <div className="grow min-h-[52px] md:h-full md:min-h-[54px] flex -mx-4 md:mx-0 bg-contrast1 relative md:overflow-hidden">
+            <div className="grow border border-contrast2 min-h-[52px] md:h-full md:min-h-[54px] flex -mx-4 md:mx-0 bg-contrast1 relative md:overflow-hidden">
                 <div className="bg-contrast1">
                     <div className="absolute h-full slide w-full mx-4 md:mx-0 overflow-x-hidden bg-contrast1">
                         <div
@@ -72,7 +72,7 @@ const Timeline = ({ containScroll = false, months, activeMonth, setActiveMonth }
                     </div>
                 </div>
             </div>
-            <button onClick={goToNext} disabled={activeMonth === 'all'} className="hidden md:block disabled:text-grey disabled:cursor-not-allowed bg-contrast1 enabled:hover:bg-contrast2 enabled:active:text-black enabled:active:bg-white cursor-pointer py-4 px-5">
+            <button onClick={goToNext} disabled={activeMonth === 'all'} className="hidden md:block disabled:text-grey disabled:cursor-not-allowed border border-contrast2 bg-contrast1 enabled:hover:bg-contrast2 enabled:active:text-black enabled:active:bg-white cursor-pointer py-4 px-5">
                 <svg width="8" height="10" viewBox="0 0 8 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M7.03125 5L2.03125 10L0.96875 8.9375L4.90625 5L0.96875 1.0625L2.03125 1.26702e-08L7.03125 5Z" fill="currentColor" />
                 </svg>

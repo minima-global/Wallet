@@ -19,7 +19,6 @@ import { Route as HistoryIndexImport } from './routes/history/index'
 import { Route as CurrencyDisplayIndexImport } from './routes/currency-display/index'
 import { Route as NftsMyNftsImport } from './routes/nfts/my-nfts'
 import { Route as NftsCreateImport } from './routes/nfts/create'
-import { Route as HistorySummaryImport } from './routes/history/summary'
 import { Route as BalanceIdImport } from './routes/balance/$id'
 
 // Create/Update Routes
@@ -72,12 +71,6 @@ const NftsCreateRoute = NftsCreateImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const HistorySummaryRoute = HistorySummaryImport.update({
-  id: '/history/summary',
-  path: '/history/summary',
-  getParentRoute: () => rootRoute,
-} as any)
-
 const BalanceIdRoute = BalanceIdImport.update({
   id: '/balance/$id',
   path: '/balance/$id',
@@ -100,13 +93,6 @@ declare module '@tanstack/react-router' {
       path: '/balance/$id'
       fullPath: '/balance/$id'
       preLoaderRoute: typeof BalanceIdImport
-      parentRoute: typeof rootRoute
-    }
-    '/history/summary': {
-      id: '/history/summary'
-      path: '/history/summary'
-      fullPath: '/history/summary'
-      preLoaderRoute: typeof HistorySummaryImport
       parentRoute: typeof rootRoute
     }
     '/nfts/create': {
@@ -166,7 +152,6 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/balance/$id': typeof BalanceIdRoute
-  '/history/summary': typeof HistorySummaryRoute
   '/nfts/create': typeof NftsCreateRoute
   '/nfts/my-nfts': typeof NftsMyNftsRoute
   '/currency-display': typeof CurrencyDisplayIndexRoute
@@ -179,7 +164,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/balance/$id': typeof BalanceIdRoute
-  '/history/summary': typeof HistorySummaryRoute
   '/nfts/create': typeof NftsCreateRoute
   '/nfts/my-nfts': typeof NftsMyNftsRoute
   '/currency-display': typeof CurrencyDisplayIndexRoute
@@ -193,7 +177,6 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/balance/$id': typeof BalanceIdRoute
-  '/history/summary': typeof HistorySummaryRoute
   '/nfts/create': typeof NftsCreateRoute
   '/nfts/my-nfts': typeof NftsMyNftsRoute
   '/currency-display/': typeof CurrencyDisplayIndexRoute
@@ -208,7 +191,6 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/balance/$id'
-    | '/history/summary'
     | '/nfts/create'
     | '/nfts/my-nfts'
     | '/currency-display'
@@ -220,7 +202,6 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/balance/$id'
-    | '/history/summary'
     | '/nfts/create'
     | '/nfts/my-nfts'
     | '/currency-display'
@@ -232,7 +213,6 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/balance/$id'
-    | '/history/summary'
     | '/nfts/create'
     | '/nfts/my-nfts'
     | '/currency-display/'
@@ -246,7 +226,6 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BalanceIdRoute: typeof BalanceIdRoute
-  HistorySummaryRoute: typeof HistorySummaryRoute
   NftsCreateRoute: typeof NftsCreateRoute
   NftsMyNftsRoute: typeof NftsMyNftsRoute
   CurrencyDisplayIndexRoute: typeof CurrencyDisplayIndexRoute
@@ -259,7 +238,6 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BalanceIdRoute: BalanceIdRoute,
-  HistorySummaryRoute: HistorySummaryRoute,
   NftsCreateRoute: NftsCreateRoute,
   NftsMyNftsRoute: NftsMyNftsRoute,
   CurrencyDisplayIndexRoute: CurrencyDisplayIndexRoute,
@@ -281,7 +259,6 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/balance/$id",
-        "/history/summary",
         "/nfts/create",
         "/nfts/my-nfts",
         "/currency-display/",
@@ -296,9 +273,6 @@ export const routeTree = rootRoute
     },
     "/balance/$id": {
       "filePath": "balance/$id.tsx"
-    },
-    "/history/summary": {
-      "filePath": "history/summary.tsx"
     },
     "/nfts/create": {
       "filePath": "nfts/create.tsx"

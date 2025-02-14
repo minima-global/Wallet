@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import Tabs from '../../components/Tabs'
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import QRCode from 'react-qr-code';
 import { CheckAddress, MDS } from '@minima-global/mds';
 import Button from '../../components/Button';
@@ -22,13 +22,14 @@ const VALIDATE_ADDRESS = 'VALIDATE_ADDRESS';
 function Index() {
   const { t } = useTranslation();
   const { s } = useSlice();
-  const { address, addresses } = useContext(appContext);
+  const { address, addresses, setAddress, addressNames } = useContext(appContext);
   const [activeTab, setActiveTab] = useState(YOUR_ADDRESS);
   const [error, setError] = useState<boolean>(false);
   const [result, setResult] = useState<CheckAddress | null>(null);
   const [query, setQuery] = useState('');
   const [filterAddressQuery, setFilterAddressQuery] = useState('');
   const [showAltAddresses, setShowAltAddresses] = useState(false);
+  const [editingAddressName, setEditingAddressName] = useState<string | false>(false);
 
   const TABS = [
     {
@@ -72,6 +73,14 @@ function Index() {
 
   const toggleAltAddresses = () => {
     setShowAltAddresses(!showAltAddresses);
+  }
+
+  const selectAddress = (address: string) => {
+    setAddress(address);
+  }
+
+  const dismissEditAddressName = () => {
+    setEditingAddressName(false);
   }
 
   if (result) {
@@ -165,6 +174,13 @@ function Index() {
 
   return (
     <div className="grow flex flex-col mb-12">
+      <EditAddressName
+        address={address}
+        display={!!editingAddressName}
+        dismiss={dismissEditAddressName}
+        existingName={addressNames[address] || ''}
+      />
+
       <h1 className="text-white text-2xl mb-6">{t("receive")}</h1>
       <div className="mb-6">
         <Tabs activeKey={activeTab} onClick={setActiveTab} tabs={TABS} />
@@ -172,25 +188,24 @@ function Index() {
       {activeTab === YOUR_ADDRESS && (
         <div className="mt-2 mb-6 flex flex-col gap-4">
           <div className="bg-contrast1 p-6 lg:p-8 rounded-lg">
-            <div className="block bg-white w-full h-full md:w-[240px] md:h-[240px] mb-4 md:my-0 mx-auto">
+            <div className="block bg-white w-full h-full md:w-[240px] md:h-[240px] mb-4 md:mt-0 md:mb-4 mx-auto">
               <QRCode value={address} className="p-4 w-full h-full" />
             </div>
 
-            <div className="mb-4">
-              <div className="block md:hidden">
+            <div className="mb-4 space-y-4">
+              <div>
                 <Input
-                  value={s(address)}
+                  value={addressNames[address] || 'Untitled address'}
                   label={t("address_name")}
                   inverse
                   readOnly
-                  copy
-                  copyValueOverride={address}
+                  info={"A custom name for this address."}
+                  action={() => setEditingAddressName(address)}
                 />
               </div>
-              <div className="hidden md:block">
+              <div>
                 <Input
                   value={address}
-                  label={t("address_name")}
                   inverse
                   readOnly
                   copy
@@ -198,9 +213,11 @@ function Index() {
               </div>
             </div>
 
-            <Button onClick={validateFetchedAddress}>
-              {t("validate")}
-            </Button>
+            <div className="flex flex-col gap-2">
+              <Button onClick={validateFetchedAddress}>
+                {t("validate")}
+              </Button>
+            </div>
           </div>
           <div className="bg-contrast1 rounded-lg">
             <div onClick={toggleAltAddresses} className="pt-6 lg:pt-8 px-8 cursor-pointer grid grid-cols-12">
@@ -210,10 +227,10 @@ function Index() {
                 </div>
               </div>
               <div className="col-span-2 flex items-center justify-end">
-                <svg className={`-ml-2 fill-[#91919D] hover:fill-white transition-all transition-100 ${showAltAddresses ? 'rotate-90' : ''}`} width="7" height="10" viewBox="0 0 7 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.875 5L0.9375 1.0625L2 0L7 5L2 10L0.9375 8.9375L4.875 5Z" fill="#currentColor"></path></svg>                </div>
+                <svg className={`-ml-2 fill-[#91919D] hover:fill-white transition-all transition-100 ${showAltAddresses ? '!fill-orange rotate-90' : ''}`} width="7" height="10" viewBox="0 0 7 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.875 5L0.9375 1.0625L2 0L7 5L2 10L0.9375 8.9375L4.875 5Z" fill="#currentColor"></path></svg>                </div>
             </div>
-            <div className={`flex flex-col gap-2 p-6 md:p-8 lg:pt-0 ${showAltAddresses ? 'mt-4 md:mt-6 opacity-100' : 'h-0 opacity-0'}`}>
-              <div className="md:mt-1 mb-4">
+            <div className={`flex flex-col gap-2 px-6 pb-8 ${showAltAddresses ? ' mt-4 md:mt-6 opacity-100' : 'h-0 opacity-0'}`}>
+              <div className="md:mt-1 mb-5">
                 <SearchBar placeholder="Enter an address" value={filterAddressQuery} onChange={(value) => setFilterAddressQuery(value)} className="!bg-black" />
               </div>
               <div className="custom-scrollbar overflow-y-auto max-h-[300px] pr-4 flex flex-col gap-2">
@@ -226,7 +243,7 @@ function Index() {
                   )}
                 {addresses
                   .filter((address) => address.toLowerCase().includes(filterAddressQuery.toLowerCase()))
-                  .map((address) => <AddressRow key={address} address={address} />)}
+                  .map((address) => <AddressRow key={address} address={address} selectAddress={selectAddress} />)}
               </div>
             </div>
           </div>
@@ -258,37 +275,75 @@ function Index() {
   )
 }
 
-export const AddressRow = ({ address }: { address: string }) => {
+export const AddressRow = ({ address, selectAddress }: { address: string, selectAddress: (address: string) => void }) => {
   const { s } = useSlice();
-  const [copied, setCopied] = useState(false);
+  const { addressNames } = useContext(appContext);
 
-  const copyToClipboard = () => {
-    setCopied(true);
-
-    navigator.clipboard.writeText(address);
-
-    setTimeout(() => {
-      setCopied(false);
-    }, 2000);
+  const handleOnClick = () => {
+    selectAddress(address);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  const addressName = addressNames[address] || 'Untitled address';
+
   return (
-    <div key={address} className="rounded-lg bg-contrast2/50 p-3 relative">
-      <div key={address}>
-        <div className="text-sm block md:hidden">{s(address)}</div>
+    <div key={address} onClick={handleOnClick} className="text-sm rounded-lg bg-contrast2/50 hover:bg-contrast2 transition-all transition-100 cursor-pointer py-4 px-5 relative">
+      <div>
+        <div className="mb-0.5">{addressName}</div>
+        <div className="block md:hidden">{s(address)}</div>
         <div className="hidden md:block">{address}</div>
-        <div onClick={copyToClipboard} className="text-sm text-grey60 absolute top-0 right-3 flex h-full items-center z-10">
-          <div>
-            {!copied && (
-              <svg className="h-4 w-4 cursor-pointer stroke-grey hover:stroke-white" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-            )}
-            {copied && (
-              <svg className="w-4 h-4" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.58075 14.2538L15.3038 7.53075L14.25 6.47693L8.58075 12.1462L5.73075 9.29615L4.67693 10.35L8.58075 14.2538ZM10.0016 19.5C8.68772 19.5 7.45268 19.2506 6.29655 18.752C5.1404 18.2533 4.13472 17.5765 3.2795 16.7217C2.42427 15.8669 1.74721 14.8616 1.24833 13.706C0.749442 12.5504 0.5 11.3156 0.5 10.0017C0.5 8.68772 0.749334 7.45268 1.248 6.29655C1.74667 5.1404 2.42342 4.13472 3.27825 3.2795C4.1331 2.42427 5.13834 1.74721 6.29398 1.24833C7.44959 0.749442 8.68437 0.5 9.9983 0.5C11.3122 0.5 12.5473 0.749333 13.7034 1.248C14.8596 1.74667 15.8652 2.42342 16.7205 3.27825C17.5757 4.1331 18.2527 5.13834 18.7516 6.29398C19.2505 7.44959 19.5 8.68437 19.5 9.9983C19.5 11.3122 19.2506 12.5473 18.752 13.7034C18.2533 14.8596 17.5765 15.8652 16.7217 16.7205C15.8669 17.5757 14.8616 18.2527 13.706 18.7516C12.5504 19.2505 11.3156 19.5 10.0016 19.5Z" fill="#4FE3C1"></path></svg>
-            )}
-          </div>
-        </div>
       </div>
     </div>
   )
 };
 
+const EditAddressName = ({ display, address, existingName, dismiss }: { display: boolean, address: string, existingName: string, dismiss: () => void }) => {
+  const { t } = useTranslation();
+  const { addressNames, setAddressNames } = useContext(appContext);
+  const [addressName, setAddressName] = useState('');
+
+  useEffect(() => {
+    setAddressName(existingName);
+  }, [existingName]);
+
+  const handleOnChange = (value: string) => {
+    setAddressName(value);
+  }
+
+  const handleSave = () => {
+    setAddressNames({ ...addressNames, [address]: addressName });
+    handleDismiss();
+  }
+
+  const handleDismiss = () => {
+    dismiss();
+    setAddressName('');
+  }
+
+  return (
+    <div className={`${display ? 'opacity-100' : 'pointer-events-none opacity-0'} delay-100 transition-opacity duration-100 flex absolute z-50 inset-0 top-0 left-0 justify-center items-center w-screen h-screen`}>
+      <div className={`bg-contrast1 mb-4 fixed z-[60] rounded-lg w-[440px] text-center text-white p-5 transform transition-all duration-200 ${display ? 'translate-y-[0%] opacity-100' : 'translate-y-[4px] opacity-0'}`}>
+        <h1 className="text-white text-2xl mt-2 mb-6 font-bold">
+          Set Address Name
+        </h1>
+        <div className="mb-6">
+          <Input
+            value={addressName}
+            label={t("address_name")}
+            onChange={handleOnChange}
+            inverse
+          />
+        </div>
+        <div className="flex flex-col gap-2">
+          <Button onClick={handleSave} disabled={!addressName}>
+            {t('save')}
+          </Button>
+          <Button onClick={handleDismiss} className="text-grey80 !bg-contrast2 !hover:opacity-90">
+            {t('close')}
+          </Button>
+        </div>
+      </div>
+      <div className="z-50 fixed bg-black opacity-90 w-screen h-screen top-0 left-0"></div>
+    </div>
+  )
+}
