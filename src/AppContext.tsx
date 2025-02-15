@@ -143,7 +143,6 @@ const AppProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
       MDS.init(async (msg) => {
         if (msg.event === MinimaEvents.INITED) {
           setLoaded(true)
-          console.log("MDS initialised and ready! 🚀")
 
           fetchBalance();
 
@@ -202,7 +201,6 @@ const AppProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
         }
 
         if (msg.event === 'MDS_PENDING') {
-          console.log(msg);
           window.dispatchEvent(new CustomEvent('MDS_PENDING', { detail: msg.data }));
         }
 
