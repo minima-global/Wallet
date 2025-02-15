@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect } from 'react'
 import { Link } from '@tanstack/react-router'
 import HamburgerButton from './HamburgerButton.tsx'
 import { appContext } from '../../AppContext.tsx'
@@ -10,7 +10,6 @@ import useTranslation from '../../hooks/useTranslation.ts';
 const Header = () => {
   const { t } = useTranslation();
   const { block, hamburgerOpen, setHamburgerOpen } = useContext(appContext)
-  const [isAtTop, setIsAtTop] = useState(true)
   const openTitleBar = useAndroidShowTitleBar();
 
   useEffect(() => {
@@ -20,18 +19,6 @@ const Header = () => {
       document.body.classList.remove('overflow-hidden')
     }
   }, [hamburgerOpen]);
-
-  useEffect(() => {
-    const onScroll = () => {
-      setIsAtTop(window.scrollY <= 30)
-    }
-
-    window.addEventListener('scroll', onScroll)
-
-    return () => {
-      window.removeEventListener('scroll', onScroll)
-    }
-  }, [])
 
   const toggle = () => {
     setHamburgerOpen((prevState) => !prevState);
@@ -215,7 +202,7 @@ const Header = () => {
             </div>
             <div className="col-span-6 flex items-center justify-end">
               <div className="flex lg:hidden gap-3">
-                <LanguageSelector isAtTop={isAtTop} />
+                <LanguageSelector />
                 <HamburgerButton isOpen={hamburgerOpen} toggle={toggle} />
               </div>
               <nav className="hidden cursor-pointer lg:block">
@@ -269,7 +256,7 @@ const Header = () => {
                   </li>
 
                   <li>
-                    <LanguageSelector isAtTop={isAtTop} />
+                    <LanguageSelector />
                   </li>
                 </ul>
               </nav>

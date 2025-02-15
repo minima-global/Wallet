@@ -148,7 +148,7 @@ function Index() {
         </div>
         <div className="flex flex-col gap-3 mb-4">
           <Button onClick={applyChanges}>Apply</Button>
-          <Button secondary onClick={resetChanges}>Reset</Button>
+          <Button variant="secondary" onClick={resetChanges}>Reset</Button>
         </div>
       </OverlayModal>
 

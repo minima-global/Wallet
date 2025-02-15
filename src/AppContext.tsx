@@ -85,7 +85,7 @@ export const appContext = createContext<{
   setAddressNames: () => { },
 })
 
-const AppProvider: React.FC = ({ children }) => {
+const AppProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   const initialised = useRef(false);
   const [loaded, setLoaded] = useState(false);
   const [gridMode, setGridMode] = useState<'list' | 'grid'>('list');

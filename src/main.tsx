@@ -1,4 +1,6 @@
 import Decimal from "decimal.js"
+Decimal.set({ precision: 64 });
+
 import { MDS } from "@minima-global/mds"
 import {
   createRouter,
@@ -11,7 +13,6 @@ import AppProvider from "./AppContext.tsx"
 import "./index.css"
 
 import { routeTree } from "./routeTree.gen"
-import Modal from "./components/Modal/Modal.tsx"
 
 const memoryHistory = createMemoryHistory({
   initialEntries: ["/"],
@@ -19,7 +20,7 @@ const memoryHistory = createMemoryHistory({
 
 const router = createRouter({
   routeTree,
-  // history: memoryHistory
+  history: memoryHistory
 });
 
 declare module "@tanstack/react-router" {
@@ -33,8 +34,6 @@ if (import.meta.env.DEV) {
   MDS.DEBUG_PORT = Number(import.meta.env.VITE_DEBUG_MDS_PORT)
   MDS.DEBUG_MINIDAPPID = import.meta.env.VITE_DEBUG_SESSION_ID
 }
-
-Decimal.set({ precision: 64 });
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

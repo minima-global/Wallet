@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { appContext } from "../../AppContext";
 
-const LanguageSelector = ({ isAtTop }: { isAtTop: boolean }) => {
+const LanguageSelector = () => {
     const { language, setLanguage } = useContext(appContext);
     const [isOpen, setIsOpen] = useState(false);
 
