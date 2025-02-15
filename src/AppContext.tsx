@@ -1,6 +1,7 @@
 import { Balance, Block, MinimaEvents } from "@minima-global/mds"
 import { MDS } from "@minima-global/mds"
 import { createContext, useCallback, useEffect, useRef, useState } from "react"
+import useOldWalletMigration from "./hooks/useOldWalletMigration"
 
 export const appContext = createContext<{
   loaded: boolean,
@@ -116,6 +117,13 @@ const AppProvider: React.FC = ({ children }) => {
 
   const [verified, setVerified] = useState<Record<string, number>>({
     '0x00': 2
+  });
+
+  // must be after setFavourites and setAddressNames
+  useOldWalletMigration({
+    loaded,
+    setFavourites,
+    setAddressNames,
   });
 
   const fetchBalance = useCallback(() => {
