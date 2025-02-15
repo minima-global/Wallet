@@ -13,6 +13,7 @@ import Decimal from 'decimal.js'
 import OverlayMenu from '../../components/OverlayModal'
 import useFormatAmount from '../../hooks/useFormatAmount'
 import Truncate from '../../components/Truncate'
+import useSlice from '../../components/Truncate/useSlice'
 
 export const Route = createFileRoute('/send/')({
     component: Index,
@@ -20,7 +21,10 @@ export const Route = createFileRoute('/send/')({
 
 function Index() {
     const { t } = useTranslation()
-    const navigate = useNavigate()
+    const { s, m } = useSlice();
+    const { f } = useFormatAmount();
+    const navigate = useNavigate();
+
     const { balance, setIsPending, setIsSuccess, setIsError } = useContext(appContext);
     const [step, setStep] = useState<number>(1);
     const [selectedTokenId, setSelectedTokenId] = useState<string>('0x00')
@@ -56,8 +60,6 @@ function Index() {
                     : undefined
             }
         })
-
-        console.log(response);
 
         if (response.pending) {
             setIsPending({
@@ -175,15 +177,15 @@ function Index() {
                             </div>
                         </div>
 
-                        <InfoBox title={t('amount')} value={`${amount}`} />
-                        <InfoBox title={t('recipient_address')} value={recipient} />
+                        <InfoBox title={t('amount')} value={(<><span className="block sm:hidden">{m(f(amount), 34)}</span><span className="hidden sm:block">{f(amount)}</span></>)} />
+                        <InfoBox title={t('recipient_address')} value={<><span className="block sm:hidden">{s(recipient, { start: 16, end: 8 })}</span><span className="hidden sm:block">{recipient}</span></>} />
                         <InfoBox title={t('message')} value={message || 'N/A'} />
                         <InfoBox title={t('burn')} value={burn || 'N/A'} />
                     </div>
 
                     <div className="flex flex-col gap-2">
                         <Button disabled={isDisabled()} onClick={send}>{t('send')}</Button>
-                        <Button onClick={goToStep1} secondary>{t('cancel')}</Button>
+                        <Button onClick={goToStep1} variant="secondary">{t('cancel')}</Button>
                     </div>
                 </div>
             )}
@@ -199,6 +201,7 @@ type TokenDropdownProps = {
 const TokenDropdown = ({ value, onChange }: TokenDropdownProps) => {
     const { balance } = useContext(appContext);
     const { f } = useFormatAmount();
+    const { m } = useSlice();
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
     const selectedToken = balance.find(
@@ -231,7 +234,8 @@ const TokenDropdown = ({ value, onChange }: TokenDropdownProps) => {
                                                 <TokenAuthenticity token={token} />
                                             </div>
                                             <div className="truncate text-grey80 font-bold text-left">
-                                                {token.sendable}
+                                               <span className="block sm:hidden">{m(f(token.sendable), 18)}</span>
+                                               <span className="hidden sm:block">{f(token.sendable)}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -242,7 +246,7 @@ const TokenDropdown = ({ value, onChange }: TokenDropdownProps) => {
                     </div>
                 </div>
                 <div className="flex flex-col gap-3 mb-4">
-                    <Button secondary onClick={toggleDropdown}>Close</Button>
+                    <Button variant="secondary" onClick={toggleDropdown}>Close</Button>
                 </div>
             </OverlayMenu>
             {selectedToken && (

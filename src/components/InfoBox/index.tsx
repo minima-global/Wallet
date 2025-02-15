@@ -2,7 +2,7 @@ import { useState } from "react";
 
 type InfoBoxProps = {
     title: string;
-    value?: string;
+    value?: string | React.ReactNode;
     copy?: boolean;
     href?: string;
     linkValue?: boolean;
@@ -19,7 +19,9 @@ const InfoBox = ({ title, value, copy, collapsable, linkValue, className, childr
         if (copy && value) {
             setCopied(true);
 
-            navigator.clipboard.writeText(value);
+            if (typeof value === 'string') {
+                navigator.clipboard.writeText(value);
+            }
 
             setTimeout(() => {
                 setCopied(false);
@@ -35,8 +37,8 @@ const InfoBox = ({ title, value, copy, collapsable, linkValue, className, childr
         <div className={`bg-contrast1 relative w-full py-4 px-5 rounded text-white ${className}`}>
             <div onClick={toggleCollapsable} className="cursor-pointer relative">
                 <div className="text-grey80">{title}</div>
-                {value && !linkValue && <div className="mt-2 text-sm">{value}</div>}
-                {value && linkValue && <a href={value} target="_blank" rel="noopener noreferrer" className="mt-2 block text-sm text-grey60 text-orange underline">{value}</a>}
+                {value && !linkValue && <div className="mt-2 text-sm break-all">{value}</div>}
+                {value && linkValue && typeof value === 'string' && <a href={value} target="_blank" rel="noopener noreferrer" className="mt-2 block text-sm text-grey60 text-orange underline">{value}</a>}
                 {copy && (
                     <div onClick={copyToClipboard} className="text-sm text-grey60 absolute top-0 right-0 flex h-full px-3 items-center">
                         <div>

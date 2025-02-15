@@ -21,7 +21,7 @@ const Pending = () => {
     return (
         <>
             <div className={`${isSuccess ? 'opacity-100' : 'pointer-events-none opacity-0'} delay-100 transition-opacity duration-100 flex absolute z-50 inset-0 top-0 left-0 justify-center items-center w-screen h-screen`}>
-                <div className={`bg-contrast1 mb-4 fixed z-[60] rounded-lg w-[440px] text-center text-white p-5 transform transition-all duration-200 ${isSuccess ? 'translate-y-[0%] opacity-100' : 'translate-y-[4px] opacity-0'}`}>
+                <div className={`bg-contrast1 mb-4 fixed z-[60] rounded-lg w-full max-w-[90%] md:max-w-[440px] text-center text-white p-5 transform transition-all duration-200 ${isSuccess ? 'translate-y-[0%] opacity-100' : 'translate-y-[4px] opacity-0'}`}>
                     <h1 className="text-white text-2xl mt-1 mb-5 font-bold">{t('success')}</h1>
                     <p className="text-grey80 text-base text-sm mb-2 max-w-[90%] mx-auto">{t('this_transaction_has_been_sent_successfully')}</p>
                     <div className="space-y-2">

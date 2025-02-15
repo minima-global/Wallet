@@ -247,7 +247,7 @@ function Index() {
                 optionalLabel={t('optional')}
               />
 
-              <div className="my-2 flex items-center gap-4 text-center text-grey60">
+              <div className="text-sm md:text-base my-2 flex items-center gap-4 text-center text-grey60">
                 <div className="grow h-[1px] bg-contrast4"></div>
                 Add additional meta data ({t('optional')})
                 <div className="relative group">

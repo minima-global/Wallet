@@ -16,6 +16,7 @@ import Truncate from '../../components/Truncate'
 import Decimal from 'decimal.js'
 import InfoBox from '../../components/InfoBox'
 import BackButton from '../../components/BackButton'
+import useSlice from '../../components/Truncate/useSlice'
 
 export const Route = createFileRoute('/history/')({
   component: Index,
@@ -351,21 +352,21 @@ function Index() {
 
                               {hasCreatedToken && showCreatedToken && (
                                 <div className="bg-contrast1 hover:bg-contrast1.5 transition-all transition-100 w-full rounded px-4 py-3 text-white flex gap-4 mb-0.5">
-                                  <div data-testid="token-icon">
-                                    <TokenIcon token={createdToken.token.name} tokenId={createdToken.tokenid} />
+                                  <div data-testid="token-icon" className="flex items-center justify-center">
+                                    <TokenIcon token={createdToken.token.name} tokenId={createdToken.tokenid} shrinkOnMobile />
                                   </div>
-                                  <div data-testid="token-name" className="grow w-full">
+                                  <div data-testid="token-name" className="grow w-full text-sm md:text-base">
                                     <div className="flex">
-                                      <h6 className="font-bold truncate lg:text-base">
+                                      <h6 className="font-bold truncate mb-0.5 md:mb-0">
                                         {renderTokenName(createdToken)}
                                       </h6>
                                       <TokenAuthenticity token={createdToken.token} />
                                     </div>
-                                    <p className="font-bold truncate text-grey40 text-sm">
+                                    <p className="font-bold truncate text-grey40 text-xs md:text-sm">
                                       {t("created")} - {format(new Date(Number(h.HEADER.timemilli)), 'HH:mm aa')}
                                     </p>
                                   </div>
-                                  <div className="text-right flex flex-col items-end justify-center gap-1">
+                                  <div className="text-right flex flex-col items-end justify-center gap-1 text-[15px]">
                                     <p className="font-bold text-green">
                                       +<Truncate text={f(createdToken.tokenamount)} />
                                     </p>
@@ -374,19 +375,19 @@ function Index() {
                               )}
 
                               <div className="bg-contrast1 hover:bg-contrast1.5 transition-all transition-100 w-full rounded px-4 py-3 text-white text-sm lg:text-base flex gap-4 mb-0.5">
-                                <div data-testid="token-icon">
+                                <div data-testid="token-icon" className="flex items-center justify-center">
                                   {h.BODY.txn.inputs[0].tokenid !== '0x00' && (
-                                    <TokenIcon token={h.BODY.txn.inputs[0].token.name} tokenId={h.BODY.txn.inputs[0].tokenid} />
+                                    <TokenIcon token={h.BODY.txn.inputs[0].token.name} tokenId={h.BODY.txn.inputs[0].tokenid} shrinkOnMobile />
                                   )}
                                   {h.BODY.txn.inputs[0].tokenid === '0x00' && (
-                                    <div className="w-[48px] h-[48px] border border-contrast2 rounded overflow-hidden">
-                                      <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="48" height="48" fill="white"></rect><path d="M32.4428 16.759L31.2053 22.2329L29.6226 15.6286L24.0773 13.3795L22.578 19.9957L21.2571 12.2371L15.7119 10L10 35.2512H16.0569L17.8062 27.4926L19.1271 35.2512H25.1959L26.6834 28.6349L28.266 35.2512H34.323L38 18.9962L32.4428 16.759Z" fill="black"></path></svg>
+                                    <div className="w-[36px] h-[36px] md:w-[48px] md:h-[48px] border border-contrast2 rounded overflow-hidden">
+                                      <svg className="w-full h-full" width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="48" height="48" fill="white"></rect><path d="M32.4428 16.759L31.2053 22.2329L29.6226 15.6286L24.0773 13.3795L22.578 19.9957L21.2571 12.2371L15.7119 10L10 35.2512H16.0569L17.8062 27.4926L19.1271 35.2512H25.1959L26.6834 28.6349L28.266 35.2512H34.323L38 18.9962L32.4428 16.759Z" fill="black"></path></svg>
                                     </div>
                                   )}
                                 </div>
                                 <div data-testid="token-name" className="grow flex flex-col justify-center items-start w-full">
                                   <div className="flex">
-                                    <h6 className="font-bold truncate lg:text-base">
+                                    <h6 className="font-bold truncate mb-0.5 md:mb-0">
                                       {renderTokenName(h.BODY.txn.inputs[0])}
                                     </h6>
                                     {h.BODY.txn.inputs[0].tokenid === '0x00' && (
@@ -399,12 +400,12 @@ function Index() {
                                       </div>
                                     )}
                                   </div>
-                                  <p className="font-bold truncate text-grey40 text-sm">
+                                  <p className="font-bold truncate text-grey40 text-xs md:text-sm">
                                     {difference > 0 ? t("received") : t("sent")} - {format(new Date(Number(h.HEADER.timemilli)), 'HH:mm aa')}
                                   </p>
                                 </div>
                                 {difference && difference !== '0' && (
-                                  <div className="text-right flex flex-col items-end justify-center gap-1 font-bold">
+                                  <div className="text-right flex flex-col items-end justify-center gap-1 font-bold text-[15px]">
                                     <p className={`${difference > 0 ? 'text-green' : 'text-red'}`}>
                                       {!difference.includes('-') ? difference > 0 ? '+' : '-' : ''}
                                       <Truncate text={f(difference)} />
@@ -417,7 +418,7 @@ function Index() {
                                   </div>
                                 )}
                                 {difference === '0' && (
-                                  <div className="text-right flex flex-col items-end justify-center gap-1 font-bold">
+                                  <div className="text-right flex flex-col items-end justify-center gap-1 font-bold text-[15px]">
                                     <p className={`text-grey-60`}>0</p>
                                     {balanceDifference[h.TXPOWID] && (
                                       <p className="text-grey60">
@@ -488,6 +489,7 @@ const Dropdown = ({ options }: { options: { key: string, label: string }[] }) =>
 const Summary = ({ txpow, back }: { txpow: any, back: () => void }) => {
   const { t } = useTranslation();
   const { f } = useFormatAmount();
+  const { s, m } = useSlice();
   const hasCreatedToken = txpow?.BODY?.txn.outputs[0].tokenid === '0xFF';
   const createdToken = txpow?.BODY?.txn.outputs[0];
   const difference = txpow?.DETAILS.difference[txpow?.BODY?.txn.inputs[0].tokenid];
@@ -529,8 +531,22 @@ const Summary = ({ txpow, back }: { txpow: any, back: () => void }) => {
 
       <div className="select-none flex flex-col gap-2">
         <InfoBox title="Transaction type" value={type} />
-        <InfoBox title="Transaction ID" value={txpow?.TXPOWID} copy />
-        <InfoBox title="Amount" value={f(difference)} />
+        <div>
+          <div className="block md:hidden">
+            <InfoBox title="Transaction ID" value={s(txpow?.TXPOWID, { start: 12, end: 16 })} copy />
+          </div>
+          <div className="hidden md:block">
+            <InfoBox title="Transaction ID" value={txpow?.TXPOWID} copy />
+          </div>
+        </div>
+        <div>
+          <div className="block md:hidden">
+            <InfoBox title="Amount" value={m(f(difference), 28)} />
+          </div>
+          <div className="hidden md:block">
+            <InfoBox title="Amount" value={f(difference)} />
+          </div>
+        </div>
         <InfoBox title="Token" value={renderTokenName(txpow?.BODY?.txn.inputs[0])} />
         {createdToken && (
           <>
@@ -540,8 +556,14 @@ const Summary = ({ txpow, back }: { txpow: any, back: () => void }) => {
         )}
         {output && (
           <>
-            <InfoBox title="To 0x" value={output.address} />
-            <InfoBox title="To Mx" value={output.miniaddress} />
+            <div className="block md:hidden">
+              <InfoBox title="To 0x" value={s(output.address, { start: 12, end: 16 })} />
+              <InfoBox title="To Mx" value={s(output.miniaddress, { start: 12, end: 16 })} />
+            </div>
+            <div className="hidden md:block">
+              <InfoBox title="To 0x" value={output.address} />
+              <InfoBox title="To Mx" value={output.miniaddress} />
+            </div>
           </>
         )}
         <InfoBox title="Date" value={format(new Date(Number(txpow?.HEADER.timemilli)), 'dd MMMM yyyy @ hh:mm aa')} />
@@ -560,15 +582,18 @@ const Summary = ({ txpow, back }: { txpow: any, back: () => void }) => {
                   </div>
                   <div className="bg-contrast2 py-3 px-4 rounded">
                     <div className="text-grey80 mb-1">Amount</div>
-                    <div className="text-white">{f(row.amount)}</div>
+                    <div className="text-white block md:hidden">{m(f(row.amount), 28)}</div>
+                    <div className="text-white hidden md:block">{f(row.amount)}</div>
                   </div>
                   <div className="bg-contrast2 py-3 px-4 rounded">
                     <div className="text-grey80 mb-1">Coin ID</div>
-                    <div className="text-white">{row.coinid}</div>
+                    <div className="text-white block md:hidden">{s(row.coinid, { start: 12, end: 16 })}</div>
+                    <div className="text-white hidden md:block">{row.coinid}</div>
                   </div>
                   <div className="bg-contrast2 py-3 px-4 rounded">
                     <div className="text-grey80 mb-1">Token ID</div>
-                    <div className="text-white">{row.tokenid}</div>
+                    <div className="text-white block md:hidden">{s(row.tokenid, { start: 12, end: 16 })}</div>
+                    <div className="text-white hidden md:block">{row.tokenid}</div>
                   </div>
                   <div className="bg-contrast2 py-3 px-4 rounded">
                     <div className="text-grey80 mb-1">Spent</div>
@@ -597,15 +622,18 @@ const Summary = ({ txpow, back }: { txpow: any, back: () => void }) => {
                   </div>
                   <div className="bg-contrast2 py-3 px-4 rounded">
                     <div className="text-grey80 mb-1">Amount</div>
-                    <div className="text-white">{f(row.amount)}</div>
+                    <div className="text-white block md:hidden">{m(f(row.amount), 28)}</div>
+                    <div className="text-white hidden md:block">{f(row.amount)}</div>
                   </div>
                   <div className="bg-contrast2 py-3 px-4 rounded">
                     <div className="text-grey80 mb-1">Coin ID</div>
-                    <div className="text-white">{row.coinid}</div>
+                    <div className="text-white block md:hidden">{s(row.coinid, { start: 12, end: 16 })}</div>
+                    <div className="text-white hidden md:block">{row.coinid}</div>
                   </div>
                   <div className="bg-contrast2 py-3 px-4 rounded">
                     <div className="text-grey80 mb-1">Token ID</div>
-                    <div className="text-white">{row.tokenid}</div>
+                    <div className="text-white block md:hidden">{s(row.tokenid, { start: 12, end: 16 })}</div>
+                    <div className="text-white hidden md:block">{row.tokenid}</div>
                   </div>
                   <div className="bg-contrast2 py-3 px-4 rounded">
                     <div className="text-grey80 mb-1">Spent</div>
@@ -621,8 +649,8 @@ const Summary = ({ txpow, back }: { txpow: any, back: () => void }) => {
           </div>
         </InfoBox>
         <InfoBox title="JSON" collapsable>
-          <div className="bg-contrast2 rounded p-2">
-            <pre className="bg-contrast2 pr-4 pb-4 text-sm max-h-[300px] rounded-b py-3 px-4 overflow-scroll custom-scrollbar">
+          <div className="bg-contrast2 rounded p-2 w-full">
+            <pre className="bg-contrast2 pr-4 pb-4 text-sm w-full max-h-[300px] rounded-b py-3 px-4 overflow-scroll custom-scrollbar whitespace-pre-wrap break-all">
               {JSON.stringify(txpow, null, 2)}
             </pre>
           </div>

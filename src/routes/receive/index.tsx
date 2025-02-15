@@ -159,9 +159,9 @@ function Index() {
           </div>
         </div>
         <div className="flex-col gap-2 flex lg:hidden">
-          <InfoBox title={t("validated")} value={s(address)} />
-          <InfoBox title={t("0x_address")} value={s(result['0x'])} copy />
-          <InfoBox title={t("mx_address")} value={s(result['Mx'])} copy />
+          <InfoBox title={t("validated")} value={s(address, { start: 16, end: 8 })} />
+          <InfoBox title={t("0x_address")} value={s(result['0x'], { start: 16, end: 8 })} copy />
+          <InfoBox title={t("mx_address")} value={s(result['Mx'], { start: 16, end: 8 })} copy />
         </div>
         <div className="flex-col gap-2 hidden md:flex-row">
           <InfoBox title={t("validating")} value={address} />
@@ -174,12 +174,14 @@ function Index() {
 
   return (
     <div className="grow flex flex-col mb-12">
-      <EditAddressName
-        address={address}
-        display={!!editingAddressName}
-        dismiss={dismissEditAddressName}
-        existingName={addressNames[address] || ''}
-      />
+      <div>
+        <EditAddressName
+          address={address}
+          display={!!editingAddressName}
+          dismiss={dismissEditAddressName}
+          existingName={addressNames[address] || ''}
+        />
+      </div>
 
       <h1 className="text-white text-2xl mb-6">{t("receive")}</h1>
       <div className="mb-6">
@@ -203,7 +205,16 @@ function Index() {
                   action={() => setEditingAddressName(address)}
                 />
               </div>
-              <div>
+              <div className="block md:hidden">
+                <Input
+                  value={s(address, { start: 8, end: 12 })}
+                  copyValueOverride={address}
+                  inverse
+                  readOnly
+                  copy
+                />
+              </div>
+              <div className="hidden md:block">
                 <Input
                   value={address}
                   inverse
@@ -290,7 +301,7 @@ export const AddressRow = ({ address, selectAddress }: { address: string, select
     <div key={address} onClick={handleOnClick} className="text-sm rounded-lg bg-contrast2/50 hover:bg-contrast2 transition-all transition-100 cursor-pointer py-4 px-5 relative">
       <div>
         <div className="mb-0.5">{addressName}</div>
-        <div className="block md:hidden">{s(address)}</div>
+        <div className="block md:hidden">{s(address, { start: 14, end: 8 })}</div>
         <div className="hidden md:block">{address}</div>
       </div>
     </div>
@@ -322,8 +333,8 @@ const EditAddressName = ({ display, address, existingName, dismiss }: { display:
 
   return (
     <div className={`${display ? 'opacity-100' : 'pointer-events-none opacity-0'} delay-100 transition-opacity duration-100 flex absolute z-50 inset-0 top-0 left-0 justify-center items-center w-screen h-screen`}>
-      <div className={`bg-contrast1 mb-4 fixed z-[60] rounded-lg w-[440px] text-center text-white p-5 transform transition-all duration-200 ${display ? 'translate-y-[0%] opacity-100' : 'translate-y-[4px] opacity-0'}`}>
-        <h1 className="text-white text-2xl mt-2 mb-5 font-bold">
+      <div className={`bg-contrast1 mb-4 fixed z-[60] rounded-lg max-w-[90%] md:max-w-[440px] w-full text-center text-white p-5 transform transition-all duration-200 ${display ? 'translate-y-[0%] opacity-100' : 'translate-y-[4px] opacity-0'}`}>
+        <h1 className="text-white text-xl md:text-2xl mt-1 md:mt-2 mb-5 font-bold">
           Set Address Name
         </h1>
         <div className="mb-6">

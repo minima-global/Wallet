@@ -13,7 +13,7 @@ const Button = ({ variant = 'primary', type = "button", onClick, children, disab
     if (variant === 'primary') {
         buttonClassName = "text-black bg-orange enabled:hover:bg-lighterOrange enabled:hover:opacity-90"
     } else if (variant === 'secondary') {
-        buttonClassName = "text-white bg-contrast hover:opacity-90"
+        buttonClassName = "text-white bg-contrast1 hover:opacity-90"
     } else if (variant === 'tertiary') {
         buttonClassName = "text-grey80 bg-contrast2 hover:opacity-80"
     }

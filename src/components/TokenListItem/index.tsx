@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import Decimal from "decimal.js";
 import Truncate from "../Truncate";
 import Button from "../Button";
+import useSlice from "../Truncate/useSlice";
 
 const TokenListItem = ({ balance }: { balance: Balance }) => {
     const { t } = useTranslation();
@@ -76,8 +77,9 @@ const TokenListItem = ({ balance }: { balance: Balance }) => {
     )
 }
 
-export const BalanceAmount = ({ balance, value }: { balance: Balance, value: string }) => {
+export const BalanceAmount = ({ balance, value, maxLength = 18 }: { balance: Balance, value: string, maxLength?: number }) => {
     const { f } = useFormatAmount();
+    const { m } = useSlice();
     const [hasUnconfirmed, setHasUnconfirmed] = useState(false);
     const [showing, setShowing] = useState<1 | 2 | false>(false);
 
@@ -106,7 +108,12 @@ export const BalanceAmount = ({ balance, value }: { balance: Balance, value: str
     return (
         <div className="relative">
             <div className={`w-full truncate overflow-ellipsis flex gap-2 items-center transition-all duration-100 ${showing === false ? '' : showing === 1 ? 'text-grey60' : 'text-white'}`}>
-                {f(value)}
+                <div className="block sm:hidden">
+                    {m(f(value), maxLength)}
+                </div>
+                <div className="hidden sm:block">
+                    {f(value)}
+                </div>
             </div>
         </div>
     )
