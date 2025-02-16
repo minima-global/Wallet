@@ -84,7 +84,7 @@ const Navigation = () => {
                     />
                 </svg>
             ),
-            title: 'Token create',
+            title: t("token_create"),
             href: '/token-create',
         },
         {
@@ -102,7 +102,7 @@ const Navigation = () => {
                     />
                 </svg>
             ),
-            title: 'NFTs',
+            title: t("NFTs"),
             href: '/nfts/create',
         },
         {

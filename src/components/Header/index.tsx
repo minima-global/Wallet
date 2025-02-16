@@ -117,7 +117,7 @@ const Header = () => {
           />
         </svg>
       ),
-      title: 'Token create',
+      title: t("token_create"),
       href: '/token-create',
     },
     {
@@ -135,7 +135,7 @@ const Header = () => {
           />
         </svg>
       ),
-      title: 'NFTs',
+      title: t("NFTs"),
       href: '/nfts/create',
     },
     {
@@ -196,7 +196,7 @@ const Header = () => {
                   </div>
                 </div>
                 <div className="mt-0.5 hidden lg:block">
-                  <div className="text-white text-sm font-bold">Wallet</div>
+                  <div className="text-white text-sm font-bold">{t('wallet')}</div>
                 </div>
               </Link>
             </div>
@@ -216,7 +216,7 @@ const Header = () => {
                       <div className="gradient-border flex items-center gap-2">
                         <NodeStatus />
                         <div className="flex items-center text-[13px] gap-2">
-                          Block <span className="text-white font-bold">{block?.block}</span>
+                          {t('block')} <span className="text-white font-bold">{block?.block}</span>
                         </div>
                       </div>
                     )}

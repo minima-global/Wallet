@@ -22,15 +22,19 @@ const TokenCard = ({ balance, showFavourite = false }: { balance: Balance, showF
         }
     }
 
+    const handleClick = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
     return (
-        <Link to="/balance/$id" params={{ id: balance.tokenid }} className="group col-span-6 md:col-span-4 flex flex-col h-full items-stretch">
+        <Link to="/balance/$id" params={{ id: balance.tokenid }} onClick={handleClick} className="group col-span-6 md:col-span-4 flex flex-col h-full items-stretch" onClick={handleClick}>
             <div className="bg-[#0f0f0f] h-full min-h-[162px] max-h-[162px] md:min-h-[240px] md:max-h-[240px] flex items-center justify-center relative rounded-t w-full h-full overflow-hidden">
                 <FullTokenIcon token={balance.token} tokenId={balance.tokenid} />
             </div>
             <div className="bg-contrast1 group-hover:bg-contrast2 transition-all duration-100 py-3 px-4 rounded-b">
                 <div className="flex">
                     <div className="grow">
-                        <h5 className="text-white capitalize">{renderTokenName(balance)}</h5>
+                        <h5 className="text-sm md:text-base text-white capitalize">{renderTokenName(balance)}</h5>
                         <div className="text-grey60 text-sm truncate">
                             <BalanceAmount balance={balance} value={confirmed} maxLength={12} />
                         </div>

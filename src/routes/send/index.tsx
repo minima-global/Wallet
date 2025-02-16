@@ -199,6 +199,7 @@ type TokenDropdownProps = {
 }
 
 const TokenDropdown = ({ value, onChange }: TokenDropdownProps) => {
+    const { t } = useTranslation();
     const { balance } = useContext(appContext);
     const { f } = useFormatAmount();
     const { m } = useSlice();
@@ -221,7 +222,9 @@ const TokenDropdown = ({ value, onChange }: TokenDropdownProps) => {
         <div>
             <OverlayMenu display={isOpen} dismiss={toggleDropdown}>
                 <div>
-                    <h5 className="mb-5 text-lg text-grey80 text-left">Select token</h5>
+                    <h5 className="mb-5 text-lg text-grey80 text-left">
+                        {t('select_token')}
+                    </h5>
                     <div className="bg-contrast1.5 rounded-lg p-3 mb-5">
                         <div className="custom-scrollbar custom-scrollbar-modal pr-3 overflow-x-hidden max-h-[300px] overflow-y-auto pr-3">
                             {balance.map((token, index) => (
@@ -246,7 +249,7 @@ const TokenDropdown = ({ value, onChange }: TokenDropdownProps) => {
                     </div>
                 </div>
                 <div className="flex flex-col gap-3 mb-4">
-                    <Button variant="secondary" onClick={toggleDropdown}>Close</Button>
+                    <Button variant="secondary" onClick={toggleDropdown}>{t('close')}</Button>
                 </div>
             </OverlayMenu>
             {selectedToken && (

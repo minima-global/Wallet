@@ -1,7 +1,8 @@
 import { format } from "date-fns";
 import useEmblaCarousel from "embla-carousel-react";
-
+import useTranslation from "../../hooks/useTranslation";
 const Timeline = ({ containScroll = false, months, activeMonth, setActiveMonth }: { containScroll: boolean, months: string[], activeMonth: string, setActiveMonth: (month: string) => void }) => {
+    const { t } = useTranslation();
     const [emblaRef, emblaApi] = useEmblaCarousel({
         slidesToScroll: 1,
         dragFree: false,
@@ -63,8 +64,7 @@ const Timeline = ({ containScroll = false, months, activeMonth, setActiveMonth }
                                             emblaApi?.scrollTo(months.findIndex((m) => m === month));
                                         }}
                                     >
-                                        {/* {month} */}
-                                        {month === 'all' ? 'All' : format(new Date(month), 'MMM yyyy')}
+                                        {month === 'all' ? t('all') : t(format(new Date(month), 'MMM').toLowerCase()) + ' ' + format(new Date(month), 'yyyy')}
                                     </div>
                                 ))}
                             </div>

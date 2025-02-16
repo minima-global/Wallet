@@ -19,9 +19,9 @@ function Index() {
   const { loaded, balance, fetchBalance, hiddenTokens, activeTab, setActiveTab, gridMode, setGridMode } = useContext(appContext);
   const { t } = useTranslation();
   const [query, setQuery] = useState('');
-  const [sort, setSort] = useState<'A-Z' | 'Z-A' | 'Lowest' | 'Highest'>('A-Z');
+  const [sort, setSort] = useState<'a_z' | 'z_a' | 'lowest' | 'highest'>('a_z');
   const [filter, setFilter] = useState<'all' | 'simple' | 'nfts' | 'custom'>('all');
-  const [proxySort, setProxySort] = useState<'A-Z' | 'Z-A' | 'Lowest' | 'Highest'>('A-Z');
+  const [proxySort, setProxySort] = useState<'a_z' | 'z_a' | 'lowest' | 'highest'>('a_z');
   const [proxyFilter, setProxyFilter] = useState<'all' | 'simple' | 'nfts' | 'custom'>('all');
   const [showFilterAndSort, setShowFilterAndSort] = useState(false);
 
@@ -54,18 +54,18 @@ function Index() {
       const aAmount = Number(a.sendable);
       const bAmount = Number(b.sendable);
 
-      if (sort === 'A-Z') {
+      if (sort === 'a_z') {
         const aName = typeof a.token === 'string' ? a.token : a.token.name;
         const bName = typeof b.token === 'string' ? b.token : b.token.name;
         return aName.localeCompare(bName);
-      } else if (sort === 'Z-A') {
+      } else if (sort === 'z_a') {
         const aName = typeof a.token === 'string' ? a.token : a.token.name;
         const bName = typeof b.token === 'string' ? b.token : b.token.name;
         return bName.localeCompare(aName);
-      } else if (sort === 'Lowest') {
+      } else if (sort === 'lowest') {
         if (aAmount > bAmount) return 1;
         if (aAmount < bAmount) return -1;
-      } else if (sort === 'Highest') {
+      } else if (sort === 'highest') {
         if (aAmount < bAmount) return 1;
         if (aAmount > bAmount) return -1;
       }
@@ -78,17 +78,17 @@ function Index() {
   }
 
   const sortOptions = [
-    { key: 'A-Z', label: 'A-Z' },
-    { key: 'Z-A', label: 'Z-A' },
-    { key: 'Lowest', label: 'Lowest' },
-    { key: 'Highest', label: 'Highest' },
+    { key: 'a_z', label: 'A-Z' },
+    { key: 'z_a', label: 'Z-A' },
+    { key: 'lowest', label: t('lowest') },
+    { key: 'highest', label: t('highest') },
   ];
 
   const filterOptions = [
-    { key: 'all', label: 'All' },
-    { key: 'simple', label: 'Simple' },
-    { key: 'custom', label: 'Custom' },
-    { key: 'nfts', label: 'NFTs' },
+    { key: 'all', label: t('all') },
+    { key: 'simple', label: t('simple') },
+    { key: 'custom', label: t('custom') },
+    { key: 'nfts', label: t('nfts') },
   ];
 
   const toggleFilterAndSort = () => {
@@ -102,9 +102,9 @@ function Index() {
   };
 
   const resetChanges = () => {
-    setSort('A-Z');
+    setSort('a_z');
     setFilter('all');
-    setProxySort('A-Z');
+    setProxySort('a_z');
     setProxyFilter('all');
     toggleFilterAndSort();
   }
@@ -113,7 +113,7 @@ function Index() {
     <div>
       <OverlayModal display={showFilterAndSort}>
         <div className="text-left">
-          <h5 className="mb-4 text-grey80">Sort by</h5>
+          <h5 className="mb-4 text-grey80">{t('sort')}</h5>
           <div className="flex flex-col gap-3 mb-8">
             {sortOptions.map((option) => (
               <div key={option.key} className="flex items-center gap-2">
@@ -129,7 +129,7 @@ function Index() {
               </div>
             ))}
           </div>
-          <h5 className="mt-4 my-4 text-grey80">Filter by</h5>
+          <h5 className="mt-4 my-4 text-grey80">{t('filter')}</h5>
           <div className="flex flex-col gap-3 mb-8">
             {filterOptions.map((option) => (
               <div key={option.key} className="flex items-center gap-2">
@@ -147,8 +147,8 @@ function Index() {
           </div>
         </div>
         <div className="flex flex-col gap-3 mb-4">
-          <Button onClick={applyChanges}>Apply</Button>
-          <Button variant="secondary" onClick={resetChanges}>Reset</Button>
+          <Button onClick={applyChanges}>{t('apply')}</Button>
+          <Button variant="secondary" onClick={resetChanges}>{t('reset')}</Button>
         </div>
       </OverlayModal>
 
@@ -159,7 +159,7 @@ function Index() {
         {activeTab === 'hidden' && (
           <div className="flex gap-2">
             <div>/</div>
-            <div>Hidden tokens</div>
+            <div>{t('hidden_tokens')}</div>
           </div>
         )}
       </h1>
@@ -174,12 +174,12 @@ function Index() {
         <div className="grow">
           <div className="flex lg:hidden items-center gap-6">
             <div onClick={toggleFilterAndSort} className="cursor-pointer text-grey80 font-bold text-[15px] active:text-white transition-all duration-100 mt-0.5">
-              Filter & sort
+              {t('filter_and_sort')}
             </div>
           </div>
           <div className="hidden lg:flex items-center gap-6 mt-1">
-            <Sort title="Sort" selected={sort} options={sortOptions} onClick={(option) => setSort(option as 'A-Z' | 'Z-A' | 'Lowest' | 'Highest')} />
-            <Sort title="Filter" selected={filter} options={filterOptions} onClick={(option) => setFilter(option as 'all' | 'simple' | 'nfts' | 'custom')} />
+            <Sort title={t('sort')} selected={sort} options={sortOptions} onClick={(option) => setSort(option as 'a_z' | 'z_a' | 'lowest' | 'highest')} />
+            <Sort title={t('filter')} selected={filter} options={filterOptions} onClick={(option) => setFilter(option as 'all' | 'simple' | 'nfts' | 'custom')} />
           </div>
         </div>
         <div className="col-span-6 flex items-center justify-end gap-5">

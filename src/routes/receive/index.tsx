@@ -45,6 +45,7 @@ function Index() {
   ]
 
   const validateFetchedAddress = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     validateAddress(address);
   }
 
@@ -197,7 +198,7 @@ function Index() {
             <div className="mb-4 space-y-4">
               <div>
                 <Input
-                  value={addressNames[address] || 'Untitled address'}
+                  value={addressNames[address] || t("untitled_address")}
                   label={t("address_name")}
                   inverse
                   readOnly
@@ -240,16 +241,16 @@ function Index() {
               <div className="col-span-2 flex items-center justify-end">
                 <svg className={`-ml-2 fill-[#91919D] hover:fill-white transition-all transition-100 ${showAltAddresses ? '!fill-orange rotate-90' : ''}`} width="7" height="10" viewBox="0 0 7 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.875 5L0.9375 1.0625L2 0L7 5L2 10L0.9375 8.9375L4.875 5Z" fill="#currentColor"></path></svg>                </div>
             </div>
-            <div className={`flex flex-col gap-2 px-6 pb-8 ${showAltAddresses ? ' mt-4 md:mt-6 opacity-100' : 'h-0 opacity-0'}`}>
+            <div className={`flex flex-col gap-2 px-4 pb-6 md:px-6 md:pb-7 ${showAltAddresses ? ' mt-4 md:mt-6 opacity-100' : 'h-0 opacity-0'}`}>
               <div className="md:mt-1 mb-5">
-                <SearchBar placeholder="Enter an address" value={filterAddressQuery} onChange={(value) => setFilterAddressQuery(value)} className="!bg-black" />
+                <SearchBar placeholder={t("enter_an_address")} value={filterAddressQuery} onChange={(value) => setFilterAddressQuery(value)} className="!bg-black" />
               </div>
-              <div className="custom-scrollbar overflow-y-auto max-h-[300px] pr-4 flex flex-col gap-2">
+              <div className="custom-scrollbar max-h-[300px] pr-4 overflow-y-scroll flex flex-col gap-2">
                 {addresses
                   .filter((address) => address.toLowerCase().includes(filterAddressQuery.toLowerCase()))
                   .length === 0 && (
                     <div className="bg-contrast2/50 rounded-lg text-white text-sm px-4 py-4">
-                      <div>No matching addresses could be found</div>
+                      <div>{t("no_matching_addresses_could_be_found")}</div>
                     </div>
                   )}
                 {addresses
@@ -288,6 +289,7 @@ function Index() {
 
 export const AddressRow = ({ address, selectAddress }: { address: string, selectAddress: (address: string) => void }) => {
   const { s } = useSlice();
+  const { t } = useTranslation();
   const { addressNames } = useContext(appContext);
 
   const handleOnClick = () => {
@@ -295,7 +297,7 @@ export const AddressRow = ({ address, selectAddress }: { address: string, select
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  const addressName = addressNames[address] || 'Untitled address';
+  const addressName = addressNames[address] || t("untitled_address");
 
   return (
     <div key={address} onClick={handleOnClick} className="text-sm rounded-lg bg-contrast2/50 hover:bg-contrast2 transition-all transition-100 cursor-pointer py-4 px-5 relative">

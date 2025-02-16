@@ -11,8 +11,6 @@ export const Route = createFileRoute('/token-create/')({
   component: Index,
 })
 
-const Title = "Token create";
-
 function Index() {
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -36,11 +34,11 @@ function Index() {
 
   const OPTIONS = [
     {
-      label: "Upload Image",
+      label: t("upload_image"),
       value: "UPLOAD_IMAGE",
     },
     {
-      label: "Web URL",
+      label: t("web_url"),
       value: "WEB_URL",
     },
   ];
@@ -79,34 +77,34 @@ function Index() {
     className?: string;
   }[] = [
       {
-        label: 'Name',
+        label: t('token_name'),
         value: tokenName,
       },
       {
-        label: "Total Supply",
+        label: t('total_supply'),
         value: totalSupply,
       },
       {
-        label: "Description",
+        label: t('description'),
         value: description,
         className: type === 'SIMPLE' ? 'hidden' : ''
       },
       {
-        label: "Decimals",
+        label: t('decimals'),
         value: decimals,
       },
       {
-        label: "Ticker",
+        label: t('ticker'),
         value: ticker || "N/A",
         className: type === 'SIMPLE' ? 'hidden' : ''
       },
       {
-        label: "Web validation URL",
+        label: t('web_validation_url'),
         value: webValidationUrl || 'N/A',
         className: type === 'SIMPLE' ? 'hidden' : ''
       },
       {
-        label: "Burn",
+        label: t('burn'),
         value: burn || 'N/A',
       },
       ...metadata.map((item) => ({
@@ -180,7 +178,7 @@ function Index() {
     }
 
     if (response.pending) {
-      setIsPending({
+      return setIsPending({
         uid: response.pendinguid as string,
         callback: () => {
           navigate({ to: '/' })
@@ -230,7 +228,7 @@ function Index() {
           <div>
             <div className="grid grid-cols-2">
               <div className="col-span-1">
-                <h1 className="text-white text-2xl mb-6">{Title}</h1>
+                <h1 className="text-white text-2xl mb-6">{t("token_create")}</h1>
               </div>
               <div className="col-span-1" />
             </div>
@@ -242,14 +240,14 @@ function Index() {
                   onClick={createSimpleToken}
                   className={`!text-left ${type !== 'SIMPLE' ? '!bg-contrast2 !text-white hover:!bg-opacity-90' : 'hover:!bg-orange enabled:hover:!opacity-100'}`}
                 >
-                  Simple
+                  {t("simple")}
                 </Button>
                 <Button
                   type="button"
                   onClick={createCustomToken}
                   className={`!text-left ${type === 'SIMPLE' ? '!bg-contrast2 !text-white hover:!bg-opacity-90' : 'hover:!bg-orange enabled:hover:!opacity-100'}`}
                 >
-                  Custom
+                  {t("custom")}
                 </Button>
               </div>
               {type !== 'SIMPLE' && (
@@ -272,7 +270,7 @@ function Index() {
                             <path d="M23 28V19.85L20.4 22.45L19 21L24 16L29 21L27.6 22.45L25 19.85V28H23ZM18 32C17.45 32 16.9792 31.8042 16.5875 31.4125C16.1958 31.0208 16 30.55 16 30V27H18V30H30V27H32V30C32 30.55 31.8042 31.0208 31.4125 31.4125C31.0208 31.8042 30.55 32 30 32H18Z" fill="#FF8630" />
                           </g>
                         </svg>
-                        <div>Upload Image</div>
+                        <div>{t("upload_image")}</div>
                       </div>
                     )}
                     {image && (
@@ -298,55 +296,55 @@ function Index() {
 
               {type === "WEB_URL" && (
                 <Input
-                  label="Web URL"
-                  placeholder="Enter the web URL of your image"
+                  label={t("web_url")}
+                  placeholder={t("enter_the_web_url_of_your_image")}
                   value={webUrl}
                   onChange={setWebUrl}
                   validation={(value) => /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z0-9\u00a1-\uffff][a-z0-9\u00a1-\uffff_-]{0,62})?[a-z0-9\u00a1-\uffff]\.)+(?:[a-z\u00a1-\uffff]{2,}\.?))(?::\d{2,5})?(?:[/?#]\S*)?$/i.test(value)}
-                  validationMessage="Please enter a valid URL."
+                  validationMessage={t("please_enter_a_valid_web_url")}
                 />
               )}
 
               {type === "SIMPLE" && (
                 <Input
-                  label="Token name"
-                  placeholder="Enter the name of your token"
+                  label={t("token_name")}
+                  placeholder={t("enter_the_name_of_your_token")}
                   value={tokenName}
                   onChange={setTokenName}
                   required={true}
                   validation={(value) => {
                     return value.length > 0 && !/\s/.test(value);
                   }}
-                  validationMessage={"A token name is required and must not contain spaces."}
+                  validationMessage={t("a_token_name_is_required_and_must_not_contain_spaces")}
                 />
               )}
 
               {type !== "SIMPLE" && (
                 <Input
-                  label="Token name"
-                  placeholder="Enter the name of your token"
+                  label={t("token_name")}
+                  placeholder={t("enter_the_name_of_your_token")}
                   value={tokenName}
                   onChange={setTokenName}
                   required={true}
                   validation={(value) => {
                     return value.length > 0;
                   }}
-                  validationMessage={"A token name is required."}
+                  validationMessage={t("a_token_name_is_required")}
                 />
               )}
 
               <Input
-                label="Total supply"
-                placeholder="Enter the total supply of your token"
+                label={t("total_supply")}
+                placeholder={t("enter_the_total_supply_of_your_token")}
                 value={totalSupply}
                 required={true}
                 onChange={setTotalSupply}
                 validation={(value) => /^\d+$/.test(value)}
-                validationMessage="Token supply is required."
+                validationMessage={t("token_supply_is_required")}
               />
               <Input
-                label="Decimals"
-                placeholder="Enter the number of decimals for your token"
+                label={t("decimals")}
+                placeholder={t("enter_the_number_of_decimals_for_your_token")}
                 value={decimals}
                 onChange={setDecimals}
                 required={true}
@@ -354,20 +352,20 @@ function Index() {
                   const num = parseInt(value);
                   return /^\d+$/.test(value) && num >= 1 && num <= 16;
                 }}
-                validationMessage="The decimal place must be a number between 1 and 16."
-                info="The number of decimal places for the token."
+                validationMessage={t("the_decimal_place_must_be_a_number_between_1_and_16")}
+                info={t("the_number_of_decimal_places_for_the_token")}
               />
               <Input
-                label="Description"
-                placeholder="Add a description"
+                label={t("description")}
+                placeholder={t("add_a_description")}
                 value={description}
                 onChange={setDescription}
                 optionalLabel={t('optional')}
                 className={`${['SIMPLE'].includes(type) ? 'hidden' : ''}`}
               />
               <Input
-                label="Ticker"
-                placeholder="Enter a ticker symbol for your token (eg. BTC, ETH)"
+                label={t("ticker")}
+                placeholder={t("enter_a_ticker_symbol_for_your_token_eg_btc_eth")}
                 value={ticker}
                 onChange={setTicker}
                 required={false}
@@ -375,38 +373,38 @@ function Index() {
                 className={`${['SIMPLE'].includes(type) ? 'hidden' : ''}`}
               />
               <Input
-                label="Web validation URL"
-                placeholder="Enter a web address"
+                label={t("web_validation_url")}
+                placeholder={t("enter_a_web_address")}
                 value={webValidationUrl}
                 onChange={setWebValidationUrl}
-                info="The web address to validate the token."
+                info={t("the_web_address_to_validate_the_token")}
                 validation={(value) => /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z0-9\u00a1-\uffff][a-z0-9\u00a1-\uffff_-]{0,62})?[a-z0-9\u00a1-\uffff]\.)+(?:[a-z\u00a1-\uffff]{2,}\.?))(?::\d{2,5})?(?:[/?#]\S*)?$/i.test(value)}
-                validationMessage="Please enter a valid URL."
+                validationMessage={t("please_enter_a_valid_url")}
                 className={`${['SIMPLE'].includes(type) ? 'hidden' : ''}`}
                 optionalLabel={t('optional')}
               />
               <Input
-                label="Add a Burn"
-                placeholder="Burn"
+                label={t("add_a_burn")}
+                placeholder={t("burn")}
                 value={burn}
                 onChange={setBurn}
                 required={false}
-                info="The amount of tokens to burn to priortise the token."
+                info={t("the_amount_of_tokens_to_burn_to_priortise_the_token")}
                 validation={(value) => /^\d+$/.test(value)}
-                validationMessage="Invalid burn amount."
+                validationMessage={t("invalid_burn_amount")}
                 optionalLabel={t('optional')}
               />
 
               <div className={`flex flex-col gap-6 ${['SIMPLE'].includes(type) ? 'hidden' : ''}`}>
                 <div className="text-sm md:text-base my-2 flex items-center gap-4 text-center text-grey60">
                   <div className="grow h-[1px] bg-contrast4"></div>
-                  Add additional meta data ({t('optional')})
+                  {t("add_additional_metadata")} ({t('optional')})
                   <div className="relative group">
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M9.25 14.4492H10.75V8.69922H9.25V14.4492ZM10 6.98772C10.2288 6.98772 10.4207 6.9103 10.5755 6.75547C10.7303 6.60064 10.8077 6.4088 10.8077 6.17997C10.8077 5.95114 10.7303 5.7593 10.5755 5.60447C10.4207 5.4498 10.2288 5.37247 10 5.37247C9.77117 5.37247 9.57933 5.4498 9.4245 5.60447C9.26967 5.7593 9.19225 5.95114 9.19225 6.17997C9.19225 6.4088 9.26967 6.60064 9.4245 6.75547C9.57933 6.9103 9.77117 6.98772 10 6.98772ZM10.0017 19.1992C8.68775 19.1992 7.45267 18.9499 6.2965 18.4512C5.14033 17.9526 4.13467 17.2758 3.2795 16.421C2.42433 15.5661 1.74725 14.5609 1.24825 13.4052C0.749417 12.2496 0.5 11.0148 0.5 9.70097C0.5 8.38697 0.749333 7.15189 1.248 5.99572C1.74667 4.83955 2.42342 3.83389 3.27825 2.97872C4.13308 2.12355 5.13833 1.44647 6.294 0.947469C7.44967 0.448635 8.68442 0.199219 9.99825 0.199219C11.3123 0.199219 12.5473 0.448552 13.7035 0.947218C14.8597 1.44589 15.8653 2.12264 16.7205 2.97747C17.5757 3.8323 18.2528 4.83755 18.7518 5.99322C19.2506 7.14889 19.5 8.38364 19.5 9.69747C19.5 11.0115 19.2507 12.2466 18.752 13.4027C18.2533 14.5589 17.5766 15.5646 16.7218 16.4197C15.8669 17.2749 14.8617 17.952 13.706 18.451C12.5503 18.9498 11.3156 19.1992 10.0017 19.1992ZM10 17.6992C12.2333 17.6992 14.125 16.9242 15.675 15.3742C17.225 13.8242 18 11.9326 18 9.69922C18 7.46589 17.225 5.57422 15.675 4.02422C14.125 2.47422 12.2333 1.69922 10 1.69922C7.76667 1.69922 5.875 2.47422 4.325 4.02422C2.775 5.57422 2 7.46589 2 9.69922C2 11.9326 2.775 13.8242 4.325 15.3742C5.875 16.9242 7.76667 17.6992 10 17.6992Z" fill="#91919D" />
                     </svg>
                     <div className="group-hover:opacity-100 z-[1000] text-left pointer-events-none text-white opacity-0 bg-contrast1.5 rounded-md px-3 py-2 absolute text-sm w-full min-w-[210px] top-[calc(100%+14px)] right-[-4px] text-sm text-grey60 before:content-[''] before:absolute before:top-[-4px] before:right-[10px] before:w-[8px] before:h-[8px] before:rotate-45 before:bg-contrast1.5">
-                      Metadata is used to store additional information about the token.
+                      {t("metadata_is_used_to_store_additional_information_about_the_token")}
                     </div>
                   </div>
                   <div className="grow h-[1px] bg-contrast4"></div>
@@ -417,7 +415,7 @@ function Index() {
                     <div className="grow bg-grey10 dark:bg-darkContrast px-4 py-2 rounded">
                       <input
                         required
-                        placeholder="Enter a key"
+                        placeholder={t("enter_a_key")}
                         className="text-sm bg-transparent w-full h-full placeholder-grey60 appearance-none outline-none"
                         value={metadataKey}
                         onChange={(e) => setMetadataKey(e.target.value)}
@@ -426,7 +424,7 @@ function Index() {
                     <div className="grow bg-grey10 dark:bg-darkContrast px-4 py-2 rounded">
                       <input
                         required
-                        placeholder="Enter a value"
+                        placeholder={t("enter_a_value")}
                         className="text-sm bg-transparent w-full h-full placeholder-grey60 appearance-none outline-none"
                         value={metadataValue}
                         onChange={(e) => setMetadataValue(e.target.value)}
@@ -447,7 +445,7 @@ function Index() {
                     <div key={`metadata-${index}`} className="flex gap-4 w-full">
                       <div className="grow bg-grey10 dark:bg-darkContrast px-4 py-2 rounded">
                         <input
-                          placeholder="Enter a key"
+                          placeholder={t("enter_a_key")}
                           className="text-sm bg-transparent w-full h-full placeholder-grey60 appearance-none outline-none"
                           value={item.key}
                           readOnly
@@ -455,7 +453,7 @@ function Index() {
                       </div>
                       <div className="grow bg-grey10 dark:bg-darkContrast px-4 py-2 rounded">
                         <input
-                          placeholder="Enter a value"
+                          placeholder={t("enter_a_value")}
                           className="text-sm bg-transparent w-full h-full placeholder-grey60 appearance-none outline-none"
                           value={item.value}
                           readOnly
@@ -476,7 +474,9 @@ function Index() {
 
               </div>
               <div className="mt-4">
-                <Button disabled={isDisabled()} onClick={goToReview}>Review</Button>
+                <Button disabled={isDisabled()} onClick={goToReview}>
+                  {t("review")}
+                </Button>
               </div>
             </form>
 
@@ -484,9 +484,9 @@ function Index() {
         )}
         {step === 2 && (
           <div className="grow flex flex-col">
-            <h1 className="text-white text-2xl mb-6">Review</h1>
+            <h1 className="text-white text-2xl mb-6">{t('review')}</h1>
             <div className="mt-2 mb-6 flex flex-col gap-4">
-              <div className="bg-contrast1 p-6 md:p-10 rounded-lg">
+              <div className="bg-contrast1 p-5 md:p-10 rounded-lg">
                 {(type === 'UPLOAD_IMAGE' || type === 'WEB_URL') && (
                   <div className="mb-5 mx-auto text-center gap-4">
                     {image && type === "UPLOAD_IMAGE" && (
@@ -505,7 +505,7 @@ function Index() {
                     )}
                   </div>
                 )}
-                <label className="text-white">Details</label>
+                <label className="text-white">{t('details')}</label>
                 <div className="my-4 text-grey20 bg-black p-5 rounded text-sm break-all flex flex-col gap-4">
                   {REVIEW_FIELDS.map((field, index) => (
                     <div key={`${field.label}-${index}`} className={field.className || ""}>
@@ -516,10 +516,10 @@ function Index() {
                 </div>
                 <div className="flex flex-col gap-4">
                   <Button disabled={isDisabled()} onClick={createToken} className="mt-4 w-full bg-orange text-black py-3 px-4 rounded text-sm">
-                    Create
+                    {t('create')}
                   </Button>
                   <Button onClick={goToCreate} className="!bg-contrast1.5 !hover:bg-contrast2 text-white">
-                    Cancel
+                    {t('cancel')}
                   </Button>
                 </div>
               </div>

@@ -82,9 +82,8 @@ function Index() {
         const inputToken = item.BODY.txn.inputs[0].tokenid;
         const difference = item.DETAILS.difference[inputToken];
 
-        if (!previousBalance[inputToken]) {
+        if (!previousBalance[inputToken] && balanceAtStart[inputToken]) {
           balanceHistory[item.TXPOWID] = new Decimal(balanceAtStart[inputToken]).toString();
-
           previousBalance[inputToken] = new Decimal(balanceAtStart[inputToken]);
         }
 
@@ -209,48 +208,54 @@ function Index() {
   const dropdownOptions = [
     {
       key: 'download_transactions',
-      label: 'Download transactions',
+      label: t('download_transactions'),
       onClick: downloadTransactions,
     },
   ]
 
   const uniqueMonths = useMemo(() => {
-    return history?.reduce((acc, h) => {
-      const date = format(new Date(Number(h.HEADER.timemilli)), 'yyyy-MM');
-      if (!acc.includes(date)) {
-        acc.push(date);
-      }
+    const currentDate = new Date();
+    const months: string[] = [];
 
-      if (acc.length === 1) {
-        const date = new Date(acc[0]);
-        for (let i = 1; i < 6; i++) {
-          date.setMonth(date.getMonth() - 1);
-          acc.push(format(date, 'yyyy-MM'));
+    // Get oldest transaction date if history exists
+    let oldestDate: any = null;
+
+    if (history?.length) {
+      oldestDate = Math.min(...history.map(h => Number(h.HEADER.timemilli)));
+      oldestDate = format(new Date(oldestDate), 'yyyy-MM');
+    }
+
+    // Check if oldest transaction date is older than current date - 5 months
+    if (oldestDate) {
+      const oldestDateObj = new Date(oldestDate);
+      const cutoffDate = new Date(currentDate);
+      cutoffDate.setMonth(cutoffDate.getMonth() - 5);
+
+      console.log('result', oldestDateObj < cutoffDate)
+      
+      if (oldestDateObj < cutoffDate) {
+        // Get all months between oldest date and current date
+        const startDate = new Date(oldestDate);
+        const endDate = new Date(currentDate);
+        
+        while (startDate <= endDate) {
+          months.push(format(startDate, 'yyyy-MM'));
+          startDate.setMonth(startDate.getMonth() + 1);
+        }
+      } else {
+        for (let i = 0; i < 6; i++) {
+          const monthDate = new Date(currentDate);
+          monthDate.setMonth(monthDate.getMonth() - i);
+          months.push(format(monthDate, 'yyyy-MM')); 
         }
       }
+    }
 
-      // Fill in missing months between lowest and highest
-      if (acc.length > 1) {
-        const start = new Date(acc[acc.length - 1]); // Lowest month
-        const end = new Date(acc[0]); // Highest month
+    // Sort in descending order (newest first)
+    months.sort((a, b) => a.localeCompare(b));
 
-        // Create array of all months between start and end
-        const current = new Date(start);
-
-        while (current <= end) {
-          const monthStr = format(current, 'yyyy-MM');
-          if (!acc.includes(monthStr)) {
-            acc.push(monthStr);
-          }
-          current.setMonth(current.getMonth() + 1);
-        }
-
-        // Sort in descending order
-        acc.sort((a, b) => a.localeCompare(b));
-      }
-
-      return acc;
-    }, []).concat(['all']);
+    // Add 'all' option
+    return months.concat(['all']);
   }, [history]);
 
   const viewTxPowInfo = (txpowid: string) => {
@@ -295,14 +300,14 @@ function Index() {
           <div className="mt-8 flex flex-col gap-4 mb-20">
             {history && (history.length === 0 || Object.values(groupedByDay || {}).every(group => group.length === 0)) && (
               <div className="w-full flex items-center bg-contrast1 opacity-80 p-4 px-5 text-sm rounded">
-                No transactions found
+                {t('no_transactions_found')}
               </div>
             )}
             {history && history.length >= 0 && (
               <>
                 {groupedByDay && activeMonth !== 'all' && !Object.keys(groupedByDay).map((row) => format(row, 'yyyy-MM')).includes(activeMonth) && (
                   <div className="w-full flex items-center bg-contrast1 opacity-80 p-4 px-5 text-sm rounded">
-                    No transactions found.
+                    {t('no_transactions_found')}
                   </div>
                 )}
                 {groupedByDay && Object.keys(groupedByDay).map((row) => {
@@ -366,7 +371,7 @@ function Index() {
                                       {t("created")} - {format(new Date(Number(h.HEADER.timemilli)), 'HH:mm aa')}
                                     </p>
                                   </div>
-                                  <div className="text-right flex flex-col items-end justify-center gap-1 text-[15px]">
+                                  <div className="text-xs md:text-base text-right flex flex-col items-end justify-center gap-1 text-[15px]">
                                     <p className="font-bold text-green">
                                       +<Truncate text={f(createdToken.tokenamount)} />
                                     </p>
@@ -405,7 +410,7 @@ function Index() {
                                   </p>
                                 </div>
                                 {difference && difference !== '0' && (
-                                  <div className="text-right flex flex-col items-end justify-center gap-1 font-bold text-[15px]">
+                                  <div className="text-xs md:text-base text-right flex flex-col items-end justify-center gap-1 font-bold text-[15px]">
                                     <p className={`${difference > 0 ? 'text-green' : 'text-red'}`}>
                                       {!difference.includes('-') ? difference > 0 ? '+' : '-' : ''}
                                       <Truncate text={f(difference)} />
@@ -418,7 +423,7 @@ function Index() {
                                   </div>
                                 )}
                                 {difference === '0' && (
-                                  <div className="text-right flex flex-col items-end justify-center gap-1 font-bold text-[15px]">
+                                  <div className="text-xs md:text-base text-right flex flex-col items-end justify-center gap-1 font-bold text-[15px]">
                                     <p className={`text-grey-60`}>0</p>
                                     {balanceDifference[h.TXPOWID] && (
                                       <p className="text-grey60">
@@ -428,7 +433,7 @@ function Index() {
                                   </div>
                                 )}
                                 {!difference && (
-                                  <div className="text-right flex flex-col items-end justify-center gap-1 font-bold">
+                                  <div className="text-xs md:text-base text-right flex flex-col items-end justify-center gap-1 font-bold">
                                     <p className={`text-grey-60`}>0</p>
                                     {balanceDifference[h.TXPOWID] && (
                                       <p className="text-grey60">
@@ -513,7 +518,7 @@ const Summary = ({ txpow, back }: { txpow: any, back: () => void }) => {
       </div>
       <div className="grid grid-cols-2 mb-8">
         <div className="col-span-1">
-          <h1 className="text-white text-2xl">Summary</h1>
+          <h1 className="text-white text-2xl">{t("summary")}</h1>
         </div>
         <div className="col-span-1 flex justify-end">
           <div className="flex items-center gap-5">
@@ -530,118 +535,113 @@ const Summary = ({ txpow, back }: { txpow: any, back: () => void }) => {
       </div>
 
       <div className="select-none flex flex-col gap-2">
-        <InfoBox title="Transaction type" value={type} />
+        <InfoBox title={t("transaction_type")} value={type} />
         <div>
           <div className="block md:hidden">
-            <InfoBox title="Transaction ID" value={s(txpow?.TXPOWID, { start: 12, end: 16 })} copy />
+            <InfoBox title={t("transaction_id")} value={s(txpow?.TXPOWID, { start: 12, end: 16 })} copy />
           </div>
           <div className="hidden md:block">
-            <InfoBox title="Transaction ID" value={txpow?.TXPOWID} copy />
+            <InfoBox title={t("transaction_id")} value={txpow?.TXPOWID} copy />
           </div>
         </div>
         <div>
-          <div className="block md:hidden">
-            <InfoBox title="Amount" value={m(f(difference), 28)} />
-          </div>
-          <div className="hidden md:block">
-            <InfoBox title="Amount" value={f(difference)} />
-          </div>
+          <InfoBox title={t("amount")} value={f(difference)} />
         </div>
-        <InfoBox title="Token" value={renderTokenName(txpow?.BODY?.txn.inputs[0])} />
-        {createdToken && (
+        <InfoBox title={t("token")} value={renderTokenName(txpow?.BODY?.txn.inputs[0])} />
+        {hasCreatedToken && createdToken && (
           <>
-            <InfoBox title="Created Token" value={renderTokenName(createdToken)} />
-            <InfoBox title="Created Token Supply" value={f(createdToken.tokenamount)} />
+            <InfoBox title={t("created_token")} value={renderTokenName(createdToken)} />
+            <InfoBox title={t("created_token_supply")} value={f(createdToken.tokenamount)} />
           </>
         )}
         {output && (
           <>
-            <div className="block md:hidden">
-              <InfoBox title="To 0x" value={s(output.address, { start: 12, end: 16 })} />
-              <InfoBox title="To Mx" value={s(output.miniaddress, { start: 12, end: 16 })} />
+            <div className="flex flex-col gap-2 md:hidden">
+              <InfoBox title={t("to_0x")} value={s(output.address, { start: 12, end: 16 })} />
+              <InfoBox title={t("to_mx")} value={s(output.miniaddress, { start: 12, end: 16 })} />
             </div>
-            <div className="hidden md:block">
-              <InfoBox title="To 0x" value={output.address} />
-              <InfoBox title="To Mx" value={output.miniaddress} />
+            <div className="hidden md:flex flex-col gap-2">
+              <InfoBox title={t("to_0x")} value={output.address} />
+              <InfoBox title={t("to_mx")} value={output.miniaddress} />
             </div>
           </>
         )}
-        <InfoBox title="Date" value={format(new Date(Number(txpow?.HEADER.timemilli)), 'dd MMMM yyyy @ hh:mm aa')} />
-        <InfoBox title="Burn" value={txpow?.BURN || "N/A"} />
-        <InfoBox title="Inputs" collapsable>
+        <InfoBox title={t("date")} value={format(new Date(Number(txpow?.HEADER.timemilli)), 'dd MMMM yyyy @ hh:mm aa')} />
+        <InfoBox title={t("burn")} value={txpow?.BURN || "N/A"} />
+        <InfoBox title={t("inputs")} collapsable>
           <div className="space-y-2 mb-2 text-sm">
             {txpow?.BODY?.txn.inputs.map((row: any, index) => (
               <div key={row.tokenid}>
                 <div className="bg-contrast3 rounded py-3 px-4 text-sm mb-1">
-                  Input #{index + 1}
+                  {t("input")} #{index + 1}
                 </div>
                 <div className="flex flex-col gap-1">
                   <div className="bg-contrast2 py-3 px-4 rounded">
-                    <div className="text-grey80 mb-1">Token</div>
+                    <div className="text-grey80 mb-1">{t("token")}</div>
                     <div className="text-white">{renderTokenName(row)}</div>
                   </div>
                   <div className="bg-contrast2 py-3 px-4 rounded">
-                    <div className="text-grey80 mb-1">Amount</div>
+                    <div className="text-grey80 mb-1">{t("amount")}</div>
                     <div className="text-white block md:hidden">{m(f(row.amount), 28)}</div>
                     <div className="text-white hidden md:block">{f(row.amount)}</div>
                   </div>
                   <div className="bg-contrast2 py-3 px-4 rounded">
-                    <div className="text-grey80 mb-1">Coin ID</div>
+                    <div className="text-grey80 mb-1">{t("coin_id")}</div>
                     <div className="text-white block md:hidden">{s(row.coinid, { start: 12, end: 16 })}</div>
                     <div className="text-white hidden md:block">{row.coinid}</div>
                   </div>
                   <div className="bg-contrast2 py-3 px-4 rounded">
-                    <div className="text-grey80 mb-1">Token ID</div>
+                    <div className="text-grey80 mb-1">{t("token_id")}</div>
                     <div className="text-white block md:hidden">{s(row.tokenid, { start: 12, end: 16 })}</div>
                     <div className="text-white hidden md:block">{row.tokenid}</div>
                   </div>
                   <div className="bg-contrast2 py-3 px-4 rounded">
-                    <div className="text-grey80 mb-1">Spent</div>
-                    <div className="text-white">{row.spent ? "True" : "False"}</div>
+                    <div className="text-grey80 mb-1">{t("spent")}</div>
+                    <div className="text-white">{row.spent ? t("true") : t("false")}</div>
                   </div>
                   <div className="bg-contrast2 py-3 px-4 rounded">
-                    <div className="text-grey80 mb-1">Store State</div>
-                    <div className="text-white">{row.storestate ? "True" : "False"}</div>
+                    <div className="text-grey80 mb-1">{t("store_state")}</div>
+                    <div className="text-white">{row.storestate ? t("true") : t("false")}</div>
                   </div>
                 </div>
               </div>
             ))}
           </div>
         </InfoBox>
-        <InfoBox title="Outputs" collapsable>
+        <InfoBox title={t("outputs")} collapsable>
           <div className="space-y-4 mb-2 text-sm">
             {txpow?.BODY?.txn.outputs.map((row: any, index) => (
               <div key={row.tokenid}>
                 <div className="bg-contrast3 rounded py-3 px-4 text-sm mb-1">
-                  Input #{index + 1}
+                  {t("output")} #{index + 1}
                 </div>
                 <div className="flex flex-col gap-1">
                   <div className="bg-contrast2 py-3 px-4 rounded">
-                    <div className="text-grey80 mb-1">Token</div>
+                    <div className="text-grey80 mb-1">{t("token")}</div>
                     <div className="text-white">{renderTokenName(row)}</div>
                   </div>
                   <div className="bg-contrast2 py-3 px-4 rounded">
-                    <div className="text-grey80 mb-1">Amount</div>
+                    <div className="text-grey80 mb-1">{t("amount")}</div>
                     <div className="text-white block md:hidden">{m(f(row.amount), 28)}</div>
                     <div className="text-white hidden md:block">{f(row.amount)}</div>
                   </div>
                   <div className="bg-contrast2 py-3 px-4 rounded">
-                    <div className="text-grey80 mb-1">Coin ID</div>
+                    <div className="text-grey80 mb-1">{t("coin_id")}</div>
                     <div className="text-white block md:hidden">{s(row.coinid, { start: 12, end: 16 })}</div>
                     <div className="text-white hidden md:block">{row.coinid}</div>
                   </div>
                   <div className="bg-contrast2 py-3 px-4 rounded">
-                    <div className="text-grey80 mb-1">Token ID</div>
+                    <div className="text-grey80 mb-1">{t("token_id")}</div>
                     <div className="text-white block md:hidden">{s(row.tokenid, { start: 12, end: 16 })}</div>
                     <div className="text-white hidden md:block">{row.tokenid}</div>
                   </div>
                   <div className="bg-contrast2 py-3 px-4 rounded">
-                    <div className="text-grey80 mb-1">Spent</div>
-                    <div className="text-white">{row.spent ? "True" : "False"}</div>
+                    <div className="text-grey80 mb-1">{t("spent")}</div>
+                    <div className="text-white">{row.spent ? t("true") : t("false")}</div>
                   </div>
                   <div className="bg-contrast2 py-3 px-4 rounded">
-                    <div className="text-grey80 mb-1">Store State</div>
-                    <div className="text-white">{row.storestate ? "True" : "False"}</div>
+                    <div className="text-grey80 mb-1">{t("store_state")}</div>
+                    <div className="text-white">{row.storestate ? t("true") : t("false")}</div>
                   </div>
                 </div>
               </div>

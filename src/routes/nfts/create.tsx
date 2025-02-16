@@ -10,8 +10,6 @@ export const Route = createFileRoute('/nfts/create')({
   component: Index,
 })
 
-const Title = 'NFTs'
-
 function Index() {
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -78,7 +76,7 @@ function Index() {
     });
 
     if (response.pending) {
-      setIsPending({
+      return setIsPending({
         uid: response.pendinguid as string,
         callback: () => {
           navigate({ to: '/' })
@@ -99,31 +97,31 @@ function Index() {
     className?: string;
   }[] = [
       {
-        label: 'Token name',
+        label: t("token_name"),
         value: tokenName,
       },
       {
-        label: "Total Supply",
+        label: t("total_supply"),
         value: totalSupply,
       },
       {
-        label: "Description",
+        label: t("description"),
         value: description,
       },
       {
-        label: "Creators name",
+        label: t("creators_name"),
         value: creatorsName,
       },
       {
-        label: "External URL",
+        label: t("external_url"),
         value: externalUrl,
       },
       {
-        label: "Web validation URL",
+        label: t("web_validation_url"),
         value: webValidationUrl,
       },
       {
-        label: "Burn",
+        label: t("burn"),
         value: burn,
       },
       ...metadata.map((item) => ({
@@ -136,11 +134,11 @@ function Index() {
   const TABS = [
     {
       key: '/nfts/create',
-      title: 'Create',
+      title: t("create"),
     },
     {
       key: '/nfts/my-nfts',
-      title: 'My NFTs',
+      title: t("my_nfts"),
     }
   ]
 
@@ -163,7 +161,7 @@ function Index() {
           <div>
             <div className="grid grid-cols-2">
               <div className="col-span-2">
-                <h1 className="text-white text-2xl mb-6">{Title}</h1>
+                <h1 className="text-white text-2xl mb-6">{t("NFTs")}</h1>
               </div>
             </div>
 
@@ -177,17 +175,17 @@ function Index() {
 
             <form className="mt-0 flex flex-col gap-6">
               <Input
-                label="Image URL"
-                placeholder="Enter the image URL for your NFT"
+                label={t("image_url")}
+                placeholder={t("enter_the_image_url_for_your_nft")}
                 value={webUrl}
                 required={true}
                 onChange={setWebUrl}
                 validation={(value) => /^(?:(?:(?:https?):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z0-9\u00a1-\uffff][a-z0-9\u00a1-\uffff_-]{0,62})?[a-z0-9\u00a1-\uffff]\.)+(?:[a-z\u00a1-\uffff]{2,}\.?))(?::\d{2,5})?(?:[/?#]\S*)?$/i.test(value)}
-                validationMessage="Please enter a valid URL."
+                validationMessage={t("please_enter_a_valid_url")}
               />
               <Input
-                label="Token name"
-                placeholder="Enter the name of your NFT"
+                label={t("token_name")}
+                placeholder={t("enter_the_name_of_your_nft")}
                 value={tokenName}
                 onChange={setTokenName}
                 validation={(value) => {
@@ -196,8 +194,8 @@ function Index() {
                 validationMessage="Please enter a name for the NFT."
               />
               <Input
-                label="Total supply"
-                placeholder="Enter the total supply of your NFT"
+                label={t("total_supply")}
+                placeholder={t("enter_the_total_supply_of_your_nft")}
                 value={totalSupply}
                 onChange={setTotalSupply}
                 validation={(value) => {
@@ -206,56 +204,56 @@ function Index() {
                 validationMessage="Please enter a total supply for the NFT."
               />
               <Input
-                label="Description"
-                placeholder="Enter a description for your NFT"
+                label={t("description")}
+                placeholder={t("enter_a_description_for_your_nft")}
                 value={description}
                 onChange={setDescription}
               />
               <Input
-                label="Creators name"
-                placeholder="Enter the name of the creator"
+                label={t("creators_name")}
+                placeholder={t("enter_the_name_of_the_creator")}
                 value={creatorsName}
                 onChange={setCreatorsName}
-                info="The creator name is used to identify the creator of the NFT."
+                info={t("the_creator_name_is_used_to_identify_the_creator_of_the_nft")}
                 optionalLabel={t('optional')}
               />
               <Input
-                label="External URL"
-                placeholder="Enter an external URL for your NFT"
+                label={t("external_url")}
+                placeholder={t("enter_an_external_url_for_your_nft")}
                 value={externalUrl}
                 onChange={setExternalUrl}
                 optionalLabel={t('optional')}
               />
               <Input
-                label="Web validation URL"
-                placeholder="Enter a web validation URL"
+                label={t("web_validation_url")}
+                placeholder={t("enter_a_web_validation_url")}
                 value={webValidationUrl}
                 onChange={setWebValidationUrl}
                 validation={(value) => {
                   return value.length > 0;
                 }}
                 validationMessage="Please enter a web validation URL for the NFT."
-                info="The web validation URL is used to validate the NFT."
+                info={t("the_web_address_to_validate_the_token")}
                 optionalLabel={t('optional')}
               />
               <Input
-                label="Burn"
-                placeholder="Enter a burn amount"
+                label={t("burn")}
+                placeholder={t("enter_a_burn_amount")}
                 value={burn}
                 onChange={setBurn}
-                info="The burn amount is used to determine the amount of tokens that will be burned when the NFT is created."
+                info={t("the_amount_of_tokens_to_burn_to_priortise_the_token")}
                 optionalLabel={t('optional')}
               />
 
               <div className="text-sm md:text-base my-2 flex items-center gap-4 text-center text-grey60">
                 <div className="grow h-[1px] bg-contrast4"></div>
-                Add additional meta data ({t('optional')})
+                {t("add_additional_metadata")} ({t('optional')})
                 <div className="relative group">
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M9.25 14.4492H10.75V8.69922H9.25V14.4492ZM10 6.98772C10.2288 6.98772 10.4207 6.9103 10.5755 6.75547C10.7303 6.60064 10.8077 6.4088 10.8077 6.17997C10.8077 5.95114 10.7303 5.7593 10.5755 5.60447C10.4207 5.4498 10.2288 5.37247 10 5.37247C9.77117 5.37247 9.57933 5.4498 9.4245 5.60447C9.26967 5.7593 9.19225 5.95114 9.19225 6.17997C9.19225 6.4088 9.26967 6.60064 9.4245 6.75547C9.57933 6.9103 9.77117 6.98772 10 6.98772ZM10.0017 19.1992C8.68775 19.1992 7.45267 18.9499 6.2965 18.4512C5.14033 17.9526 4.13467 17.2758 3.2795 16.421C2.42433 15.5661 1.74725 14.5609 1.24825 13.4052C0.749417 12.2496 0.5 11.0148 0.5 9.70097C0.5 8.38697 0.749333 7.15189 1.248 5.99572C1.74667 4.83955 2.42342 3.83389 3.27825 2.97872C4.13308 2.12355 5.13833 1.44647 6.294 0.947469C7.44967 0.448635 8.68442 0.199219 9.99825 0.199219C11.3123 0.199219 12.5473 0.448552 13.7035 0.947218C14.8597 1.44589 15.8653 2.12264 16.7205 2.97747C17.5757 3.8323 18.2528 4.83755 18.7518 5.99322C19.2506 7.14889 19.5 8.38364 19.5 9.69747C19.5 11.0115 19.2507 12.2466 18.752 13.4027C18.2533 14.5589 17.5766 15.5646 16.7218 16.4197C15.8669 17.2749 14.8617 17.952 13.706 18.451C12.5503 18.9498 11.3156 19.1992 10.0017 19.1992ZM10 17.6992C12.2333 17.6992 14.125 16.9242 15.675 15.3742C17.225 13.8242 18 11.9326 18 9.69922C18 7.46589 17.225 5.57422 15.675 4.02422C14.125 2.47422 12.2333 1.69922 10 1.69922C7.76667 1.69922 5.875 2.47422 4.325 4.02422C2.775 5.57422 2 7.46589 2 9.69922C2 11.9326 2.775 13.8242 4.325 15.3742C5.875 16.9242 7.76667 17.6992 10 17.6992Z" fill="#91919D" />
                   </svg>
-                  <div className="group-hover:opacity-100 text-left pointer-events-none text-white opacity-0 bg-contrast1.5 rounded-md px-3 py-2 absolute text-sm w-full min-w-[210px] top-[calc(100%+14px)] right-[-4px] text-sm text-grey60 before:content-[''] before:absolute before:top-[-4px] before:right-[10px] before:w-[8px] before:h-[8px] before:rotate-45 before:bg-contrast1.5">
-                    Metadata is used to store additional information about the token.
+                  <div className="group-hover:opacity-100 z-[100] text-left pointer-events-none text-white opacity-0 bg-contrast1.5 rounded-md px-3 py-2 absolute text-sm w-full min-w-[210px] top-[calc(100%+14px)] right-[-4px] text-sm text-grey60 before:content-[''] before:absolute before:top-[-4px] before:right-[10px] before:w-[8px] before:h-[8px] before:rotate-45 before:bg-contrast1.5">
+                    {t("metadata_is_used_to_store_additional_information_about_the_token")}
                   </div>
                 </div>
                 <div className="grow h-[1px] bg-contrast4"></div>
@@ -265,7 +263,7 @@ function Index() {
                 <div className="flex gap-4 w-full">
                   <div className="grow bg-grey10 dark:bg-darkContrast px-4 py-2 rounded">
                     <input
-                      placeholder="Enter a key"
+                      placeholder={t("enter_a_key")}
                       className="text-sm bg-transparent w-full h-full placeholder-grey60 appearance-none outline-none"
                       value={metadataKey}
                       onChange={(e) => setMetadataKey(e.target.value)}
@@ -273,7 +271,7 @@ function Index() {
                   </div>
                   <div className="grow bg-grey10 dark:bg-darkContrast px-4 py-2 rounded">
                     <input
-                      placeholder="Enter a value"
+                      placeholder={t("enter_a_value")}
                       className="text-sm bg-transparent w-full h-full placeholder-grey60 appearance-none outline-none"
                       value={metadataValue}
                       onChange={(e) => setMetadataValue(e.target.value)}
@@ -324,16 +322,20 @@ function Index() {
               </div>
 
               <div className="mt-4">
-                <Button disabled={isDisabled()} onClick={goToReview}>Review</Button>
+                <Button disabled={isDisabled()} onClick={goToReview}>
+                  {t("review")}
+                </Button>
               </div>
             </form>
           </div>
         )}
         {step === 2 && (
           <div className="grow flex flex-col">
-            <h1 className="text-white text-2xl mb-6">Review</h1>
+            <h1 className="text-white text-2xl mb-6">
+              {t("review")}
+            </h1>
             <div className="mt-2 mb-6 flex flex-col gap-4">
-              <div className="bg-contrast1 p-6 md:p-10 rounded-lg">
+              <div className="bg-contrast1 p-5 md:p-10 rounded-lg">
                 <div className="mb-5 mx-auto text-center gap-4">
                   {webUrl && (
                     <div className="relative w-full h-full mx-auto min-h-[200px] max-w-[200px] border border-contrast2 rounded-md flex items-center justify-center">
@@ -345,7 +347,9 @@ function Index() {
                     </div>
                   )}
                 </div>
-                <label className="text-white">Details</label>
+                <label className="text-white">
+                  {t("details")}
+                </label>
                 <div className="my-4 text-grey20 bg-black p-5 rounded text-sm break-all flex flex-col gap-4">
                   {REVIEW_FIELDS.map((field, index) => (
                     <div key={`${field.label}-${index}`}>
@@ -356,10 +360,10 @@ function Index() {
                 </div>
                 <div className="flex flex-col gap-4">
                   <Button disabled={isDisabled()} onClick={createToken} className="mt-4 w-full bg-orange text-black py-3 px-4 rounded text-sm">
-                    Create
+                    {t("create")}
                   </Button>
                   <Button onClick={goToCreate} className="!bg-contrast1.5 !hover:bg-contrast2 text-white">
-                    Cancel
+                    {t("cancel")}
                   </Button>
                 </div>
               </div>

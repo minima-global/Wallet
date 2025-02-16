@@ -20,6 +20,10 @@ const TokenListItem = ({ balance }: { balance: Balance }) => {
         setShowInfo(!showInfo);
     }
 
+    const handleClick = (evt: React.MouseEvent<HTMLAnchorElement>) => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
     const locked = new Decimal(balance.confirmed).minus(balance.sendable).toString();
     const confirmed = new Decimal(balance.confirmed).add(balance.unconfirmed).toString();
     const sendable = new Decimal(balance.sendable).add(balance.unconfirmed).toString();
@@ -27,7 +31,7 @@ const TokenListItem = ({ balance }: { balance: Balance }) => {
     return (
         <li>
             <BalanceInfoModal display={showInfo} dismiss={() => setShowInfo(false)} />
-            <Link to="/balance/$id" params={{ id: balance.tokenid }}>
+            <Link to="/balance/$id" params={{ id: balance.tokenid }} onClick={handleClick}>
                 <div className={`w-full flex items-center bg-contrast1.5 rounded-t hover:bg-contrast2 transition-all duration-100 p-3`}>
                     <div className="grow flex">
                         <TokenIcon token={balance.token} tokenId={balance.tokenid} />

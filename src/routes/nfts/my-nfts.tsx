@@ -7,11 +7,13 @@ import { appContext } from '../../AppContext';
 import SearchBar from '../../components/SearchBar';
 import TokenCard from '../../components/TokenCard';
 import HeartButton from '../../components/HeartButton';
+import useTranslation from '../../hooks/useTranslation';
 export const Route = createFileRoute('/nfts/my-nfts')({
   component: Index,
 })
 
 function Index() {
+  const { t } = useTranslation();
   const { balance, favourites } = useContext(appContext);
   const navigate = useNavigate();
   const [query, setQuery] = useState('');
@@ -28,11 +30,11 @@ function Index() {
   const TABS = [
     {
       key: '/nfts/create',
-      title: 'Create',
+      title: t("create"),
     },
     {
       key: '/nfts/my-nfts',
-      title: 'My NFTs',
+      title: t("my_nfts"),
     }
   ]
 
@@ -51,7 +53,9 @@ function Index() {
       <div>
         <div className="grid grid-cols-2">
           <div className="col-span-2">
-            <h1 className="text-white text-2xl mb-6">My NFTs</h1>
+            <h1 className="text-white text-2xl mb-6">
+              {t("my_nfts")}
+            </h1>
           </div>
         </div>
 
@@ -64,14 +68,14 @@ function Index() {
         </div>
 
         <div className="flex gap-4">
-          <SearchBar placeholder="Search for an NFT" value={query} onChange={setQuery} />
+          <SearchBar placeholder={t("search_for_an_nft")} value={query} onChange={setQuery} />
           <HeartButton showOnlyFavourites={showOnlyFavourites} onClick={toggleShowOnlyFavourites} />
         </div>
 
         <div className="my-8 grid grid-cols-12 gap-6">
           {nfts.length === 0 && (
             <div className="col-span-12 w-full flex items-center bg-contrast1 opacity-80 p-4 px-5 text-sm rounded">
-              No NFTs found
+              {t("no_nfts_found")}
             </div>
           )}
           {nfts.length > 0 && nfts

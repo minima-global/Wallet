@@ -69,7 +69,7 @@ const Input: React.FC<InputProps> = ({ label, optionalLabel, placeholder, value,
                         {action && (
                             <div className="grow flex justify-end mb-1.5">
                                 <button onClick={() => typeof action === 'function' ? action() : null} className="cursor-pointer text-xs flex bg-contrast1.5 hover:bg-contrast2 transition-all duration-100 border border-contrast2 rounded-full flex items-center gap-3 w-fit px-3.5 py-1 text-white cursor-pointer select-none origin-center active:scale-[0.95] transition-all duration-100">
-                                    Edit
+                                    {t('edit')}
                                 </button>
                             </div>
                         )}
@@ -78,7 +78,7 @@ const Input: React.FC<InputProps> = ({ label, optionalLabel, placeholder, value,
             )}
             <div className={`px-4 py-3.5 rounded border border-transparent ${validation && valid === false ? "!border-red" : ""} ${inverse ? 'bg-contrast2' : 'bg-contrast1'}`}>
                 <div className="flex relative">
-                    <input readOnly={readOnly} required={required} name="amount" onBlur={handleOnBlur} placeholder={placeholder} className={`text-sm bg-transparent w-full placeholder-grey60 appearance-none outline-none ${copy || clearable ? "pr-8" : ""}`} value={value} onChange={(e) => onChange?.(e.target.value)} />
+                    <input readOnly={readOnly} required={required} name="amount" onBlur={handleOnBlur} placeholder={placeholder} className={`text-sm bg-transparent w-full placeholder-grey60 appearance-none outline-none ${copy || clearable || info ? "pr-4 md:pr-8" : ""}`} value={value} onChange={(e) => onChange?.(e.target.value)} />
                     {info &&
                         <div className="relative group z-[30]">
                             <div className="text-sm text-grey60">

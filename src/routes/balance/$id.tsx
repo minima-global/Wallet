@@ -44,7 +44,7 @@ function RouteComponent() {
             const response = await MDS.cmd.send({
                 params: {
                     tokenid: token?.tokenid,
-                    amount: '0.01',
+                    amount: token?.sendable,
                     address: '0xFF'
                 }
             });
@@ -91,7 +91,7 @@ function RouteComponent() {
     return (
         <div>
             <div className={`${showBurnModal ? 'opacity-100' : 'pointer-events-none opacity-0'} transition-opacity duration-100 flex absolute z-50 inset-0 top-0 left-0 justify-center items-center w-screen h-screen`}>
-                <div className={`bg-contrast1 mb-8 fixed z-[60] rounded-lg w-[440px] text-center text-white p-5 transform transition-all duration-200 ${showBurnModal ? 'translate-y-[0%] opacity-100' : 'translate-y-[4px] opacity-0'}`}>
+                <div className={`bg-contrast1 mb-8 fixed z-[60] rounded-lg w-full max-w-[90%] md:max-w-[440px] text-center text-white p-5 transform transition-all duration-200 ${showBurnModal ? 'translate-y-[0%] opacity-100' : 'translate-y-[4px] opacity-0'}`}>
                     <h1 className="text-white text-2xl mt-1.5 mb-5 font-bold">{t('burn_token')}</h1>
                     <p className="text-grey80 text-base text-sm mb-2 max-w-[80%] mx-auto">{t('are_you_sure_you_want_to_burn_this_token_this_action_cannot_be_reversed')}</p>
                     <div className="mt-6 space-y-2">
@@ -107,7 +107,7 @@ function RouteComponent() {
             </div>
 
             <div className={`${showHideTokenModal ? 'opacity-100' : 'pointer-events-none opacity-0'} transition-opacity duration-100 flex absolute z-50 inset-0 top-0 left-0 justify-center items-center w-screen h-screen`}>
-                <div className={`bg-contrast1 mb-8 fixed z-[60] rounded-lg w-[440px] text-center text-white p-5 transform transition-all duration-200 ${showHideTokenModal ? 'translate-y-[0%] opacity-100' : 'translate-y-[4px] opacity-0'}`}>
+                <div className={`bg-contrast1 mb-8 fixed z-[60] rounded-lg w-full max-w-[90%] md:max-w-[440px] text-center text-white p-5 transform transition-all duration-200 ${showHideTokenModal ? 'translate-y-[0%] opacity-100' : 'translate-y-[4px] opacity-0'}`}>
                     {isHidden ? (
                         <>
                             <h1 className="text-white text-2xl mt-1.5 mb-5 font-bold">{t('show_token')}</h1>
@@ -169,7 +169,7 @@ function RouteComponent() {
 
             {!token && (
                 <div className="mb-10">
-                    <InfoBox title="Token could not be found" />
+                    <InfoBox title={t('token_could_not_be_found')} />
                 </div>
             )}
 
@@ -201,10 +201,9 @@ function RouteComponent() {
                         {token && token.tokenid === '0x00' && (
                             <InfoBox
                                 title={t('description')}
-                                value={t('this_is_the_native_minima_token')}
+                                value={t('this_is_the_official_minima_token')}
                             />
                         )}
-                        {/* <InfoBox title={t('token_id')} value={token.tokenid} copy /> */}
                         <InfoBox title={t('total_minted')} value={token.total} />
                         <InfoBox title={t('total_coins')} value={token.coins} />
                         <InfoBox
