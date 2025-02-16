@@ -128,25 +128,25 @@ const BalanceInfoModal = ({ display, dismiss }: { display: boolean, dismiss: () 
 
     return (
         <div className={`${display ? 'opacity-100' : 'pointer-events-none opacity-0'} delay-100 transition-opacity duration-100 flex absolute z-50 inset-0 top-0 left-0 justify-center items-center w-screen h-screen`}>
-            <div className={`bg-contrast1 mb-4 fixed z-[60] rounded-lg w-[440px] text-center text-white p-5 transform transition-all duration-200 ${display ? 'translate-y-[0%] opacity-100' : 'translate-y-[4px] opacity-0'}`}>
-                <h1 className="text-white text-2xl mt-2 mb-6 font-bold">
-                    Token states
+            <div className={`bg-contrast1 mb-4 fixed z-[60] rounded-lg w-full max-w-[90%] md:max-w-[440px] text-center text-white p-5 transform transition-all duration-200 ${display ? 'translate-y-[0%] opacity-100' : 'translate-y-[4px] opacity-0'}`}>
+                <h1 className="text-white text-xl md:text-2xl mt-2 mb-6 font-bold">
+                    {t('token_states')}
                 </h1>
                 <div className="flex flex-col gap-3 mb-1 text-left text-grey80 text-sm">
                     <div className="bg-contrast1.5/50 py-3 px-4 rounded-lg">
-                        <h2 className="text-white text-lg font-bold mb-1.5">
-                            Available
+                        <h2 className="text-white text-base md:text-lg font-bold mb-1.5">
+                            {t('available')}
                         </h2>
                         <p className="text-grey80 text-sm">
-                            Funds are available to be spent immediately as they are currently not locked in a contract.
+                            {t('token_states_available')}
                         </p>
                     </div>
                     <div className="bg-contrast1.5/50 py-3 px-4 rounded-lg">
-                        <h2 className="text-white text-lg font-bold mb-1.5">
-                            Locked
+                        <h2 className="text-white text-base md:text-lg font-bold mb-1.5">
+                            {t('locked')}
                         </h2>
                         <p>
-                            Funds are locked in a contract and unable to spend.
+                            {t('token_states_locked')}
                         </p>
                     </div>
                 </div>

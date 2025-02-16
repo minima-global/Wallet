@@ -181,7 +181,10 @@
         "highest": "Highest",
         "lowest": "Lowest",
         "apply": "Apply",
-        "reset": "Reset"
+        "reset": "Reset",
+        "token_states": "Token states",
+        "token_states_available": "Funds are available to be spent immediately as they are currently not locked in a contract.",
+        "token_states_locked": "Funds are locked in a contract and unable to spend."
     },
     "zh": {
         "wallet": "钱包",
@@ -396,7 +399,10 @@
         "highest": "最高",
         "lowest": "最低",
         "apply": "应用",
-        "reset": "重置"
+        "reset": "重置",
+        "token_states": "代币状态",
+        "token_states_available": "资金可以立即用于消费，因为它们目前不在合约中锁定。",
+        "token_states_locked": "资金被锁定在合约中，无法使用。"
     },
     "ru": {
         "wallet": "Кошелек",
@@ -580,7 +586,10 @@
         "highest": "Высший",
         "lowest": "Низший",
         "apply": "Применить",
-        "reset": "Сбросить"
+        "reset": "Сбросить",
+        "token_states": "Состояние токена",
+        "token_states_available": "Средства доступны для использования, так как они в настоящее время не заблокированы в контракте.",
+        "token_states_locked": "Средства заблокированы в контракте и не могут быть использованы."
     },
     "ukr": {
         "wallet": "Гаманець",
@@ -764,7 +773,10 @@
         "highest": "Высший",
         "lowest": "Низший",
         "apply": "Применить",
-        "reset": "Сбросить"
+        "reset": "Сбросить",
+        "token_states": "Состояние токена",
+        "token_states_available": "Средства доступны для использования, так как они в настоящее время не заблокированы в контракте.",
+        "token_states_locked": "Средства заблокированы в контракте и не могут быть использованы."
     },
     "fr": {
         "wallet": "Portefeuille",
@@ -949,7 +961,10 @@
         "highest": "Haut",
         "lowest": "Bas",
         "apply": "Appliquer",
-        "reset": "Réinitialiser"
+        "reset": "Réinitialiser",
+        "token_states": "État du jeton",
+        "token_states_available": "Les fonds sont disponibles pour être dépensés immédiatement car ils ne sont actuellement pas verrouillés dans un contrat.",
+        "token_states_locked": "Les fonds sont verrouillés dans un contrat et ne peuvent pas être utilisés."
     },
     "es": {
         "wallet": "Cartera",
@@ -1133,7 +1148,10 @@
         "highest": "Haut",
         "lowest": "Bas",
         "apply": "Appliquer",
-        "reset": "Réinitialiser"
+        "reset": "Réinitialiser",
+        "token_states": "État du jeton",
+        "token_states_available": "Les fonds sont disponibles pour être dépensés immédiatement car ils ne sont actuellement pas verrouillés dans un contrat.",
+        "token_states_locked": "Les fonds sont verrouillés dans un contrat et ne peuvent pas être utilisés."
     },
     "ja": {
         "wallet": "ウォレット",
@@ -1348,7 +1366,10 @@
         "highest": "最高",
         "lowest": "最低",
         "apply": "適用",
-        "reset": "リセット"
+        "reset": "リセット",
+        "token_states": "トークンの状態",
+        "token_states_available": "資金は、現在契約でロックされていないため、すぐに使用できます。",
+        "token_states_locked": "資金は契約でロックされているため、使用できません。"
     },
     "ko": {
         "wallet": "지갑",
@@ -1564,6 +1585,9 @@
         "highest": "최고",
         "lowest": "최저",
         "apply": "적용",
-        "reset": "초기화"
+        "reset": "초기화",
+        "token_states": "토큰 상태",
+        "token_states_available": "자금은 현재 계약에 잠금되지 않아 즉시 사용할 수 있습니다.",
+        "token_states_locked": "자금은 계약에 잠금되어 사용할 수 없습니다."
     }
 }
