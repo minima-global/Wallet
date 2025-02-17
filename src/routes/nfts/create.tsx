@@ -16,15 +16,15 @@ function Index() {
   const { setIsPending, setIsSuccess, setIsError } = useContext(appContext);
 
   const [step, setStep] = useState(1);
-  const [webUrl, setWebUrl] = useState("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRyd_3tNcIge2aIjsnJNa6leacGWID5_RkB6A&s");
-  const [tokenName, setTokenName] = useState("Test");
-  const [totalSupply, setTotalSupply] = useState("1");
-  const [description, setDescription] = useState("Testing description");
-  const [creatorsName, setCreatorsName] = useState("Test");
+  const [webUrl, setWebUrl] = useState("");
+  const [tokenName, setTokenName] = useState("");
+  const [totalSupply, setTotalSupply] = useState("");
+  const [description, setDescription] = useState("");
+  const [creatorsName, setCreatorsName] = useState("");
   const [externalUrl, setExternalUrl] = useState("");
-  const [webValidationUrl, setWebValidationUrl] = useState("https://www.google.com");
-  const [burn, setBurn] = useState("1");
-  const [metadata, setMetadata] = useState<{ key: string, value: string }[]>([{ key: "test", value: "test" }]);
+  const [webValidationUrl, setWebValidationUrl] = useState("");
+  const [burn, setBurn] = useState("");
+  const [metadata, setMetadata] = useState<{ key: string, value: string }[]>([]);
   const [metadataKey, setMetadataKey] = useState("");
   const [metadataValue, setMetadataValue] = useState("");
 

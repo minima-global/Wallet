@@ -3,6 +3,8 @@ import { MDS } from "@minima-global/mds"
 import { createContext, useCallback, useEffect, useRef, useState } from "react"
 import useOldWalletMigration from "./hooks/useOldWalletMigration"
 
+(window as any).MDS = MDS;
+
 export const appContext = createContext<{
   loaded: boolean,
   currencyType: string,

@@ -36,7 +36,7 @@ const TokenCard = ({ balance, showFavourite = false }: { balance: Balance, showF
                     <div className="grow">
                         <h5 className="text-sm md:text-base text-white capitalize">{renderTokenName(balance)}</h5>
                         <div className="text-grey60 text-sm truncate">
-                            <BalanceAmount balance={balance} value={confirmed} maxLength={12} />
+                            <BalanceAmount balance={balance} value={confirmed} maxLength={14} />
                         </div>
                     </div>
                     {showFavourite && (

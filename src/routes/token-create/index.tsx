@@ -19,15 +19,16 @@ function Index() {
 
   const [step, setStep] = useState(1);
   const [type, setType] = useState("SIMPLE");
+
   const [webUrl, setWebUrl] = useState("");
-  const [tokenName, setTokenName] = useState("Test");
-  const [totalSupply, setTotalSupply] = useState("1");
-  const [description, setDescription] = useState("Testing description");
-  const [decimals, setDecimals] = useState("16");
-  const [ticker, setTicker] = useState("TEST");
-  const [webValidationUrl, setWebValidationUrl] = useState("https://www.google.com");
-  const [burn, setBurn] = useState("1");
-  const [metadata, setMetadata] = useState<{ key: string, value: string }[]>([{ key: "test", value: "test" }]);
+  const [tokenName, setTokenName] = useState("");
+  const [totalSupply, setTotalSupply] = useState("");
+  const [description, setDescription] = useState("");
+  const [decimals, setDecimals] = useState("");
+  const [ticker, setTicker] = useState("");
+  const [webValidationUrl, setWebValidationUrl] = useState("");
+  const [burn, setBurn] = useState("");
+  const [metadata, setMetadata] = useState<{ key: string, value: string }[]>([]);
   const [metadataKey, setMetadataKey] = useState("");
   const [metadataValue, setMetadataValue] = useState("");
   const [image, setImage] = useState<string | null>(null);
@@ -216,8 +217,7 @@ function Index() {
         || !(/^\d+$/.test(decimals) && parseInt(decimals) >= 1 && parseInt(decimals) <= 16);
     } else if (type === "SIMPLE") {
       return !(tokenName.length > 0 && !/\s/.test(tokenName))
-        || !(/^\d+$/.test(totalSupply))
-        || !(/^\d+$/.test(decimals) && parseInt(decimals) >= 1 && parseInt(decimals) <= 16);
+        || !(/^\d+$/.test(totalSupply));
     }
   };
 
@@ -348,11 +348,6 @@ function Index() {
                 value={decimals}
                 onChange={setDecimals}
                 required={true}
-                validation={(value) => {
-                  const num = parseInt(value);
-                  return /^\d+$/.test(value) && num >= 1 && num <= 16;
-                }}
-                validationMessage={t("the_decimal_place_must_be_a_number_between_1_and_16")}
                 info={t("the_number_of_decimal_places_for_the_token")}
               />
               <Input
