@@ -5,7 +5,7 @@ import SortButton from '../../components/SortButton'
 import { useContext, useEffect, useState, Fragment, useMemo, useRef } from 'react'
 import { appContext } from '../../AppContext'
 import { MDS } from '@minima-global/mds'
-import { format } from "date-fns";
+import { differenceInMilliseconds, format } from "date-fns";
 import useFormatAmount from '../../hooks/useFormatAmount'
 import { escape, renderTokenName } from '../../utils'
 import TokenAuthenticity from '../../components/TokenAuthenticity'
@@ -81,10 +81,27 @@ function Index() {
       history.forEach((item) => {
         const inputToken = item.BODY.txn.inputs[0].tokenid;
         const difference = item.DETAILS.difference[inputToken];
+        const time = new Date(Number(item.HEADER.timemilli));
+
+        // If the transaction was less than a minute ago
+        const timeDiff = differenceInMilliseconds(new Date(), time);
+        const isLessThanMinute = timeDiff < (60000 * 5); // 60000 ms = 1 minute
+        const isBurnt = item.BODY.txn.outputs[0].address === '0xFF';
+        const isConfirmed = balance && balance.find((b) => b.tokenid === inputToken)?.sendable === balance.find((b) => b.tokenid === inputToken)?.confirmed;
 
         if (!previousBalance[inputToken] && balanceAtStart[inputToken]) {
           balanceHistory[item.TXPOWID] = new Decimal(balanceAtStart[inputToken]).toString();
           previousBalance[inputToken] = new Decimal(balanceAtStart[inputToken]);
+        }
+
+        if (isLessThanMinute && isBurnt && isConfirmed) {
+          if (item.DETAILS.outputs[inputToken]) {
+            balanceHistory[item.TXPOWID] = new Decimal(item.DETAILS.outputs[inputToken]).toString();
+            previousBalance[inputToken] = new Decimal(item.DETAILS.outputs[inputToken]);
+          } else {
+            balanceHistory[item.TXPOWID] = '0';
+            previousBalance[inputToken] = new Decimal(0);
+          }
         }
 
         if (previousBalance[inputToken]) {
@@ -158,7 +175,7 @@ function Index() {
     const time = now.toISOString().split('T')[1].split('.')[0].replace(/:/g, '_');
     const filename = `minima_${date}_${time}.csv`;
 
-    const headers = ['AMOUNT', 'TYPE', 'TOKEN_ID','DATE', 'SENT_TO_MX_ADDRESS', 'SENT_TO_0X_ADDRESS', 'TXPOWID', 'TIMEMILLI', 'ISBLOCK', 'ISTRANSACTION', 'HASBODY', 'BURN', 'SUPERBLOCK', 'SIZE', 'HEADER', 'BODY', 'DETAILS'];
+    const headers = ['AMOUNT', 'TYPE', 'TOKEN_ID', 'DATE', 'SENT_TO_MX_ADDRESS', 'SENT_TO_0X_ADDRESS', 'TXPOWID', 'TIMEMILLI', 'ISBLOCK', 'ISTRANSACTION', 'HASBODY', 'BURN', 'SUPERBLOCK', 'SIZE', 'HEADER', 'BODY', 'DETAILS'];
     const csv = [headers];
 
     history.filter((row) => {
@@ -338,8 +355,8 @@ function Index() {
                         </div>
 
                         {groupedByDay[row].map((h) => {
-                          let type = '';
-                          
+                          let type = t('sent');
+
                           const input = h.BODY.txn.inputs[0].tokenid;
                           const difference = h.DETAILS.difference[input];
 
@@ -354,8 +371,6 @@ function Index() {
 
                           if (difference > 0) {
                             type = t("received");
-                          } else if (difference < 0) {
-                            type = t("sent");
                           }
 
                           if (h.BODY?.txn.outputs[0].address === '0xFF' || h.BODY?.txn.outputs[0].tokenid === '0xFF') {
@@ -425,7 +440,7 @@ function Index() {
                                       {!difference.includes('-') ? difference > 0 ? '+' : '-' : ''}
                                       <Truncate text={f(difference)} />
                                     </p>
-                                    {balanceDifference[h.TXPOWID] && (
+                                    {balanceDifference[h.TXPOWID] && balanceDifference[h.TXPOWID] !== '0' && (
                                       <p className="text-grey60">
                                         <Truncate text={f(balanceDifference[h.TXPOWID].toString())} />
                                       </p>

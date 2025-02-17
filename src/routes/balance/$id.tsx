@@ -48,7 +48,8 @@ function RouteComponent() {
                 params: {
                     tokenid: token?.tokenid,
                     amount: burnAmount,
-                    address: '0xFF'
+                    address: '0xFF',
+                    mine: 'true',
                 }
             });
 
