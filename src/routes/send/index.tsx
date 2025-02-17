@@ -12,7 +12,6 @@ import { MDS } from '@minima-global/mds'
 import Decimal from 'decimal.js'
 import OverlayMenu from '../../components/OverlayModal'
 import useFormatAmount from '../../hooks/useFormatAmount'
-import Truncate from '../../components/Truncate'
 import useSlice from '../../components/Truncate/useSlice'
 
 export const Route = createFileRoute('/send/')({
@@ -62,7 +61,7 @@ function Index() {
         })
 
         if (response.pending) {
-            setIsPending({
+            return setIsPending({
                 uid: response.pendinguid as string,
                 callback: () => {
                     navigate({ to: '/' })
@@ -71,7 +70,7 @@ function Index() {
         }
 
         if (response.status) {
-            setIsSuccess(true)
+            return setIsSuccess(true)
         }
 
         return setIsError({ display: true, message: response.error || "An unknown error occurred, please try again later." });

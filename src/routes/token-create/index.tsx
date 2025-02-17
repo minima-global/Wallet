@@ -92,7 +92,7 @@ function Index() {
       },
       {
         label: t('decimals'),
-        value: decimals,
+        value: decimals || '8',
       },
       {
         label: t('ticker'),

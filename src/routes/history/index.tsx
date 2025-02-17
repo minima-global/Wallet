@@ -196,8 +196,6 @@ function Index() {
         ]);
       }
 
-      console.log(h.BODY.txn.inputs[0].tokenid);
-
       csv.push([AMOUNT, TYPE, `"${h.BODY.txn.inputs[0].tokenid}"`, DATE, `"${SENT_TO_MX}"`, `"${SENT_TO_0X}"`, h.TXPOWID, h.HEADER.timemilli, h.ISBLOCK, h.ISTRANSACTION, h.HASBODY, h.BURN, h.SUPERBLOCK, h.SIZE, escape(h.HEADER), escape(h.BODY), escape(h.DETAILS)]);
     });
 

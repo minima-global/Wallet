@@ -20,7 +20,7 @@ const TokenListItem = ({ balance }: { balance: Balance }) => {
         setShowInfo(!showInfo);
     }
 
-    const handleClick = (evt: React.MouseEvent<HTMLAnchorElement>) => {
+    const handleClick = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
@@ -81,7 +81,7 @@ const TokenListItem = ({ balance }: { balance: Balance }) => {
     )
 }
 
-export const BalanceAmount = ({ balance, value, maxLength = 18 }: { balance: Balance, value: string, maxLength?: number }) => {
+export const BalanceAmount = ({ balance, value }: { balance: Balance, value: string }) => {
     const { f } = useFormatAmount();
     const { m } = useSlice();
     const [hasUnconfirmed, setHasUnconfirmed] = useState(false);
@@ -112,11 +112,11 @@ export const BalanceAmount = ({ balance, value, maxLength = 18 }: { balance: Bal
     return (
         <div className="relative">
             <div className={`w-full truncate overflow-ellipsis flex gap-2 items-center transition-all duration-100 ${showing === false ? '' : showing === 1 ? 'text-grey60' : 'text-white'}`}>
-                <div className="block sm:hidden">
-                    {m(f(value), maxLength)}
+                <div className="block md:hidden">
+                    {m(f(value), 20)}
                 </div>
-                <div className="hidden sm:block">
-                    {f(value)}
+                <div className="hidden md:block">
+                    {m(f(value), 22)}
                 </div>
             </div>
         </div>

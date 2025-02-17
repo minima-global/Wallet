@@ -16,7 +16,7 @@ var getHistoryAndStore = function () {
             }
 
             MDS.sql(txpowsNotInDatabase.join('; '), function () {
-                MDS.log('done!');
+                // completed
             });
         })
     });

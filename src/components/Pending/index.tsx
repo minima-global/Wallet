@@ -48,7 +48,7 @@ const Pending = () => {
                     <p className="text-grey80 text-base text-sm mb-2 max-w-[90%] mx-auto">{t('pending_transaction_message')}</p>
                     <div className="mt-6 space-y-2">
                         <Button variant="tertiary" onClick={skip}>
-                            {t('go_to_balance')}
+                            {t('continue')}
                         </Button>
                     </div>
                 </div>

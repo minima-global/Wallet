@@ -27,7 +27,7 @@ const TokenCard = ({ balance, showFavourite = false }: { balance: Balance, showF
     }
 
     return (
-        <Link to="/balance/$id" params={{ id: balance.tokenid }} onClick={handleClick} className="group col-span-6 md:col-span-4 flex flex-col h-full items-stretch" onClick={handleClick}>
+        <Link to="/balance/$id" params={{ id: balance.tokenid }} onClick={handleClick} className="group col-span-6 md:col-span-4 flex flex-col h-full items-stretch">
             <div className="bg-[#0f0f0f] h-full min-h-[162px] max-h-[162px] md:min-h-[240px] md:max-h-[240px] flex items-center justify-center relative rounded-t w-full h-full overflow-hidden">
                 <FullTokenIcon token={balance.token} tokenId={balance.tokenid} />
             </div>

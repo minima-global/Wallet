@@ -120,7 +120,7 @@ function Index() {
                 <label className="w-full flex items-center gap-2 text-grey20">
                   {option.label}
                   <span className="grow flex justify-end relative">
-                    <input type="radio" className="peer sr-only" name="sort" id={option.key} checked={proxySort === option.key} onChange={() => setProxySort(option.key as 'A-Z' | 'Z-A' | 'Lowest' | 'Highest')} />
+                    <input type="radio" className="peer sr-only" name="sort" id={option.key} checked={proxySort === option.key} onChange={() => setProxySort(option.key as 'a_z' | 'z_a' | 'lowest' | 'highest')} />
                     <div className="relative peer-checked:[&>div]:opacity-100 w-4 h-4 border-2 border-grey60 peer-checked:border-orange rounded-full flex items-center justify-center">
                       <div className="absolute inset-0 opacity-0 top-0.5 left-0.5 w-2 h-2 rounded-full bg-orange"></div>
                     </div>
