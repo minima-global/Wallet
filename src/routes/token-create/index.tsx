@@ -406,61 +406,124 @@ function Index() {
                 </div>
 
                 <div className="flex flex-col gap-4">
-                  <div className="flex gap-4 w-full">
-                    <div className="grow bg-grey10 dark:bg-darkContrast px-4 py-2 rounded">
-                      <input
-                        required
-                        placeholder={t("enter_a_key")}
-                        className="text-sm bg-transparent w-full h-full placeholder-grey60 appearance-none outline-none"
-                        value={metadataKey}
-                        onChange={(e) => setMetadataKey(e.target.value)}
-                      />
+
+                  <div className="flex lg:hidden gap-4 bg-contrast1 p-4 rounded">
+                    <div className="flex flex-col gap-2 w-full">
+                      <div className="grow bg-contrast1.5 px-4 py-2 rounded">
+                        <input
+                          placeholder={t("enter_a_key")}
+                          className="text-sm w-full bg-transparent h-full placeholder-grey60 appearance-none outline-none"
+                          value={metadataKey}
+                          onChange={(e) => setMetadataKey(e.target.value)}
+                        />
+                      </div>
+                      <div className="grow bg-contrast1.5 px-4 py-2 rounded">
+                        <input
+                          placeholder={t("enter_a_value")}
+                          className="text-sm bg-transparent w-full h-full placeholder-grey60 appearance-none outline-none"
+                          value={metadataValue}
+                          onChange={(e) => setMetadataValue(e.target.value)}
+                        />
+                      </div>
                     </div>
-                    <div className="grow bg-grey10 dark:bg-darkContrast px-4 py-2 rounded">
-                      <input
-                        required
-                        placeholder={t("enter_a_value")}
-                        className="text-sm bg-transparent w-full h-full placeholder-grey60 appearance-none outline-none"
-                        value={metadataValue}
-                        onChange={(e) => setMetadataValue(e.target.value)}
-                      />
+                    <div className="flex items-center justify-center">
+                      <button onClick={addMetadata} disabled={!metadataKey || !metadataValue} className="text-sm disabled:opacity-20 disabled:cursor-not-allowed cursor-pointer enabled:text-white enabled:hover:text-grey60 enabled:active:text-orange">
+                        <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M12.2122 19.0322H13.8872V13.5996H19.3335V11.9246H13.8872V6.36556H12.2122V11.9246H6.66683V13.5996H12.2122V19.0322ZM13.0082 25.3656C11.2546 25.3656 9.61027 25.0331 8.07516 24.3682C6.53983 23.7033 5.19827 22.7973 4.0505 21.6502C2.90294 20.5029 1.9965 19.1614 1.33116 17.6259C0.666051 16.0901 0.333496 14.4448 0.333496 12.6899C0.333496 10.9408 0.665941 9.29667 1.33083 7.75756C1.99572 6.21823 2.90172 4.87845 4.04883 3.73823C5.19616 2.598 6.53761 1.69523 8.07316 1.02989C9.60894 0.364782 11.2543 0.0322266 13.0092 0.0322266C14.7583 0.0322266 16.4024 0.36467 17.9415 1.02956C19.4808 1.69445 20.8206 2.59678 21.9608 3.73656C23.1011 4.87634 24.0038 6.21667 24.6692 7.75756C25.3343 9.29845 25.6668 10.9429 25.6668 12.6909C25.6668 14.4444 25.3344 16.0888 24.6695 17.6239C24.0046 19.1592 23.1023 20.4993 21.9625 21.6442C20.8227 22.7893 19.4824 23.6958 17.9415 24.3636C16.4006 25.0316 14.7562 25.3656 13.0082 25.3656Z" fill="currentColor" />
+                        </svg>
+                      </button>
                     </div>
-                    <div>
-                      <div className="pl-1 pr-4 md:pl-2 py-2 md:pr-5 rounded">
-                        <button onClick={addMetadata} disabled={!metadataKey || !metadataValue} className="text-sm disabled:opacity-20 disabled:cursor-not-allowed cursor-pointer enabled:text-white enabled:hover:text-grey60 enabled:active:text-orange">
-                          <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12.2122 19.0322H13.8872V13.5996H19.3335V11.9246H13.8872V6.36556H12.2122V11.9246H6.66683V13.5996H12.2122V19.0322ZM13.0082 25.3656C11.2546 25.3656 9.61027 25.0331 8.07516 24.3682C6.53983 23.7033 5.19827 22.7973 4.0505 21.6502C2.90294 20.5029 1.9965 19.1614 1.33116 17.6259C0.666051 16.0901 0.333496 14.4448 0.333496 12.6899C0.333496 10.9408 0.665941 9.29667 1.33083 7.75756C1.99572 6.21823 2.90172 4.87845 4.04883 3.73823C5.19616 2.598 6.53761 1.69523 8.07316 1.02989C9.60894 0.364782 11.2543 0.0322266 13.0092 0.0322266C14.7583 0.0322266 16.4024 0.36467 17.9415 1.02956C19.4808 1.69445 20.8206 2.59678 21.9608 3.73656C23.1011 4.87634 24.0038 6.21667 24.6692 7.75756C25.3343 9.29845 25.6668 10.9429 25.6668 12.6909C25.6668 14.4444 25.3344 16.0888 24.6695 17.6239C24.0046 19.1592 23.1023 20.4993 21.9625 21.6442C20.8227 22.7893 19.4824 23.6958 17.9415 24.3636C16.4006 25.0316 14.7562 25.3656 13.0082 25.3656Z" fill="currentColor" />
-                          </svg>
-                        </button>
+                  </div>
+
+                  <div className="hidden lg:block">
+                    <div className="flex gap-4 w-full">
+                      <div className="grow bg-contrast1.5 px-4 py-2 rounded">
+                        <input
+                          placeholder={t("enter_a_key")}
+                          className="text-sm bg-transparent w-full h-full placeholder-grey60 appearance-none outline-none"
+                          value={metadataKey}
+                          onChange={(e) => setMetadataKey(e.target.value)}
+                        />
+                      </div>
+                      <div className="grow bg-contrast1.5 px-4 py-2 rounded">
+                        <input
+                          placeholder={t("enter_a_value")}
+                          className="text-sm bg-transparent w-full h-full placeholder-grey60 appearance-none outline-none"
+                          value={metadataValue}
+                          onChange={(e) => setMetadataValue(e.target.value)}
+                        />
+                      </div>
+                      <div>
+                        <div className="pl-1 pr-4 md:pl-2 py-2 md:pr-5 rounded">
+                          <button onClick={addMetadata} disabled={!metadataKey || !metadataValue} className="text-sm disabled:opacity-20 disabled:cursor-not-allowed cursor-pointer enabled:text-white enabled:hover:text-grey60 enabled:active:text-orange">
+                            <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M12.2122 19.0322H13.8872V13.5996H19.3335V11.9246H13.8872V6.36556H12.2122V11.9246H6.66683V13.5996H12.2122V19.0322ZM13.0082 25.3656C11.2546 25.3656 9.61027 25.0331 8.07516 24.3682C6.53983 23.7033 5.19827 22.7973 4.0505 21.6502C2.90294 20.5029 1.9965 19.1614 1.33116 17.6259C0.666051 16.0901 0.333496 14.4448 0.333496 12.6899C0.333496 10.9408 0.665941 9.29667 1.33083 7.75756C1.99572 6.21823 2.90172 4.87845 4.04883 3.73823C5.19616 2.598 6.53761 1.69523 8.07316 1.02989C9.60894 0.364782 11.2543 0.0322266 13.0092 0.0322266C14.7583 0.0322266 16.4024 0.36467 17.9415 1.02956C19.4808 1.69445 20.8206 2.59678 21.9608 3.73656C23.1011 4.87634 24.0038 6.21667 24.6692 7.75756C25.3343 9.29845 25.6668 10.9429 25.6668 12.6909C25.6668 14.4444 25.3344 16.0888 24.6695 17.6239C24.0046 19.1592 23.1023 20.4993 21.9625 21.6442C20.8227 22.7893 19.4824 23.6958 17.9415 24.3636C16.4006 25.0316 14.7562 25.3656 13.0082 25.3656Z" fill="currentColor" />
+                            </svg>
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
 
                   {metadata.map((item, index) => (
-                    <div key={`metadata-${index}`} className="flex gap-4 w-full">
-                      <div className="grow bg-grey10 dark:bg-darkContrast px-4 py-2 rounded">
-                        <input
-                          placeholder={t("enter_a_key")}
-                          className="text-sm bg-transparent w-full h-full placeholder-grey60 appearance-none outline-none"
-                          value={item.key}
-                          readOnly
-                        />
-                      </div>
-                      <div className="grow bg-grey10 dark:bg-darkContrast px-4 py-2 rounded">
-                        <input
-                          placeholder={t("enter_a_value")}
-                          className="text-sm bg-transparent w-full h-full placeholder-grey60 appearance-none outline-none"
-                          value={item.value}
-                          readOnly
-                        />
-                      </div>
-                      <div>
-                        <div className="pl-1 pr-4 md:pl-2 py-2 md:pr-5 rounded">
+                    <div key={`metadata-${index}`}>
+                      <div className="flex lg:hidden gap-4 bg-contrast1 p-4 rounded">
+                        <div className="flex flex-col gap-2 w-full">
+                          <div className="grow bg-contrast2 px-4 py-2 rounded">
+                            <input
+                              required
+                              placeholder="Enter a key"
+                              className="text-sm bg-transparent w-full h-full placeholder-grey60 appearance-none outline-none"
+                              value={item.key}
+                              readOnly
+                            />
+                          </div>
+                          <div className="grow bg-contrast2 px-4 py-2 rounded">
+                            <input
+                              required
+                              placeholder="Enter a value"
+                              className="text-sm bg-transparent w-full h-full placeholder-grey60 appearance-none outline-none"
+                              value={item.value}
+                              readOnly
+                            />
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-center">
                           <button onClick={() => removeMetadata(index)} className="text-sm disabled:opacity-20 disabled:cursor-not-allowed cursor-pointer text-orange enabled:hover:text-lighterOrange enabled:active:text-white">
                             <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
                               <path d="M8.10116 18.7777L13.0002 13.8783L17.8992 18.7777L19.0788 17.598L14.1795 12.699L19.0788 7.80002L17.8992 6.62035L13.0002 11.5197L8.10116 6.62035L6.9215 7.80002L11.8208 12.699L6.9215 17.598L8.10116 18.7777ZM13.0025 25.3657C11.2596 25.3657 9.61883 25.0332 8.08016 24.3684C6.5415 23.7035 5.19827 22.7975 4.0505 21.6503C2.90294 20.503 1.9965 19.1603 1.33116 17.6224C0.666051 16.0844 0.333496 14.444 0.333496 12.7013C0.333496 10.9493 0.665941 9.30257 1.33083 7.76102C1.99572 6.21946 2.90172 4.87857 4.04883 3.73835C5.19616 2.59813 6.53883 1.69535 8.07683 1.03002C9.61483 0.364904 11.2552 0.0323486 12.9978 0.0323486C14.7498 0.0323486 16.3966 0.364792 17.9382 1.02968C19.4797 1.69457 20.8206 2.5969 21.9608 3.73668C23.1011 4.87646 24.0038 6.21679 24.6692 7.75768C25.3343 9.29857 25.6668 10.9449 25.6668 12.6967C25.6668 14.4396 25.3344 16.0803 24.6695 17.619C24.0046 19.1577 23.1023 20.5009 21.9625 21.6487C20.8227 22.7962 19.4824 23.7027 17.9415 24.368C16.4006 25.0331 14.7543 25.3657 13.0025 25.3657Z" fill="currentColor" />
                             </svg>
                           </button>
+                        </div>
+                      </div>
+
+                      <div className="hidden lg:flex gap-4 w-full">
+                        <div className="grow bg-grey10 dark:bg-darkContrast px-4 py-2 rounded">
+                          <input
+                            required
+                            placeholder="Enter a key"
+                            className="text-sm bg-transparent w-full h-full placeholder-grey60 appearance-none outline-none"
+                            value={item.key}
+                            readOnly
+                          />
+                        </div>
+                        <div className="grow bg-grey10 dark:bg-darkContrast px-4 py-2 rounded">
+                          <input
+                            required
+                            placeholder="Enter a value"
+                            className="text-sm bg-transparent w-full h-full placeholder-grey60 appearance-none outline-none"
+                            value={item.value}
+                            readOnly
+                          />
+                        </div>
+                        <div>
+                          <div className="pl-1 pr-4 md:pl-2 py-2 md:pr-5 rounded">
+                            <button onClick={() => removeMetadata(index)} className="text-sm disabled:opacity-20 disabled:cursor-not-allowed cursor-pointer text-orange enabled:hover:text-lighterOrange enabled:active:text-white">
+                              <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M8.10116 18.7777L13.0002 13.8783L17.8992 18.7777L19.0788 17.598L14.1795 12.699L19.0788 7.80002L17.8992 6.62035L13.0002 11.5197L8.10116 6.62035L6.9215 7.80002L11.8208 12.699L6.9215 17.598L8.10116 18.7777ZM13.0025 25.3657C11.2596 25.3657 9.61883 25.0332 8.08016 24.3684C6.5415 23.7035 5.19827 22.7975 4.0505 21.6503C2.90294 20.503 1.9965 19.1603 1.33116 17.6224C0.666051 16.0844 0.333496 14.444 0.333496 12.7013C0.333496 10.9493 0.665941 9.30257 1.33083 7.76102C1.99572 6.21946 2.90172 4.87857 4.04883 3.73835C5.19616 2.59813 6.53883 1.69535 8.07683 1.03002C9.61483 0.364904 11.2552 0.0323486 12.9978 0.0323486C14.7498 0.0323486 16.3966 0.364792 17.9382 1.02968C19.4797 1.69457 20.8206 2.5969 21.9608 3.73668C23.1011 4.87646 24.0038 6.21679 24.6692 7.75768C25.3343 9.29857 25.6668 10.9449 25.6668 12.6967C25.6668 14.4396 25.3344 16.0803 24.6695 17.619C24.0046 19.1577 23.1023 20.5009 21.9625 21.6487C20.8227 22.7962 19.4824 23.7027 17.9415 24.368C16.4006 25.0331 14.7543 25.3657 13.0025 25.3657Z" fill="currentColor" />
+                              </svg>
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>

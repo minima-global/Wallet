@@ -505,6 +505,12 @@ const Summary = ({ txpow, back }: { txpow: any, back: () => void }) => {
     const blob = new Blob([JSON.stringify(txpow, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
+
+    if (window.navigator.userAgent.includes('Minima Browser')) {
+      // @ts-ignore
+      return Android.blobDownload(`${txpow?.TXPOWID}.json`, toHex(JSON.stringify(txpow, null, 2)));
+    }
+
     link.href = url;
     link.download = `${txpow?.TXPOWID}.json`;
     link.click();
