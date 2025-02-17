@@ -47,7 +47,7 @@ function RouteComponent() {
             const response = await MDS.cmd.send({
                 params: {
                     tokenid: token?.tokenid,
-                    amount: token?.sendable,
+                    amount: burnAmount,
                     address: '0xFF'
                 }
             });
@@ -96,7 +96,6 @@ function RouteComponent() {
         : [];
 
     const isBurnAmountValid = (value: string) => {
-        console.log(token);
         if (!token?.sendable) {
             return false;
         }
