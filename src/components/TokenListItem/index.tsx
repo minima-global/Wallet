@@ -38,12 +38,12 @@ const TokenListItem = ({ balance }: { balance: Balance }) => {
                         <div className="grow overflow-hidden px-4">
                             <div className="grow w-full">
                                 <div className="flex grow gap-1">
-                                    <h6 className="font-bold truncate text-black dark:text-neutral-400 capitalize truncate">
+                                    <h6 className="font-bold truncate text-neutral-400 capitalize truncate">
                                         {renderTokenName(balance)}
                                     </h6>
                                     <TokenAuthenticity token={balance} />
                                 </div>
-                                <div className="font-bold w-full overflow-ellipsis truncate text-grey dark:text-neutral-300">
+                                <div className="font-bold w-full overflow-ellipsis truncate text-neutral-300">
                                     <BalanceAmount balance={balance} value={confirmed} />
                                 </div>
                             </div>

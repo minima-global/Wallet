@@ -167,7 +167,7 @@ function Index() {
                                 <div className="grow flex items-center overflow-hidden px-4">
                                     <div className="grow items-center w-full">
                                         <div className="flex items-center grow gap-1.5">
-                                            <h6 className="text-lg font-bold truncate text-black dark:text-neutral-400">
+                                            <h6 className="text-lg font-bold truncate text-neutral-400">
                                                 {renderTokenName(selectedToken)}
                                             </h6>
                                             <TokenAuthenticity token={selectedToken} />
@@ -253,11 +253,11 @@ const TokenDropdown = ({ value, onChange }: TokenDropdownProps) => {
                 </div>
             </OverlayMenu>
             {selectedToken && (
-                <div onClick={toggleDropdown} className="relative z-[20] bg-grey10 dark:bg-darkContrast relative w-full flex p-3 dark:border-lightDarkContrast rounded cursor-pointer select-none">
+                <div onClick={toggleDropdown} className="relative z-[20] bg-darkContrast relative w-full flex p-3 border-lightDarkContrast rounded cursor-pointer select-none">
                     <div className="relative z-[20] flex w-full">
                         <TokenIcon token={selectedToken.token} tokenId={selectedToken.tokenid} />
                         <div className="w-full my-auto px-4">
-                            <div className="font-bold dark:text-neutral-100 -mt-0.5 mb-0.5 flex items-center gap-1">
+                            <div className="font-bold text-neutral-100 -mt-0.5 mb-0.5 flex items-center gap-1">
                                 {renderTokenName(selectedToken)}
                                 <TokenAuthenticity token={selectedToken} />
                             </div>

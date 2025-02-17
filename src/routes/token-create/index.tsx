@@ -498,7 +498,7 @@ function Index() {
                       </div>
 
                       <div className="hidden lg:flex gap-4 w-full">
-                        <div className="grow bg-grey10 dark:bg-darkContrast px-4 py-2 rounded">
+                        <div className="grow bg-darkContrast px-4 py-2 rounded">
                           <input
                             required
                             placeholder="Enter a key"
@@ -507,7 +507,7 @@ function Index() {
                             readOnly
                           />
                         </div>
-                        <div className="grow bg-grey10 dark:bg-darkContrast px-4 py-2 rounded">
+                        <div className="grow bg-darkContrast px-4 py-2 rounded">
                           <input
                             required
                             placeholder="Enter a value"
@@ -605,7 +605,7 @@ const Dropdown = ({ options, value, onChange }: DropdownProps) => {
 
   return (
     <div>
-      <div onClick={toggleDropdown} className="relative z-[50] bg-grey10 dark:bg-darkContrast relative w-full flex p-3 dark:border-lightDarkContrast rounded cursor-pointer select-none">
+      <div onClick={toggleDropdown} className="relative z-[50] bg-darkContrast relative w-full flex p-3 border-lightDarkContrast rounded cursor-pointer select-none">
         <div className="relative z-[50] flex w-full">
           <div className="px-4 py-1.5">
             {selectedOption?.label}

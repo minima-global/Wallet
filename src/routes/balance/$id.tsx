@@ -142,12 +142,12 @@ function RouteComponent() {
                 {token && token.tokenid !== '0x00' && <div className="grow flex lg:justify-end">
                     <div className="flex gap-2">
                         <div className="flex justify-end cursor-pointer select-none">
-                            <div onClick={toggleHideTokenModal} className="flex items-center gap-2 text-sm text-grey60 text-xs font-bold bg-contrast1 hover:bg-contrast2 w-fit rounded-full px-3.5 py-1.5 border dark:border-contrast2 origin-center active:scale-[0.95] transition-all duration-100">
+                            <div onClick={toggleHideTokenModal} className="flex items-center gap-2 text-sm text-grey60 text-xs font-bold bg-contrast1 hover:bg-contrast2 w-fit rounded-full px-3.5 py-1.5 border border-contrast2 origin-center active:scale-[0.95] transition-all duration-100">
                                 {isHidden ? t('show_token') : t('hide_token')}
                             </div>
                         </div>
                         <div className="flex justify-end cursor-pointer select-none">
-                            <div onClick={toggleBurnModal} className="flex items-center gap-2 text-sm text-grey60 text-xs font-bold bg-contrast1 hover:bg-contrast2 w-fit rounded-full px-3.5 py-1.5 border dark:border-contrast2 origin-center active:scale-[0.95] transition-all duration-100">
+                            <div onClick={toggleBurnModal} className="flex items-center gap-2 text-sm text-grey60 text-xs font-bold bg-contrast1 hover:bg-contrast2 w-fit rounded-full px-3.5 py-1.5 border border-contrast2 origin-center active:scale-[0.95] transition-all duration-100">
                                 <svg
                                     width="12"
                                     height="15"

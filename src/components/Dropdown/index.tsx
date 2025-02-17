@@ -1,6 +1,6 @@
 const Dropdown = () => {
     return (
-        <div className="grid grid-cols-2 bg-contrast1 border border-grey40 dark:border-lightDarkContrast rounded px-6 py-4 text-grey60">
+        <div className="grid grid-cols-2 bg-contrast1 rounded px-6 py-4 text-grey60">
             <div className="col-span-1">Upload Image</div>
             <div className="col-span-1 flex items-center justify-end">
                 <svg width="10" height="7" viewBox="0 0 10 7" fill="none" xmlns="http://www.w3.org/2000/svg">

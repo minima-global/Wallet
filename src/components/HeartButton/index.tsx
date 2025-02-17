@@ -1,7 +1,7 @@
 const HeartButton = ({ showOnlyFavourites, onClick }: { showOnlyFavourites: boolean, onClick: () => void }) => {
     return (
         <div>
-            <button type="button" className="text-white h-[44px] w-[44px] p-0 border border-grey40 dark:border-mediumDarkContrast rounded-full flex justify-center items-center bg-contrast1 hover:bg-contrast2 active:scale-90 transition-all " onClick={onClick}>
+            <button type="button" className="text-white h-[44px] w-[44px] p-0 border border-contrast2 rounded-full flex justify-center items-center bg-contrast1 hover:bg-contrast2 active:scale-90 transition-all " onClick={onClick}>
                 {showOnlyFavourites && (
                     <svg width="16" height="15" viewBox="0 0 16 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M8 15L6.95833 14.0625C5.56944 12.8264 4.42361 11.7674 3.52083 10.8854C2.61806 10.0035 1.90625 9.21875 1.38542 8.53125C0.864583 7.84375 0.503472 7.21528 0.302083 6.64583C0.100694 6.07639 0 5.49306 0 4.89583C0 3.65972 0.423611 2.61806 1.27083 1.77083C2.11806 0.923611 3.15972 0.5 4.39583 0.5C5.07639 0.5 5.73611 0.645833 6.375 0.9375C7.01389 1.22917 7.55556 1.63889 8 2.16667C8.44444 1.63889 8.98611 1.22917 9.625 0.9375C10.2639 0.645833 10.9236 0.5 11.6042 0.5C12.8403 0.5 13.8819 0.923611 14.7292 1.77083C15.5764 2.61806 16 3.65972 16 4.89583C16 5.49306 15.9028 6.06944 15.7083 6.625C15.5139 7.18056 15.1562 7.79861 14.6354 8.47917C14.1146 9.15972 13.3993 9.94792 12.4896 10.8438C11.5799 11.7396 10.4167 12.8264 9 14.1042L8 15Z" fill="#FF8630" />

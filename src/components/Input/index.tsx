@@ -60,7 +60,7 @@ const Input: React.FC<InputProps> = ({ label, optionalLabel, placeholder, value,
     return (
         <div className={`relative ${className}`}>
             {label && (
-                <div className="dark:text-grey40 mb-2">
+                <div className="text-grey40 mb-2">
                     <div className="flex items-center">
                         <div>
                             {label}

@@ -1,9 +1,22 @@
 import { Link, useLocation } from "@tanstack/react-router"
 import useTranslation from "../../hooks/useTranslation";
+import { useState } from "react";
+import { useEffect } from "react";
 
 const Navigation = () => {
     const { t } = useTranslation();
     const { pathname } = useLocation();
+    const [isAtTop, setIsAtTop] = useState(true);
+
+    useEffect(() => {   
+        const handleScroll = () => {
+            setIsAtTop(window.scrollY === 0);
+        };
+
+        window.addEventListener('scroll', handleScroll);
+
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
 
     const NAV_ITEMS = [
         {
@@ -144,7 +157,7 @@ const Navigation = () => {
     ]
 
     return (
-        <div className="flex flex-col text-[14px] gap-2 w-full min-w-[250px] bg-contrast1 rounded-lg p-6">
+        <div className={`sticky flex flex-col text-[14px] gap-2 w-full min-w-[250px] bg-contrast1 rounded-lg p-6 ${isAtTop ? 'top-0' : 'top-[112px]'}`}>
             {NAV_ITEMS.map((item) => (
                 <Link key={item.href} to={item.href} className="flex items-center gap-5 transition-all py-2 px-3 rounded duration-100 group">
                     <div className="w-4 flex items-center">

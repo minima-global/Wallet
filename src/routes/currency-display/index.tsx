@@ -56,7 +56,7 @@ function Index() {
       <h1 className="text-white text-2xl mb-6">{t("choose_a_display_format")}</h1>
       <div className="flex flex-col gap-3">
         {OPTIONS.map((option) => (
-          <div key={option.key} className="bg-grey10 dark:bg-darkContrast relative w-full flex p-4 rounded">
+          <div key={option.key} className="bg-darkContrast relative w-full flex p-4 rounded">
             <label htmlFor={option.key} className="flex items-center gap-5 cursor-pointer">
               <input id={option.key} name="currency-display" type="radio" className="peer hidden" value={option.key} checked={currencyType === option.key} onChange={handleChange} />
               <div className="relative peer-checked:[&>div]:opacity-100 w-4 h-4 border-2 border-grey60 peer-checked:border-orange rounded-full flex items-center justify-center">
