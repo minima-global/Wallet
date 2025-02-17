@@ -205,13 +205,12 @@ const Header = () => {
                 <LanguageSelector />
                 <HamburgerButton isOpen={hamburgerOpen} toggle={toggle} />
               </div>
-              <nav className="hidden cursor-pointer lg:block">
+              <nav className="hidden lg:block">
                 <ul
                   className={`gap-4 flex items-center text-sm transition-all`}
                 >
 
                   <li className="text-white flex items-center gap-6">
-
                     {block && (
                       <div className="gradient-border flex items-center gap-2">
                         <NodeStatus />

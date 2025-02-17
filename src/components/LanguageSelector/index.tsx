@@ -5,7 +5,8 @@ const LanguageSelector = () => {
     const { language, setLanguage } = useContext(appContext);
     const [isOpen, setIsOpen] = useState(false);
 
-    const toggleOpen = () => {
+    const toggleOpen = (evt: React.MouseEvent<HTMLDivElement>) => {
+        evt.stopPropagation();
         setIsOpen(!isOpen);
     }
 
