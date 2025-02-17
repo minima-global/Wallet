@@ -200,7 +200,7 @@ function Index() {
         <ul className="select-none flex flex-col gap-4 mb-20">
           {filteredBalance.length === 0 && (
             <div className="w-full flex items-center bg-contrast1 opacity-80 p-3 px-4 text-sm rounded">
-              No tokens found
+              {t('no_tokens_found')}
             </div>
           )}
           {filteredBalance.map((balance) => (
@@ -214,7 +214,7 @@ function Index() {
           <div className="grid grid-cols-12 gap-4">
             {filteredBalance.length === 0 && (
               <div className="col-span-12 w-full flex items-center bg-contrast1 opacity-80 p-3 px-4 text-sm rounded">
-                No tokens found
+                {t('no_tokens_found')}
               </div>
             )}
             {filteredBalance.map((balance) => (

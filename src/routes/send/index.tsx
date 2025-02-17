@@ -1,5 +1,5 @@
-import { useContext, useState } from 'react'
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { useContext, useEffect, useState } from 'react'
+import { createFileRoute, useLocation, useNavigate } from '@tanstack/react-router'
 import Input from '../../components/Input'
 import useTranslation from '../../hooks/useTranslation'
 import { appContext } from '../../AppContext'
@@ -13,13 +13,17 @@ import Decimal from 'decimal.js'
 import OverlayMenu from '../../components/OverlayModal'
 import useFormatAmount from '../../hooks/useFormatAmount'
 import useSlice from '../../components/Truncate/useSlice'
-
+import { z } from 'zod'
 export const Route = createFileRoute('/send/')({
     component: Index,
+    validateSearch: z.object({
+        tokenid: z.string().optional()
+    })
 })
 
 function Index() {
     const { t } = useTranslation()
+    const location = useLocation();
     const { s, m } = useSlice();
     const { f } = useFormatAmount();
     const navigate = useNavigate();
@@ -33,6 +37,12 @@ function Index() {
     const sendableMinima = balance.find(
         (token) => token.tokenid === '0x00',
     );
+
+    useEffect(() => {
+        if (location.search.tokenid) {
+            setSelectedTokenId(location.search.tokenid);
+        }
+    }, [location.search]);
 
     const [amount, setAmount] = useState<string>('')
     const [recipient, setRecipient] = useState<string>('')

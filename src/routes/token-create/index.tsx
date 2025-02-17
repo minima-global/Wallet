@@ -160,6 +160,7 @@ function Index() {
             url: webUrl,
             ticker: ticker,
             description: description,
+            webvalidate: webValidationUrl,
             ...token,
           }),
           amount: totalSupply,

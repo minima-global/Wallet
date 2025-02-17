@@ -1,11 +1,12 @@
 import { useContext } from "react";
 import { Balance } from "@minima-global/mds";
 import { Link } from "@tanstack/react-router";
-import { renderTokenName } from "../../utils";
+import { renderTicker, renderTokenName } from "../../utils";
 import FullTokenIcon from "../FullTokenIcon";
 import Decimal from "decimal.js";
 import { BalanceAmount } from "../TokenListItem";
 import { appContext } from "../../AppContext";
+import TokenAuthenticity from "../TokenAuthenticity";
 
 const TokenCard = ({ balance, showFavourite = false }: { balance: Balance, showFavourite?: boolean }) => {
     const { favourites, setFavourites } = useContext(appContext);
@@ -34,7 +35,7 @@ const TokenCard = ({ balance, showFavourite = false }: { balance: Balance, showF
             <div className="bg-contrast1 group-hover:bg-contrast2 transition-all duration-100 py-3 px-4 rounded-b">
                 <div className="flex">
                     <div className="grow">
-                        <h5 className="text-sm md:text-base text-white capitalize">{renderTokenName(balance)}</h5>
+                        <h5 className="text-sm md:text-base text-white capitalize flex items-end">{renderTokenName(balance)} {renderTicker(balance)} <TokenAuthenticity token={balance} /></h5>
                         <div className="text-grey60 text-sm truncate">
                             <BalanceAmount balance={balance} value={confirmed} grid />
                         </div>

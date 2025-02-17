@@ -9,6 +9,8 @@ import { renderTokenName } from '../../utils'
 import { MDS } from '@minima-global/mds'
 import useTranslation from '../../hooks/useTranslation'
 import Button from '../../components/Button'
+import Input from '../../components/Input'
+import Decimal from 'decimal.js'
 
 export const Route = createFileRoute('/balance/$id')({
     component: RouteComponent,
@@ -24,6 +26,7 @@ function RouteComponent() {
     const { balance, setIsPending, setIsSuccess, hiddenTokens, setHiddenTokens } = useContext(appContext);
     const isHidden = hiddenTokens.includes(id);
 
+    const [burnAmount, setBurnAmount] = useState<string>('');
     const [showBurnModal, setShowBurnModal] = useState(false);
     const [showHideTokenModal, setShowHideTokenModal] = useState(false);
 
@@ -80,6 +83,10 @@ function RouteComponent() {
         }, 100);
     }
 
+    const goToSendWithToken = () => {
+        navigate({ to: `/send?tokenid=${token?.tokenid}` });
+    }
+
     const normalFields = ['name', 'url', 'description', 'external_url', 'webvalidate', 'ticker', 'owner'];
     const hasMetadata = typeof token?.token === 'object' && token.token && Object.keys(token.token).some(key => !normalFields.includes(key));
     const metadata = hasMetadata
@@ -88,14 +95,41 @@ function RouteComponent() {
             .map(([key, value]) => ({ key, value }))
         : [];
 
+    const isBurnAmountValid = (value: string) => {
+        console.log(token);
+        if (!token?.sendable) {
+            return false;
+        }
+
+        try {
+            return value.length > 0 && new Decimal(value).lte(token?.sendable);
+        } catch {
+            return false;
+        }
+    }
+
+    const canBurn = isBurnAmountValid(burnAmount);
+
     return (
         <div>
             <div className={`${showBurnModal ? 'opacity-100' : 'pointer-events-none opacity-0'} transition-opacity duration-100 flex absolute z-50 inset-0 top-0 left-0 justify-center items-center w-screen h-screen`}>
                 <div className={`bg-contrast1 mb-8 fixed z-[60] rounded-lg w-full max-w-[90%] md:max-w-[440px] text-center text-white p-5 transform transition-all duration-200 ${showBurnModal ? 'translate-y-[0%] opacity-100' : 'translate-y-[4px] opacity-0'}`}>
                     <h1 className="text-white text-2xl mt-1.5 mb-5 font-bold">{t('burn_token')}</h1>
-                    <p className="text-grey80 text-base text-sm mb-2 max-w-[80%] mx-auto">{t('are_you_sure_you_want_to_burn_this_token_this_action_cannot_be_reversed')}</p>
+                    <p className="text-grey80 text-base text-sm mb-3 max-w-[80%] mx-auto">{t('please_enter_an_amount_to_burn')}</p>
+                    <div className="text-left">
+                        <Input
+                            label={t('burn')}
+                            placeholder={t('enter_a_burn_amount')}
+                            value={burnAmount}
+                            inverse
+                            onChange={(value) => setBurnAmount(value)}
+                            validation={isBurnAmountValid}
+                            validationMessage={t('please_enter_a_valid_amount')}
+                            max={token?.sendable || ""}
+                        />
+                    </div>
                     <div className="mt-6 space-y-2">
-                        <Button onClick={confirmBurn}>
+                        <Button disabled={!canBurn} onClick={confirmBurn}>
                             {t('confirm')}
                         </Button>
                         <Button variant="tertiary" onClick={toggleBurnModal}>
@@ -176,7 +210,7 @@ function RouteComponent() {
             {token && (
                 <div className="mb-14">
                     <ul className="select-none flex flex-col gap-2">
-                        <li className="bg-darkContrast relative w-full flex items-center p-5 rounded">
+                        <li className="bg-contrast1 relative w-full flex items-center p-5 rounded">
                             <div className="grow flex">
                                 <TokenIcon token={token.token} tokenId={token.tokenid} />
                                 <div className="grow flex items-center overflow-hidden px-5">
@@ -189,6 +223,9 @@ function RouteComponent() {
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div onClick={goToSendWithToken} className="pr-3 text-grey hover:text-orange cursor-pointer">
+                                <svg className="w-5 h-5" fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M6 12L3 21L21 12L3 3L6 12ZM6 12L12 12" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" /></svg>
                             </div>
                         </li>
 

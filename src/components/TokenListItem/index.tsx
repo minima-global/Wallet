@@ -5,7 +5,7 @@ import { Link } from "@tanstack/react-router";
 import TokenIcon from "../TokenIcon";
 import useFormatAmount from "../../hooks/useFormatAmount";
 import { Balance } from "@minima-global/mds";
-import { renderTokenName } from "../../utils";
+import { renderTicker, renderTokenName } from "../../utils";
 import { useEffect, useState } from "react";
 import Decimal from "decimal.js";
 import Truncate from "../Truncate";
@@ -39,7 +39,7 @@ const TokenListItem = ({ balance }: { balance: Balance }) => {
                             <div className="grow w-full">
                                 <div className="flex grow gap-1">
                                     <h6 className="font-bold truncate text-neutral-400 capitalize truncate">
-                                        {renderTokenName(balance)}
+                                        {renderTokenName(balance)} {renderTicker(balance)}
                                     </h6>
                                     <TokenAuthenticity token={balance} />
                                 </div>

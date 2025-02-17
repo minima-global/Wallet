@@ -266,22 +266,20 @@ const Header = () => {
         <div className="bg-minima-gradient h-[1px] absolute bottom-0 left-0 w-full" />
       </header>
       <div className="flex lg:hidden">
-        {hamburgerOpen && (
-          <nav className="fixed left-0 top-0 z-[1000] h-screen w-screen bg-black pt-20 pl-1 text-white">
-            <div className="py-3 px-5">
-              <ul className="flex flex-col gap-6 text-2xl">
-                {NAV_ITEMS.map((item) => (
-                  <Link key={item.href} to={item.href} onClick={dismissHamburger} className="flex items-center gap-5">
-                    <div className="w-4 flex items-center">
-                      <div className={`group-hover:text-grey60 ${pathname === '/' && item.href === '/' || pathname !== '/' && item.href.includes(pathname) ? '[&>svg>path]:!fill-orange' : ''}`}>{item.icon}</div>
-                    </div>
-                    <div className={`text-sm ${pathname === '/' && item.href === '/' || pathname !== '/' && item.href.includes(pathname) ? '!text-orange' : 'text-white'}`}>{item.title}</div>
-                  </Link>
-                ))}
-              </ul>
-            </div>
-          </nav>
-        )}
+        <nav className={`fixed left-0 top-0 z-[1000] h-screen w-screen bg-black pt-20 pl-1 text-white transition-all duration-200 ${hamburgerOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
+          <div className="py-3 px-5">
+            <ul className="flex flex-col gap-6 text-2xl">
+              {NAV_ITEMS.map((item) => (
+                <Link key={item.href} to={item.href} onClick={dismissHamburger} className="flex items-center gap-5">
+                  <div className="w-4 flex items-center">
+                    <div className={`group-hover:text-grey60 ${pathname === '/' && item.href === '/' || pathname !== '/' && item.href.includes(pathname) ? '[&>svg>path]:!fill-orange' : ''}`}>{item.icon}</div>
+                  </div>
+                  <div className={`text-sm ${pathname === '/' && item.href === '/' || pathname !== '/' && item.href.includes(pathname) ? '!text-orange' : 'text-white'}`}>{item.title}</div>
+                </Link>
+              ))}
+            </ul>
+          </div>
+        </nav>
       </div>
     </>
   )
