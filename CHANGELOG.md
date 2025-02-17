@@ -1,5 +1,9 @@
 # Changelog
 
+##### [3.0.2] - 17 February 2025
+
+- Added spinner loader on buttons that perform Minima commands
+
 ##### [3.0.1] - 17 February 2025
 
 - Added ability to burn tokens by a specific amount

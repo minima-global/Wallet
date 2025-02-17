@@ -181,3 +181,16 @@ canvas {
     min-width: 25%;
   }
 }
+
+.spinner-border {
+  display: inline-block;
+  vertical-align: text-bottom;
+  border: 0.3em solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spinner-border .75s linear infinite;
+}
+
+@keyframes spinner-border {
+  to { transform: rotate(360deg); }
+}

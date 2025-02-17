@@ -19,6 +19,7 @@ function Index() {
 
   const [step, setStep] = useState(1);
   const [type, setType] = useState("SIMPLE");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [webUrl, setWebUrl] = useState("");
   const [tokenName, setTokenName] = useState("");
@@ -87,7 +88,7 @@ function Index() {
       },
       {
         label: t('description'),
-        value: description,
+        value: description || 'N/A',
         className: type === 'SIMPLE' ? 'hidden' : ''
       },
       {
@@ -127,6 +128,8 @@ function Index() {
 
   const createToken = async () => {
     let response;
+
+    setIsLoading(true);
 
     const token = {
       name: tokenName,
@@ -178,6 +181,10 @@ function Index() {
         }
       });
     }
+
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 750);
 
     if (response.pending) {
       return setIsPending({
@@ -573,8 +580,8 @@ function Index() {
                     </div>
                   ))}
                 </div>
-                <div className="flex flex-col gap-4">
-                  <Button disabled={isDisabled()} onClick={createToken} className="mt-4 w-full bg-orange text-black py-3 px-4 rounded text-sm">
+                <div className="flex flex-col gap-4 mt-8">
+                  <Button isLoading={isLoading} disabled={isDisabled()} onClick={createToken}>
                     {t('create')}
                   </Button>
                   <Button onClick={goToCreate} className="!bg-contrast1.5 !hover:bg-contrast2 text-white">

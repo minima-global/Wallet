@@ -29,6 +29,7 @@ function Index() {
     const navigate = useNavigate();
 
     const { balance, setIsPending, setIsSuccess, setIsError } = useContext(appContext);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [step, setStep] = useState<number>(1);
     const [selectedTokenId, setSelectedTokenId] = useState<string>('0x00')
     const selectedToken = balance.find(
@@ -58,6 +59,8 @@ function Index() {
     }
 
     const send = async () => {
+        setIsLoading(true);
+
         const response = await MDS.cmd.send({
             params: {
                 tokenid: selectedTokenId,
@@ -68,7 +71,11 @@ function Index() {
                     ? `{"44":"[${message}]"}`
                     : undefined
             }
-        })
+        });
+
+        setTimeout(() => {
+            setIsLoading(false);
+        }, 750);
 
         if (response.pending) {
             return setIsPending({
@@ -193,7 +200,7 @@ function Index() {
                     </div>
 
                     <div className="flex flex-col gap-2">
-                        <Button disabled={isDisabled()} onClick={send}>{t('send')}</Button>
+                        <Button isLoading={isLoading} disabled={isDisabled()} onClick={send}>{t('send')}</Button>
                         <Button onClick={goToStep1} variant="secondary">{t('cancel')}</Button>
                     </div>
                 </div>

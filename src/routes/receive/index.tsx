@@ -30,6 +30,7 @@ function Index() {
   const [filterAddressQuery, setFilterAddressQuery] = useState('');
   const [showAltAddresses, setShowAltAddresses] = useState(false);
   const [editingAddressName, setEditingAddressName] = useState<string | false>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const TABS = [
     {
@@ -44,18 +45,29 @@ function Index() {
     },
   ]
 
-  const validateFetchedAddress = () => {
+  const validateFetchedAddress = async () => {
+    setIsLoading(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    validateAddress(address);
+    await validateAddress(address);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 750);
   }
 
   const validateAddress = async (address: string) => {
     try {
+      setIsLoading(true);
+
       const results = await MDS.cmd.checkaddress({
         params: {
           address: address,
         },
       });
+
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 750);
+
       if (results.error) {
         return setError(true);
       }
@@ -159,12 +171,12 @@ function Index() {
             )}
           </div>
         </div>
-        <div className="flex-col gap-2 flex lg:hidden">
+        <div className="flex-col gap-2 flex md:hidden">
           <InfoBox title={t("validated")} value={s(address, { start: 16, end: 8 })} />
           <InfoBox title={t("0x_address")} value={s(result['0x'], { start: 16, end: 8 })} copy />
           <InfoBox title={t("mx_address")} value={s(result['Mx'], { start: 16, end: 8 })} copy />
         </div>
-        <div className="flex-col gap-2 hidden md:flex-row">
+        <div className="flex-col gap-2 hidden md:flex">
           <InfoBox title={t("validating")} value={address} />
           <InfoBox title={t("0x_address")} value={result['0x']} copy />
           <InfoBox title={t("mx_address")} value={result['Mx']} copy />
@@ -226,7 +238,7 @@ function Index() {
             </div>
 
             <div className="flex flex-col gap-2">
-              <Button onClick={validateFetchedAddress}>
+              <Button isLoading={isLoading} onClick={validateFetchedAddress}>
                 {t("validate")}
               </Button>
             </div>
@@ -241,7 +253,7 @@ function Index() {
               <div className="col-span-2 flex items-center justify-end">
                 <svg className={`-ml-2 fill-[#91919D] hover:fill-white transition-all transition-100 ${showAltAddresses ? '!fill-orange rotate-90' : ''}`} width="7" height="10" viewBox="0 0 7 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.875 5L0.9375 1.0625L2 0L7 5L2 10L0.9375 8.9375L4.875 5Z" fill="#currentColor"></path></svg>                </div>
             </div>
-            <div className={`flex flex-col gap-2 px-4 pb-6 md:px-6 md:pb-7 ${showAltAddresses ? ' mt-4 md:mt-6 opacity-100' : 'h-0 opacity-0'}`}>
+            <div className={`flex flex-col gap-2 px-4 pb-6 md:px-6 md:pb-8 ${showAltAddresses ? ' mt-4 md:mt-4 opacity-100' : 'h-0 opacity-0'}`}>
               <div className="md:mt-1 mb-5">
                 <SearchBar placeholder={t("enter_an_address")} value={filterAddressQuery} onChange={(value) => setFilterAddressQuery(value)} className="!bg-black" />
               </div>
@@ -279,7 +291,7 @@ function Index() {
               inverse
               clearable
             />
-            <Button disabled={!/^(0x|Mx)[0-9a-zA-Z]*$/.test(query)} onClick={() => validateAddress(query)}>{t("validate")}</Button>
+            <Button isLoading={isLoading} disabled={!/^(0x|Mx)[0-9a-zA-Z]*$/.test(query)} onClick={() => validateAddress(query)}>{t("validate")}</Button>
           </div>
         </div>
       )}
@@ -314,18 +326,25 @@ const EditAddressName = ({ display, address, existingName, dismiss }: { display:
   const { t } = useTranslation();
   const { addressNames, setAddressNames } = useContext(appContext);
   const [addressName, setAddressName] = useState('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    setAddressName(existingName);
-  }, [existingName]);
+    if (display) {
+      setAddressName(addressNames[address] || '');
+    }
+  }, [display]);
 
   const handleOnChange = (value: string) => {
     setAddressName(value);
   }
 
   const handleSave = () => {
+    setIsLoading(true);
     setAddressNames({ ...addressNames, [address]: addressName });
     handleDismiss();
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 750);
   }
 
   const handleDismiss = () => {
@@ -335,8 +354,8 @@ const EditAddressName = ({ display, address, existingName, dismiss }: { display:
 
   return (
     <div className={`${display ? 'opacity-100' : 'pointer-events-none opacity-0'} delay-100 transition-opacity duration-100 flex absolute z-50 inset-0 top-0 left-0 justify-center items-center w-screen h-screen`}>
-      <div className={`bg-contrast1 mb-4 fixed z-[60] rounded-lg max-w-[90%] md:max-w-[440px] w-full text-center text-white p-5 transform transition-all duration-200 ${display ? 'translate-y-[0%] opacity-100' : 'translate-y-[4px] opacity-0'}`}>
-        <h1 className="text-white text-xl md:text-2xl mt-1 md:mt-2 mb-5 font-bold">
+      <div className={`bg-contrast1 mb-4 fixed z-[60] rounded-lg max-w-[90%] md:max-w-[440px] w-full text-center text-white p-6 transform transition-all duration-200 ${display ? 'translate-y-[0%] opacity-100' : 'translate-y-[4px] opacity-0'}`}>
+        <h1 className="text-white text-xl md:text-2xl mt-1 mb-6 font-bold">
           {t("set_address_name")}
         </h1>
         <div className="mb-6">
@@ -348,7 +367,7 @@ const EditAddressName = ({ display, address, existingName, dismiss }: { display:
           />
         </div>
         <div className="flex flex-col gap-2">
-          <Button onClick={handleSave} disabled={!addressName}>
+          <Button isLoading={isLoading} onClick={handleSave} disabled={!addressName}>
             {t('save')}
           </Button>
           <Button onClick={handleDismiss} className="text-grey80 !bg-contrast2 !hover:opacity-90">

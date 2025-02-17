@@ -16,6 +16,8 @@ function Index() {
   const { setIsPending, setIsSuccess, setIsError } = useContext(appContext);
 
   const [step, setStep] = useState(1);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const [webUrl, setWebUrl] = useState("");
   const [tokenName, setTokenName] = useState("");
   const [totalSupply, setTotalSupply] = useState("");
@@ -49,6 +51,8 @@ function Index() {
   }
 
   const createToken = async () => {
+    setIsLoading(true);
+
     const token = {
       name: tokenName,
       url: webUrl,
@@ -74,6 +78,10 @@ function Index() {
     const response = await MDS.cmd.tokencreate({
       params
     });
+
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 750);
 
     if (response.pending) {
       return setIsPending({
@@ -106,23 +114,23 @@ function Index() {
       },
       {
         label: t("description"),
-        value: description,
+        value: description || 'N/A',
       },
       {
         label: t("creators_name"),
-        value: creatorsName,
+        value: creatorsName || 'N/A',
       },
       {
         label: t("external_url"),
-        value: externalUrl,
+        value: externalUrl || 'N/A',
       },
       {
         label: t("web_validation_url"),
-        value: webValidationUrl,
+        value: webValidationUrl || 'N/A',
       },
       {
         label: t("burn"),
-        value: burn,
+        value: burn || 'N/A',
       },
       ...metadata.map((item) => ({
         label: item.key,
@@ -208,6 +216,7 @@ function Index() {
                 placeholder={t("enter_a_description_for_your_nft")}
                 value={description}
                 onChange={setDescription}
+                optionalLabel={t('optional')}
               />
               <Input
                 label={t("creators_name")}
@@ -421,8 +430,8 @@ function Index() {
                     </div>
                   ))}
                 </div>
-                <div className="flex flex-col gap-4">
-                  <Button disabled={isDisabled()} onClick={createToken} className="mt-4 w-full bg-orange text-black py-3 px-4 rounded text-sm">
+                <div className="flex flex-col gap-4 mt-8">
+                  <Button isLoading={isLoading} disabled={isDisabled()} onClick={createToken}>
                     {t("create")}
                   </Button>
                   <Button onClick={goToCreate} className="!bg-contrast1.5 !hover:bg-contrast2 text-white">
