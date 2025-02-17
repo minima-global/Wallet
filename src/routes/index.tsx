@@ -173,9 +173,9 @@ function Index() {
       <div className="flex gap-4 my-4">
         <div className="grow">
           <div className="flex lg:hidden items-center gap-6">
-            <div onClick={toggleFilterAndSort} className="cursor-pointer text-grey80 font-bold text-[15px] active:text-white transition-all duration-100 mt-0.5">
-              {t('filter_and_sort')}
-            </div>
+            <button onClick={toggleFilterAndSort} className="cursor-pointer text-xs flex bg-contrast1 hover:bg-contrast2 transition-all duration-100 border border-contrast2 rounded-full flex items-center gap-3 w-fit px-3.5 py-1.5 text-white cursor-pointer select-none origin-center active:scale-[0.95] transition-all duration-100">
+                {t('filter_and_sort')}
+            </button>
           </div>
           <div className="hidden lg:flex items-center gap-6 mt-1">
             <Sort title={t('sort')} selected={sort} options={sortOptions} onClick={(option) => setSort(option as 'a_z' | 'z_a' | 'lowest' | 'highest')} />

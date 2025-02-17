@@ -1,5 +1,5 @@
 import { useContext, useEffect } from 'react'
-import { Link } from '@tanstack/react-router'
+import { Link, useLocation } from '@tanstack/react-router'
 import HamburgerButton from './HamburgerButton.tsx'
 import { appContext } from '../../AppContext.tsx'
 import useAndroidShowTitleBar from './useAndroidShowTitlebar';
@@ -9,6 +9,7 @@ import useTranslation from '../../hooks/useTranslation.ts';
 
 const Header = () => {
   const { t } = useTranslation();
+  const { pathname } = useLocation();
   const { block, hamburgerOpen, setHamburgerOpen } = useContext(appContext)
   const openTitleBar = useAndroidShowTitleBar();
 
@@ -272,9 +273,9 @@ const Header = () => {
                 {NAV_ITEMS.map((item) => (
                   <Link key={item.href} to={item.href} onClick={dismissHamburger} className="flex items-center gap-5">
                     <div className="w-4 flex items-center">
-                      <div className="[&>svg>path]:fill-orange">{item.icon}</div>
+                      <div className={`group-hover:text-grey60 ${pathname === '/' && item.href === '/' || pathname !== '/' && item.href.includes(pathname) ? '[&>svg>path]:!fill-orange' : ''}`}>{item.icon}</div>
                     </div>
-                    <div className="text-white text-sm">{item.title}</div>
+                    <div className={`text-sm ${pathname === '/' && item.href === '/' || pathname !== '/' && item.href.includes(pathname) ? '!text-orange' : 'text-white'}`}>{item.title}</div>
                   </Link>
                 ))}
               </ul>

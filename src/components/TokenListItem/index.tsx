@@ -81,7 +81,7 @@ const TokenListItem = ({ balance }: { balance: Balance }) => {
     )
 }
 
-export const BalanceAmount = ({ balance, value }: { balance: Balance, value: string }) => {
+export const BalanceAmount = ({ balance, value, grid = false }: { balance: Balance, value: string, grid?: boolean }) => {
     const { f } = useFormatAmount();
     const { m } = useSlice();
     const [hasUnconfirmed, setHasUnconfirmed] = useState(false);
@@ -112,12 +112,32 @@ export const BalanceAmount = ({ balance, value }: { balance: Balance, value: str
     return (
         <div className="relative">
             <div className={`w-full truncate overflow-ellipsis flex gap-2 items-center transition-all duration-100 ${showing === false ? '' : showing === 1 ? 'text-grey60' : 'text-white'}`}>
-                <div className="block md:hidden">
-                    {m(f(value), 20)}
-                </div>
-                <div className="hidden md:block">
-                    {m(f(value), 22)}
-                </div>
+                {grid && (
+                    <>
+                        <div className="block sm:hidden md:hidden">
+                            {m(f(value), 14)}
+                        </div>
+                        <div className="hidden sm:block md:hidden">
+                            {m(f(value), 28)}
+                        </div>
+                        <div className="hidden sm:hidden md:block">
+                            {m(f(value), 22)}
+                        </div>
+                    </>
+                )}
+                {!grid && (
+                    <>
+                        <div className="block sm:hidden">
+                            {m(f(value), 18)}
+                        </div>
+                        <div className="hidden sm:block md:hidden">
+                            {m(f(value), 38)}
+                        </div>
+                        <div className="hidden md:block">
+                            {f(value)}
+                        </div>
+                    </>
+                )}
             </div>
         </div>
     )
