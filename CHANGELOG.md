@@ -1,5 +1,15 @@
 # Changelog
 
+##### [3.0.1] - 17 February 2025
+
+- Added ability to burn tokens by a specific amount
+- Added a send token button on token details page
+- Mobile menu now fades in
+- Mobile menu, active page is now shown correctly
+- Searching for an address by name now works
+- Ticker is now shown on balance page
+- Various UI bug fixes
+
 ##### [3.0.0] - 17 February 2025
 
 - The wallet has been reskin

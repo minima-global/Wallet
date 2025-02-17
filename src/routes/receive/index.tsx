@@ -97,7 +97,7 @@ function Index() {
         <div className="grid grid-cols-12 text-grey60 mb-6 gap-2 md:gap-4">
           <div className="col-span-12 md:col-span-4 bg-contrast1 pt-3 pb-4 px-4 rounded text-center">
             <div className="text-base md:text-lg mb-2">
-              Valid address
+              {t("valid_address")}
             </div>
             <svg className="mx-auto w-[32px] h-[32px]" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <mask id="mask0_7856_39219" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
@@ -247,14 +247,14 @@ function Index() {
               </div>
               <div className="custom-scrollbar max-h-[300px] pr-4 overflow-y-scroll flex flex-col gap-2">
                 {addresses
-                  .filter((address) => address.toLowerCase().includes(filterAddressQuery.toLowerCase()))
+                  .filter((address) => address.toLowerCase().includes(filterAddressQuery.toLowerCase()) || addressNames[address]?.toLowerCase().includes(filterAddressQuery.toLowerCase()))
                   .length === 0 && (
                     <div className="bg-contrast2/50 rounded-lg text-white text-sm px-4 py-4">
-                      <div>{t("no_matching_addresses_could_be_found")}</div>
+                      <div className="text-grey80">{t("no_matching_addresses_could_be_found")}</div>
                     </div>
                   )}
                 {addresses
-                  .filter((address) => address.toLowerCase().includes(filterAddressQuery.toLowerCase()))
+                  .filter((address) => address.toLowerCase().includes(filterAddressQuery.toLowerCase()) || addressNames[address]?.toLowerCase().includes(filterAddressQuery.toLowerCase()))
                   .map((address) => <AddressRow key={address} address={address} selectAddress={selectAddress} />)}
               </div>
             </div>
@@ -337,7 +337,7 @@ const EditAddressName = ({ display, address, existingName, dismiss }: { display:
     <div className={`${display ? 'opacity-100' : 'pointer-events-none opacity-0'} delay-100 transition-opacity duration-100 flex absolute z-50 inset-0 top-0 left-0 justify-center items-center w-screen h-screen`}>
       <div className={`bg-contrast1 mb-4 fixed z-[60] rounded-lg max-w-[90%] md:max-w-[440px] w-full text-center text-white p-5 transform transition-all duration-200 ${display ? 'translate-y-[0%] opacity-100' : 'translate-y-[4px] opacity-0'}`}>
         <h1 className="text-white text-xl md:text-2xl mt-1 md:mt-2 mb-5 font-bold">
-          Set Address Name
+          {t("set_address_name")}
         </h1>
         <div className="mb-6">
           <Input

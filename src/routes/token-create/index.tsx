@@ -24,7 +24,7 @@ function Index() {
   const [tokenName, setTokenName] = useState("");
   const [totalSupply, setTotalSupply] = useState("");
   const [description, setDescription] = useState("");
-  const [decimals, setDecimals] = useState("");
+  const [decimals, setDecimals] = useState("8");
   const [ticker, setTicker] = useState("");
   const [webValidationUrl, setWebValidationUrl] = useState("");
   const [burn, setBurn] = useState("");

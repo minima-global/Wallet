@@ -338,6 +338,8 @@ function Index() {
                         </div>
 
                         {groupedByDay[row].map((h) => {
+                          let type = '';
+                          
                           const input = h.BODY.txn.inputs[0].tokenid;
                           const difference = h.DETAILS.difference[input];
 
@@ -349,6 +351,16 @@ function Index() {
                           }
 
                           const showCreatedToken = query ? renderTokenName(createdToken).toLowerCase().includes(query.toLowerCase().trim()) : true;
+
+                          if (difference > 0) {
+                            type = t("received");
+                          } else if (difference < 0) {
+                            type = t("sent");
+                          }
+
+                          if (h.BODY?.txn.outputs[0].address === '0xFF' || h.BODY?.txn.outputs[0].tokenid === '0xFF') {
+                            type = t("burnt");
+                          }
 
                           return (
                             <div key={h.TXPOWID} className="cursor-pointer" onClick={() => viewTxPowInfo(h.TXPOWID)}>
@@ -404,7 +416,7 @@ function Index() {
                                     )}
                                   </div>
                                   <p className="font-bold truncate text-grey40 text-xs md:text-sm">
-                                    {difference > 0 ? t("received") : t("sent")} - {format(new Date(Number(h.HEADER.timemilli)), 'HH:mm aa')}
+                                    {type} - {format(new Date(Number(h.HEADER.timemilli)), 'HH:mm aa')}
                                   </p>
                                 </div>
                                 {difference && difference !== '0' && (

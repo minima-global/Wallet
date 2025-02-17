@@ -32,7 +32,9 @@
         "this_address_is_not_safe": "This address is not safe",
         "validation_report": "Validation report",
         "belongs_to_this_node": "Belongs to this node",
+        "valid_address": "Valid address",
         "simple_address": "Simple address",
+        "set_address_name": "Set address name",
         "0x_address": "0x address",
         "mx_address": "Mx address",
         "back": "Back",
@@ -192,7 +194,8 @@
         "reset": "Reset",
         "token_states": "Token states",
         "token_states_available": "Funds are available to be spent immediately as they are currently not locked in a contract.",
-        "token_states_locked": "Funds are locked in a contract and unable to spend."
+        "token_states_locked": "Funds are locked in a contract and unable to spend.",
+        "burnt": "Burnt"
     },
     "zh": {
         "wallet": "钱包",
@@ -227,7 +230,9 @@
         "this_address_is_not_safe": "此地址不安全",
         "validation_report": "验证报告",
         "belongs_to_this_node": "属于此节点",
+        "valid_address": "有效地址",
         "simple_address": "简单地址",
+        "set_address_name": "设置地址名称",
         "validating": "验证中",
         "0x_address": "0x地址",
         "mx_address": "Mx地址", 
@@ -418,7 +423,8 @@
         "reset": "重置",
         "token_states": "代币状态",
         "token_states_available": "资金可以立即用于消费，因为它们目前不在合约中锁定。",
-        "token_states_locked": "资金被锁定在合约中，无法使用。"
+        "token_states_locked": "资金被锁定在合约中，无法使用。",
+        "burnt": "销毁"
     },
     "ru": {
         "wallet": "Кошелек",
@@ -454,6 +460,8 @@
         "validation_report": "Отчет о проверке",
         "belongs_to_this_node": "Принадлежит этому узлу",
         "simple_address": "Простой адрес",
+        "valid_address": "Действительный адрес",
+        "set_address_name": "Установить имя адреса",
         "validating": "Проверка",
         "0x_address": "0x адрес",
         "mx_address": "Mx адрес",
@@ -613,7 +621,8 @@
         "reset": "Сбросить",
         "token_states": "Состояние токена",
         "token_states_available": "Средства доступны для использования, так как они в настоящее время не заблокированы в контракте.",
-        "token_states_locked": "Средства заблокированы в контракте и не могут быть использованы."
+        "token_states_locked": "Средства заблокированы в контракте и не могут быть использованы.",
+        "burnt": "Сгоревший"
     },
     "ukr": {
         "wallet": "Гаманець",
@@ -649,6 +658,8 @@
         "validation_report": "Звіт про перевірку",
         "belongs_to_this_node": "Належить цьому вузлу",
         "simple_address": "Проста адреса",
+        "valid_address": "Дійсна адреса",
+        "set_address_name": "Встановити назву адреси",
         "validating": "Перевірка",
         "0x_address": "0x адреса",
         "mx_address": "Mx адреса",
@@ -808,7 +819,8 @@
         "reset": "Сбросить",
         "token_states": "Состояние токена",
         "token_states_available": "Средства доступны для использования, так как они в настоящее время не заблокированы в контракте.",
-        "token_states_locked": "Средства заблокированы в контракте и не могут быть использованы."
+        "token_states_locked": "Средства заблокированы в контракте и не могут быть использованы.",
+        "burnt": "Сгоревший"
     },
     "fr": {
         "wallet": "Portefeuille",
@@ -844,6 +856,8 @@
         "validation_report": "Rapport de validation",
         "belongs_to_this_node": "Appartient à ce nœud",
         "simple_address": "Adresse simple",
+        "valid_address": "Adresse valide",
+        "set_address_name": "Définir le nom de l'adresse",
         "validating": "Validation en cours",
         "0x_address": "Adresse 0x",
         "mx_address": "Adresse Mx",
@@ -1004,7 +1018,8 @@
         "reset": "Réinitialiser",
         "token_states": "État du jeton",
         "token_states_available": "Les fonds sont disponibles pour être dépensés immédiatement car ils ne sont actuellement pas verrouillés dans un contrat.",
-        "token_states_locked": "Les fonds sont verrouillés dans un contrat et ne peuvent pas être utilisés."
+        "token_states_locked": "Les fonds sont verrouillés dans un contrat et ne peuvent pas être utilisés.",
+        "burnt": "Brûlé"
     },
     "es": {
         "wallet": "Cartera",
@@ -1040,6 +1055,8 @@
         "validation_report": "Informe de validación",
         "belongs_to_this_node": "Pertenece a este nodo",
         "simple_address": "Dirección simple",
+        "valid_address": "Dirección válida",
+        "set_address_name": "Establecer nombre de la dirección",
         "validating": "Validando",
         "0x_address": "Dirección 0x",
         "mx_address": "Dirección Mx",
@@ -1199,7 +1216,8 @@
         "reset": "Réinitialiser",
         "token_states": "État du jeton",
         "token_states_available": "Les fonds sont disponibles pour être dépensés immédiatement car ils ne sont actuellement pas verrouillés dans un contrat.",
-        "token_states_locked": "Les fonds sont verrouillés dans un contrat et ne peuvent pas être utilisés."
+        "token_states_locked": "Les fonds sont verrouillés dans un contrat et ne peuvent pas être utilisés.",
+        "burnt": "Brûlé"
     },
     "ja": {
         "wallet": "ウォレット",
@@ -1235,6 +1253,8 @@
         "validation_report": "検証レポート",
         "belongs_to_this_node": "このノードに属します",
         "simple_address": "シンプルアドレス",
+        "valid_address": "有効なアドレス",
+        "set_address_name": "アドレス名を設定",
         "validating": "検証中",
         "0x_address": "0xアドレス",
         "mx_address": "Mxアドレス",
@@ -1425,7 +1445,8 @@
         "reset": "リセット",
         "token_states": "トークンの状態",
         "token_states_available": "資金は、現在契約でロックされていないため、すぐに使用できます。",
-        "token_states_locked": "資金は契約でロックされているため、使用できません。"
+        "token_states_locked": "資金は契約でロックされているため、使用できません。",
+        "burnt": "燃え尽きた"
     },
     "ko": {
         "wallet": "지갑",
@@ -1461,6 +1482,8 @@
         "validation_report": "검증 보고서",
         "belongs_to_this_node": "이 노드에 속합니다",
         "simple_address": "간단한 주소",
+        "valid_address": "유효한 주소",
+        "set_address_name": "주소 이름 설정",
         "validating": "검증 중",
         "0x_address": "0x 주소",
         "mx_address": "Mx 주소",
@@ -1652,6 +1675,7 @@
         "reset": "초기화",
         "token_states": "토큰 상태",
         "token_states_available": "자금은 현재 계약에 잠금되지 않아 즉시 사용할 수 있습니다.",
-        "token_states_locked": "자금은 계약에 잠금되어 사용할 수 없습니다."
+        "token_states_locked": "자금은 계약에 잠금되어 사용할 수 없습니다.",
+        "burnt": "소각됨"
     }
 }

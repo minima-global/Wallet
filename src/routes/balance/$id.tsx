@@ -23,7 +23,7 @@ function RouteComponent() {
     const { t } = useTranslation();
     const { id } = useParams({ from: '/balance/$id' });
     const navigate = useNavigate();
-    const { balance, setIsPending, setIsSuccess, hiddenTokens, setHiddenTokens } = useContext(appContext);
+    const { balance, setIsPending, setIsSuccess, hiddenTokens, setHiddenTokens, setIsError } = useContext(appContext);
     const isHidden = hiddenTokens.includes(id);
 
     const [burnAmount, setBurnAmount] = useState<string>('');
@@ -53,7 +53,7 @@ function RouteComponent() {
             });
 
             if (response.pending) {
-                setIsPending({
+                return setIsPending({
                     uid: response.pendinguid as string,
                     callback: () => {
                         navigate({ to: '/' });
@@ -62,8 +62,13 @@ function RouteComponent() {
             }
 
             if (response.status) {
-                setIsSuccess(true);
+                return setIsSuccess(true);
             }
+
+            return setIsError({
+                display: true,
+                message: response.error
+            });
         } catch {
             // do nothing
         }
@@ -98,6 +103,10 @@ function RouteComponent() {
     const isBurnAmountValid = (value: string) => {
         if (!token?.sendable) {
             return false;
+        }
+
+        if ((token as any)?.details?.decimals === 0) {
+            return value.length > 0 && Number.isInteger(Number(value)) && new Decimal(value).lte(token?.sendable);
         }
 
         try {
@@ -227,7 +236,7 @@ function RouteComponent() {
                                 <svg className="w-5 h-5" fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M6 12L3 21L21 12L3 3L6 12ZM6 12L12 12" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" /></svg>
                             </div>
                         </li>
-
+                        <InfoBox title={t('token_id')} value={token.tokenid} copy />
                         {token && token.tokenid !== '0x00' && (
                             <InfoBox
                                 title={t('description')}
@@ -252,7 +261,7 @@ function RouteComponent() {
                         <InfoBox title={t('confirmed')} value={token.confirmed} />
                         <InfoBox title={t('unconfirmed')} value={token.unconfirmed} />
                         {metadata.length > 0 && metadata.map((item) => (
-                            <InfoBox title={item.key} value={item.value} className="capitalize" />
+                            <InfoBox key={item.key} title={item.key} value={item.value} className="capitalize" />
                         ))}
                     </ul>
                 </div>

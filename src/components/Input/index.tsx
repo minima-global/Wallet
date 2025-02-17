@@ -44,20 +44,24 @@ const Input: React.FC<InputProps> = ({
     const [valid, setValid] = useState<boolean | null>(null);
     const [copied, setCopied] = useState(false);
 
-    const handleOnBlur = (evt: React.FocusEvent<HTMLInputElement>) => {
+    const handleValidate = (value: string)  => {
         if (validation) {
-            if (required === false && evt.target.value.length === 0) {
+            if (required === false && value.length === 0) {
                 setValid(true);
                 return;
             }
 
             if (typeof validation === 'function') {
-                return setValid(validation(evt.target.value));
+                return setValid(validation(value));
             }
 
-            const invalid = new RegExp(validation, 'gmi').test(evt.target.value.toString());
+            const invalid = new RegExp(validation, 'gmi').test(value.toString());
             setValid(invalid);
         }
+    }
+
+    const handleOnBlur = (evt: React.FocusEvent<HTMLInputElement>) => {
+        handleValidate(evt.target.value);
     }
 
     const copyToClipboard = () => {
@@ -70,6 +74,11 @@ const Input: React.FC<InputProps> = ({
                 setCopied(false);
             }, 2000);
         }
+    }
+
+    const handleMax = () => {
+        onChange?.(max);
+        handleValidate(max);
     }
 
     const handleClear = () => {
@@ -128,7 +137,7 @@ const Input: React.FC<InputProps> = ({
                         </div>
                     )}
                     {max && (
-                        <div onClick={() => onChange?.(max)} className="text-sm cursor-pointer font-bold text-grey40 hover:text-white absolute top-0 right-0 flex h-full items-center z-10">
+                        <div onClick={handleMax} className="text-sm cursor-pointer font-bold text-grey40 hover:text-white absolute top-0 right-0 flex h-full items-center z-10">
                             Max
                         </div>
                     )}
