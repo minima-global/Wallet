@@ -79,14 +79,9 @@ function Index() {
         balanceAtStart[item.tokenid] = new Decimal(item.confirmed).add(item.unconfirmed);
       });
 
-      history && history.forEach((item, index) => {
+      history && history.forEach((item) => {
         const inputToken = item.BODY.txn.inputs[0].tokenid;
         const difference = item.DETAILS.difference[inputToken];
-        const time = new Date(Number(item.HEADER.timemilli));
-        const isBurnt = item.BODY.txn.outputs[0].address === '0xFF';
-
-        // If the transaction was less than a minute ago
-        const lessThanMinuteAgo = differenceInMilliseconds(new Date(), time) < 60000;
 
         if (!previousBalance[inputToken] && balanceAtStart[inputToken]) {
           balanceHistory[item.TXPOWID] = new Decimal(balanceAtStart[inputToken]).toString();
