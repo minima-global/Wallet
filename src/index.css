@@ -194,3 +194,7 @@ canvas {
 @keyframes spinner-border {
   to { transform: rotate(360deg); }
 }
+
+.break-word {
+  word-break: break-word;
+}

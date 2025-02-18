@@ -69,41 +69,30 @@ function Index() {
   }, [history]);
 
   useEffect(() => {
-    if (history && balance) {
+    const callback = () => {
       const balanceAtStart = {};
       const previousBalance = {};
       const balanceHistory = {};
+      const burntBalance= {};
 
       balance.forEach((item) => {
         balanceAtStart[item.tokenid] = new Decimal(item.confirmed).add(item.unconfirmed);
       });
 
-      history.forEach((item) => {
+      history && history.forEach((item, index) => {
         const inputToken = item.BODY.txn.inputs[0].tokenid;
         const difference = item.DETAILS.difference[inputToken];
         const time = new Date(Number(item.HEADER.timemilli));
+        const isBurnt = item.BODY.txn.outputs[0].address === '0xFF';
 
         // If the transaction was less than a minute ago
-        const timeDiff = differenceInMilliseconds(new Date(), time);
-        const isLessThanMinute = timeDiff < (60000 * 5); // 60000 ms = 1 minute
-        const isBurnt = item.BODY.txn.outputs[0].address === '0xFF';
-        const isConfirmed = balance && balance.find((b) => b.tokenid === inputToken)?.sendable === balance.find((b) => b.tokenid === inputToken)?.confirmed;
+        const lessThanMinuteAgo = differenceInMilliseconds(new Date(), time) < 60000;
 
         if (!previousBalance[inputToken] && balanceAtStart[inputToken]) {
           balanceHistory[item.TXPOWID] = new Decimal(balanceAtStart[inputToken]).toString();
           previousBalance[inputToken] = new Decimal(balanceAtStart[inputToken]);
         }
-
-        if (isLessThanMinute && isBurnt && isConfirmed) {
-          if (item.DETAILS.outputs[inputToken]) {
-            balanceHistory[item.TXPOWID] = new Decimal(item.DETAILS.outputs[inputToken]).toString();
-            previousBalance[inputToken] = new Decimal(item.DETAILS.outputs[inputToken]);
-          } else {
-            balanceHistory[item.TXPOWID] = '0';
-            previousBalance[inputToken] = new Decimal(0);
-          }
-        }
-
+        
         if (previousBalance[inputToken]) {
           balanceHistory[item.TXPOWID] = new Decimal(previousBalance[inputToken]).toString();
 
@@ -111,11 +100,10 @@ function Index() {
             const add = difference[0] === '+';
             const subtract = difference[0] === '-';
             const amount = difference.replace('+', '').replace('-', '');
-
-
+            
             if (add) {
               previousBalance[inputToken] = new Decimal(previousBalance[inputToken]).sub(amount);
-            } else if (subtract) {
+            } else if (subtract) { 
               previousBalance[inputToken] = new Decimal(previousBalance[inputToken]).add(amount);
             } else {
               previousBalance[inputToken] = new Decimal(previousBalance[inputToken]).sub(amount);
@@ -128,10 +116,13 @@ function Index() {
 
       setBalanceDifference(balanceHistory);
     }
+
+    if (history && balance) {
+      callback();
+    }
   }, [history, balance]);
 
   const toggleOrder = () => {
-    setActiveMonth('all');
     setOrder(prevState => prevState === 'desc' ? 'asc' : 'desc');
     getHistory(order === 'asc' ? 'desc' : 'asc');
   }

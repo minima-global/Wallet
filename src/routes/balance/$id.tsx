@@ -29,6 +29,7 @@ function RouteComponent() {
     const [burnAmount, setBurnAmount] = useState<string>('');
     const [showBurnModal, setShowBurnModal] = useState(false);
     const [showHideTokenModal, setShowHideTokenModal] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const token = balance.find((b) => b.tokenid === id);
 
@@ -42,7 +43,7 @@ function RouteComponent() {
 
     const confirmBurn = async () => {
         try {
-            setShowBurnModal(false);
+            setIsLoading(true);
 
             const response = await MDS.cmd.send({
                 params: {
@@ -52,6 +53,11 @@ function RouteComponent() {
                     mine: 'true',
                 }
             });
+
+            setTimeout(() => {
+                setIsLoading(false);
+                setShowBurnModal(false);
+            }, 250);
 
             if (response.pending) {
                 return setIsPending({
@@ -138,7 +144,7 @@ function RouteComponent() {
                         />
                     </div>
                     <div className="mt-6 space-y-2">
-                        <Button disabled={!canBurn} onClick={confirmBurn}>
+                        <Button isLoading={isLoading} disabled={!canBurn} onClick={confirmBurn}>
                             {t('confirm')}
                         </Button>
                         <Button variant="tertiary" onClick={toggleBurnModal}>
@@ -219,7 +225,7 @@ function RouteComponent() {
             {token && (
                 <div className="mb-14">
                     <ul className="select-none flex flex-col gap-2">
-                        <li className="bg-contrast1 relative w-full flex items-center p-5 rounded">
+                        <li className="bg-contrast1 relative w-full flex items-center p-5 rounded mb-6">
                             <div className="grow flex">
                                 <TokenIcon token={token.token} tokenId={token.tokenid} />
                                 <div className="grow flex items-center overflow-hidden px-5">
@@ -233,8 +239,10 @@ function RouteComponent() {
                                     </div>
                                 </div>
                             </div>
-                            <div onClick={goToSendWithToken} className="pr-3 text-grey hover:text-orange cursor-pointer">
-                                <svg className="w-5 h-5" fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M6 12L3 21L21 12L3 3L6 12ZM6 12L12 12" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" /></svg>
+                            <div onClick={goToSendWithToken} className="pr-2 transition-all duration-100 text-white hover:text-grey cursor-pointer">
+                                <svg width="24" height="16" viewBox="0 0 24 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M6.01953 15.2308C4.29253 14.7423 2.94411 13.8153 1.97428 12.45C1.00445 11.0847 0.519531 9.60133 0.519531 8C0.519531 6.39867 1.00445 4.91533 1.97428 3.55C2.94411 2.18467 4.29253 1.25775 6.01953 0.76925V2.35C4.8362 2.75 3.8737 3.46667 3.13203 4.5C2.39036 5.53333 2.01953 6.7 2.01953 8C2.01953 9.3 2.39036 10.4667 3.13203 11.5C3.8737 12.5333 4.8362 13.25 6.01953 13.65V15.2308ZM14.0195 15.5C11.9375 15.5 10.167 14.7705 8.70803 13.3115C7.24903 11.8525 6.51953 10.082 6.51953 8C6.51953 5.918 7.24903 4.1475 8.70803 2.6885C10.167 1.2295 11.9375 0.5 14.0195 0.5C15.0234 0.5 15.9718 0.685917 16.8648 1.05775C17.7576 1.42958 18.5483 1.94692 19.2368 2.60975L18.183 3.6635C17.6394 3.13917 17.0147 2.73083 16.309 2.4385C15.6032 2.14617 14.84 2 14.0195 2C12.3529 2 10.9362 2.58333 9.76953 3.75C8.60286 4.91667 8.01953 6.33333 8.01953 8C8.01953 9.66667 8.60286 11.0833 9.76953 12.25C10.9362 13.4167 12.3529 14 14.0195 14C14.84 14 15.6032 13.8538 16.309 13.5615C17.0147 13.2692 17.6394 12.8608 18.183 12.3365L19.2368 13.3903C18.5483 14.0531 17.7576 14.5704 16.8648 14.9423C15.9718 15.3141 15.0234 15.5 14.0195 15.5ZM19.8273 11.6538L18.7733 10.6L20.6233 8.75H13.0773V7.25H20.6233L18.7733 5.4L19.8273 4.34625L23.481 8L19.8273 11.6538Z" fill="currentColor" />
+                                </svg>
                             </div>
                         </li>
                         <InfoBox title={t('token_id')} value={token.tokenid} copy />

@@ -80,8 +80,8 @@ function Index() {
   const sortOptions = [
     { key: 'a_z', label: 'A-Z' },
     { key: 'z_a', label: 'Z-A' },
-    { key: 'lowest', label: t('lowest') },
-    { key: 'highest', label: t('highest') },
+    { key: 'lowest', label: t('lowest_balance') },
+    { key: 'highest', label: t('highest_balance') },
   ];
 
   const filterOptions = [
@@ -147,8 +147,8 @@ function Index() {
           </div>
         </div>
         <div className="flex flex-col gap-3 mb-4">
-          <Button onClick={applyChanges}>{t('apply')}</Button>
-          <Button variant="secondary" onClick={resetChanges}>{t('reset')}</Button>
+          <Button disabled={proxySort === sort && proxyFilter === filter} onClick={applyChanges}>{t('apply')}</Button>
+          <Button variant="secondary" onClick={resetChanges} className="bg-contrast3 hover:bg-contrast4">{t('reset')}</Button>
         </div>
       </OverlayModal>
 
@@ -178,8 +178,8 @@ function Index() {
             </button>
           </div>
           <div className="hidden lg:flex items-center gap-6 mt-1">
-            <Sort title={t('sort')} selected={sort} options={sortOptions} onClick={(option) => setSort(option as 'a_z' | 'z_a' | 'lowest' | 'highest')} />
-            <Sort title={t('filter')} selected={filter} options={filterOptions} onClick={(option) => setFilter(option as 'all' | 'simple' | 'nfts' | 'custom')} />
+            <Sort leftAlign title={t('sort')} selected={sort} options={sortOptions} onClick={(option) => setSort(option as 'a_z' | 'z_a' | 'lowest' | 'highest')} />
+            <Sort leftAlign title={t('filter')} selected={filter} options={filterOptions} onClick={(option) => setFilter(option as 'all' | 'simple' | 'nfts' | 'custom')} />
           </div>
         </div>
         <div className="col-span-6 flex items-center justify-end gap-5">
@@ -227,7 +227,7 @@ function Index() {
   );
 }
 
-const Sort = ({ title, selected, options, onClick }: { title: string, selected: string, options: { key: string, label: string }[], onClick: (option: string) => void }) => {
+const Sort = ({ title, selected, options, onClick, leftAlign }: { title: string, selected: string, options: { key: string, label: string }[], onClick: (option: string) => void, leftAlign?: boolean  }) => {
   const [isOpen, setIsOpen] = useState(false);
   const selectedOption = options.find((option) => option.key === selected);
 
@@ -253,9 +253,9 @@ const Sort = ({ title, selected, options, onClick }: { title: string, selected: 
           <path d="M5 6.0625L0 1.0625L1.0625 0L5 3.9375L8.9375 0L10 1.0625L5 6.0625Z" fill="#E9E9EB" />
         </svg>
       </div>
-      <div className={`absolute z-20 top-[100%] mt-4 text-sm right-0 flex flex-col gap-[2px] bg-contrast1 whitespace-nowrap ${isOpen ? 'block' : 'hidden'}`}>
+      <div className={`absolute z-20 top-[100%] mt-4 text-sm flex flex-col gap-[2px] bg-contrast1 whitespace-nowrap ${isOpen ? 'block' : 'hidden'} ${leftAlign ? 'left-0' : 'right-0'}`}>
         {options.map((option) => (
-          <button key={option.key} onClick={() => handleOptionClick(option)} className="bg-contrast2 px-4 py-2 text-white hover:bg-white hover:text-black">{option.label}</button>
+          <button key={option.key} onClick={() => handleOptionClick(option)} className={`bg-contrast2 px-4 py-2 text-white hover:bg-white hover:text-black ${leftAlign ? "text-left" : ""}`}>{option.label}</button>
         ))}
       </div>
       <div className={`fixed z-10 bg-black opacity-50 inset-0 ${isOpen ? 'pointer-events-auto' : 'pointer-events-none hidden'}`} onClick={toggleDropdown}></div>

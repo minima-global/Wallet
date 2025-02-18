@@ -192,7 +192,6 @@ function Index() {
           address={address}
           display={!!editingAddressName}
           dismiss={dismissEditAddressName}
-          existingName={addressNames[address] || ''}
         />
       </div>
 
@@ -322,7 +321,7 @@ export const AddressRow = ({ address, selectAddress }: { address: string, select
   )
 };
 
-const EditAddressName = ({ display, address, existingName, dismiss }: { display: boolean, address: string, existingName: string, dismiss: () => void }) => {
+const EditAddressName = ({ display, address, dismiss }: { display: boolean, address: string, dismiss: () => void }) => {
   const { t } = useTranslation();
   const { addressNames, setAddressNames } = useContext(appContext);
   const [addressName, setAddressName] = useState('');
