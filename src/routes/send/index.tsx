@@ -283,7 +283,7 @@ const TokenDropdown = ({ value, onChange }: TokenDropdownProps) => {
                             </div>
                         </div>
                         <span className="flex absolute top-0 right-0 h-full items-center">
-                            <div className={`px-2 py-2 transition-all duration-300 ${isOpen ? 'text-orange' : 'text-grey hover:text-white -rotate-90'}`}>
+                            <div className={`px-2 py-2 transition-all duration-300 ${isOpen ? 'text-orange rotate-0' : 'text-grey hover:text-white -rotate-180'}`}>
                                 <svg width="10" height="7" viewBox="0 0 10 7" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M5 6.0625L0 1.0625L1.0625 0L5 3.9375L8.9375 0L10 1.0625L5 6.0625Z" fill="currentColor" />
                                 </svg>

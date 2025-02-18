@@ -1,5 +1,13 @@
 # Changelog
 
+##### [3.0.4] - 18 February 2025
+
+- Added minor UI rollover fixes
+
+##### [3.0.3] - 18 February 2025
+
+- Fixed a bug when the burnt token balance was not being reflected immediately in history
+
 ##### [3.0.2] - 17 February 2025
 
 - Added spinner loader on buttons that perform Minima commands

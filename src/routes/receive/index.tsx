@@ -250,7 +250,7 @@ function Index() {
                 </div>
               </div>
               <div className="col-span-2 flex items-center justify-end">
-                <svg className={`-ml-2 fill-[#91919D] hover:fill-white transition-all transition-100 ${showAltAddresses ? '!fill-orange rotate-90' : ''}`} width="7" height="10" viewBox="0 0 7 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.875 5L0.9375 1.0625L2 0L7 5L2 10L0.9375 8.9375L4.875 5Z" fill="#currentColor"></path></svg>                </div>
+                <svg className={`-ml-2 fill-[#91919D] hover:fill-white transition-all transition-100 -rotate-90 ${showAltAddresses ? '!fill-orange rotate-90' : ''}`} width="7" height="10" viewBox="0 0 7 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.875 5L0.9375 1.0625L2 0L7 5L2 10L0.9375 8.9375L4.875 5Z" fill="#currentColor"></path></svg>                </div>
             </div>
             <div className={`flex flex-col gap-2 px-4 pb-6 md:px-6 md:pb-8 ${showAltAddresses ? ' mt-4 md:mt-4 opacity-100' : 'h-0 opacity-0'}`}>
               <div className="md:mt-1 mb-5">

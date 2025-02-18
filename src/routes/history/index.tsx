@@ -5,7 +5,6 @@ import SortButton from '../../components/SortButton'
 import { useContext, useEffect, useState, Fragment, useMemo, useRef } from 'react'
 import { appContext } from '../../AppContext'
 import { MDS } from '@minima-global/mds'
-import { differenceInMilliseconds, format } from "date-fns";
 import useFormatAmount from '../../hooks/useFormatAmount'
 import { escape, renderTokenName } from '../../utils'
 import TokenAuthenticity from '../../components/TokenAuthenticity'
@@ -17,6 +16,7 @@ import Decimal from 'decimal.js'
 import InfoBox from '../../components/InfoBox'
 import BackButton from '../../components/BackButton'
 import useSlice from '../../components/Truncate/useSlice'
+import { format } from 'date-fns'
 
 export const Route = createFileRoute('/history/')({
   component: Index,
@@ -73,7 +73,6 @@ function Index() {
       const balanceAtStart = {};
       const previousBalance = {};
       const balanceHistory = {};
-      const burntBalance= {};
 
       balance.forEach((item) => {
         balanceAtStart[item.tokenid] = new Decimal(item.confirmed).add(item.unconfirmed);
@@ -82,6 +81,25 @@ function Index() {
       history && history.forEach((item) => {
         const inputToken = item.BODY.txn.inputs[0].tokenid;
         const difference = item.DETAILS.difference[inputToken];
+
+        /**
+         * This logic handles the burnt token balance not being reflected immediately
+         * It checks if the token is burnt, if the balance is not already set, and if the token is in the resting state
+         */
+        {
+          const isBurnt = item.BODY.txn.outputs[0].address === '0xFF';
+          const token = balance.find(i => i.tokenid === inputToken);
+          const tokenIsRestingState = token && token.confirmed === token.sendable && token.unconfirmed === '0';
+          const timeOfTxn = new Date(Number(item.HEADER.timemilli));
+          const withinLast90Seconds = timeOfTxn.getTime() > Date.now() - 90000;
+    
+          if (isBurnt && !previousBalance[inputToken] && tokenIsRestingState && withinLast90Seconds) {
+            const amount = difference.replace('+', '').replace('-', '');
+            const assumedAmount = new Decimal(balanceAtStart[inputToken]);
+            balanceHistory[item.TXPOWID] = assumedAmount.sub(amount).toString();
+            return previousBalance[inputToken] = assumedAmount;
+          }
+        }
 
         if (!previousBalance[inputToken] && balanceAtStart[inputToken]) {
           balanceHistory[item.TXPOWID] = new Decimal(balanceAtStart[inputToken]).toString();

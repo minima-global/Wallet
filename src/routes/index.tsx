@@ -241,7 +241,7 @@ const Sort = ({ title, selected, options, onClick, leftAlign }: { title: string,
   }
 
   return (
-    <div className="relative text-[15px]">
+    <div className="group relative text-[15px]">
       <div onClick={toggleDropdown} className="cursor-pointer flex items-center gap-3">
         <div className="text-grey80">
           {title}
@@ -249,8 +249,8 @@ const Sort = ({ title, selected, options, onClick, leftAlign }: { title: string,
         <div className="font-bold capitalize">
           {selectedOption?.label}
         </div>
-        <svg className="-mb-1" width="10" height="7" viewBox="0 0 10 7" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M5 6.0625L0 1.0625L1.0625 0L5 3.9375L8.9375 0L10 1.0625L5 6.0625Z" fill="#E9E9EB" />
+        <svg className="-mb-1 group-hover:text-grey80 transition-all duration-100 text-white" width="10" height="7" viewBox="0 0 10 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M5 6.0625L0 1.0625L1.0625 0L5 3.9375L8.9375 0L10 1.0625L5 6.0625Z" fill="currentColor" />
         </svg>
       </div>
       <div className={`absolute z-20 top-[100%] mt-4 text-sm flex flex-col gap-[2px] bg-contrast1 whitespace-nowrap ${isOpen ? 'block' : 'hidden'} ${leftAlign ? 'left-0' : 'right-0'}`}>
