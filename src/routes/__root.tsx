@@ -16,7 +16,7 @@ export const Route = createRootRoute({
       <Header />
       <div className="container mx-auto px-4 lg:px-0 lg:mx-auto flex">
         <div className="mt-4 lg:mt-10 flex w-full gap-10">
-          <div className="flex flex-col gap-5 hidden lg:block relative">
+          <div className="flex flex-col gap-5 hidden xl:block relative">
             <Navigation />
           </div>
           <div className="grow">

@@ -282,8 +282,8 @@ const TokenDropdown = ({ value, onChange }: TokenDropdownProps) => {
                                 <span className="hidden sm:block">{f(selectedToken.sendable)}</span>
                             </div>
                         </div>
-                        <span className="flex absolute top-0 right-0 h-full items-center">
-                            <div className={`px-2 py-2 transition-all duration-300 ${isOpen ? 'text-orange rotate-0' : 'text-grey hover:text-white -rotate-180'}`}>
+                        <span className="flex absolute top-0 right-2 h-full items-center">
+                            <div className={`px-2 py-2 transition-all duration-300 ${isOpen ? 'text-orange -rotate-180' : 'text-grey hover:text-white'}`}>
                                 <svg width="10" height="7" viewBox="0 0 10 7" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M5 6.0625L0 1.0625L1.0625 0L5 3.9375L8.9375 0L10 1.0625L5 6.0625Z" fill="currentColor" />
                                 </svg>

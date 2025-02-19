@@ -150,9 +150,10 @@ function Index() {
             description: description,
             webvalidate: webValidationUrl,
             ...token,
+            ...metadata,
           }),
           amount: totalSupply,
-          decimals: '0',
+          decimals,
           burn: burn || undefined,
         }
       });
@@ -167,7 +168,7 @@ function Index() {
             ...token,
           }),
           amount: totalSupply,
-          decimals: '0',
+          decimals,
           burn: burn || undefined,
         }
       });
@@ -618,8 +619,8 @@ const Dropdown = ({ options, value, onChange }: DropdownProps) => {
           <div className="px-4 py-1.5">
             {selectedOption?.label}
           </div>
-          <span className="flex absolute top-0 right-2 h-full items-center">
-            <div className={`p-3 transition-all duration-300 ${isOpen ? 'text-orange' : 'text-grey hover:text-white -rotate-90'}`}>
+          <span className="flex absolute top-0 right-1 h-full items-center">
+            <div className={`p-3 transition-all duration-300 ${isOpen ? 'text-orange -rotate-180' : 'text-grey hover:text-white'}`}>
               <svg width="10" height="7" viewBox="0 0 10 7" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M5 6.0625L0 1.0625L1.0625 0L5 3.9375L8.9375 0L10 1.0625L5 6.0625Z" fill="currentColor" />
               </svg>

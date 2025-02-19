@@ -35,7 +35,7 @@ const InfoBox = ({ title, value, copy, collapsable, linkValue, className, childr
 
     return (
         <div className={`bg-contrast1 relative w-full py-4 px-5 rounded text-white ${className}`}>
-            <div onClick={toggleCollapsable} className="cursor-pointer relative">
+            <div onClick={toggleCollapsable} className={`relative ${collapsable ? 'cursor-pointer' : ''}`}>
                 <div className="text-grey80">{title}</div>
                 {value && !linkValue && <div className={`mt-2 text-sm break-word ${copy ? 'pr-14' : ''}`}>{value}</div>}
                 {value && linkValue && typeof value === 'string' && <a href={value} target="_blank" rel="noopener noreferrer" className="mt-2 block text-sm text-grey60 text-orange underline break-all pr-14">{value}</a>}

@@ -1,5 +1,14 @@
 # Changelog
 
+##### [3.0.6] - 19 February 2025
+
+- Minor UI tweaks
+- Extra NFT details are now shown on the nft details page
+
+##### [3.0.5] - 18 February 2025
+
+- Tweaked arrow direction on dropdowns
+
 ##### [3.0.4] - 18 February 2025
 
 - Added minor UI rollover fixes

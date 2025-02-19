@@ -4,6 +4,12 @@ export default {
   content: ["./src/**/*.tsx"],
   theme: {
     extend: {
+      screens: {
+        'pm': '428px',
+        'lg': '1024px',
+        'xl': '1280px',
+        '2xl': '1536px',
+      },
       colors: {
         orange: "var(--light-orange)",
         lightOrange: "var(--light-orange)",

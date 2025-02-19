@@ -124,6 +124,9 @@ function RouteComponent() {
     }
 
     const canBurn = isBurnAmountValid(burnAmount);
+    const isCustomToken = token && typeof token.token === 'object';
+
+    const isNFT = token && (token as any).details && (token as any).details.decimals === 0;
 
     return (
         <div>
@@ -186,7 +189,9 @@ function RouteComponent() {
 
             <div className="flex flex-col lg:flex-row gap-6 lg:gap-0 mb-6">
                 <div className="flex items-center">
-                    <h1 className="text-white text-2xl">{t('token_details')}</h1>
+                    <h1 className="text-white text-2xl">
+                        {isNFT ? t('nft_details') : t('token_details')}
+                    </h1>
                 </div>
                 {token && token.tokenid !== '0x00' && <div className="grow flex lg:justify-end">
                     <div className="flex gap-2">
@@ -245,6 +250,20 @@ function RouteComponent() {
                                 </svg>
                             </div>
                         </li>
+                        {isCustomToken && (
+                            <>
+                                {
+                                    typeof token.token === 'object' && (token.token as any).url && (token.token as any).url.includes("http") && (
+                                        <InfoBox
+                                            title={t('url')}
+                                            copy={!!(typeof token.token === 'object' && (token.token as any).url)}
+                                            linkValue={!!(typeof token.token === 'object' && (token.token as any).url)}
+                                            value={typeof token.token === 'object' && (token.token as any).url || t('n_a')}
+                                        />
+                                    )
+                                }
+                            </>
+                        )}
                         <InfoBox title={t('token_id')} value={token.tokenid} copy />
                         {token && token.tokenid !== '0x00' && (
                             <InfoBox
@@ -258,20 +277,34 @@ function RouteComponent() {
                                 value={t('this_is_the_official_minima_token')}
                             />
                         )}
-                        <InfoBox title={t('total_minted')} value={token.total} />
-                        <InfoBox title={t('total_coins')} value={token.coins} />
-                        <InfoBox
-                            title={t('web_validation_url')}
-                            copy
-                            linkValue={!!(typeof token.token === 'object' && token.token.webvalidate)}
-                            value={typeof token.token === 'object' && token.token.webvalidate || t('n_a')}
-                        />
                         <InfoBox title={t('sendable')} value={token.sendable} />
                         <InfoBox title={t('confirmed')} value={token.confirmed} />
                         <InfoBox title={t('unconfirmed')} value={token.unconfirmed} />
-                        {metadata.length > 0 && metadata.map((item) => (
-                            <InfoBox key={item.key} title={item.key} value={item.value} className="capitalize" />
-                        ))}
+                        <InfoBox title={t('total_minted')} value={token.total} />
+                        <InfoBox title={t('total_coins')} value={token.coins} />
+                        {isCustomToken && (
+                            <>
+                                <InfoBox
+                                    copy={!!(typeof token.token === 'object' && token.token.webvalidate)}
+                                    title={t('web_validation_url')}
+                                    linkValue={!!(typeof token.token === 'object' && token.token.webvalidate)}
+                                    value={typeof token.token === 'object' && token.token.webvalidate || t('n_a')}
+                                />
+                                <InfoBox
+                                    copy={!!(typeof token.token === 'object' && (token.token as any).external_url)}
+                                    title={t('external_url')}
+                                    linkValue={!!(typeof token.token === 'object' && (token.token as any).external_url)}
+                                    value={typeof token.token === 'object' && (token.token as any).external_url || t('n_a')}
+                                />
+                                <InfoBox
+                                    title={t('owner')}
+                                    value={typeof token.token === 'object' && (token.token as any).owner || t('n_a')}
+                                />
+                                {metadata.length > 0 && metadata.map((item) => (
+                                    <InfoBox key={item.key} title={item.key} value={item.value} className="capitalize" />
+                                ))}
+                            </>
+                        )}
                     </ul>
                 </div>
             )}
