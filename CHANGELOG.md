@@ -1,9 +1,14 @@
 # Changelog
 
+##### [3.0.7] - 19 February 2025
+
+- Added the ability to open the token URL in the external browser on the device for Android
+
 ##### [3.0.6] - 19 February 2025
 
 - Minor UI tweaks
 - Extra NFT details are now shown on the nft details page
+- You can now open the token URL in a new window to view the token image bigger
 
 ##### [3.0.5] - 18 February 2025
 
