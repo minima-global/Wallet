@@ -98,6 +98,11 @@ function Index() {
             if (value === '0') {
                 return false;
             }
+
+            if (!/^[0-9.]*$/.test(value)) {
+                return false;
+            }
+
             return new Decimal(value).lte(new Decimal(selectedToken?.sendable || '0'));
         } catch (error) {
             return false;
