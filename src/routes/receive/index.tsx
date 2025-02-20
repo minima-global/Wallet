@@ -238,6 +238,7 @@ function Index() {
                   value={s(address, { start: 8, end: 12 })}
                   copyValueOverride={address}
                   inverse
+                  copy
                 />
               </div>
               <div className="hidden md:flex flex-col gap-4">
