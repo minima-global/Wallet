@@ -1,4 +1,4 @@
-import { Balance, Block, MinimaEvents } from "@minima-global/mds"
+import { Balance, Block, MinimaEvents, Script } from "@minima-global/mds"
 import { MDS } from "@minima-global/mds"
 import { createContext, useCallback, useEffect, useRef, useState } from "react"
 import useOldWalletMigration from "./hooks/useOldWalletMigration"
@@ -45,6 +45,8 @@ export const appContext = createContext<{
   setIsError: React.Dispatch<React.SetStateAction<{ display: boolean, message?: string } | null>>,
   addressNames: Record<string, string>,
   setAddressNames: React.Dispatch<React.SetStateAction<Record<string, string>>>,
+  fullAddresses: Script[],
+  setFullAddresses: React.Dispatch<React.SetStateAction<Script[]>>,
 }>({
   loaded: false,
   currencyType: '1',
@@ -85,6 +87,8 @@ export const appContext = createContext<{
   setIsError: () => { },
   addressNames: {},
   setAddressNames: () => { },
+  fullAddresses: [],
+  setFullAddresses: () => { },
 })
 
 const AppProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
@@ -93,6 +97,7 @@ const AppProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   const [gridMode, setGridMode] = useState<'list' | 'grid'>('list');
   const [activeTab, setActiveTab] = useState<'main' | 'hidden'>('main');
   const [addresses, setAddresses] = useState<string[]>([]);
+  const [fullAddresses, setFullAddresses] = useState<Script[]>([]);
 
   const [hamburgerOpen, setHamburgerOpen] = useState(false);
 
@@ -187,6 +192,7 @@ const AppProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
 
           MDS.cmd.scripts((scripts) => {
             setAddresses(scripts.response.filter((script) => script.simple && script.default).map((script) => script.miniaddress));
+            setFullAddresses(scripts.response.filter((script) => script.simple && script.default).map((script) => script));
           });
 
           MDS.sql(`SELECT * FROM txpows ORDER BY timemilli desc`).then((txpows) => {
@@ -325,6 +331,8 @@ const AppProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
     setIsError,
     addressNames,
     setAddressNames,
+    fullAddresses,
+    setFullAddresses,
   }
 
   return <appContext.Provider value={context}>{children}</appContext.Provider>

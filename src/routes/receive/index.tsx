@@ -22,7 +22,7 @@ const VALIDATE_ADDRESS = 'VALIDATE_ADDRESS';
 function Index() {
   const { t } = useTranslation();
   const { s } = useSlice();
-  const { address, addresses, setAddress, addressNames } = useContext(appContext);
+  const { address, addresses, setAddress, addressNames, fullAddresses } = useContext(appContext);
   const [activeTab, setActiveTab] = useState(YOUR_ADDRESS);
   const [error, setError] = useState<boolean>(false);
   const [result, setResult] = useState<CheckAddress | null>(null);
@@ -31,6 +31,7 @@ function Index() {
   const [showAltAddresses, setShowAltAddresses] = useState(false);
   const [editingAddressName, setEditingAddressName] = useState<string | false>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const fullAddress = fullAddresses.find((script) => script.miniaddress === address);
 
   const TABS = [
     {
@@ -201,12 +202,18 @@ function Index() {
       </div>
       {activeTab === YOUR_ADDRESS && (
         <div className="mt-2 mb-6 flex flex-col gap-4">
+
+          <div className="text-white text-sm mb-2 bg-contrast1.5 p-3 px-4 border-l-4 border-l-yellow-500 rounded">
+            {t("mx_and_0x_description")}
+          </div>
+
           <div className="bg-contrast1 p-6 lg:p-8 rounded-lg">
             <div className="block bg-white w-full h-full md:w-[240px] md:h-[240px] mb-4 md:mt-0 md:mb-4 mx-auto">
               <QRCode value={address} className="p-4 w-full h-full" />
             </div>
 
             <div className="mb-4 space-y-4">
+
               <div>
                 <Input
                   value={addressNames[address] || t("untitled_address")}
@@ -217,16 +224,32 @@ function Index() {
                   action={() => setEditingAddressName(address)}
                 />
               </div>
-              <div className="block md:hidden">
+              <div className="flex md:hidden flex-col gap-4">
+                {fullAddress && fullAddress.address && (
+                  <Input
+                    value={s(fullAddress.address, { start: 8, end: 12 })}
+                    copyValueOverride={fullAddress.address}
+                    inverse
+                    readOnly
+                    copy
+                  />
+                )}
                 <Input
                   value={s(address, { start: 8, end: 12 })}
                   copyValueOverride={address}
                   inverse
-                  readOnly
-                  copy
                 />
               </div>
-              <div className="hidden md:block">
+              <div className="hidden md:flex flex-col gap-4">
+                {fullAddress && fullAddress.address && (
+                  <Input
+                    value={fullAddress.address}
+                    copyValueOverride={fullAddress.address}
+                    inverse
+                    readOnly
+                    copy
+                  />
+                )}
                 <Input
                   value={address}
                   inverse
@@ -290,7 +313,7 @@ function Index() {
               inverse
               clearable
             />
-            <Button isLoading={isLoading} disabled={!/^(0x|Mx)[0-9a-zA-Z]*$/.test(query)} onClick={() => validateAddress(query)}>{t("validate")}</Button>
+            <Button isLoading={isLoading} disabled={!/^(0x|Mx)[0-9a-zA-Z]*$/gmi.test(query)} onClick={() => validateAddress(query)}>{t("validate")}</Button>
           </div>
         </div>
       )}

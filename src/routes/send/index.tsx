@@ -95,6 +95,9 @@ function Index() {
 
     const isMaxAmount = (value: string) => {
         try {
+            if (value === '0') {
+                return false;
+            }
             return new Decimal(value).lte(new Decimal(selectedToken?.sendable || '0'));
         } catch (error) {
             return false;
@@ -109,8 +112,13 @@ function Index() {
         }
     }
 
+    const selectToken = (tokenId: string) => {
+        setSelectedTokenId(tokenId);
+        setAmount('');
+    }
+
     const isDisabled = () => {
-        if (!recipient.match(/^(0x|Mx)[0-9a-zA-Z]*$/)) {
+        if (!recipient.match(/^(0x|Mx)[0-9a-zA-Z]*$/gmi)) {
             return true;
         }
 
@@ -131,7 +139,7 @@ function Index() {
                 <div className="grow flex flex-col">
                     <h1 className="text-white text-2xl mb-6">{t('send')}</h1>
 
-                    <TokenDropdown value={selectedTokenId} onChange={setSelectedTokenId} />
+                    <TokenDropdown value={selectedTokenId} onChange={selectToken} />
 
                     <div className="mt-5 mb-8 flex flex-col gap-6">
                         <Input

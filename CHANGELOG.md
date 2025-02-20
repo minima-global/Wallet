@@ -1,5 +1,10 @@
 # Changelog
 
+##### [3.0.8] - 20 February 2025
+
+- Added 0x address to the receive address page
+- Fixed validation on send button when address was in lowercase
+
 ##### [3.0.7] - 19 February 2025
 
 - Added the ability to open the token URL in the external browser on the device for Android
