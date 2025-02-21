@@ -1,5 +1,5 @@
 import Lottie from 'react-lottie';
-import animationData from './reveal.json';
+import animationData from './logo_reveal_v2.json';
 import { useEffect } from 'react';
 import { useContext } from 'react';
 import { appContext } from './AppContext';

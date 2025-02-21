@@ -1,5 +1,13 @@
 # Changelog
 
+##### [3.0.9] - 21 February 2025
+
+- Added a max button to the send page
+- Change the iPad pro view to show the sidebar
+- Added Minima to the filter list
+- The selected filter will last for the duration of the session
+- Minor UI tweaks
+
 ##### [3.0.8] - 20 February 2025
 
 - Added 0x address to the receive address page

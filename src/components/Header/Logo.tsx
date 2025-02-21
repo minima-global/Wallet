@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import Lottie from 'react-lottie';
-import animationData from './logo.json';
+import animationData from '../../hover_animation_v2.json';
 
 const Logo = () => {
     const [isStopped, setIsStopped] = useState(false);
@@ -20,7 +20,7 @@ const Logo = () => {
         renderer: 'svg',
         animationData: animationData,
         rendererSettings: {
-            preserveAspectRatio: 'xMidYMid meet'
+            // preserveAspectRatio: 'xMidYMid meet'
         },
     };
 
