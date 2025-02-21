@@ -152,7 +152,7 @@ const Navigation = () => {
                     <div className="w-4 flex items-center">
                         <div className={`group-hover:text-grey60 duration-200 transition-all ${pathname === '/' && item.href === '/' || pathname !== '/' && item.href.includes(pathname) ? '[&>svg>path]:!fill-orange' : ''}`}>{item.icon}</div>
                     </div>
-                    <div className={`font-[500] ${pathname === '/' && item.href === '/' || pathname !== '/' && item.href.includes(pathname) ? '!text-orange' : 'text-white'} group-hover:text-grey60`}>{item.title}</div>
+                    <div className={`font-[500] ${pathname === '/' && item.href === '/' || pathname !== '/' && item.href.includes(pathname) ? '!text-orange' : 'text-white'} transition-all duration-200 group-hover:text-grey60`}>{item.title}</div>
                 </Link>
             ))}
         </div>

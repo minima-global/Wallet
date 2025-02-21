@@ -10,6 +10,7 @@ const LogoReveal = ({ children }: { children: React.ReactNode }) => {
     const { loaded } = useContext(appContext);
     const [isReady, setIsReady] = useState(false);
     const [isHidden, setIsHidden] = useState(true);
+    const isMobile = window.innerWidth < 768;
 
     useEffect(() => {
         if (!loaded) {
@@ -41,8 +42,8 @@ const LogoReveal = ({ children }: { children: React.ReactNode }) => {
             <div className={`fixed bg-[#000] w-screen h-screen z-[99999] flex items-center justify-center transition-all duration-200 ${isHidden ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'}`}>
                 <Lottie
                     options={defaultOptions}
-                    width={400}
-                    height={400}
+                    width={isMobile ? 200 : 400}
+                    height={isMobile ? 200 : 400}
                     isStopped={isHidden}
                     eventListeners={[
                         {

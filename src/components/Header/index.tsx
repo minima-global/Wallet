@@ -162,7 +162,7 @@ const Header = () => {
 
   return (
     <>
-      <header onClick={openTitleBar} className="sticky relative top-0 z-[10000] h-[64px] lg:h-[72px] px-4 bg-black">
+      <header onClick={openTitleBar} className="sticky relative top-0 z-[10000] h-[64px] lg:h-[72px] px-4 bg-[#000]">
         <div className="container mx-auto h-full relative">
           <div className="grid grid-cols-12 h-full">
             <div className="col-span-6 flex items-center">
