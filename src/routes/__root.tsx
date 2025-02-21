@@ -5,18 +5,19 @@ import Denied from "../components/Denied";
 import Error from "../components/Error";
 import Navigation from "../components/Navigation";
 import Header from "../components/Header";
+import LogoReveal from "../LogoReveal";
 
 export const Route = createRootRoute({
   component: () => (
-    <div>
+    <LogoReveal>
       <Pending />
       <Success />
       <Denied />
       <Error />
       <Header />
       <div className="container mx-auto px-4 lg:px-0 lg:mx-auto flex">
-        <div className="mt-4 lg:mt-10 flex w-full gap-10">
-          <div className="flex flex-col gap-5 hidden xl:block relative">
+        <div className="mt-4 lg:mt-8 xl:mt-10 flex w-full gap-10 lg:px-8 xl:px-0">
+          <div className="flex flex-col gap-5 hidden xl:px-0 lg:block relative">
             <Navigation />
           </div>
           <div className="grow">
@@ -26,7 +27,7 @@ export const Route = createRootRoute({
           </div>
         </div>
       </div>
-    </div>
+    </LogoReveal>
   ),
   notFoundComponent: () => (
     <div className="p-2">

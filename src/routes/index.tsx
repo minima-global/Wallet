@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import SearchBar from "../components/SearchBar";
 import RefreshButton from "../components/RefreshButton";
 import { appContext } from "../AppContext";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import useTranslation from "../hooks/useTranslation";
 import TokenListItem from "../components/TokenListItem";
 
@@ -16,14 +16,48 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  const filterLoaded = useRef(false);
   const { loaded, balance, fetchBalance, hiddenTokens, activeTab, setActiveTab, gridMode, setGridMode } = useContext(appContext);
   const { t } = useTranslation();
   const [query, setQuery] = useState('');
   const [sort, setSort] = useState<'a_z' | 'z_a' | 'lowest' | 'highest'>('a_z');
-  const [filter, setFilter] = useState<'all' | 'simple' | 'nfts' | 'custom'>('all');
+  const [filter, setFilter] = useState<'all' | 'minima' | 'simple' | 'nfts' | 'custom'>('all');
   const [proxySort, setProxySort] = useState<'a_z' | 'z_a' | 'lowest' | 'highest'>('a_z');
-  const [proxyFilter, setProxyFilter] = useState<'all' | 'simple' | 'nfts' | 'custom'>('all');
+  const [proxyFilter, setProxyFilter] = useState<'all' | 'minima' | 'simple' | 'nfts' | 'custom'>('all');
   const [showFilterAndSort, setShowFilterAndSort] = useState(false);
+
+  const sortOptions = [
+    { key: 'a_z', label: 'A-Z' },
+    { key: 'z_a', label: 'Z-A' },
+    { key: 'lowest', label: t('lowest_balance') },
+    { key: 'highest', label: t('highest_balance') },
+  ];
+
+  const filterOptions = [
+    { key: 'all', label: t('all') },
+    { key: 'minima', label: 'Minima' },
+    { key: 'simple', label: t('simple') },
+    { key: 'custom', label: t('custom') },
+    { key: 'nfts', label: t('nfts') },
+  ];
+
+  useEffect(() => {
+    if (!filterLoaded.current) {
+      filterLoaded.current = true;
+      const filter = sessionStorage.getItem('wallet_filter');
+      const foundFilter = filter && filterOptions.find((option) => option.key === filter);
+
+      if (foundFilter) {
+        setFilter(foundFilter.key as 'all' | 'simple' | 'nfts' | 'custom');
+      }
+    }
+  }, [filterLoaded]);
+
+  useEffect(() => {
+    if (filter && filter !== 'all') {
+      sessionStorage.setItem('wallet_filter', filter);
+    }
+  }, [filter]);
 
   const baseBalance = balance
     .filter(balance => {
@@ -33,6 +67,7 @@ function Index() {
     })
     .filter(balance => {
       if (filter === 'all') return true;
+      if (filter === 'minima') return balance.tokenid === '0x00';
       if (filter === 'simple') return typeof balance.token === 'string';
       if (filter === 'nfts') return typeof balance.token === 'object' && (balance as any).details.decimals === 0;
       if (filter === 'custom') return typeof balance.token === 'object' && (balance as any).details.decimals !== 0;
@@ -76,20 +111,6 @@ function Index() {
   const toggleGridMode = () => {
     setGridMode(prevState => prevState === 'list' ? 'grid' : 'list');
   }
-
-  const sortOptions = [
-    { key: 'a_z', label: 'A-Z' },
-    { key: 'z_a', label: 'Z-A' },
-    { key: 'lowest', label: t('lowest_balance') },
-    { key: 'highest', label: t('highest_balance') },
-  ];
-
-  const filterOptions = [
-    { key: 'all', label: t('all') },
-    { key: 'simple', label: t('simple') },
-    { key: 'custom', label: t('custom') },
-    { key: 'nfts', label: t('nfts') },
-  ];
 
   const toggleFilterAndSort = () => {
     setShowFilterAndSort(prevState => !prevState);

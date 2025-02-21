@@ -70,7 +70,7 @@ const InfoBox = ({ title, value, copy, collapsable, linkValue, className, childr
                 {collapsable && (
                     <div className="cursor-pointer text-sm text-grey60 hover:text-white absolute top-0 right-0 flex h-full items-center">
                         <div>
-                            <svg className={`transition-all duration-100 rotate-90 ${open ? 'rotate-[-90deg] !text-orange' : ''}`} width="7" height="10" viewBox="0 0 7 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <svg className={`transition-all duration-200 rotate-90 ${open ? 'rotate-[-90deg] !text-orange' : ''}`} width="7" height="10" viewBox="0 0 7 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M4.875 5L0.9375 1.0625L2 0L7 5L2 10L0.9375 8.9375L4.875 5Z" fill="currentColor" />
                             </svg>
                         </div>

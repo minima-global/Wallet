@@ -6,6 +6,7 @@ import useAndroidShowTitleBar from './useAndroidShowTitlebar';
 import NodeStatus from '../NodeStatus/index.tsx';
 import LanguageSelector from '../LanguageSelector/index.tsx';
 import useTranslation from '../../hooks/useTranslation.ts';
+import Logo from './Logo.tsx';
 
 const Header = () => {
   const { t } = useTranslation();
@@ -165,11 +166,8 @@ const Header = () => {
         <div className="container mx-auto h-full relative">
           <div className="grid grid-cols-12 h-full">
             <div className="col-span-6 flex items-center">
-              <Link to="/" className="flex items-center gap-5 text-xs">
-                <svg className={`w-[32px] h-[40px] lg:w-[42px] lg:h-[40px] transition-all duration-150`} width="42" height="40" viewBox="0 0 42 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M13.1247 13.0477L24.6192 17.6251L31.658 14.8219L34.1184 4.09599L24.6192 7.87852L6.56361 0.688477L0 29.2966L10.342 25.1777L13.1247 13.0477Z" fill="white" />
-                  <path d="M31.6591 14.822L28.8765 26.952L17.382 22.3746L10.3432 25.1779L7.88281 35.9038L17.382 32.1212L35.4376 39.3113L42.0012 10.7031L31.6591 14.822Z" fill="white" />
-                </svg>
+              <Link to="/" className="flex items-center gap-4 text-xs">
+                <Logo />
                 <div className="mt-0.5 flex items-center gap-2 lg:hidden">
                   <div className="gradient-border text-[11px] flex items-center gap-2">
                     <div className="-ml-0.5"><NodeStatus /></div>

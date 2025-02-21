@@ -154,6 +154,7 @@ function Index() {
                             onChange={(value) => setAmount(value)}
                             validation={isMaxAmount}
                             validationMessage={t('please_enter_a_valid_amount')}
+                            max={selectedToken?.sendable}
                         />
                         <Input
                             label={t('recipient_address')}

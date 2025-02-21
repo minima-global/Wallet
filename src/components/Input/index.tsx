@@ -137,7 +137,7 @@ const Input: React.FC<InputProps> = ({
                         </div>
                     )}
                     {max && (
-                        <div onClick={handleMax} className="text-sm cursor-pointer font-bold text-grey40 hover:text-white absolute top-0 right-0 flex h-full items-center z-10">
+                        <div onClick={handleMax} className="text-sm cursor-pointer font-bold text-grey40 hover:text-grey80 transition-all duration-200 absolute top-0 right-0 flex h-full items-center z-10">
                             Max
                         </div>
                     )}

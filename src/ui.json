@@ -1,5 +1,6 @@
 {
     "en": {
+        "label": "English",
         "wallet": "Wallet",
         "balance": "Balance",
         "send": "Send",
@@ -202,7 +203,8 @@
         "burnt": "Burnt",
         "mx_and_0x_description": "The Mx and 0x addresses below can both be used as your receive address, but only Mx addresses are validated at the time of transaction."
     },
-    "zh": {
+    "zh-cn": {
+        "label": "中文",
         "wallet": "钱包",
         "balance": "余额",
         "send": "发送",
@@ -425,8 +427,8 @@
         "filter_and_sort": "过滤和排序",
         "filter": "过滤",
         "sort": "排序",
-        "highest": "最高余额",
-        "lowest": "最低余额",
+        "highest_balance": "最高余额",
+        "lowest_balance": "最低余额",
         "apply": "应用",
         "reset": "重置",
         "token_states": "代币状态",
@@ -436,6 +438,7 @@
         "mx_and_0x_description": "以下的Mx和0x地址都可以用作您的接收地址，但只有Mx地址在交易时会被验证。"
     },
     "ru": {
+        "label": "Русский",
         "wallet": "Кошелек",
         "balance": "Баланс",
         "send": "Отправить",
@@ -640,6 +643,7 @@
         "mx_and_0x_description": "Ниже приведены Mx и 0x адреса, которые можно использовать в качестве вашего получателя, но только Mx адреса проверяются при транзакции."
     },
     "ukr": {
+        "label": "Українська",
         "wallet": "Гаманець",
         "balance": "Баланс",
         "send": "Надіслати",
@@ -844,6 +848,7 @@
         "mx_and_0x_description": "Ниже приведены Mx и 0x адреса, которые можно использовать в качестве вашего получателя, но только Mx адреса проверяются при транзакции."
     },
     "fr": {
+        "label": "Français",
         "wallet": "Portefeuille",
         "balance": "Solde",
         "send": "Envoyer",
@@ -1047,6 +1052,7 @@
         "mx_and_0x_description": "Les adresses Ox et Mx peuvent être utilisées de manière interchangeable, mais seules les adresses Mx sont validées lors d'une transaction."
     },
     "es": {
+        "label": "Español",
         "wallet": "Cartera",
         "balance": "Saldo",
         "send": "Enviar",
@@ -1249,6 +1255,7 @@
         "mx_and_0x_description": "Les adresses Mx et 0x ci-dessous peuvent toutes deux être utilisées comme adresse de réception, mais seules les adresses Mx sont validées au moment de la transaction."
     },
     "ja": {
+        "label": "日本語",
         "wallet": "ウォレット",
         "balance": "残高",
         "send": "送信",
@@ -1482,6 +1489,7 @@
         "mx_and_0x_description": "以下のMxと0xアドレスは両方とも受信アドレスとして使用できますが、取引時に検証されるのはMxアドレスのみです。"
     },
     "ko": {
+        "label": "한국어",
         "wallet": "지갑",
         "balance": "잔액",
         "send": "보내기",

@@ -148,9 +148,9 @@ const Navigation = () => {
     return (
         <div className={`sticky flex flex-col text-[14px] gap-2 w-full min-w-[250px] bg-contrast1 rounded-lg p-6 ${isAtTop ? 'top-0' : 'top-[112px]'}`}>
             {NAV_ITEMS.map((item) => (
-                <Link key={item.href} to={item.href} onClick={scrollToTop} className="flex items-center gap-5 transition-all py-2 px-3 rounded duration-100 group">
+                <Link key={item.href} to={item.href} onClick={scrollToTop} className="flex items-center gap-5 transition-all py-2 px-3 rounded duration-200 group">
                     <div className="w-4 flex items-center">
-                        <div className={`group-hover:text-grey60 ${pathname === '/' && item.href === '/' || pathname !== '/' && item.href.includes(pathname) ? '[&>svg>path]:!fill-orange' : ''}`}>{item.icon}</div>
+                        <div className={`group-hover:text-grey60 duration-200 transition-all ${pathname === '/' && item.href === '/' || pathname !== '/' && item.href.includes(pathname) ? '[&>svg>path]:!fill-orange' : ''}`}>{item.icon}</div>
                     </div>
                     <div className={`font-[500] ${pathname === '/' && item.href === '/' || pathname !== '/' && item.href.includes(pathname) ? '!text-orange' : 'text-white'} group-hover:text-grey60`}>{item.title}</div>
                 </Link>

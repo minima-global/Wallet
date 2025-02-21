@@ -14,6 +14,7 @@ import useSlice from "../Truncate/useSlice";
 
 const TokenListItem = ({ balance }: { balance: Balance }) => {
     const { t } = useTranslation();
+    const { f } = useFormatAmount();
     const [showInfo, setShowInfo] = useState(false);
 
     const toggleInfo = () => {
@@ -67,7 +68,7 @@ const TokenListItem = ({ balance }: { balance: Balance }) => {
                             <BalanceAmount balance={balance} value={sendable} />
                         </div>
                         <div>
-                            <Truncate text={locked} maxLength={24} />
+                            <Truncate text={f(locked)} maxLength={24} />
                         </div>
                     </div>
                     <div onClick={toggleInfo} className="cursor-pointer flex items-center pr-2 text-grey60 hover:text-white transition-all duration-100">
