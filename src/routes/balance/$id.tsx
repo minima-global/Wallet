@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate, useParams } from '@tanstack/react-router'
 import InfoBox from '../../components/InfoBox'
 import BackButton from '../../components/BackButton'
 import { appContext } from '../../AppContext'
-import { useContext, useState } from 'react'
+import { Fragment, useContext, useState } from 'react'
 import TokenIcon from '../../components/TokenIcon'
 import TokenAuthenticity from '../../components/TokenAuthenticity'
 import { renderTokenName } from '../../utils'
@@ -127,6 +127,34 @@ function RouteComponent() {
     const isCustomToken = token && typeof token.token === 'object';
 
     const isNFT = token && (token as any).details && (token as any).details.decimals === 0;
+
+    const renderArray = (key: string, item: string[]) => {
+        return (
+            <Fragment key={key}>
+                {item.map((value, index) => {
+                    if (typeof value !== 'string') {
+                        return;
+                    }
+
+                    return <InfoBox key={key} title={`${key} #${index + 1}`} value={value || "N/A"} className="capitalize" />
+                })}
+            </Fragment>
+        )
+    }
+
+    const renderObject = (key: string, item: Record<string, any>) => {
+        return (
+            <Fragment key={key}>
+                {Object.entries(item).map(([key, value]) => {
+                    if (typeof value === 'object' && value !== null) {  
+                        return;
+                    }
+
+                    return <InfoBox key={key} title={key} value={value || "N/A"} className="capitalize" />
+                })}
+            </Fragment>
+        )
+    }
 
     return (
         <div>
@@ -300,9 +328,19 @@ function RouteComponent() {
                                     title={t('owner')}
                                     value={typeof token.token === 'object' && (token.token as any).owner || t('n_a')}
                                 />
-                                {metadata.length > 0 && metadata.map((item) => (
-                                    <InfoBox key={item.key} title={item.key} value={item.value} className="capitalize" />
-                                ))}
+                                {metadata.length > 0 && metadata.map((item) => {
+                                    if (item.value && typeof item.value === 'object' && Array.isArray(item.value)) {
+                                        return renderArray(item.key, item.value);
+                                    }
+
+                                    if (item.value && typeof item.value === 'object') {
+                                        return renderObject(item.key, item.value);
+                                    }
+
+                                    return (
+                                        <InfoBox key={item.key} title={item.key} value={item.value || "N/A"} className="capitalize" />
+                                    )
+                                })}
                             </>
                         )}
                     </ul>

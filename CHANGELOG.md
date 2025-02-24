@@ -1,5 +1,9 @@
 # Changelog
 
+##### [3.0.10] - 24 February 2025
+
+- Metadata for tokens are now displayed if the value is an object or an array
+
 ##### [3.0.9] - 21 February 2025
 
 - Added a max button to the send page
