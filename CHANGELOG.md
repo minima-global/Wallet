@@ -1,5 +1,10 @@
 # Changelog
 
+##### [3.0.11] - 24 February 2025
+
+- The mobile menu is now hidden on large devices
+- Fixed the incorrect validating address being shown when submitting an address via the validate address form
+
 ##### [3.0.10] - 24 February 2025
 
 - Metadata for tokens are now displayed if the value is an object or an array
@@ -7,9 +12,8 @@
 ##### [3.0.9] - 21 February 2025
 
 - Added a max button to the send page
-- Change the iPad pro view to show the sidebar
-- Added Minima to the filter list
-- The selected filter will last for the duration of the session
+- Adjustments have been made to the UI for 1024 x 720 devices
+- Added Minima to the filter list, the selected filter will last for the duration of the session (until browser is closed)
 - Minor UI tweaks
 
 ##### [3.0.8] - 20 February 2025

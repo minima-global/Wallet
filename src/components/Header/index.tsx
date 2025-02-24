@@ -182,11 +182,11 @@ const Header = () => {
               </Link>
             </div>
             <div className="col-span-6 flex items-center justify-end">
-              <div className="flex xl:hidden gap-3">
+              <div className="flex lg:hidden gap-3">
                 <LanguageSelector />
                 <HamburgerButton isOpen={hamburgerOpen} toggle={toggle} />
               </div>
-              <nav className="hidden xl:block">
+              <nav className="hidden lg:block">
                 <ul
                   className={`gap-4 flex items-center text-sm transition-all`}
                 >
@@ -245,7 +245,7 @@ const Header = () => {
         </div>
         <div className="bg-minima-gradient h-[1px] absolute bottom-0 left-0 w-full" />
       </header>
-      <div className="flex xl:hidden">
+      <div className="flex lg:hidden">
         <nav className={`fixed left-0 top-0 z-[1000] h-screen w-screen bg-black pt-20 pl-1 text-white transition-all duration-200 ${hamburgerOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
           <div className="py-3 px-5">
             <ul className="flex flex-col gap-6 text-2xl">

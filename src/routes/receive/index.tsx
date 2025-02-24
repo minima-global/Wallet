@@ -186,6 +186,11 @@ function Index() {
     )
   }
 
+  const handleValidateAddress = () => {
+    setAddress(query);
+    validateAddress(query);
+  }
+
   return (
     <div className="grow flex flex-col mb-12">
       <div>
@@ -314,7 +319,7 @@ function Index() {
               inverse
               clearable
             />
-            <Button isLoading={isLoading} disabled={!/^(0x|Mx)[0-9a-zA-Z]*$/gmi.test(query)} onClick={() => validateAddress(query)}>{t("validate")}</Button>
+            <Button isLoading={isLoading} disabled={!/^(0x|Mx)[0-9a-zA-Z]*$/gmi.test(query)} onClick={handleValidateAddress}>{t("validate")}</Button>
           </div>
         </div>
       )}
