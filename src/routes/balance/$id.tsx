@@ -11,6 +11,7 @@ import useTranslation from '../../hooks/useTranslation'
 import Button from '../../components/Button'
 import Input from '../../components/Input'
 import Decimal from 'decimal.js'
+import useFormatAmount from '../../hooks/useFormatAmount'
 
 export const Route = createFileRoute('/balance/$id')({
     component: RouteComponent,
@@ -20,6 +21,7 @@ export const Route = createFileRoute('/balance/$id')({
 })
 
 function RouteComponent() {
+    const { f } = useFormatAmount();
     const { t } = useTranslation();
     const { id } = useParams({ from: '/balance/$id' });
     const navigate = useNavigate();
@@ -305,11 +307,11 @@ function RouteComponent() {
                                 value={t('this_is_the_official_minima_token')}
                             />
                         )}
-                        <InfoBox title={t('sendable')} value={token.sendable} />
-                        <InfoBox title={t('confirmed')} value={token.confirmed} />
-                        <InfoBox title={t('unconfirmed')} value={token.unconfirmed} />
-                        <InfoBox title={t('total_minted')} value={token.total} />
-                        <InfoBox title={t('total_coins')} value={token.coins} />
+                        <InfoBox title={t('sendable')} value={f(token.sendable)} />
+                        <InfoBox title={t('confirmed')} value={f(token.confirmed)} />
+                        <InfoBox title={t('unconfirmed')} value={f(token.unconfirmed)} />
+                        <InfoBox title={t('total_minted')} value={f(token.total)} />
+                        <InfoBox title={t('total_coins')} value={f(token.coins)} />
                         {isCustomToken && (
                             <>
                                 <InfoBox

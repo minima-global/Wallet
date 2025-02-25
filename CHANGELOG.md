@@ -1,5 +1,9 @@
 # Changelog
 
+##### [3.0.12] - 24 February 2025
+
+- Fixed amount formatting on token details page
+
 ##### [3.0.11] - 24 February 2025
 
 - The mobile menu is now hidden on large devices
