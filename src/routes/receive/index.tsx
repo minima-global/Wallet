@@ -34,6 +34,16 @@ function Index() {
   const fullAddress = fullAddresses.find((script) => script.miniaddress === address);
   const [copiedAddress, setCopiedAddress] = useState<boolean>(false);
 
+  useEffect(() => {
+    if (copiedAddress) {
+      const timeout = setTimeout(() => {
+        setCopiedAddress(false);
+      }, 1000);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [copiedAddress]);
+
   const TABS = [
     {
       key: YOUR_ADDRESS,
@@ -195,9 +205,6 @@ function Index() {
   const copyAddress = () => {
     setCopiedAddress(true);
     navigator.clipboard.writeText(address);
-    setTimeout(() => {
-      setCopiedAddress(false);
-    }, 5000);
   }
 
   return (
@@ -222,13 +229,9 @@ function Index() {
           </div>
 
           <div className="bg-contrast1 p-6 lg:p-8 rounded-lg">
-            <div className={`block bg-white w-full h-full md:w-[240px] md:h-[240px] mb-4 md:mt-0 md:mb-4 mx-auto relative transition-all duration-200 border-8 border-transparent ${copiedAddress ? 'border-green' : ''}`}>
+            <div className={`block bg-white w-full h-full md:w-[240px] md:h-[240px] mb-4 md:mt-0 md:mb-4 mx-auto relative transition-all duration-200 border-8 ${copiedAddress ? 'border-green' : 'border-transparent'}`}>
               <QRCode value={address} className="p-4 w-full h-full" onClick={copyAddress} />
-              <div className={`text-sm text-grey60 absolute bottom-2 right-2 absolute transition-opacity duration-[150ms] ${copiedAddress ? 'opacity-100' : 'opacity-0'}`}>
-                <div className="bg-black w-10 h-10 rounded-full flex items-center justify-center">
-                  <svg className="w-6 h-6" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.58075 14.2538L15.3038 7.53075L14.25 6.47693L8.58075 12.1462L5.73075 9.29615L4.67693 10.35L8.58075 14.2538ZM10.0016 19.5C8.68772 19.5 7.45268 19.2506 6.29655 18.752C5.1404 18.2533 4.13472 17.5765 3.2795 16.7217C2.42427 15.8669 1.74721 14.8616 1.24833 13.706C0.749442 12.5504 0.5 11.3156 0.5 10.0017C0.5 8.68772 0.749334 7.45268 1.248 6.29655C1.74667 5.1404 2.42342 4.13472 3.27825 3.2795C4.1331 2.42427 5.13834 1.74721 6.29398 1.24833C7.44959 0.749442 8.68437 0.5 9.9983 0.5C11.3122 0.5 12.5473 0.749333 13.7034 1.248C14.8596 1.74667 15.8652 2.42342 16.7205 3.27825C17.5757 4.1331 18.2527 5.13834 18.7516 6.29398C19.2505 7.44959 19.5 8.68437 19.5 9.9983C19.5 11.3122 19.2506 12.5473 18.752 13.7034C18.2533 14.8596 17.5765 15.8652 16.7217 16.7205C15.8669 17.5757 14.8616 18.2527 13.706 18.7516C12.5504 19.2505 11.3156 19.5 10.0016 19.5Z" fill="#4FE3C1"></path></svg>
-                </div>
-              </div>
+              <div className={`text-sm text-grey60 absolute bottom-0 right-0 absolute transition-opacity duration-[150ms] ${copiedAddress ? 'opacity-100' : 'opacity-0'}`} />
             </div>
 
             <div className="mb-4 space-y-4">
