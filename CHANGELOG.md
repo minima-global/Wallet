@@ -1,5 +1,9 @@
 # Changelog
 
+##### [3.0.13] - 26 February 2025
+
+- Tapping the QR code on the receive page now copies the address to the clipboard
+
 ##### [3.0.12] - 24 February 2025
 
 - Fixed amount formatting on token details page
