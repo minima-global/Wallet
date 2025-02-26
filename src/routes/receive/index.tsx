@@ -229,7 +229,7 @@ function Index() {
           </div>
 
           <div className="bg-contrast1 p-6 lg:p-8 rounded-lg">
-            <div className={`block bg-white w-full h-full md:w-[240px] md:h-[240px] mb-4 md:mt-0 md:mb-4 mx-auto relative transition-all duration-200 border-8 ${copiedAddress ? 'border-green' : 'border-transparent'}`}>
+            <div className={`block cursor-pointer bg-white w-full h-full md:w-[240px] md:h-[240px] mb-4 md:mt-0 md:mb-4 mx-auto relative transition-all duration-200 border-8 ${copiedAddress ? 'border-green' : 'border-transparent'}`}>
               <QRCode value={address} className="p-4 w-full h-full" onClick={copyAddress} />
               <div className={`text-sm text-grey60 absolute bottom-0 right-0 absolute transition-opacity duration-[150ms] ${copiedAddress ? 'opacity-100' : 'opacity-0'}`} />
             </div>
