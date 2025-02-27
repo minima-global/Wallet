@@ -1,5 +1,11 @@
 # Changelog
 
+##### [3.0.14] - 27 February 2025
+
+- "Pending MiniDapp" is no longer translated pending_transaction_message and denied_transaction_message ui labels.
+- Fixed history bug where it was inserting duplicate txpows into the database
+- Fixed issue with viewing Maximize transactions on the history page
+
 ##### [3.0.13] - 26 February 2025
 
 - Tapping the QR code on the receive page now copies the address to the clipboard

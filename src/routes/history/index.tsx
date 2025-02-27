@@ -17,6 +17,7 @@ import InfoBox from '../../components/InfoBox'
 import BackButton from '../../components/BackButton'
 import useSlice from '../../components/Truncate/useSlice'
 import { format } from 'date-fns'
+import { chunk } from 'lodash'
 
 export const Route = createFileRoute('/history/')({
   component: Index,
@@ -48,12 +49,21 @@ function Index() {
             const details = response.response.details[index];
 
             if (!txpowsInDatabase.includes(txpow.txpowid)) {
-              txpowsNotInDatabase.push(`INSERT INTO txpows (txpowid, timemilli, isblock, istransaction, hasbody, burn, superblock, size, header, body, details) VALUES ('${txpow.txpowid}', ${txpow.header.timemilli}, ${txpow.isblock}, ${txpow.istransaction}, ${txpow.hasbody}, ${txpow.burn}, ${txpow.superblock}, ${txpow.size}, '${JSON.stringify(txpow.header)}', '${JSON.stringify(txpow.body)}','${JSON.stringify(details)}')`);
+              txpowsNotInDatabase.push(`INSERT INTO txpows (txpowid, timemilli, isblock, istransaction, hasbody, burn, superblock, size, header, body, details) VALUES ('${txpow.txpowid}', ${txpow.header.timemilli}, ${txpow.isblock}, ${txpow.istransaction}, ${txpow.hasbody}, ${txpow.burn}, ${txpow.superblock}, ${txpow.size}, '${JSON.stringify(txpow.header)}', '${JSON.stringify(txpow.body).replace(/'/g, "''")}', '${JSON.stringify(details)}')`);
             }
           }
 
-          if (txpowsNotInDatabase.length > 0) {
-            await MDS.sql(txpowsNotInDatabase.join('; '));
+          try {
+            if (txpowsNotInDatabase.length > 0) {
+              const chunked = chunk(txpowsNotInDatabase, 10);
+  
+              for (let index = 0; index < chunked.length; index++) {
+                const element = chunked[index];
+                  await MDS.sql(element.join('; '));
+              }
+            }
+          } catch (error) {
+            // silently ignore
           }
 
           getHistory();
@@ -202,7 +212,7 @@ function Index() {
       return true;
     }).forEach((h) => {
       const DIFFERENCE = h.DETAILS.difference[h.BODY.txn.inputs[0].tokenid];
-      const AMOUNT = DIFFERENCE > 0 ? `"${'+' + DIFFERENCE}"` : `"${DIFFERENCE}"`;
+      const AMOUNT = DIFFERENCE ? DIFFERENCE > 0 ? `"${'+' + DIFFERENCE}"` : `"${DIFFERENCE}"` : 0;
       const TYPE = DIFFERENCE > 0 ? 'IN' : 'OUT';
       const DATE = format(new Date(Number(h.TIMEMILLI)), "dd-MM-yyyy HH:mm a");
       const SENT_TO_MX = h.BODY.txn.outputs[0].miniaddress || "N/A";
@@ -526,7 +536,7 @@ const Summary = ({ txpow, back }: { txpow: any, back: () => void }) => {
   const { s, m } = useSlice();
   const hasCreatedToken = txpow?.BODY?.txn.outputs[0].tokenid === '0xFF';
   const createdToken = txpow?.BODY?.txn.outputs[0];
-  const difference = txpow?.DETAILS.difference[txpow?.BODY?.txn.inputs[0].tokenid];
+  const difference = txpow?.DETAILS.difference[txpow?.BODY?.txn.inputs[0].tokenid] || "0";
   const type = hasCreatedToken ? 'Create' : difference > 0 ? 'Received' : 'Sent';
   const output = txpow?.BODY?.txn.outputs[0];
 

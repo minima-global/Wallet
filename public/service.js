@@ -6,18 +6,31 @@ var getHistoryAndStore = function () {
             const txpowsInDatabase = result.rows.map((row) => row.TXPOWID);
             const txpowsNotInDatabase = [];
 
-            for (let index = 0; index < response.response.txpows.length; index++) {
-                const txpow = response.response.txpows[index];
+            response.response.txpows.forEach((txpow, index) => {
                 const details = response.response.details[index];
 
                 if (!txpowsInDatabase.includes(txpow.txpowid)) {
-                    txpowsNotInDatabase.push(`INSERT INTO txpows (txpowid, timemilli, isblock, istransaction, hasbody, burn, superblock, size, header, body, details) VALUES ('${txpow.txpowid}', ${txpow.header.timemilli}, ${txpow.isblock}, ${txpow.istransaction}, ${txpow.hasbody}, ${txpow.burn}, ${txpow.superblock}, ${txpow.size}, '${JSON.stringify(txpow.header)}', '${JSON.stringify(txpow.body)}','${JSON.stringify(details)}')`);
+                    txpowsNotInDatabase.push(`INSERT INTO txpows (txpowid, timemilli, isblock, istransaction, hasbody, burn, superblock, size, header, body, details) VALUES ('${txpow.txpowid}', ${txpow.header.timemilli}, ${txpow.isblock}, ${txpow.istransaction}, ${txpow.hasbody}, ${txpow.burn}, ${txpow.superblock}, ${txpow.size}, '${JSON.stringify(txpow.header)}', '${JSON.stringify(txpow.body).replace(/'/g, "''")}','${JSON.stringify(details)}')`);
                 }
-            }
-
-            MDS.sql(txpowsNotInDatabase.join('; '), function () {
-                // completed
             });
+
+            try {
+                const chunked = [];
+    
+                for (let i = 0; i < txpowsNotInDatabase.length; i += 10) {
+                    chunked.push(txpowsNotInDatabase.slice(i, i + 10));
+                }
+    
+                for (let index = 0; index < chunked.length; index++) {
+                    const element = chunked[index];
+    
+                    MDS.sql(element.join('; '), function () {
+                        // do nothing on success
+                    });
+                }
+            } catch (error) {
+                // silently ignore
+            }
         })
     });
 }
