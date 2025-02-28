@@ -3,7 +3,7 @@
   "description": "Wallet MiniDapp",
   "category": "other",
   "private": true,
-  "version": "3.0.13-c",
+  "version": "3.0.14",
   "type": "module",
   "template": "react-ts",
   "scripts": {
