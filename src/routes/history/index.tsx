@@ -17,7 +17,7 @@ import InfoBox from '../../components/InfoBox'
 import BackButton from '../../components/BackButton'
 import useSlice from '../../components/Truncate/useSlice'
 import { format } from 'date-fns'
-import { chunk } from 'lodash'
+import chunk from 'lodash/chunk'
 
 export const Route = createFileRoute('/history/')({
   component: Index,
