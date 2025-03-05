@@ -398,13 +398,13 @@ function Index() {
 
                                   <div className="col-span-12 w-full">
                                     {hasCreatedToken && showCreatedToken && (
-                                      <div className="w-full flex items-center bg-contrast1.5 rounded-t hover:bg-contrast2 transition-all duration-100 p-3 mb-0.5">
+                                      <div className="bg-contrast1 hover:bg-contrast1.5 transition-all transition-100 w-full rounded px-4 py-3 text-white text-sm lg:text-base flex gap-4 mb-0.5">
                                         <div className="flex w-full">
                                           <TokenIcon token={createdToken.token.name} tokenId={createdToken.tokenid} shrinkOnMobile />
 
                                           <div className="px-4 min-w-0 flex flex-col w-full">
                                             <div className="flex items-center w-full">
-                                              <h6 className="font-bold truncate mb-0.5 md:mb-0">
+                                              <h6 className="font-bold truncate mt-0.5 mb-0.5 md:mb-0">
                                                 {renderTokenName(createdToken)}
                                               </h6>
                                               <TokenAuthenticity token={createdToken.token} />
@@ -422,7 +422,7 @@ function Index() {
                                       </div>
                                     )}
 
-                                    <div className="w-full flex items-center bg-contrast1.5 rounded-t hover:bg-contrast2 transition-all duration-100 p-3 mb-0.5">
+                                    <div className="bg-contrast1 hover:bg-contrast1.5 transition-all transition-100 w-full rounded px-4 py-3 text-white text-sm lg:text-base flex gap-4 mb-0.5">
                                       <div className="flex w-full">
                                         <div data-testid="token-icon" className="flex items-center justify-center">
                                           {h.BODY.txn.inputs[0].tokenid !== '0x00' && (
@@ -437,7 +437,7 @@ function Index() {
 
                                         <div className="px-4 min-w-0 flex flex-col w-full">
                                           <div className="flex items-center w-full">
-                                            <h6 className="font-bold w-fit truncate mb-0.5 md:mb-0">
+                                            <h6 className="font-bold w-fit truncate mt-1 mb-0.5 md:mb-0">
                                               {renderTokenName(h.BODY.txn.inputs[0])}
                                             </h6>
                                             {h.BODY.txn.inputs[0].tokenid === '0x00' && (
