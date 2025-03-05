@@ -5,6 +5,7 @@ type InfoBoxProps = {
     title: string;
     value?: string | React.ReactNode;
     copy?: boolean;
+    copyOverride?: string;
     href?: string;
     linkValue?: boolean;
     className?: string;
@@ -12,7 +13,7 @@ type InfoBoxProps = {
     children?: React.ReactNode;
 }
 
-const InfoBox = ({ title, value, copy, collapsable, linkValue, className, children }: InfoBoxProps) => {
+const InfoBox = ({ title, value, copy, copyOverride, collapsable, linkValue, className, children }: InfoBoxProps) => {
     const [copied, setCopied] = useState(false);
     const [open, setOpen] = useState(false);
 
@@ -21,7 +22,11 @@ const InfoBox = ({ title, value, copy, collapsable, linkValue, className, childr
             setCopied(true);
 
             if (typeof value === 'string') {
-                navigator.clipboard.writeText(value);
+                if (copyOverride) {
+                    navigator.clipboard.writeText(copyOverride);
+                } else {
+                    navigator.clipboard.writeText(value);
+                }
             }
 
             setTimeout(() => {

@@ -307,10 +307,10 @@ function RouteComponent() {
                                 value={t('this_is_the_official_minima_token')}
                             />
                         )}
-                        <InfoBox title={t('sendable')} value={f(token.sendable)} />
-                        <InfoBox title={t('confirmed')} value={f(token.confirmed)} />
-                        <InfoBox title={t('unconfirmed')} value={f(token.unconfirmed)} />
-                        <InfoBox title={t('total_minted')} value={f(token.total)} />
+                        <InfoBox title={t('sendable')} value={f(token.sendable)} copy copyOverride={token.sendable} />
+                        <InfoBox title={t('confirmed')} value={f(token.confirmed)} copy copyOverride={token.confirmed} />
+                        <InfoBox title={t('unconfirmed')} value={f(token.unconfirmed)} copy copyOverride={token.unconfirmed} />
+                        <InfoBox title={t('total_minted')} value={f(token.total)} copy copyOverride={token.total} />
                         <InfoBox title={t('total_coins')} value={f(token.coins)} />
                         {isCustomToken && (
                             <>

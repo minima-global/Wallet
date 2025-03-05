@@ -34,12 +34,16 @@ const TokenCard = ({ balance, showFavourite = false }: { balance: Balance, showF
                     <FullTokenIcon token={balance.token} tokenId={balance.tokenid} />
                 </div>
                 <div className="bg-contrast1 group-hover:bg-contrast2 transition-all duration-100 py-3 px-4 rounded-b">
-                    <div className="flex">
-                        <div className="grow">
-                            <h5 className="text-sm md:text-base text-white capitalize flex items-end">{renderTokenName(balance)} {renderTicker(balance)} <TokenAuthenticity token={balance} /></h5>
-                            <div className="text-grey60 text-sm truncate">
-                                <BalanceAmount balance={balance} value={confirmed} grid />
+                    <div className="min-w-0">
+                        <div className="flex items-center w-full">
+                            <div className="w-fit truncate font-bold text-neutral-400 capitalize">
+                                {renderTokenName(balance)}
                             </div>
+                            <span className="hidden md:inline">{renderTicker(balance)}</span>
+                            <TokenAuthenticity token={balance} />
+                        </div>
+                        <div className="text-grey60 text-sm truncate">
+                            <BalanceAmount balance={balance} value={confirmed} grid />
                         </div>
                         {showFavourite && (
                             <div className="flex items-center gap-2 pr-1">

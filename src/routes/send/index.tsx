@@ -14,6 +14,7 @@ import OverlayMenu from '../../components/OverlayModal'
 import useFormatAmount from '../../hooks/useFormatAmount'
 import useSlice from '../../components/Truncate/useSlice'
 import { z } from 'zod'
+
 export const Route = createFileRoute('/send/')({
     component: Index,
     validateSearch: z.object({
@@ -191,16 +192,18 @@ function Index() {
 
                     <div className="flex flex-col gap-2 mb-8">
 
-                        <div className="bg-contrast1 relative w-full flex items-center p-5 rounded">
-                            <div className="grow flex">
-                                <TokenIcon token={selectedToken.token} tokenId={selectedToken.tokenid} />
-                                <div className="grow flex items-center overflow-hidden px-4">
-                                    <div className="grow items-center w-full">
-                                        <div className="flex items-center grow gap-1.5">
-                                            <h6 className="text-lg font-bold truncate text-neutral-400">
-                                                {renderTokenName(selectedToken)}
-                                            </h6>
-                                            <TokenAuthenticity token={selectedToken} />
+                        <div className="grid grid-cols-12">
+                            <div className="col-span-12">
+                                <div className="bg-contrast1 relative w-full flex items-center p-5 rounded">
+                                    <div className="grow flex overflow-hidden">
+                                        <TokenIcon token={selectedToken.token} tokenId={selectedToken.tokenid} />
+                                        <div className="min-w-0 px-4 flex items-center">
+                                            <div className="flex items-center w-full">
+                                                <h6 className="w-fit truncate text-lg font-bold text-neutral-400">
+                                                    {renderTokenName(selectedToken)}
+                                                </h6>
+                                                <TokenAuthenticity token={selectedToken} />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -259,16 +262,20 @@ const TokenDropdown = ({ value, onChange }: TokenDropdownProps) => {
                         <div className="custom-scrollbar custom-scrollbar-modal pr-3 overflow-x-hidden max-h-[300px] overflow-y-auto pr-3">
                             {balance.map((token, index) => (
                                 <div key={token.tokenid}>
-                                    <div onClick={() => selectToken(token.tokenid)} className="p-2.5 rounded cursor-pointer hover:bg-contrast flex">
+                                    <div onClick={() => selectToken(token.tokenid)} className="p-2.5 pr-0 rounded cursor-pointer hover:bg-contrast flex">
                                         <TokenIcon token={token.token} tokenId={token.tokenid} />
-                                        <div className="my-auto px-4 text-[14px]">
-                                            <div className="font-bold text-neutral-100 -mt-1 mb-0.5 flex items-center gap-1">
-                                                {renderTokenName(token)}
-                                                <TokenAuthenticity token={token} />
-                                            </div>
-                                            <div className="truncate text-grey80 font-bold text-left">
-                                               <span className="block sm:hidden">{m(f(token.sendable), 18)}</span>
-                                               <span className="hidden sm:block">{f(token.sendable)}</span>
+                                        <div className="min-w-0 pl-4">
+                                            <div className="w-full text-[14px]">
+                                                <div className="flex">
+                                                    <div className="w-fit font-bold text-neutral-100 mb-0.5 text-left gap-1 truncate">
+                                                        {renderTokenName(token)}
+                                                    </div>
+                                                    <TokenAuthenticity token={token} />
+                                                </div>
+                                                <div className="truncate text-grey80 font-bold text-left">
+                                                    <span className="block sm:hidden">{m(f(token.sendable), 18)}</span>
+                                                    <span className="hidden sm:block">{f(token.sendable)}</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -282,51 +289,63 @@ const TokenDropdown = ({ value, onChange }: TokenDropdownProps) => {
                     <Button variant="secondary" onClick={toggleDropdown}>{t('close')}</Button>
                 </div>
             </OverlayMenu>
-            {selectedToken && (
-                <div onClick={toggleDropdown} className="relative z-[20] bg-darkContrast relative w-full flex p-3 border-lightDarkContrast rounded cursor-pointer select-none">
-                    <div className="relative z-[20] flex w-full">
-                        <TokenIcon token={selectedToken.token} tokenId={selectedToken.tokenid} />
-                        <div className="w-full my-auto px-4">
-                            <div className="font-bold text-neutral-100 -mt-0.5 mb-0.5 flex items-center gap-1">
-                                {renderTokenName(selectedToken)}
-                                <TokenAuthenticity token={selectedToken} />
-                            </div>
-                            <div className="text-sm truncate text-grey80 font-bold">
-                                <span className="block sm:hidden">{m(f(selectedToken.sendable), 24)}</span>
-                                <span className="hidden sm:block">{f(selectedToken.sendable)}</span>
-                            </div>
-                        </div>
-                        <span className="flex absolute top-0 right-2 h-full items-center">
-                            <div className={`px-2 py-2 transition-all duration-300 ${isOpen ? 'text-orange -rotate-180' : 'text-grey hover:text-white'}`}>
-                                <svg width="10" height="7" viewBox="0 0 10 7" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M5 6.0625L0 1.0625L1.0625 0L5 3.9375L8.9375 0L10 1.0625L5 6.0625Z" fill="currentColor" />
-                                </svg>
-                            </div>
-                        </span>
-                    </div>
-                    <div className={`hidden lg:block absolute left-0 top-[100%] border border-contrast2 bg-contrast1.5 p-2 z-[20] w-full custom-scrollbar ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
-                        <div className="custom-scrollbar max-h-[300px] overflow-y-auto pr-3">
-                            {balance.map((token, index) => (
-                                <div key={token.tokenid}>
-                                    <div onClick={() => onChange(token.tokenid)} className="p-2.5 rounded cursor-pointer hover:bg-contrast2 flex">
-                                        <TokenIcon token={token.token} tokenId={token.tokenid} />
-                                        <div className="my-auto px-4 text-[14px]">
-                                            <div className="font-bold text-neutral-100 -mt-1 mb-0.5 flex items-center gap-1">
-                                                {renderTokenName(token)}
-                                                <TokenAuthenticity token={token} />
-                                            </div>
-                                            <div className="truncate text-grey80 font-bold">
-                                                {token.sendable}
+            <div className="grid grid-cols-12">
+                <div className="col-span-12">
+                    {selectedToken && (
+                        <div onClick={toggleDropdown} className="relative z-[20]">
+                            <div className="relative z-20 bg-darkContrast p-3 border-lightDarkContrast rounded cursor-pointer select-none flex">
+                                <TokenIcon token={selectedToken.token} tokenId={selectedToken.tokenid} />
+                                <div className="grow min-w-0 pl-4">
+                                    <div className="w-full text-[14px]">
+                                        <div className="flex">
+                                            <div className="w-fit font-bold text-neutral-100 -mt-1 mb-0.5 text-left gap-1 truncate">
+                                                <div className="flex items-center mt-1.5 mb-0.5">
+                                                    <div className="truncate font-bold text-neutral-100">{renderTokenName(selectedToken)}</div>
+                                                    <TokenAuthenticity token={selectedToken} />
+                                                </div>
+                                                <div className="text-sm truncate text-grey80 font-bold">
+                                                    <span className="block sm:hidden">{m(f(selectedToken.sendable), 24)}</span>
+                                                    <span className="hidden sm:block">{f(selectedToken.sendable)}</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                    {index !== balance.length - 1 && <div className="h-[1px] bg-contrast3 w-full"></div>}
                                 </div>
-                            ))}
+                                <div className="pl-4 flex items-center justify-end">
+                                    <div className={`px-2 py-2 transition-all duration-300 ${isOpen ? 'text-orange -rotate-180' : 'text-grey hover:text-white'}`}>
+                                        <svg width="10" height="7" viewBox="0 0 10 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M5 6.0625L0 1.0625L1.0625 0L5 3.9375L8.9375 0L10 1.0625L5 6.0625Z" fill="currentColor" />
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div className={`hidden lg:block absolute left-0 top-[100%] border border-contrast2 bg-contrast1.5 p-2 z-[20] w-full custom-scrollbar ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+                                    <div className="custom-scrollbar grid grid-cols-12 max-h-[300px] overflow-y-auto pr-3">
+                                        {balance.map((token, index) => (
+                                            <div key={token.tokenid} className="col-span-12 relative z-20">
+                                                <div onClick={() => onChange(token.tokenid)} className="p-2.5 rounded cursor-pointer hover:bg-contrast2 flex">
+                                                    <TokenIcon token={token.token} tokenId={token.tokenid} />
+                                                    <div className="min-w-0 overflow-hidden my-auto pl-4 text-[14px]">
+                                                        <div className="flex items-center mb-0.5">
+                                                            <div className="w-fit truncate font-bold text-neutral-100">
+                                                                {renderTokenName(token)}
+                                                            </div>
+                                                            <TokenAuthenticity token={token} />
+                                                        </div>
+                                                        <div className="truncate text-grey80 font-bold">
+                                                            {token.sendable}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                {index !== balance.length - 1 && <div className="h-[1px] bg-contrast3 w-full"></div>}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
-            )}
+            </div>
 
             <div className={`absolute top-0 left-0 w-full h-full bg-black z-[20] lg:z-[10] ${isOpen ? 'opacity-80' : 'opacity-0 pointer-events-none'}`}></div>
         </div>

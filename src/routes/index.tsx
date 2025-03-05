@@ -218,14 +218,16 @@ function Index() {
       </div>
 
       {loaded &&gridMode === 'list' && (
-        <ul className="select-none flex flex-col gap-4 mb-20">
+        <ul className="select-none grid grid-cols-12 gap-4 mb-20">
           {filteredBalance.length === 0 && (
-            <div className="w-full flex items-center bg-contrast1 opacity-80 p-3 px-4 text-sm rounded">
+            <div className="col-span-12 w-full flex items-center bg-contrast1 opacity-80 p-3 px-4 text-sm rounded">
               {t('no_tokens_found')}
             </div>
           )}
           {filteredBalance.map((balance) => (
-            <TokenListItem key={balance.tokenid} balance={balance} />
+            <div className="col-span-12">
+              <TokenListItem key={balance.tokenid} balance={balance} /> 
+            </div>
           ))}
         </ul>
       )}

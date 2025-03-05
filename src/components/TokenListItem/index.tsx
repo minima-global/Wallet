@@ -34,19 +34,18 @@ const TokenListItem = ({ balance }: { balance: Balance }) => {
             <BalanceInfoModal display={showInfo} dismiss={() => setShowInfo(false)} />
             <Link to="/balance/$id" params={{ id: balance.tokenid }} onClick={handleClick}>
                 <div className={`w-full flex items-center bg-contrast1.5 rounded-t hover:bg-contrast2 transition-all duration-100 p-3`}>
-                    <div className="grow flex">
+                    <div className="flex w-full">
                         <TokenIcon token={balance.token} tokenId={balance.tokenid} />
-                        <div className="grow overflow-hidden px-4">
-                            <div className="grow w-full">
-                                <div className="flex grow gap-1">
-                                    <h6 className="font-bold truncate text-neutral-400 capitalize truncate">
-                                        {renderTokenName(balance)} {renderTicker(balance)}
-                                    </h6>
-                                    <TokenAuthenticity token={balance} />
-                                </div>
-                                <div className="font-bold w-full overflow-ellipsis truncate text-neutral-300">
-                                    <BalanceAmount balance={balance} value={confirmed} />
-                                </div>
+                        <div className="px-4 min-w-0 flex flex-col w-full">
+                            <div className="flex items-center w-full">
+                                <h6 className="w-fit font-bold truncate text-neutral-400 capitalize truncate">
+                                    {renderTokenName(balance)}
+                                </h6>
+                                {renderTicker(balance)}
+                                <TokenAuthenticity token={balance} />
+                            </div>
+                            <div className="font-bold">
+                                <BalanceAmount balance={balance} value={confirmed} />
                             </div>
                         </div>
                     </div>

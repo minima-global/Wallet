@@ -1,5 +1,11 @@
 # Changelog
 
+##### [3.0.15] - 05 March 2025
+
+- Altered truncated token names on the balance page, send page and history page
+- Added copy button to the balance page for token confirmed, sendable and unconfirmed amounts
+- Added copy button to the history page for amount, 0x and Mx address 
+
 ##### [3.0.14] - 27 February 2025
 
 - "Pending MiniDapp" is no longer translated pending_transaction_message and denied_transaction_message ui labels.

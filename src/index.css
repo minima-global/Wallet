@@ -198,3 +198,9 @@ canvas {
 .break-word {
   word-break: break-word;
 }
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
