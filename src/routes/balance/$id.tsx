@@ -148,7 +148,7 @@ function RouteComponent() {
         return (
             <Fragment key={key}>
                 {Object.entries(item).map(([key, value]) => {
-                    if (typeof value === 'object' && value !== null) {  
+                    if (typeof value === 'object' && value !== null) {
                         return;
                     }
 
@@ -259,93 +259,95 @@ function RouteComponent() {
 
             {token && (
                 <div className="mb-14">
-                    <ul className="select-none flex flex-col gap-2">
-                        <li className="bg-contrast1 relative w-full flex items-center p-5 rounded mb-6">
-                            <div className="grow flex">
-                                <TokenIcon token={token.token} tokenId={token.tokenid} />
-                                <div className="grow flex items-center overflow-hidden px-5">
-                                    <div className="grow items-center w-full">
-                                        <div className="flex items-center grow gap-1">
-                                            <h6 className="text-lg font-bold truncate">
-                                                {renderTokenName(token)}
-                                            </h6>
-                                            <TokenAuthenticity token={token} />
+                    <div className="grid grid-cols-12">
+                        <div className="col-span-12">
+                            <ul className="select-none flex flex-col gap-2">
+                                <li className="bg-contrast1 relative w-full flex items-center p-5 rounded mb-6">
+                                    <div className="flex items-center w-full">
+                                        <TokenIcon token={token.token} tokenId={token.tokenid} />
+                                        <div className="px-4 min-w-0 flex flex-col w-full">
+                                            <div className="w-full flex items-center">
+                                                <h6 className="text-lg font-bold truncate">
+                                                    {renderTokenName(token)}
+                                                </h6>
+                                                <TokenAuthenticity token={token} />
+                                            </div>
+                                        </div>
+                                        <div onClick={goToSendWithToken} className="pl-2 pr-2 transition-all duration-200 text-white hover:text-grey80 cursor-pointer">
+                                            <svg width="24" height="16" viewBox="0 0 24 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M6.01953 15.2308C4.29253 14.7423 2.94411 13.8153 1.97428 12.45C1.00445 11.0847 0.519531 9.60133 0.519531 8C0.519531 6.39867 1.00445 4.91533 1.97428 3.55C2.94411 2.18467 4.29253 1.25775 6.01953 0.76925V2.35C4.8362 2.75 3.8737 3.46667 3.13203 4.5C2.39036 5.53333 2.01953 6.7 2.01953 8C2.01953 9.3 2.39036 10.4667 3.13203 11.5C3.8737 12.5333 4.8362 13.25 6.01953 13.65V15.2308ZM14.0195 15.5C11.9375 15.5 10.167 14.7705 8.70803 13.3115C7.24903 11.8525 6.51953 10.082 6.51953 8C6.51953 5.918 7.24903 4.1475 8.70803 2.6885C10.167 1.2295 11.9375 0.5 14.0195 0.5C15.0234 0.5 15.9718 0.685917 16.8648 1.05775C17.7576 1.42958 18.5483 1.94692 19.2368 2.60975L18.183 3.6635C17.6394 3.13917 17.0147 2.73083 16.309 2.4385C15.6032 2.14617 14.84 2 14.0195 2C12.3529 2 10.9362 2.58333 9.76953 3.75C8.60286 4.91667 8.01953 6.33333 8.01953 8C8.01953 9.66667 8.60286 11.0833 9.76953 12.25C10.9362 13.4167 12.3529 14 14.0195 14C14.84 14 15.6032 13.8538 16.309 13.5615C17.0147 13.2692 17.6394 12.8608 18.183 12.3365L19.2368 13.3903C18.5483 14.0531 17.7576 14.5704 16.8648 14.9423C15.9718 15.3141 15.0234 15.5 14.0195 15.5ZM19.8273 11.6538L18.7733 10.6L20.6233 8.75H13.0773V7.25H20.6233L18.7733 5.4L19.8273 4.34625L23.481 8L19.8273 11.6538Z" fill="currentColor" />
+                                            </svg>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                            <div onClick={goToSendWithToken} className="pr-2 transition-all duration-200 text-white hover:text-grey80 cursor-pointer">
-                                <svg width="24" height="16" viewBox="0 0 24 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M6.01953 15.2308C4.29253 14.7423 2.94411 13.8153 1.97428 12.45C1.00445 11.0847 0.519531 9.60133 0.519531 8C0.519531 6.39867 1.00445 4.91533 1.97428 3.55C2.94411 2.18467 4.29253 1.25775 6.01953 0.76925V2.35C4.8362 2.75 3.8737 3.46667 3.13203 4.5C2.39036 5.53333 2.01953 6.7 2.01953 8C2.01953 9.3 2.39036 10.4667 3.13203 11.5C3.8737 12.5333 4.8362 13.25 6.01953 13.65V15.2308ZM14.0195 15.5C11.9375 15.5 10.167 14.7705 8.70803 13.3115C7.24903 11.8525 6.51953 10.082 6.51953 8C6.51953 5.918 7.24903 4.1475 8.70803 2.6885C10.167 1.2295 11.9375 0.5 14.0195 0.5C15.0234 0.5 15.9718 0.685917 16.8648 1.05775C17.7576 1.42958 18.5483 1.94692 19.2368 2.60975L18.183 3.6635C17.6394 3.13917 17.0147 2.73083 16.309 2.4385C15.6032 2.14617 14.84 2 14.0195 2C12.3529 2 10.9362 2.58333 9.76953 3.75C8.60286 4.91667 8.01953 6.33333 8.01953 8C8.01953 9.66667 8.60286 11.0833 9.76953 12.25C10.9362 13.4167 12.3529 14 14.0195 14C14.84 14 15.6032 13.8538 16.309 13.5615C17.0147 13.2692 17.6394 12.8608 18.183 12.3365L19.2368 13.3903C18.5483 14.0531 17.7576 14.5704 16.8648 14.9423C15.9718 15.3141 15.0234 15.5 14.0195 15.5ZM19.8273 11.6538L18.7733 10.6L20.6233 8.75H13.0773V7.25H20.6233L18.7733 5.4L19.8273 4.34625L23.481 8L19.8273 11.6538Z" fill="currentColor" />
-                                </svg>
-                            </div>
-                        </li>
-                        {isCustomToken && (
-                            <>
-                                {
-                                    typeof token.token === 'object' && (token.token as any).url && (token.token as any).url.includes("http") && (
+                                </li>
+                                {isCustomToken && (
+                                    <>
+                                        {
+                                            typeof token.token === 'object' && (token.token as any).url && (token.token as any).url.includes("http") && (
+                                                <InfoBox
+                                                    title={t('url')}
+                                                    copy={!!(typeof token.token === 'object' && (token.token as any).url)}
+                                                    linkValue={!!(typeof token.token === 'object' && (token.token as any).url)}
+                                                    value={typeof token.token === 'object' && (token.token as any).url || t('n_a')}
+                                                />
+                                            )
+                                        }
+                                    </>
+                                )}
+                                <InfoBox title={t('token_id')} value={token.tokenid} copy />
+                                {token && token.tokenid !== '0x00' && (
+                                    <InfoBox
+                                        title={t('description')}
+                                        value={typeof token.token === 'object' && token.token.description || t('no_description')}
+                                    />
+                                )}
+                                {token && token.tokenid === '0x00' && (
+                                    <InfoBox
+                                        title={t('description')}
+                                        value={t('this_is_the_official_minima_token')}
+                                    />
+                                )}
+                                <InfoBox title={t('sendable')} value={f(token.sendable)} copy copyOverride={token.sendable} />
+                                <InfoBox title={t('confirmed')} value={f(token.confirmed)} copy copyOverride={token.confirmed} />
+                                <InfoBox title={t('unconfirmed')} value={f(token.unconfirmed)} copy copyOverride={token.unconfirmed} />
+                                <InfoBox title={t('total_minted')} value={f(token.total)} />
+                                <InfoBox title={t('total_coins')} value={f(token.coins)} />
+                                {isCustomToken && (
+                                    <>
                                         <InfoBox
-                                            title={t('url')}
-                                            copy={!!(typeof token.token === 'object' && (token.token as any).url)}
-                                            linkValue={!!(typeof token.token === 'object' && (token.token as any).url)}
-                                            value={typeof token.token === 'object' && (token.token as any).url || t('n_a')}
+                                            copy={!!(typeof token.token === 'object' && token.token.webvalidate)}
+                                            title={t('web_validation_url')}
+                                            linkValue={!!(typeof token.token === 'object' && token.token.webvalidate)}
+                                            value={typeof token.token === 'object' && token.token.webvalidate || t('n_a')}
                                         />
-                                    )
-                                }
-                            </>
-                        )}
-                        <InfoBox title={t('token_id')} value={token.tokenid} copy />
-                        {token && token.tokenid !== '0x00' && (
-                            <InfoBox
-                                title={t('description')}
-                                value={typeof token.token === 'object' && token.token.description || t('no_description')}
-                            />
-                        )}
-                        {token && token.tokenid === '0x00' && (
-                            <InfoBox
-                                title={t('description')}
-                                value={t('this_is_the_official_minima_token')}
-                            />
-                        )}
-                        <InfoBox title={t('sendable')} value={f(token.sendable)} copy copyOverride={token.sendable} />
-                        <InfoBox title={t('confirmed')} value={f(token.confirmed)} copy copyOverride={token.confirmed} />
-                        <InfoBox title={t('unconfirmed')} value={f(token.unconfirmed)} copy copyOverride={token.unconfirmed} />
-                        <InfoBox title={t('total_minted')} value={f(token.total)} copy copyOverride={token.total} />
-                        <InfoBox title={t('total_coins')} value={f(token.coins)} />
-                        {isCustomToken && (
-                            <>
-                                <InfoBox
-                                    copy={!!(typeof token.token === 'object' && token.token.webvalidate)}
-                                    title={t('web_validation_url')}
-                                    linkValue={!!(typeof token.token === 'object' && token.token.webvalidate)}
-                                    value={typeof token.token === 'object' && token.token.webvalidate || t('n_a')}
-                                />
-                                <InfoBox
-                                    copy={!!(typeof token.token === 'object' && (token.token as any).external_url)}
-                                    title={t('external_url')}
-                                    linkValue={!!(typeof token.token === 'object' && (token.token as any).external_url)}
-                                    value={typeof token.token === 'object' && (token.token as any).external_url || t('n_a')}
-                                />
-                                <InfoBox
-                                    title={t('owner')}
-                                    value={typeof token.token === 'object' && (token.token as any).owner || t('n_a')}
-                                />
-                                {metadata.length > 0 && metadata.map((item) => {
-                                    if (item.value && typeof item.value === 'object' && Array.isArray(item.value)) {
-                                        return renderArray(item.key, item.value);
-                                    }
+                                        <InfoBox
+                                            copy={!!(typeof token.token === 'object' && (token.token as any).external_url)}
+                                            title={t('external_url')}
+                                            linkValue={!!(typeof token.token === 'object' && (token.token as any).external_url)}
+                                            value={typeof token.token === 'object' && (token.token as any).external_url || t('n_a')}
+                                        />
+                                        <InfoBox
+                                            title={t('owner')}
+                                            value={typeof token.token === 'object' && (token.token as any).owner || t('n_a')}
+                                        />
+                                        {metadata.length > 0 && metadata.map((item) => {
+                                            if (item.value && typeof item.value === 'object' && Array.isArray(item.value)) {
+                                                return renderArray(item.key, item.value);
+                                            }
 
-                                    if (item.value && typeof item.value === 'object') {
-                                        return renderObject(item.key, item.value);
-                                    }
+                                            if (item.value && typeof item.value === 'object') {
+                                                return renderObject(item.key, item.value);
+                                            }
 
-                                    return (
-                                        <InfoBox key={item.key} title={item.key} value={item.value || "N/A"} className="capitalize" />
-                                    )
-                                })}
-                            </>
-                        )}
-                    </ul>
+                                            return (
+                                                <InfoBox key={item.key} title={item.key} value={item.value || "N/A"} className="capitalize" />
+                                            )
+                                        })}
+                                    </>
+                                )}
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             )}
         </div>

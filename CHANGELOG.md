@@ -1,5 +1,9 @@
 # Changelog
 
+##### [3.0.16] - 05 March 2025
+
+- Fixed truncated token name on the token details page
+
 ##### [3.0.15] - 05 March 2025
 
 - Altered truncated token names on the balance page, send page and history page
