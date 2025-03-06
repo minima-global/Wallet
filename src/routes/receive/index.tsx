@@ -198,7 +198,6 @@ function Index() {
   }
 
   const handleValidateAddress = () => {
-    setAddress(query);
     validateAddress(query);
   }
 
