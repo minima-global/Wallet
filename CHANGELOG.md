@@ -1,5 +1,9 @@
 # Changelog
 
+##### [3.0.17] - 06 March 2025
+
+- Minor text change
+
 ##### [3.0.16] - 05 March 2025
 
 - Fixed truncated token name on the token details page
