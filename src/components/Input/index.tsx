@@ -119,7 +119,7 @@ const Input: React.FC<InputProps> = ({
             )}
             <div className={`px-4 py-3.5 rounded border border-transparent ${validation && valid === false ? "!border-red" : ""} ${inverse ? 'bg-contrast2' : 'bg-contrast1'}`}>
                 <div className="flex relative">
-                    <input readOnly={readOnly} required={required} name="amount" onBlur={handleOnBlur} placeholder={placeholder} className={`text-sm bg-transparent w-full placeholder-grey60 appearance-none outline-none ${copy || clearable || info || camera ? "pr-4 md:pr-8" : ""} ${max ? "pr-12" : ""}`} value={value} onChange={(e) => onChange?.(e.target.value)} />
+                    <input readOnly={readOnly} required={required} name="amount" onBlur={handleOnBlur} placeholder={placeholder} className={`text-sm bg-transparent w-full placeholder-grey60 appearance-none outline-none ${copy || clearable || info || camera ? "pr-9 md:pr-8" : ""} ${max ? "pr-12" : ""}`} value={value} onChange={(e) => onChange?.(e.target.value)} />
                     {info &&
                         <div className="relative group z-[30]">
                             <div className="text-sm text-grey60">
