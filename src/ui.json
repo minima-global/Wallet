@@ -201,7 +201,14 @@
         "token_states_available": "Funds are available to be spent immediately as they are currently not locked in a contract.",
         "token_states_locked": "Funds are locked in a contract and unable to spend.",
         "burnt": "Burnt",
-        "mx_and_0x_description": "The Mx and 0x addresses below can both be used as your receive address, but only Mx addresses are validated at the time of transaction."
+        "mx_and_0x_description": "The Mx and 0x addresses below can both be used as your receive address, but only Mx addresses are validated at the time of transaction.",
+        "download_json": "Download JSON",
+        "download_csv": "Download CSV",
+        "camera_is_unavailable": "Camera is unavailable!",
+        "wallet_is_requesting_camera": "Wallet is requesting camera",
+        "denied_camera_permissions": "You have denied camera permissions, please enable the permission and refresh the page.",
+        "please_accept_camera_permissions": "Please accept the camera permissions to scan a QR code.",
+        "invalid_address_qr_code": "Unable to scan Address QR code, please try again."
     },
     "zh-cn": {
         "label": "中文",
@@ -435,7 +442,14 @@
         "token_states_available": "资金可以立即用于消费，因为它们目前不在合约中锁定。",
         "token_states_locked": "资金被锁定在合约中，无法使用。",
         "burnt": "销毁",
-        "mx_and_0x_description": "以下的Mx和0x地址都可以用作您的接收地址，但只有Mx地址在交易时会被验证。"
+        "mx_and_0x_description": "以下的Mx和0x地址都可以用作您的接收地址，但只有Mx地址在交易时会被验证。",
+        "download_json": "下载JSON",
+        "download_csv": "下载CSV",
+        "camera_is_unavailable": "相机不可用！",
+        "wallet_is_requesting_camera": "钱包正在请求相机",
+        "denied_camera_permissions": "您已拒绝相机权限，请启用权限并刷新页面。",
+        "please_accept_camera_permissions": "请接受相机权限以扫描二维码。",
+        "invalid_address_qr_code": "无法扫描地址二维码，请重试。"
     },
     "ru": {
         "label": "Русский",
@@ -640,7 +654,14 @@
         "token_states_available": "Средства доступны для использования, так как они в настоящее время не заблокированы в контракте.",
         "token_states_locked": "Средства заблокированы в контракте и не могут быть использованы.",
         "burnt": "Сгоревший",
-        "mx_and_0x_description": "Ниже приведены Mx и 0x адреса, которые можно использовать в качестве вашего получателя, но только Mx адреса проверяются при транзакции."
+        "mx_and_0x_description": "Ниже приведены Mx и 0x адреса, которые можно использовать в качестве вашего получателя, но только Mx адреса проверяются при транзакции.",
+        "download_json": "Скачать JSON",
+        "download_csv": "Скачать CSV",
+        "camera_is_unavailable": "Камера недоступна!",
+        "wallet_is_requesting_camera": "Кошелек запрашивает камеру",
+        "denied_camera_permissions": "Вы отказали в разрешении на использование камеры, пожалуйста, разрешите разрешение и обновите страницу.",
+        "please_accept_camera_permissions": "Пожалуйста, разрешите разрешение на использование камеры для сканирования QR-кода.",
+        "invalid_address_qr_code": "Не удалось сканировать QR-код адреса, пожалуйста, попробуйте снова."
     },
     "ukr": {
         "label": "Українська",
@@ -845,7 +866,14 @@
         "token_states_available": "Средства доступны для использования, так как они в настоящее время не заблокированы в контракте.",
         "token_states_locked": "Средства заблокированы в контракте и не могут быть использованы.",
         "burnt": "Сгоревший",
-        "mx_and_0x_description": "Ниже приведены Mx и 0x адреса, которые можно использовать в качестве вашего получателя, но только Mx адреса проверяются при транзакции."
+        "mx_and_0x_description": "Ниже приведены Mx и 0x адреса, которые можно использовать в качестве вашего получателя, но только Mx адреса проверяются при транзакции.",
+        "download_json": "Скачать JSON",
+        "download_csv": "Скачать CSV",
+        "camera_is_unavailable": "Камера недоступна!",
+        "wallet_is_requesting_camera": "Кошелек запрашивает камеру",
+        "denied_camera_permissions": "Вы отказали в разрешении на использование камеры, пожалуйста, разрешите разрешение и обновите страницу.",
+        "please_accept_camera_permissions": "Пожалуйста, разрешите разрешение на использование камеры для сканирования QR-кода.",
+        "invalid_address_qr_code": "Не удалось сканировать QR-код адреса, пожалуйста, попробуйте снова."
     },
     "fr": {
         "label": "Français",
@@ -1049,7 +1077,14 @@
         "token_states_available": "Les fonds sont disponibles pour être dépensés immédiatement car ils ne sont actuellement pas verrouillés dans un contrat.",
         "token_states_locked": "Les fonds sont verrouillés dans un contrat et ne peuvent pas être utilisés.",
         "burnt": "Brûlé",
-        "mx_and_0x_description": "Les adresses Ox et Mx peuvent être utilisées de manière interchangeable, mais seules les adresses Mx sont validées lors d'une transaction."
+        "mx_and_0x_description": "Les adresses Ox et Mx peuvent être utilisées de manière interchangeable, mais seules les adresses Mx sont validées lors d'une transaction.",
+        "download_json": "Télécharger JSON",
+        "download_csv": "Télécharger CSV",
+        "camera_is_unavailable": "Camera is unavailable!",
+        "wallet_is_requesting_camera": "Wallet is requesting camera",
+        "denied_camera_permissions": "You have denied camera permissions, please enable the permission and refresh the page.",
+        "please_accept_camera_permissions": "Please accept the camera permissions to scan a QR code.",
+        "invalid_address_qr_code": "Unable to scan Address QR code, please try again."
     },
     "es": {
         "label": "Español",
@@ -1252,7 +1287,14 @@
         "token_states_available": "Les fonds sont disponibles pour être dépensés immédiatement car ils ne sont actuellement pas verrouillés dans un contrat.",
         "token_states_locked": "Les fonds sont verrouillés dans un contrat et ne peuvent pas être utilisés.",
         "burnt": "Brûlé",
-        "mx_and_0x_description": "Les adresses Mx et 0x ci-dessous peuvent toutes deux être utilisées comme adresse de réception, mais seules les adresses Mx sont validées au moment de la transaction."
+        "mx_and_0x_description": "Les adresses Mx et 0x ci-dessous peuvent toutes deux être utilisées comme adresse de réception, mais seules les adresses Mx sont validées au moment de la transaction.",
+        "download_json": "Télécharger JSON",
+        "download_csv": "Télécharger CSV",
+        "camera_is_unavailable": "Camera is unavailable!",
+        "wallet_is_requesting_camera": "Wallet is requesting camera",
+        "denied_camera_permissions": "You have denied camera permissions, please enable the permission and refresh the page.",
+        "please_accept_camera_permissions": "Please accept the camera permissions to scan a QR code.",
+        "invalid_address_qr_code": "Unable to scan Address QR code, please try again."
     },
     "ja": {
         "label": "日本語",
@@ -1486,7 +1528,14 @@
         "token_states_available": "資金は、現在契約でロックされていないため、すぐに使用できます。",
         "token_states_locked": "資金は契約でロックされているため、使用できません。",
         "burnt": "燃え尽きた",
-        "mx_and_0x_description": "以下のMxと0xアドレスは両方とも受信アドレスとして使用できますが、取引時に検証されるのはMxアドレスのみです。"
+        "mx_and_0x_description": "以下のMxと0xアドレスは両方とも受信アドレスとして使用できますが、取引時に検証されるのはMxアドレスのみです。",
+        "download_json": "JSONをダウンロード",
+        "download_csv": "CSVをダウンロード",
+        "camera_is_unavailable": "Camera is unavailable!",
+        "wallet_is_requesting_camera": "Wallet is requesting camera",
+        "denied_camera_permissions": "You have denied camera permissions, please enable the permission and refresh the page.",
+        "please_accept_camera_permissions": "Please accept the camera permissions to scan a QR code.",
+        "invalid_address_qr_code": "Unable to scan Address QR code, please try again."
     },
     "ko": {
         "label": "한국어",
@@ -1721,6 +1770,13 @@
         "token_states_available": "자금은 현재 계약에 잠금되지 않아 즉시 사용할 수 있습니다.",
         "token_states_locked": "자금은 계약에 잠금되어 사용할 수 없습니다.",
         "burnt": "소각됨",
-        "mx_and_0x_description": "아래의 Mx와 0x 주소는 모두 수신 주소로 사용할 수 있지만, 거래 시점에는 Mx 주소만 검증됩니다."
+        "mx_and_0x_description": "아래의 Mx와 0x 주소는 모두 수신 주소로 사용할 수 있지만, 거래 시점에는 Mx 주소만 검증됩니다.",
+        "download_json": "JSON 다운로드",
+        "download_csv": "CSV 다운로드",
+        "camera_is_unavailable": "Camera is unavailable!",
+        "wallet_is_requesting_camera": "Wallet is requesting camera",
+        "denied_camera_permissions": "You have denied camera permissions, please enable the permission and refresh the page.",
+        "please_accept_camera_permissions": "Please accept the camera permissions to scan a QR code.",
+        "invalid_address_qr_code": "Unable to scan Address QR code, please try again."
     }
 }

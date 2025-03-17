@@ -32,6 +32,7 @@
     "react-dom": "^18.3.1",
     "react-lottie": "^1.2.10",
     "react-qr-code": "^2.0.15",
+    "react-qr-reader": "^3.0.0-beta-1",
     "react-scroll": "^1.9.2",
     "react-use-draggable-scroll": "^0.4.7",
     "sanitize-html": "^2.14.0",

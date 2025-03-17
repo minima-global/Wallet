@@ -553,7 +553,7 @@ const Summary = ({ txpow, back }: { txpow: any, back: () => void }) => {
   const type = hasCreatedToken ? 'Create' : difference > 0 ? 'Received' : 'Sent';
   const output = txpow?.BODY?.txn.outputs[0];
 
-  const download = () => {
+  const downloadAsJSON = () => {
     const blob = new Blob([JSON.stringify(txpow, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -569,6 +569,47 @@ const Summary = ({ txpow, back }: { txpow: any, back: () => void }) => {
     URL.revokeObjectURL(url);
   }
 
+  const downloadAsCSV = () => {
+    const filename = `${txpow?.TXPOWID}.csv`;
+
+    const headers = ['AMOUNT', 'TYPE', 'TOKEN_ID', 'DATE', 'SENT_TO_MX_ADDRESS', 'SENT_TO_0X_ADDRESS', 'TXPOWID', 'TIMEMILLI', 'ISBLOCK', 'ISTRANSACTION', 'HASBODY', 'BURN', 'SUPERBLOCK', 'SIZE', 'HEADER', 'BODY', 'DETAILS'];
+    const csv = [headers];
+
+    if (txpow) {
+      const h = txpow; // Only process the first transaction
+      const DIFFERENCE = h.DETAILS.difference[h.BODY.txn.inputs[0].tokenid];
+      const AMOUNT = DIFFERENCE ? DIFFERENCE > 0 ? `"${'+' + DIFFERENCE}"` : `"${DIFFERENCE}"` : 0;
+      const TYPE = DIFFERENCE > 0 ? 'IN' : 'OUT';
+      const DATE = format(new Date(Number(h.TIMEMILLI)), "dd-MM-yyyy HH:mm a");
+      const SENT_TO_MX = h.BODY.txn.outputs[0].miniaddress || "N/A";
+      const SENT_TO_0X = h.BODY.txn.outputs[0].address || "N/A";
+
+      const hasCreatedToken = h.BODY?.txn.outputs[0].tokenid === '0xFF';
+      const createdToken = h.BODY?.txn.outputs[0];
+
+      if (hasCreatedToken) {
+        csv.push([
+          createdToken.tokenamount, 'IN', `"${createdToken.tokenid}"`, DATE, `"${SENT_TO_MX}"`, `"${SENT_TO_0X}"`, h.TXPOWID, h.HEADER.timemilli, h.ISBLOCK, h.ISTRANSACTION, h.HASBODY, h.BURN, h.SUPERBLOCK, h.SIZE, escape(h.HEADER), escape(h.BODY), escape(h.DETAILS),
+        ]);
+      }
+
+      csv.push([AMOUNT, TYPE, `"${h.BODY.txn.inputs[0].tokenid}"`, DATE, `"${SENT_TO_MX}"`, `"${SENT_TO_0X}"`, h.TXPOWID, h.HEADER.timemilli, h.ISBLOCK, h.ISTRANSACTION, h.HASBODY, h.BURN, h.SUPERBLOCK, h.SIZE, escape(h.HEADER), escape(h.BODY), escape(h.DETAILS)]);
+    }
+
+    if (window.navigator.userAgent.includes('Minima Browser')) {
+      // @ts-ignore
+      return Android.blobDownload(filename, toHex(csv.join('\n')));
+    }
+
+    const blob = new Blob([csv.join('\n')], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+
   return (
     <div className="mb-12">
       <div className="mb-6">
@@ -580,12 +621,18 @@ const Summary = ({ txpow, back }: { txpow: any, back: () => void }) => {
         </div>
         <div className="col-span-1 flex justify-end">
           <div className="flex items-center gap-5">
-            <div>
-              <button onClick={download} className="cursor-pointer text-xs flex bg-contrast1 hover:bg-contrast2 transition-all duration-100 border border-contrast2 rounded-full flex items-center gap-3 w-fit px-3.5 py-1.5 text-white cursor-pointer select-none origin-center active:scale-[0.95] transition-all duration-100">
+            <div className="flex gap-3">
+              <button onClick={downloadAsJSON} className="cursor-pointer text-xs flex bg-contrast1 hover:bg-contrast2 transition-all duration-100 border border-contrast2 rounded-full flex items-center gap-3 w-fit px-3.5 py-1.5 text-white cursor-pointer select-none origin-center active:scale-[0.95] transition-all duration-100">
                 <svg width="12" height="13" viewBox="0 0 12 13" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M6 10L2 6L3.0625 4.9375L5.25 7.125V0H6.75V7.125L8.9375 4.9375L10 6L6 10ZM1.49417 13C1.08139 13 0.729167 12.8531 0.4375 12.5594C0.145833 12.2656 0 11.9125 0 11.5V10H1.5V11.5H10.5V10H12V11.5C12 11.9125 11.8531 12.2656 11.5592 12.5594C11.2653 12.8531 10.9119 13 10.4992 13H1.49417Z" fill="#A7A7B0" />
                 </svg>
-                {t('download')}
+                {t('download_json')}
+              </button>
+              <button onClick={downloadAsCSV} className="cursor-pointer text-xs flex bg-contrast1 hover:bg-contrast2 transition-all duration-100 border border-contrast2 rounded-full flex items-center gap-3 w-fit px-3.5 py-1.5 text-white cursor-pointer select-none origin-center active:scale-[0.95] transition-all duration-100">
+                <svg width="12" height="13" viewBox="0 0 12 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M6 10L2 6L3.0625 4.9375L5.25 7.125V0H6.75V7.125L8.9375 4.9375L10 6L6 10ZM1.49417 13C1.08139 13 0.729167 12.8531 0.4375 12.5594C0.145833 12.2656 0 11.9125 0 11.5V10H1.5V11.5H10.5V10H12V11.5C12 11.9125 11.8531 12.2656 11.5592 12.5594C11.2653 12.8531 10.9119 13 10.4992 13H1.49417Z" fill="#A7A7B0" />
+                </svg>
+                {t('download_csv')}
               </button>
             </div>
           </div>

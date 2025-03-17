@@ -1,5 +1,11 @@
 # Changelog
 
+##### [3.1.0] - 17 March 2025
+
+- Fixed verified marker on NFTs not displaying correctly
+- Added scan Mx Address QR code functionality on the send page
+- Added the ability to download a singular transaction as CSV file
+
 ##### [3.0.17] - 06 March 2025
 
 - Minor text change

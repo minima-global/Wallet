@@ -1,5 +1,6 @@
 import { useState } from "react";
 import useTranslation from "../../hooks/useTranslation";
+import QrScanner from "../CameraInput";
 
 interface InputProps {
     label?: string;
@@ -19,32 +20,35 @@ interface InputProps {
     copyValueOverride?: string;
     action?: true | (() => void);
     max?: string;
+    camera?: boolean;
 }
 
 const Input: React.FC<InputProps> = ({
-  label,
-  optionalLabel,
-  placeholder,
-  value,
-  onChange,
-  required = false,
-  info,
-  inverse,
-  validation,
-  validationMessage,
-  copy,
-  className = '',
-  clearable = false,
-  readOnly = false,
-  copyValueOverride,
-  action = false,
-  max = '',
+    label,
+    optionalLabel,
+    placeholder,
+    value,
+    onChange,
+    required = false,
+    info,
+    inverse,
+    validation,
+    validationMessage,
+    copy,
+    className = '',
+    clearable = false,
+    readOnly = false,
+    copyValueOverride,
+    action = false,
+    max = '',
+    camera = false,
 }) => {
     const { t } = useTranslation();
     const [valid, setValid] = useState<boolean | null>(null);
     const [copied, setCopied] = useState(false);
+    const [showCamera, setShowCamera] = useState(false);
 
-    const handleValidate = (value: string)  => {
+    const handleValidate = (value: string) => {
         if (validation) {
             if (required === false && value.length === 0) {
                 setValid(true);
@@ -85,6 +89,15 @@ const Input: React.FC<InputProps> = ({
         onChange?.('');
     }
 
+    const toggleCamera = () => {
+        setShowCamera(!showCamera);
+    }
+
+    const handleCameraCallback = (address: string) => {
+        onChange?.(address);
+        setShowCamera(false);
+    }
+
     return (
         <div className={`relative ${className}`}>
             {label && (
@@ -106,7 +119,7 @@ const Input: React.FC<InputProps> = ({
             )}
             <div className={`px-4 py-3.5 rounded border border-transparent ${validation && valid === false ? "!border-red" : ""} ${inverse ? 'bg-contrast2' : 'bg-contrast1'}`}>
                 <div className="flex relative">
-                    <input readOnly={readOnly} required={required} name="amount" onBlur={handleOnBlur} placeholder={placeholder} className={`text-sm bg-transparent w-full placeholder-grey60 appearance-none outline-none ${copy || clearable || info ? "pr-4 md:pr-8" : ""} ${max ? "pr-12" : ""}`} value={value} onChange={(e) => onChange?.(e.target.value)} />
+                    <input readOnly={readOnly} required={required} name="amount" onBlur={handleOnBlur} placeholder={placeholder} className={`text-sm bg-transparent w-full placeholder-grey60 appearance-none outline-none ${copy || clearable || info || camera ? "pr-4 md:pr-8" : ""} ${max ? "pr-12" : ""}`} value={value} onChange={(e) => onChange?.(e.target.value)} />
                     {info &&
                         <div className="relative group z-[30]">
                             <div className="text-sm text-grey60">
@@ -140,6 +153,15 @@ const Input: React.FC<InputProps> = ({
                         <div onClick={handleMax} className="text-sm cursor-pointer font-bold text-grey40 hover:text-grey80 transition-all duration-200 absolute top-0 right-0 flex h-full items-center z-10">
                             Max
                         </div>
+                    )}
+                    {camera && (
+                        <>
+                            <svg onClick={toggleCamera} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5 cursor-pointer stroke-grey60 hover:stroke-white">
+                                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                                <circle cx="12" cy="13" r="4"></circle>
+                            </svg>
+                            <QrScanner open={showCamera} closeModal={toggleCamera} callback={handleCameraCallback} />
+                        </>
                     )}
                 </div>
             </div>

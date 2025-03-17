@@ -164,6 +164,7 @@ function Index() {
                             onChange={(value) => setRecipient(value)}
                             validation="^(0x|Mx|0X|MX)[0-9a-zA-Z]*$"
                             validationMessage={t('please_enter_a_valid_address')}
+                            camera
                         />
                         <Input
                             label={t('message')}

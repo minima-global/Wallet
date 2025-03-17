@@ -270,10 +270,10 @@ const AppProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
             tokenid: token.tokenid
           }
         }).then((response) => {
-          setVerified({
-            ...verified,
+          setVerified((prev) => ({
+            ...prev,
             [token.tokenid]: response.response.web.valid ? 2 : 1
-          });
+          }));
         });
       }
     });
