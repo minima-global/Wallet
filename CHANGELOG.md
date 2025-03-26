@@ -1,5 +1,10 @@
 # Changelog
 
+##### [3.1.1] - 18 March 2025
+
+- Fixed issue where copying Mx and 0x address on validate address page was bugged
+- Hopefully fixes issues the device width issue in Vivo browser
+
 ##### [3.1.0] - 17 March 2025
 
 - Fixed verified marker on NFTs not displaying correctly
