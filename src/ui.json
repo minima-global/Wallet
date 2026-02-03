@@ -201,7 +201,9 @@
         "token_states_available": "Funds are available to be spent immediately as they are currently not locked in a contract.",
         "token_states_locked": "Funds are locked in a contract and unable to spend.",
         "burnt": "Burnt",
-        "mx_and_0x_description": "The Mx and 0x addresses below can both be used as your receive address, but only Mx addresses are validated at the time of transaction."
+        "mx_and_0x_description": "The Mx and 0x addresses below can both be used as your receive address, but only Mx addresses are validated at the time of transaction.",
+        "enter_an_external_url_for_your_token": "Enter an external URL for your token",
+        "enter_the_owner_of_your_token": "Enter the owner of your token"
     },
     "zh-cn": {
         "label": "中文",
@@ -435,7 +437,9 @@
         "token_states_available": "资金可以立即用于消费，因为它们目前不在合约中锁定。",
         "token_states_locked": "资金被锁定在合约中，无法使用。",
         "burnt": "销毁",
-        "mx_and_0x_description": "以下的Mx和0x地址都可以用作您的接收地址，但只有Mx地址在交易时会被验证。"
+        "mx_and_0x_description": "以下的Mx和0x地址都可以用作您的接收地址，但只有Mx地址在交易时会被验证。",
+        "enter_an_external_url_for_your_token": "输入您的代币的外部URL",
+        "enter_the_owner_of_your_token": "输入您的代币的所有者"
     },
     "ru": {
         "label": "Русский",
@@ -640,7 +644,9 @@
         "token_states_available": "Средства доступны для использования, так как они в настоящее время не заблокированы в контракте.",
         "token_states_locked": "Средства заблокированы в контракте и не могут быть использованы.",
         "burnt": "Сгоревший",
-        "mx_and_0x_description": "Ниже приведены Mx и 0x адреса, которые можно использовать в качестве вашего получателя, но только Mx адреса проверяются при транзакции."
+        "mx_and_0x_description": "Ниже приведены Mx и 0x адреса, которые можно использовать в качестве вашего получателя, но только Mx адреса проверяются при транзакции.",
+        "enter_an_external_url_for_your_token": "Введите внешний URL для вашего токена",
+        "enter_the_owner_of_your_token": "Введите владельца вашего токена"
     },
     "ukr": {
         "label": "Українська",
@@ -845,7 +851,9 @@
         "token_states_available": "Средства доступны для использования, так как они в настоящее время не заблокированы в контракте.",
         "token_states_locked": "Средства заблокированы в контракте и не могут быть использованы.",
         "burnt": "Сгоревший",
-        "mx_and_0x_description": "Ниже приведены Mx и 0x адреса, которые можно использовать в качестве вашего получателя, но только Mx адреса проверяются при транзакции."
+        "mx_and_0x_description": "Ниже приведены Mx и 0x адреса, которые можно использовать в качестве вашего получателя, но только Mx адреса проверяются при транзакции.",
+        "enter_an_external_url_for_your_token": "Введите внешний URL для вашего токена",
+        "enter_the_owner_of_your_token": "Введите владельца вашего токена"
     },
     "fr": {
         "label": "Français",
@@ -1049,7 +1057,9 @@
         "token_states_available": "Les fonds sont disponibles pour être dépensés immédiatement car ils ne sont actuellement pas verrouillés dans un contrat.",
         "token_states_locked": "Les fonds sont verrouillés dans un contrat et ne peuvent pas être utilisés.",
         "burnt": "Brûlé",
-        "mx_and_0x_description": "Les adresses Ox et Mx peuvent être utilisées de manière interchangeable, mais seules les adresses Mx sont validées lors d'une transaction."
+        "mx_and_0x_description": "Les adresses Ox et Mx peuvent être utilisées de manière interchangeable, mais seules les adresses Mx sont validées lors d'une transaction.",
+        "enter_an_external_url_for_your_token": "Entrez une URL externe pour votre jeton",
+        "enter_the_owner_of_your_token": "Entrez le propriétaire de votre jeton"
     },
     "es": {
         "label": "Español",
@@ -1252,7 +1262,9 @@
         "token_states_available": "Les fonds sont disponibles pour être dépensés immédiatement car ils ne sont actuellement pas verrouillés dans un contrat.",
         "token_states_locked": "Les fonds sont verrouillés dans un contrat et ne peuvent pas être utilisés.",
         "burnt": "Brûlé",
-        "mx_and_0x_description": "Les adresses Mx et 0x ci-dessous peuvent toutes deux être utilisées comme adresse de réception, mais seules les adresses Mx sont validées au moment de la transaction."
+        "mx_and_0x_description": "Les adresses Mx et 0x ci-dessous peuvent toutes deux être utilisées comme adresse de réception, mais seules les adresses Mx sont validées au moment de la transaction.",
+        "enter_an_external_url_for_your_token": "Entrez une URL externe pour votre jeton",
+        "enter_the_owner_of_your_token": "Entrez le propriétaire de votre jeton"
     },
     "ja": {
         "label": "日本語",
@@ -1486,7 +1498,9 @@
         "token_states_available": "資金は、現在契約でロックされていないため、すぐに使用できます。",
         "token_states_locked": "資金は契約でロックされているため、使用できません。",
         "burnt": "燃え尽きた",
-        "mx_and_0x_description": "以下のMxと0xアドレスは両方とも受信アドレスとして使用できますが、取引時に検証されるのはMxアドレスのみです。"
+        "mx_and_0x_description": "以下のMxと0xアドレスは両方とも受信アドレスとして使用できますが、取引時に検証されるのはMxアドレスのみです。",
+        "enter_an_external_url_for_your_token": "外部URLを入力してください",
+        "enter_the_owner_of_your_token": "所有者を入力してください"
     },
     "ko": {
         "label": "한국어",
@@ -1721,6 +1735,8 @@
         "token_states_available": "자금은 현재 계약에 잠금되지 않아 즉시 사용할 수 있습니다.",
         "token_states_locked": "자금은 계약에 잠금되어 사용할 수 없습니다.",
         "burnt": "소각됨",
-        "mx_and_0x_description": "아래의 Mx와 0x 주소는 모두 수신 주소로 사용할 수 있지만, 거래 시점에는 Mx 주소만 검증됩니다."
+        "mx_and_0x_description": "아래의 Mx와 0x 주소는 모두 수신 주소로 사용할 수 있지만, 거래 시점에는 Mx 주소만 검증됩니다.",
+        "enter_an_external_url_for_your_token": "외부 URL을 입력하세요",
+        "enter_the_owner_of_your_token": "소유자를 입력하세요"
     }
 }

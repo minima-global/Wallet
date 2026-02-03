@@ -6,6 +6,7 @@ import Button from '../../components/Button';
 import { appContext } from '../../AppContext';
 import useGetSuitableImage from '../../hooks/useGetSuitableImage';
 import useTranslation from '../../hooks/useTranslation';
+import { isValidHttpUrl } from '../../helpers';
 
 export const Route = createFileRoute('/token-create/')({
   component: Index,
@@ -28,6 +29,8 @@ function Index() {
   const [decimals, setDecimals] = useState("8");
   const [ticker, setTicker] = useState("");
   const [webValidationUrl, setWebValidationUrl] = useState("");
+  const [externalUrl, setExternalUrl] = useState("");
+  const [owner, setOwner] = useState("");
   const [burn, setBurn] = useState("");
   const [metadata, setMetadata] = useState<{ key: string, value: string }[]>([]);
   const [metadataKey, setMetadataKey] = useState("");
@@ -106,6 +109,16 @@ function Index() {
         className: type === 'SIMPLE' ? 'hidden' : ''
       },
       {
+        label: t('external_url'),
+        value: externalUrl || 'N/A',
+        className: type === 'SIMPLE' ? 'hidden' : ''
+      },
+      {
+        label: t('owner'),
+        value: owner || 'N/A',
+        className: type === 'SIMPLE' ? 'hidden' : ''
+      },
+      {
         label: t('burn'),
         value: burn || 'N/A',
       },
@@ -149,6 +162,8 @@ function Index() {
             ticker: ticker,
             description: description,
             webvalidate: webValidationUrl,
+            external_url: externalUrl,
+            owner: owner,
             ...token,
             ...metadata,
           }),
@@ -165,6 +180,8 @@ function Index() {
             ticker: ticker,
             description: description,
             webvalidate: webValidationUrl,
+            external_url: externalUrl,
+            owner: owner,
             ...token,
           }),
           amount: totalSupply,
@@ -214,22 +231,31 @@ function Index() {
   }
 
   const isDisabled = () => {
-    if (type === "UPLOAD_IMAGE") {
+    const hasInvalidTotalSupply = !(/^\d+$/.test(totalSupply));
+    const hasInvalidDecimals = !(/^\d+$/.test(decimals) && parseInt(decimals) >= 1 && parseInt(decimals) <= 16);
+    const hasInvalidWebValidationUrl = !!webValidationUrl && !isValidHttpUrl(webValidationUrl);
+    const hasInvalidExternalUrl = !!externalUrl && !isValidHttpUrl(externalUrl);
+
+    if (type === "UPLOAD_IMAGE") {  
       return !image
         || !(tokenName.length > 0)
-        || !(/^\d+$/.test(totalSupply))
-        || !(/^\d+$/.test(decimals) && parseInt(decimals) >= 1 && parseInt(decimals) <= 16);
+        || hasInvalidTotalSupply
+        || hasInvalidDecimals
+        || hasInvalidWebValidationUrl
+        || hasInvalidExternalUrl;
     } else if (type === "WEB_URL") {
       return !webUrl
         || !(tokenName.length > 0)
-        || !(/^\d+$/.test(totalSupply))
-        || !(/^\d+$/.test(decimals) && parseInt(decimals) >= 1 && parseInt(decimals) <= 16);
+        || hasInvalidTotalSupply
+        || hasInvalidDecimals
+        || hasInvalidWebValidationUrl
+        || hasInvalidExternalUrl;
     } else if (type === "SIMPLE") {
       return !(tokenName.length > 0 && !/\s/.test(tokenName))
-        || !(/^\d+$/.test(totalSupply));
+        || hasInvalidTotalSupply;
     }
   };
-
+  
   return (
     <>
       <div className="grow flex flex-col mb-20">
@@ -386,6 +412,24 @@ function Index() {
                 validationMessage={t("please_enter_a_valid_url")}
                 className={`${['SIMPLE'].includes(type) ? 'hidden' : ''}`}
                 optionalLabel={t('optional')}
+              />
+              <Input
+                label={t("external_url")}
+                placeholder={t("enter_an_external_url_for_your_token")}
+                value={externalUrl}
+                onChange={setExternalUrl}
+                optionalLabel={t('optional')}
+                validation={(value) => /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z0-9\u00a1-\uffff][a-z0-9\u00a1-\uffff_-]{0,62})?[a-z0-9\u00a1-\uffff]\.)+(?:[a-z\u00a1-\uffff]{2,}\.?))(?::\d{2,5})?(?:[/?#]\S*)?$/i.test(value)}
+                validationMessage={t("please_enter_a_valid_url")}
+                className={`${['SIMPLE'].includes(type) ? 'hidden' : ''}`}
+              />
+              <Input
+                label={t("owner")}
+                placeholder={t("enter_the_owner_of_your_token")}
+                value={owner}
+                onChange={setOwner}
+                optionalLabel={t('optional')}
+                className={`${['SIMPLE'].includes(type) ? 'hidden' : ''}`}
               />
               <Input
                 label={t("add_a_burn")}

@@ -1,5 +1,10 @@
 # Changelog
 
+##### [3.1.0] - 3 February 2026
+
+- Removed unverified icon as it can look confusing to the user
+- Added the ability to add a owner and external url when creating a custom token
+
 ##### [3.0.13] - 26 February 2025
 
 - Tapping the QR code on the receive page now copies the address to the clipboard
