@@ -299,12 +299,14 @@ function RouteComponent() {
                             <InfoBox
                                 title={t('description')}
                                 value={typeof token.token === 'object' && token.token.description || t('no_description')}
+                                copy={!!(typeof token.token === 'object' && token.token.description)}
                             />
                         )}
                         {token && token.tokenid === '0x00' && (
                             <InfoBox
                                 title={t('description')}
                                 value={t('this_is_the_official_minima_token')}
+                                copy
                             />
                         )}
                         <InfoBox title={t('sendable')} value={f(token.sendable)} />
